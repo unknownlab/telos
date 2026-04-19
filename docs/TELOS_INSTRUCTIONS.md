@@ -14,6 +14,24 @@ The steps below can be performed by a single person declaring Telos for a small 
 
 The steps are sequential but the work is iterative. Expect to return to earlier steps as you learn.
 
+### Relationship to the 9-step founding cycle
+
+The Framework's normative 9-step founding cycle (`TELOS_FRAMEWORK.md` §51.1) is broken into 13 operational steps here for practical use. The mapping:
+
+| Framework 9-step (§51.1) | Instructions 13-step |
+|---|---|
+| 1. Accept | Step 1 — Pick one real goal |
+| 2. Decompose | Steps 2–3 — Pick methodology, decompose tree |
+| 3. Assign | Step 4 — Assign actors |
+| 4. Execute | Steps 5–7 — Declare contracts, requirements/invariants/scope, execute in parallel |
+| 5. Control | Steps 8–9 — Collect evidence, verify contracts |
+| 6. Analyze | Step 11 — Analyze |
+| 7. Improve | Step 12 — Improve |
+| 8. Handle failures | Step 10 — Handle failures |
+| 9. Reproducibility | Step 13 — Record and expose |
+
+The 13-step form is for operational use; the 9-step form is normative for conformance checking.
+
 ---
 
 ## Step 1 — Pick one real goal

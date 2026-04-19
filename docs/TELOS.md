@@ -51,6 +51,7 @@ Telos is an active project. Documents in this repository are versioned:
 
 - **Version 0.1** (2026-04-18) — established at the close of Session Zero. Conceptual foundation complete. Implementation has not begun.
 - **Version 0.2** (2026-04-19) — Framework hardened against methodology-spec best practices. Added: RFC 2119 normative keywords + tagged clauses; §Scope / §Normative references / §Terms (ISO-style); Big Picture diagram; `Metric.Leading / Lagging / Balancing` subtypes; `causal_mechanism` field in Contract (optional if/then/because/then declaration form); worked Telos-purity examples (1 compliant + 4 failing); Part XI Conformance with Class A/B/C and clause IDs (CF-001…CF-206); Revision history, stability tiers per Part, deprecation policy. See `TELOS_FRAMEWORK.md` §57 for the full change log.
+- **Version 0.2.1** (2026-04-19) — stress-test finalization after four paper scenarios + five cross-cutting tests. Four blocking gaps closed; eleven non-blocking gaps tracked in `NEXT_STEPS.md §6`. Framework is now **Ready with caveats** for Session One.
 
 Subsequent versions will be recorded here with dates and principal changes.
 

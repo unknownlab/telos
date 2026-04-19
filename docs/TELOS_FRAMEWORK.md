@@ -2,7 +2,7 @@
 
 ## A methodology for goal-oriented companies in a probabilistic world
 
-**Version 0.2 (2026-04-19). This document is the canonical methodology of Telos. It supersedes any informal description found elsewhere and all prior versions.**
+**Version 0.2.1 (2026-04-19, stress-test finalization). This document is the canonical methodology of Telos. It supersedes any informal description found elsewhere and all prior versions.**
 
 ---
 
@@ -332,7 +332,7 @@ The `Metric` primitive has three canonical subtypes:
 
 - **Metric.Leading** — an early indicator measurable during execution, correlated with the eventual outcome.
 - **Metric.Lagging** — a terminal indicator measured at or after completion, reflecting the actual outcome.
-- **Metric.Balancing** — a metric held approximately constant, selected to detect whether optimizing a Leading or Lagging metric has caused collateral damage elsewhere.
+- **Metric.Balancing** — a metric held within a declared acceptable band, selected to detect whether optimizing a Leading or Lagging metric has caused collateral damage elsewhere. When a prior baseline exists, the band is anchored to it. When no baseline exists (a new Metric introduced at Process declaration), the Contract MUST declare an explicit target band.
 
 Every Contract SHOULD declare at least one Leading or Lagging metric for verification. Every Contract whose execution carries a material risk of collateral damage SHOULD declare one or more Balancing metrics.
 
@@ -641,7 +641,7 @@ Accountability is not the same as executing. The Accountable Actor MAY or MAY NO
 
 The distinguishing question: *who is accountable?* The accountable entity is the Actor; everything else used during execution is a Tool.
 
-An LLM agent invoked for a single capability call is a Tool. An LLM agent with its own Contract for a sub-process is a sub-actor.
+The criterion is **Contract possession**, not invocation arity. An LLM agent invoked without its own Contract on the invocation is a Tool, regardless of how many times it is called or how complex the call. An LLM agent with its own Contract on the invocation is a sub-actor, even for a single call.
 
 ### §37. The autonomy spectrum in practice
 
@@ -790,6 +790,22 @@ When enough of Telos's own operation runs on Telos, Telos builds Telos. This is 
 
 The founding goal of Telos is: run the full nine-step cycle for one real goal of one real company. When Telos can do this, Telos exists. Autopoiesis follows if Telos is useful enough to be used on itself.
 
+### §51.1. The founding cycle — enumerated
+
+The **nine-step cycle** referenced in §51 is defined normatively here. Any Class A implementation (§53) MUST support all nine steps. Steps MAY be interleaved in time (continuous execution), but their logical order MUST be preserved within each Process's lifecycle.
+
+1. **Accept** a Goal from the host company at any level of the Goal hierarchy.
+2. **Decompose** the Goal via a chosen methodology (or composed methodologies) into a tree of sub-Goals terminating in leaf Contracts.
+3. **Assign** to each Process exactly one Accountable Actor, zero or more Executing Actors, and zero or more Tools. When the Executing Actor is an AI agent, the Autonomy Level (L0–L3) MUST be specified.
+4. **Execute** nodes in parallel by default, each governed by its own Contract including `causal_mechanism` (§26).
+5. **Control** — run verification Processes in parallel with execution, checking Contracts against declared tolerances and collecting Evidence at the appropriate grade (§30–§32).
+6. **Analyze** — run Processes that aggregate Metrics and surface unreliable links across the tree.
+7. **Improve** — run Processes that recommend changes (reassignment, re-negotiation, autonomy promotion or demotion) based on the analysis output.
+8. **Handle failures** — errors, cancellations, and compensations (sagas, retries, reassignment) MUST be routed through the declared failure policy (§29).
+9. **Reproducibility** — every Fact MUST carry Provenance (§33) such that an external party MAY clone, replay, and verify the record.
+
+An implementation that omits any of these nine steps is not a conforming Class A implementation.
+
 ---
 
 ## Part XI: Conformance
@@ -860,6 +876,7 @@ An implementation that claims to be Telos but does not satisfy all Class A MUST 
 |---|---|---|
 | 0.1 | 2026-04-18 | Initial release. Session Zero conceptual foundation. Ten-part structure. |
 | 0.2 | 2026-04-19 | Added RFC 2119 normative keywords and tagged every normative clause. Added §1 Scope, §2 Normative references, §3 Terms. Added Big Picture diagram (§4.1). Added `Metric.Leading`, `Metric.Lagging`, `Metric.Balancing` subtypes (§12.1). Added `causal_mechanism` field to Contract (§26). Added §26.1 optional if/then/because/then declaration form. Added worked Telos-purity examples (§20). Added Part XI Conformance with Class A/B/C and clauses CF-001…CF-206. Added this Revision history, §58 stability tiers, §59 deprecation policy, §60 amendment rule. |
+| 0.2.1 | 2026-04-19 | Stress-test finalization after four-scenario paper walkthrough and five cross-cutting tests. Four blocking gaps closed: added §51.1 normative enumeration of the 9-step founding cycle (previously only in design-rationale doc); clarified §12.1 `Metric.Balancing` without prior baseline (explicit target band MUST be declared); reworded §36 to make Actor/Tool classification Contract-possession-based rather than arity-based; added 13-operational-step to 9-normative-step mapping in `TELOS_INSTRUCTIONS.md`. Eleven non-blocking gaps tracked in `NEXT_STEPS.md §6`. |
 
 ### §58. Stability tiers
 

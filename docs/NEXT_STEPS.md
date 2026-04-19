@@ -146,4 +146,38 @@ None of the items in §2 (Open questions) or §3 (Next steps) are invalidated by
 
 ---
 
-*End of document. Telos is now ready to move from concept to construction. Framework is at v0.2.*
+---
+
+## 6. Stress-test findings (2026-04-19)
+
+Framework v0.2 was stress-tested via four scenarios (small-scale hiring, mid-scale churn reduction, meta Session-One preparation, enterprise EU market launch) and five cross-cutting stress tests (agent demotion, saga cascade, conformance-class migration, latent variable, reflexive meta-process).
+
+**Verdict: Ready with caveats.** All scenarios passed structurally. Fifteen gaps catalogued; four blocking fixes applied; eleven tracked below.
+
+### 6.1. Blocking gaps — FIXED 2026-04-19
+
+- [x] **G-1.** The 9-step founding cycle is now enumerated normatively in `TELOS_FRAMEWORK.md` §51.1. Previously it existed only in `SESSION_ZERO.md` §4 (design rationale), not in the spec.
+- [x] **G-2.** `TELOS_INSTRUCTIONS.md` preface now maps its 13 operational steps to the Framework's 9 normative steps. No more step-count whiplash.
+- [x] **G-10.** `TELOS_FRAMEWORK.md` §12.1 clarifies that `Metric.Balancing` without a prior baseline requires an explicit target band declared at Process declaration time.
+- [x] **G-11.** `TELOS_FRAMEWORK.md` §36 reworded: Actor/Tool classification is determined by Contract possession, not invocation arity. Single-call agents can still be sub-actors if they carry their own Contract.
+
+### 6.2. Major gaps — non-blocking, tracked for Session One
+
+- **G-3. Latent-variable representation.** Surfaces in Scenario B (churn drivers) and D (brand health). NEXT_STEPS §2.1 #2 parks this. Informal pattern to document by end of Session One: *latent variable = belief distribution over a proxied variable, updated by an inference Process whose Evidence is graded at the inference model's epistemic level, typically `Signaled`.* Promote CF-206 from MAY to SHOULD after first implementation.
+- **G-4. Causal attribution across concurrent Processes.** Surfaces in Scenario B (product ship overlapping CS outreach) and §20.3. Framework's remedy (isolate a control segment) is often organizationally impractical. Add a worked example under §20 describing *attribution model* as an alternative pattern, with the consequence that Evidence downgrades to `Signaled`.
+- **G-5. Parent Contract tolerance aggregation.** §18 correctly states the parent's Contract is not a conjunction of children's — but gives zero guidance on deriving parent tolerance from children's distributions. Add §18.1 covering sum-of-independent and min/max-of-dependent cases; explicitly name "declared by vibe" as acceptable-but-flagged.
+- **G-6. Operational mechanics of Invariant checks (CF-010).** How does the harness actually detect that a Contract's Process will violate an Invariant like "data stays in EU"? The check is semantic, not lexical. Defer to Session One (NEXT_STEPS §2.2 #4 and #6) but flag as a Class-A operational requirement.
+- **G-12. Conformance class migration.** No migration template exists. Add §52.1 describing class transitions as Processes with their own Contracts (target class, deadline, reliability threshold), with mid-migration Processes continuing under the old class until re-declared.
+
+### 6.3. Minor gaps — tracked for backlog
+
+- **G-7.** Monadic purity on creative/generative workflows. Acknowledge in §19 alongside the Dirac case: creative workflows satisfy monadic purity only in the weak sense of "same distribution over design-quality judgements."
+- **G-8.** Framework claims reflexivity (§7, §49) but the Telos project itself has no declared Goal/Contracts in Telos syntax. Session One deliverable — already in §3.2 #3.
+- **G-9.** Candidate/prospect/lead Actor typology. §34 has 5 types; a job candidate or sales prospect is neither "system user" nor "team member." Broaden the Glossary entry for "System user" or add a 6th Actor type.
+- **G-13.** Saga depth bound. §24 doesn't terminate compensation-of-compensation recursion. Add: "A compensation that itself fails escalates to the grandparent's failure policy. Saga depth is bounded by the tree height."
+- **G-14.** Invariant mutation semantics. §11 says Invariants MUST NOT be broken but is silent on Invariants themselves changing (regulatory updates). Add: "Change of an Invariant is itself a Process producing a new Invariant; prior Contracts affected MUST be re-verified or marked stale."
+- **G-15.** Methodology vocabulary → primitive mapping. §41 says methodologies compose at boundaries but doesn't map OKR's "Key Result" or JTBD's "Job" to primitives. When each methodology gets its concrete template (§2.1 #3), include a translation table.
+
+---
+
+*End of document. Telos is at Framework v0.2 (stress-tested, 4 blocking fixes applied). Ready to move from concept to construction.*
