@@ -28,6 +28,10 @@ Telos is a substrate that gives proven organizational methodologies three things
 - **[SESSION_ZERO.md](SESSION_ZERO.md)** — the design rationale. Why each decision was made, with quotes from the founding discussion.
 - **[NEXT_STEPS.md](NEXT_STEPS.md)** — summary, open questions, roadmap, current work.
 
+### Dog-food — live declaration
+
+- **[TELOS_ON_TELOS.md](TELOS_ON_TELOS.md)** — the Telos project declared in Telos Framework v0.2.1 terms. Current Tactical goal ("ship Session One") fully decomposed with Contracts, actors, metrics, deadlines. Reflexivity in practice.
+
 ---
 
 ## Quick orientation
