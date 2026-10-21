@@ -53,6 +53,8 @@ You need Bun `1.4.4-canary.1` or later, because `bun lint` and `bun fmt` exist o
 Bun >=1.4.4-canary.1 required, found 1.4.3. Run: bun upgrade --canary
 ```
 
+`bun run lint`, `bun run typecheck` and `bun run test` run the same guard first, so they also refuse an unsupported Bun.
+
 ### Layout
 
 - `apps/`: applications, one directory per app.
@@ -104,11 +106,15 @@ Run them from the repository root.
 
 Any failure stops the commit with a `pre-commit:` message. On the empty skeleton the hook takes under two seconds.
 
+Commits that stage only files under `kitty-specs/` or `.kittify/` (Spec Kitty's bookkeeping commits) pass at once: the hook exits silently, without running the checks and without installed dependencies. Any other staged path brings back the full run above, including the `dependencies not installed` message when `node_modules/` is absent. A commit that moves a file out of any other directory runs the full checks too, because the old path counts as a staged path.
+
 Formatting restages whole files. If you staged only part of a file, the hook blocks the commit with `pre-commit: format failed` and nothing is committed. Fix it by staging the rest of the file (`git add <file>`), or by setting the unstaged changes aside with `git stash --keep-index`.
 
 ### Review gate
 
 Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review. It runs every check, writes one JUnit report with a test case per check (`verify.lint`, `verify.typecheck`, and so on) plus every `bun test` result, and Spec Kitty blocks the review on any failure that is not already failing on the base branch.
+
+The report is always well-formed XML. Escape codes and other characters that XML cannot represent are removed from messages. A failed check's message shows the first real error line of that check, not the wrapper line that `bun run` prints. The checks run without colour.
 
 ## One-time setup on a new machine or fresh clone
 

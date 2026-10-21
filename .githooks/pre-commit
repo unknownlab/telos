@@ -10,6 +10,13 @@ fail() {
 
 cd "$(git rev-parse --show-toplevel)" || fail "cannot find the repository root"
 
+# Spec Kitty bookkeeping commits touch only kitty-specs/ and .kittify/, which no check covers.
+# They must pass in worktrees without installed dependencies.
+staged=$(git -c core.quotePath=false diff --cached --name-only --no-renames)
+if [ -n "$staged" ] && ! printf '%s\n' "$staged" | grep -q -v -E '^(kitty-specs|\.kittify)/'; then
+  exit 0
+fi
+
 command -v bun >/dev/null 2>&1 || fail "bun not found. See docs/tooling.md"
 bun scripts/check-bun-version.ts || exit 1
 [ -d node_modules ] || fail "dependencies not installed. Run: bun install"
