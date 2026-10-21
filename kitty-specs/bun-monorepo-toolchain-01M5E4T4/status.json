@@ -1,7 +1,7 @@
 {
-  "event_count": 20,
-  "last_event_id": "01M5ED35W4XFCRD6ZMJAF17NW2",
-  "materialized_at": "2026-10-21T04:56:42.117019+00:00",
+  "event_count": 21,
+  "last_event_id": "01M5ED3G25JXHMFA57NFXDG1A3",
+  "materialized_at": "2026-10-21T04:56:52.549653+00:00",
   "mission_number": "",
   "mission_slug": "bun-monorepo-toolchain-01M5E4T4",
   "mission_type": "",
@@ -11,8 +11,8 @@
     "canceled": 0,
     "claimed": 0,
     "done": 0,
-    "for_review": 1,
-    "in_progress": 1,
+    "for_review": 2,
+    "in_progress": 0,
     "in_review": 0,
     "planned": 2
   },
@@ -85,9 +85,9 @@
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "in_progress",
-      "last_event_id": "01M5ECYECVDZX203DZB3ZAN5HP",
-      "last_transition_at": "2026-10-21T04:54:07.003191+00:00",
+      "lane": "for_review",
+      "last_event_id": "01M5ED3G25JXHMFA57NFXDG1A3",
+      "last_transition_at": "2026-10-21T04:56:52.549653+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Unblocked: lane merge conflicts resolved manually"
