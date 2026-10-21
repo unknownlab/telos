@@ -458,6 +458,9 @@
       "last_event_id": "01M5FKX838BKYQ62CJR3M7E86Z",
       "last_transition_at": "2026-10-21T16:15:02.249005+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Ready for review: 3ad94ea"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 4845,
