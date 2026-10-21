@@ -1,13 +1,3 @@
----
-affected_files: []
-cycle_number: 1
-mission_slug: locus-foundation-01M5EWDR
-reproduction_command:
-reviewed_at: '2026-10-21T15:54:52Z'
-reviewer_agent: claude
-wp_id: WP13
----
-
 # WP13 review feedback (cycle 1) — reviewer-renata
 
 Verdict: APPROVE in substance (613 tests green, NS-018 "Not run" works, failing reports render as failing, 9 mutants caught). The following gaps weaken INV-013 ("nothing is shown as passing without a real run") and the WP's own text, so fix them before approval. Keep every change inside this WP's owned files.
