@@ -12,5 +12,7 @@
   "purpose_tldr": "Give the repository a working Bun-based monorepo foundation with local quality checks.",
   "slug": "bun-monorepo-toolchain-01M5E4T4",
   "target_branch": "feat/bun-monorepo-toolchain",
-  "topology": "coord"
+  "topology": "coord",
+  "vcs": "git",
+  "vcs_locked_at": "2026-10-21T03:34:51.098275+00:00"
 }
