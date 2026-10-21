@@ -20,7 +20,8 @@
       <Scenario>A failure message picks the first real error line, not bun's wrapper line or the summary.</Scenario>
       <Scenario>A checkout without node_modules gets one frozen install before the checks, so type checks do not fail on missing type definitions. With node_modules present no install step is added.</Scenario>
       <Scenario>A failed install is recorded as a failing verify.install case and the remaining checks still run.</Scenario>
-      <TraceAssertion>The buildReport, escapeXml, sanitizeText, failureMessage and needsInstall unit tests pass. The install scenarios are checked by running the gate in a clone without node_modules.</TraceAssertion>
+      <Scenario>Check steps run without colour and without CLAUDECODE, CLAUDE_CODE_ENTRYPOINT or FORCE_COLOR, so a failing type check reports readable text instead of agent-specific XML tags.</Scenario>
+      <TraceAssertion>The buildReport, escapeXml, sanitizeText, failureMessage, needsInstall and cleanEnv unit tests pass. The install scenarios are checked by running the gate in a clone without node_modules.</TraceAssertion>
     </V-M-REVIEW-GATE>
   </VD-MAIN>
 </GraceVerificationDocument>

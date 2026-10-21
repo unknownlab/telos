@@ -13,6 +13,7 @@
 //   escapeXml - sanitize, then escape text for an XML attribute
 //   failureMessage - pick the first real error line of a failed step
 //   needsInstall - true when a directory has no node_modules yet
+//   cleanEnv - child environment with NO_COLOR set and agent output variables removed
 //   buildReport - JUnit report with a "verify" suite plus bun test's suites
 // END_MODULE_MAP
 
@@ -176,16 +177,28 @@ function readOptional(path: string): string | null {
   }
 }
 
+// START_CONTRACT: cleanEnv
+//   PURPOSE: Build the environment for a check step so its output is plain text: no colour, and no variables that make the tools print agent-specific formats.
+//   INPUTS: { env: Record<string, string | undefined> - the parent environment }
+//   OUTPUTS: { Record<string, string | undefined> - a new object: a copy of env with NO_COLOR set to "1" and without FORCE_COLOR, CLAUDECODE and CLAUDE_CODE_ENTRYPOINT }
+//   SIDE_EFFECTS: none; the input object is not mutated
+//   LINKS: M-REVIEW-GATE
+// END_CONTRACT: cleanEnv
+export function cleanEnv(
+  env: Record<string, string | undefined>,
+): Record<string, string | undefined> {
+  const copy: Record<string, string | undefined> = { ...env, NO_COLOR: "1" };
+  delete copy.FORCE_COLOR;
+  delete copy.CLAUDECODE;
+  delete copy.CLAUDE_CODE_ENTRYPOINT;
+  return copy;
+}
+
 function runStep(name: string, command: string[]): StepResult {
-  const env: Record<string, string | undefined> = {
-    ...process.env,
-    NO_COLOR: "1",
-  };
-  delete env.FORCE_COLOR;
   const result = Bun.spawnSync(command, {
     stdout: "pipe",
     stderr: "pipe",
-    env,
+    env: cleanEnv(process.env),
   });
   const output = `${result.stdout.toString()}\n${result.stderr.toString()}`;
   const ok = result.exitCode === 0;

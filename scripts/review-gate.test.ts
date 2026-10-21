@@ -17,6 +17,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   buildReport,
+  cleanEnv,
   escapeXml,
   failureMessage,
   needsInstall,
@@ -166,5 +167,37 @@ describe("needsInstall", () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("cleanEnv", () => {
+  test("sets NO_COLOR and removes colour and agent output variables", () => {
+    const cleaned = cleanEnv({
+      PATH: "/usr/bin",
+      FORCE_COLOR: "1",
+      CLAUDECODE: "1",
+      CLAUDE_CODE_ENTRYPOINT: "cli",
+    });
+    expect(cleaned.NO_COLOR).toBe("1");
+    expect(cleaned.PATH).toBe("/usr/bin");
+    expect(Object.keys(cleaned)).not.toContain("FORCE_COLOR");
+    expect(Object.keys(cleaned)).not.toContain("CLAUDECODE");
+    expect(Object.keys(cleaned)).not.toContain("CLAUDE_CODE_ENTRYPOINT");
+  });
+
+  test("does not add variables that were not there", () => {
+    const cleaned = cleanEnv({ PATH: "/usr/bin" });
+    expect(Object.keys(cleaned).sort()).toEqual(["NO_COLOR", "PATH"]);
+  });
+
+  test("does not change the input object", () => {
+    const input = {
+      FORCE_COLOR: "1",
+      CLAUDECODE: "1",
+      CLAUDE_CODE_ENTRYPOINT: "cli",
+    };
+    const before = { ...input };
+    cleanEnv(input);
+    expect(input).toEqual(before);
   });
 });
