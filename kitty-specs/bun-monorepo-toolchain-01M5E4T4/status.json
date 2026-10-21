@@ -4,7 +4,7 @@
   "materialized_at": "2026-10-21T04:52:44.053198+00:00",
   "mission_number": "",
   "mission_slug": "bun-monorepo-toolchain-01M5E4T4",
-  "mission_type": "",
+  "mission_type": "software-dev",
   "summary": {
     "approved": 1,
     "blocked": 1,
