@@ -157,8 +157,10 @@ A structured self-challenge of the security-relevant decisions was run in this p
 
 ## R-10 Model routing
 
-**Decision**: propose Sonnet for IC-02 to IC-10 and Haiku for IC-01 and IC-11, and ask the owner.
+**Decision** (owner, 2026-10-21): Haiku implements every work package, Sonnet reviews every work package, and Opus plans the mission and runs the mission review. The planning proposal was Sonnet for IC-02 to IC-10; the owner kept the charter default.
 
-**Rationale**: the charter routes implementation to Haiku-class models "sized so that one of these models can finish each one from its prompt alone". Effect 4 (2026-10-01) and TanStack Start 1.169 are newer than such models' training data, and the core concerns carry subtle determinism and canonicalisation contracts. A rejected WP costs more than the model difference.
+**Consequence**: each WP prompt must be self-sufficient. It quotes the exact Effect 4 and TanStack Start APIs it needs (R-02, the contracts) instead of relying on model knowledge, and states its acceptance tests. AGENTS.md's rule still applies: after two rejections of one WP, the owner is asked before a stronger model is used.
+
+**Rationale for the original proposal**: the charter routes implementation to Haiku-class models "sized so that one of these models can finish each one from its prompt alone". Effect 4 (2026-10-01) and TanStack Start 1.169 are newer than such models' training data, and the core concerns carry subtle determinism and canonicalisation contracts. A rejected WP costs more than the model difference.
 
 **Alternatives considered**: Haiku throughout, with very detailed prompts; AGENTS.md already escalates after two rejections, but starting on the weaker model for known-hard work is likely to hit that.

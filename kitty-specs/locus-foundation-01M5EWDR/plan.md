@@ -55,15 +55,15 @@ Items that need the owner's decision before implementation are listed in [Owner 
 | Blocking gates (`bun run verify`) | `verify` and the review gate gain `docs:build` and `test:e2e`. The pre-commit hook keeps its current fast set (no browser). | Pass, needs owner approval of the wiring (part of this plan) |
 | Bun only; dependencies are owner decisions with supply-chain checks | Bun stays the only toolchain. Vite runs under Bun (`bun --bun vite`). Every dependency is pinned exactly, at least 7 days old, and has no install scripts (R-01). | Pass, pending owner approval of R-01 |
 | Small, faithful changes; record decisions | Work packages map to implementation concerns below. Decisions are in `research.md`. Deviations need review before acceptance. | Pass |
-| One vocabulary (Spec Kitty glossary canonical) | **Conflict.** ADR-0012 makes `docs/foundation/terminology` canonical for product terms. Proposed resolution: the glossary entry for each product term points to the foundation page, and the charter line is reworded. This is a charter and glossary edit, so it needs the owner. | Needs owner decision |
-| Implementation on Haiku-class models | **Deviation proposed.** Effect 4 (released 2026-10-01) and TanStack Start 1.169 are newer than the training data of small models. Work packages touching them are routed to Sonnet. Mechanical packages stay on Haiku. | Needs owner decision |
-| WP review on Sonnet; mission review on Opus, high effort | Unchanged | Pass |
+| One vocabulary (Spec Kitty glossary canonical) | ADR-0012 makes `docs/foundation/terminology` canonical for product terms. The owner approved rewording the charter line and the glossary `telos` entry (2026-10-21); applied in IC-11. | Pass |
+| Implementation on Haiku-class models | Every work package is implemented on Haiku (owner decision, 2026-10-21). Because Effect 4 and TanStack Start 1.169 are newer than small models' training data, each WP prompt quotes the exact APIs from [research.md R-02](research.md#r-02-effect-4-usage) and the contracts. | Pass |
+| WP review on Sonnet; mission planning and mission review on Opus, high effort | Unchanged (owner confirmed 2026-10-21) | Pass |
 | No CI (current exception) | Unchanged. The site shows CI provenance as "unavailable". | Pass |
 | Directive 051 supply-chain install safety | R-01: registry authenticity, freshness cutoff, no lifecycle scripts, empty `trustedDependencies`, lockfile committed. The Playwright browser download is listed as an explicit owner approval. | Pass, pending approval |
 | Directive 036 black-box integration testing | Specifications use only the public API. Playwright treats the site as a black box. | Pass |
 | Directive 037 living documentation sync | The docs are compiled from `docs/`. Foundation maturity is updated after merge (FR-026). | Pass |
 
-Post-design re-check: no new violations. The two "needs owner decision" rows are listed under [Owner approvals required](#owner-approvals-required).
+Post-design re-check: no new violations. The two rows that needed an owner decision were resolved on 2026-10-21; see [Owner approvals required](#owner-approvals-required).
 
 ## Project Structure
 
@@ -159,7 +159,7 @@ Root changes: `tsconfig.json` references the three projects; `bunfig.toml` ignor
 
 ## Implementation Concern Map
 
-> Implementation concerns are not work packages. `/spec-kitty.tasks` turns them into WPs. The model column is the proposed routing for those WPs; see [Owner approvals required](#owner-approvals-required).
+> Implementation concerns are not work packages. `/spec-kitty.tasks` turns them into WPs. Each concern lists the model routing the owner approved; see [Owner approvals](#owner-approvals-required).
 
 ```mermaid
 flowchart LR
@@ -184,7 +184,7 @@ flowchart LR
 - **Relevant requirements**: C-001, C-005, NFR-003
 - **Affected surfaces**: `packages/locus/{package.json,tsconfig.json}`, `packages/locus-specs/{package.json,tsconfig.json}`, `apps/docs/{package.json,tsconfig.json,vite.config.ts,components.json}`, root `tsconfig.json`, `bunfig.toml`, `.gitignore`, `package.json`, `bun.lock`
 - **Sequencing/depends-on**: none
-- **Proposed model**: Haiku
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: Vite plugins under Bun (`bun --bun vite`); TanStack Start's generated route tree must be ignored by lint and format; `bun check -b` must accept JSX and DOM libraries for the app project only.
 
 ### IC-02 — Model and validation
@@ -193,7 +193,7 @@ flowchart LR
 - **Relevant requirements**: FR-001 to FR-007, NFR-001, NFR-002, NFR-006
 - **Affected surfaces**: `packages/locus/src/{identity,charter,relation,locus,fabric,diagnostic,validate,index}.ts`, `packages/locus/test/`
 - **Sequencing/depends-on**: IC-01
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: deterministic ordering (diagnostics must not depend on input order); cycle reporting (each cycle once, rotated to its smallest member); deep ownership chains must be handled iteratively, not recursively.
 
 ### IC-03 — Revisions and change sets
@@ -202,7 +202,7 @@ flowchart LR
 - **Relevant requirements**: FR-009, FR-011, NFR-001, NFR-003
 - **Affected surfaces**: `packages/locus/src/{canonical,revision,diff,errors}.ts`, tests
 - **Sequencing/depends-on**: IC-02
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: canonical-form stability is a contract (OQ-011); Unicode must not be normalised; string ordering by UTF-16 code units must be consistent across engines.
 
 ### IC-04 — History service
@@ -211,7 +211,7 @@ flowchart LR
 - **Relevant requirements**: FR-010
 - **Affected surfaces**: `packages/locus/src/history.ts`, tests
 - **Sequencing/depends-on**: IC-03
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: atomicity of append within one runtime (use `Ref`/`SynchronizedRef`); order of the stale check before the no-op check is a contract.
 
 ### IC-05 — Decoding
@@ -220,7 +220,7 @@ flowchart LR
 - **Relevant requirements**: FR-008
 - **Affected surfaces**: `packages/locus/src/decode.ts`, tests
 - **Sequencing/depends-on**: IC-02
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: Effect 4 Schema API differs from Effect 3; implementers must read `node_modules/effect/dist/Schema.d.ts`. Shape errors versus rule diagnostics must stay separate (NS-001 versus NS-008).
 
 ### IC-06 — Executable specifications
@@ -229,7 +229,7 @@ flowchart LR
 - **Relevant requirements**: FR-012, NFR-001, NFR-002, NFR-003, NFR-007, INV-014
 - **Affected surfaces**: `packages/locus-specs/**`
 - **Sequencing/depends-on**: IC-03, IC-04, IC-05
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: a runner bug could make every spec pass; the meta-tests exist to catch that. The catalogue must use only the public API.
 
 ### IC-07 — Content pipeline and guides
@@ -238,7 +238,7 @@ flowchart LR
 - **Relevant requirements**: FR-014, FR-017, FR-018, FR-023, NS-020, C-003
 - **Affected surfaces**: `apps/docs/scripts/content.ts`, `apps/docs/test/content*.test.ts`, `apps/docs/test/fixtures/`, `docs/guides/*.md`
 - **Sequencing/depends-on**: IC-01 (independent of IC-02 to IC-06, so it can run in parallel)
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: heading-id generation must match the link anchors used in `docs/`; relative links to non-document repository files must map to repository URLs.
 
 ### IC-08 — Site shell
@@ -247,7 +247,7 @@ flowchart LR
 - **Relevant requirements**: FR-013, FR-015, FR-016, FR-018, NFR-004, NFR-005
 - **Affected surfaces**: `apps/docs/src/{routes,components,lib,styles.css}`, `apps/docs/vite.config.ts`
 - **Sequencing/depends-on**: IC-07
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: TanStack Start static prerendering under Bun (spike first; fallback in R-05); theme flash before hydration; Mermaid bundle size (load lazily).
 
 ### IC-09 — Playground and verification
@@ -256,7 +256,7 @@ flowchart LR
 - **Relevant requirements**: FR-019 to FR-022, NFR-001, C-002, INV-013
 - **Affected surfaces**: `apps/docs/src/playground/**`, `apps/docs/src/routes/{playground,verification}*`, `apps/docs/scripts/spec-report.ts`, `apps/docs/test/spec-report*.test.ts`
 - **Sequencing/depends-on**: IC-06, IC-08
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: never render a result without a provenance label; mark results "historical" after the input changes; keep user text out of raw HTML.
 
 ### IC-10 — Browser tests and gate wiring
@@ -265,7 +265,7 @@ flowchart LR
 - **Relevant requirements**: NFR-001, NFR-004, NFR-005, FR-021, SC-002, SC-004, C-007
 - **Affected surfaces**: `apps/docs/e2e/*.e2e.ts`, `apps/docs/playwright.config.ts`, root `package.json`, `scripts/review-gate.ts` and its tests
 - **Sequencing/depends-on**: IC-09
-- **Proposed model**: Sonnet
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: flaky timing (use web-first assertions, no sleeps); the review gate's existing tests must be extended, not weakened.
 
 ### IC-11 — Governance sync
@@ -274,7 +274,7 @@ flowchart LR
 - **Relevant requirements**: FR-024, FR-025, FR-026, NFR-006
 - **Affected surfaces**: `.grace/graph/main.xml`, `.grace/verification/main.xml`, `AGENTS.md` (approved wording only), `.kittify/config.yaml` `path_conventions` (if approved), charter and glossary wording (if approved), foundation `maturity` fields (after merge)
 - **Sequencing/depends-on**: GRACE entries are added by each concern for its own modules. This concern does the final consistency pass after IC-10, and the maturity update after merge.
-- **Proposed model**: Haiku
+- **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: the maturity update must reflect evidence, not intent.
 
 ### GRACE modules to add
@@ -296,11 +296,23 @@ Each module gets a matching `V-M-*` verification entry naming its test files and
 
 ## Owner approvals required
 
-These are owner decisions under `AGENTS.md` and the charter. Implementation does not start until they are answered.
+These are owner decisions under `AGENTS.md` and the charter. **All were answered on 2026-10-21**:
+
+| # | Decision | Owner answer |
+| --- | --- | --- |
+| 1 | Spec, plan, ADR-0002 to ADR-0014 | Approved |
+| 2 | Dependencies, Chromium download, shadcn CLI | Approved as listed |
+| 3 | Model routing | Haiku implements every WP; Sonnet reviews every WP; Opus plans the mission and runs the mission review |
+| 4 | Gate wiring | Approved: `docs:build` and `test:e2e` in `verify` and the review gate, not in pre-commit |
+| 5 | `AGENTS.md` pointer | Approved as worded |
+| 6 | Charter and glossary wording | Approved as worded |
+| 7 | `path_conventions` | Approved |
+
+The items as originally put to the owner:
 
 1. **Spec and plan**: approve [spec.md](spec.md) and this plan, including the proposed ADR-0002 to ADR-0014 as the design basis.
 2. **Dependencies** (C-005): the pinned list in [research.md R-01](research.md#r-01-dependencies-and-supply-chain), the one-off Playwright Chromium download into `~/Library/Caches/ms-playwright`, and running the pinned `shadcn` CLI to generate components.
-3. **Model routing**: Sonnet for IC-02 to IC-10, Haiku for IC-01 and IC-11 (charter default is Haiku).
+3. **Model routing**: proposed Sonnet for IC-02 to IC-10 and Haiku for IC-01 and IC-11 (charter default is Haiku). Owner chose Haiku for all implementation.
 4. **Gate wiring**: add `docs:build` and `test:e2e` to `bun run verify` and the review gate (not to the pre-commit hook).
 5. **`AGENTS.md` pointer** (FR-024), exact wording:
 
