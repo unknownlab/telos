@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: List the playground scenarios in letter order, with their text, their example input and the component that runs each one (FR-019).
-//   SCOPE: ScenarioProps, Scenario, SCENARIOS, scenarioById, PLAYGROUND_SUMMARY and the scenario components ScenarioA to ScenarioC. WP15 appends D and E.
+//   SCOPE: ScenarioProps, Scenario, SCENARIOS, scenarioById, PLAYGROUND_SUMMARY and the scenario components ScenarioA to ScenarioE.
 //   DEPENDS: M-DOCS-PLAYGROUND
 //   LINKS: M-DOCS-PLAYGROUND
 //   ROLE: RUNTIME
@@ -19,6 +19,8 @@ import { type ComponentType, createElement } from "react";
 import { examples } from "@telos/locus-specs";
 import type { SpecReportFile } from "@/lib/build-data";
 import { FabricScenario } from "@/playground/components/fabric-scenario";
+import { RevisionsScenario } from "@/playground/components/revisions-scenario";
+import { SpecsScenario } from "@/playground/components/specs-scenario";
 
 export interface ScenarioProps {
   readonly siteCommit: string;
@@ -91,10 +93,32 @@ function ScenarioC({ siteCommit }: ScenarioProps) {
   });
 }
 
+// START_CONTRACT: ScenarioD
+//   PURPOSE: Run scenario D, which compares two Revisions of one Locus, shows the change set and appends them to a compare-and-set history.
+//   INPUTS: { siteCommit: string - the commit the site was built from }
+//   OUTPUTS: { JSX.Element - a RevisionsScenario with the two editors, the Revision and change-set results and the history panel }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-PLAYGROUND
+// END_CONTRACT: ScenarioD
+function ScenarioD({ siteCommit }: ScenarioProps) {
+  return createElement(RevisionsScenario, { siteCommit });
+}
+
+// START_CONTRACT: ScenarioE
+//   PURPOSE: Run scenario E, which runs the catalogue in the browser and compares the results with the build report and the golden Revision ids.
+//   INPUTS: { siteCommit: string - the commit the site was built from, buildReport: SpecReportFile | null - the build-time report }
+//   OUTPUTS: { JSX.Element - a SpecsScenario with the build report, the Run all action and the results }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-PLAYGROUND
+// END_CONTRACT: ScenarioE
+function ScenarioE({ siteCommit, buildReport }: ScenarioProps) {
+  return createElement(SpecsScenario, { siteCommit, buildReport });
+}
+
 // START_CONTRACT: SCENARIOS
 //   PURPOSE: Give the scenarios in letter order, so that the index and the routes read one list.
 //   INPUTS: none (constant)
-//   OUTPUTS: { ReadonlyArray<Scenario> - scenarios A to C, each with its example text rendered as JSON }
+//   OUTPUTS: { ReadonlyArray<Scenario> - scenarios A to E, each with its example text rendered as JSON, or null for E }
 //   SIDE_EFFECTS: none
 //   LINKS: M-DOCS-PLAYGROUND
 // END_CONTRACT: SCENARIOS
@@ -134,6 +158,33 @@ export const SCENARIOS: ReadonlyArray<Scenario> = [
     ],
     exampleText: JSON.stringify(examples.relations, null, 2),
     Component: ScenarioC,
+  },
+  {
+    id: "d",
+    letter: "D",
+    title: "Revise a Locus",
+    summary:
+      "Compare two Revisions of one Locus, see the change set, and append them to a compare-and-set history.",
+    description: [
+      "Locus A and Locus B are two versions of the checkout Locus; B rewords one responsibility. Compute both Revisions to see their ids and the change set from A to B.",
+      "Then append them to a history. Each append names the head it expects. If that is not the current head, the history refuses with a stale-baseline error instead of overwriting.",
+      "Revisions are computed for any Locus that decodes, even one that is invalid. A Revision id does not mean that the Locus is valid.",
+    ],
+    exampleText: JSON.stringify(examples.history, null, 2),
+    Component: ScenarioD,
+  },
+  {
+    id: "e",
+    letter: "E",
+    title: "Run the specifications",
+    summary:
+      "Run all executable specifications in your browser and compare them with the build report.",
+    description: [
+      "The specifications are data. This page runs them with the same runner the build uses, in your browser, and shows the results next to the report recorded at build time.",
+      "It also recomputes the Revision ids of the revision fixtures and checks them against the golden values the Bun tests use.",
+    ],
+    exampleText: null,
+    Component: ScenarioE,
   },
 ];
 

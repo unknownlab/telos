@@ -23,6 +23,8 @@ export const APP_PAGES: ReadonlyArray<string> = [
   "/playground/a",
   "/playground/b",
   "/playground/c",
+  "/playground/d",
+  "/playground/e",
 ];
 
 // START_CONTRACT: prerenderPaths

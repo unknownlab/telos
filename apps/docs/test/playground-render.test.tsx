@@ -271,14 +271,24 @@ describe("result views", () => {
 });
 
 describe("PlaygroundIndex", () => {
-  test("links to scenarios a to c in order", () => {
+  test("links to every registered scenario, in registry order", () => {
     const markup = renderToStaticMarkup(
       <PlaygroundIndex scenarios={SCENARIOS} />,
     );
     const hrefs = [...markup.matchAll(/href="(\/playground\/[a-z])"/g)].map(
       (match) => match[1],
     );
-    expect(hrefs).toEqual(["/playground/a", "/playground/b", "/playground/c"]);
+    expect(hrefs).toEqual(SCENARIOS.map((s) => `/playground/${s.id}`));
     expect(markup).toContain('data-page="playground"');
+  });
+
+  test("the registry order is a, b, c, d, e, so a reordering or a dropped scenario fails", () => {
+    expect(SCENARIOS.map((scenario) => scenario.id)).toEqual([
+      "a",
+      "b",
+      "c",
+      "d",
+      "e",
+    ]);
   });
 });
