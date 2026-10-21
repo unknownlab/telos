@@ -1,4 +1,5 @@
 node_modules/
+.spec-kitty/
 # Added by Spec Kitty CLI (auto-managed)
 .claude/
 .codex/
