@@ -356,7 +356,8 @@
       "last_transition_at": "2026-10-21T15:39:49.612769+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: 72e84fd, 070665e"
+        "Ready for review: 72e84fd, 070665e",
+        "Review passed (reviewer-renata, Sonnet): verify green 356 tests, 66 pages prerendered in 2 s, 64 docs checked 0 bad, 5 mutants caught."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
