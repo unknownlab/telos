@@ -1,7 +1,7 @@
 {
-  "event_count": 15,
-  "last_event_id": "01M5ECVJYGNV3N7CG3FPK1B5KP",
-  "materialized_at": "2026-10-21T04:52:33.360913+00:00",
+  "event_count": 19,
+  "last_event_id": "01M5ECYECVDZX203DZB3ZAN5HP",
+  "materialized_at": "2026-10-21T04:54:07.003191+00:00",
   "mission_number": "",
   "mission_slug": "bun-monorepo-toolchain-01M5E4T4",
   "mission_type": "software-dev",
@@ -12,9 +12,9 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 2,
     "in_review": 0,
-    "planned": 4
+    "planned": 2
   },
   "work_packages": {
     "WP01": {
@@ -54,18 +54,38 @@
       }
     },
     "WP02": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5E7PCTEQ2FAWYDW8QMH97HP",
-      "last_transition_at": "2026-10-21T03:22:20.366232+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5ECYAYJF40X4Q59TEFSB77Y",
+      "last_transition_at": "2026-10-21T04:54:03.474096+00:00",
+      "model": "__resolved_model_absent__",
+      "notes": [
+        "Unblocked: lane merge conflicts resolved manually"
+      ],
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer",
+      "shell_pid": 80053,
+      "shell_pid_created_at": "1792558441.209046"
     },
     "WP03": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5E7PD9EZJC8726FR6836Z9H",
-      "last_transition_at": "2026-10-21T03:22:20.846724+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5ECYECVDZX203DZB3ZAN5HP",
+      "last_transition_at": "2026-10-21T04:54:07.003191+00:00",
+      "model": "__resolved_model_absent__",
+      "notes": [
+        "Unblocked: lane merge conflicts resolved manually"
+      ],
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer"
     },
     "WP04": {
       "actor": "finalize-tasks",
