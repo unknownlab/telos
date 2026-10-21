@@ -537,17 +537,17 @@
         "reviewer": "claude",
         "verdict": "changes_requested"
       },
-      "role": "reviewer",
-      "shell_pid": 28504,
-      "shell_pid_created_at": "1792605265.597193",
+      "role": "implementer",
+      "shell_pid": null,
+      "shell_pid_created_at": null,
       "subtasks": {
-        "T086": "done",
-        "T087": "done",
-        "T088": "done",
-        "T089": "done",
-        "T090": "done",
-        "T091": "done",
-        "T092": "done"
+        "T086": "planned",
+        "T087": "planned",
+        "T088": "planned",
+        "T089": "planned",
+        "T090": "planned",
+        "T091": "planned",
+        "T092": "planned"
       }
     },
     "WP17": {
