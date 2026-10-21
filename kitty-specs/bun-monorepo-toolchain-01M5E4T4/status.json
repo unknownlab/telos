@@ -132,7 +132,9 @@
         "Unblocked: lane-d merges resolved manually"
       ],
       "provider": "__resolved_provider_absent__",
-      "role": "implementer"
+      "role": "implementer",
+      "shell_pid": 86358,
+      "shell_pid_created_at": "1792558737.46565"
     },
     "WP05": {
       "actor": "finalize-tasks",
