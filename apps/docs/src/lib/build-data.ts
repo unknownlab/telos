@@ -34,8 +34,9 @@ const SPEC_REPORT = "spec-report.json";
 const BUILD_INFO = "build-info.json";
 const STATUSES: ReadonlyArray<string> = ["pass", "fail", "error"];
 
-function invalid(file: string, path: string): never {
-  throw new Error(`${file}: ${path} is invalid`);
+function invalid(file: string, path: string, reason?: string): never {
+  const detail = reason === undefined ? "" : ` (${reason})`;
+  throw new Error(`${file}: ${path} is invalid${detail}`);
 }
 
 function isPlain(value: unknown): value is Plain {
@@ -106,13 +107,25 @@ function decodeStatus(value: unknown, file: string, path: string): Status {
   return value as Status;
 }
 
+function decodeId(result: Plain, file: string, path: string): string {
+  const id = stringAt(result, "id", file, `${path}.id`);
+  if (id === "") invalid(file, `${path}.id`, "empty");
+  return id;
+}
+
+// Decode the rows, refusing an empty or repeated id. A repeated id would let one
+// record count twice, so the summary could agree with rows that are wrong.
 function decodeResults(value: unknown, file: string): SpecResult[] {
   if (!Array.isArray(value)) invalid(file, "report.results");
+  const seen = new Set<string>();
   return value.map((item, index) => {
     const path = `report.results[${index}]`;
     const result = objectAt(item, file, path);
+    const id = decodeId(result, file, path);
+    if (seen.has(id)) invalid(file, `${path}.id`, `duplicate of "${id}"`);
+    seen.add(id);
     return {
-      id: stringAt(result, "id", file, `${path}.id`) as SpecResult["id"],
+      id: id as SpecResult["id"],
       status: decodeStatus(result.status, file, `${path}.status`),
       expected: result.expected,
       observed: result.observed,
@@ -121,18 +134,47 @@ function decodeResults(value: unknown, file: string): SpecResult[] {
   });
 }
 
+// Compare the rows with the catalogue ids, in order. A record popped from the
+// report, an out-of-sequence record or an unknown id fails here even when the
+// summary was recomputed to agree.
+function checkAgainstCatalogue(
+  results: ReadonlyArray<SpecResult>,
+  expectedIds: ReadonlyArray<string>,
+  file: string,
+): void {
+  if (results.length !== expectedIds.length) {
+    invalid(
+      file,
+      "report.results",
+      `expected ${expectedIds.length} results, found ${results.length}`,
+    );
+  }
+  results.forEach((result, index) => {
+    if (result.id !== expectedIds[index]) {
+      invalid(
+        file,
+        `report.results[${index}].id`,
+        `expected "${expectedIds[index]}"`,
+      );
+    }
+  });
+}
+
 function countOf(results: ReadonlyArray<SpecResult>, status: Status): number {
   return results.filter((result) => result.status === status).length;
 }
 
 // START_CONTRACT: readSpecReportFile
-//   PURPOSE: Decode spec-report.json, refusing any wrong shape and any summary that disagrees with its rows, so that a report can never claim more passes than it holds.
-//   INPUTS: { value: unknown - the parsed spec-report.json, or null when the file does not exist }
-//   OUTPUTS: { SpecReportFile | null - the decoded file, or null for null input; throws "spec-report.json: <field> is invalid" for a wrong shape or a summary that disagrees with the results }
+//   PURPOSE: Decode spec-report.json, refusing any wrong shape, any repeated or empty record id, any summary that disagrees with its rows and, when the catalogue ids are given, any row list that is not exactly the catalogue in order, so that a report can never claim more passes than it holds.
+//   INPUTS: { value: unknown - the parsed spec-report.json, or null when the file does not exist; expectedIds: ReadonlyArray<string> - optional, the catalogue ids in order (the build passes the catalogue) }
+//   OUTPUTS: { SpecReportFile | null - the decoded file, or null for null input; throws "spec-report.json: <path> is invalid" with a reason for a wrong shape, a bad id, a row list that differs from expectedIds, or a summary that disagrees with the results }
 //   SIDE_EFFECTS: none
 //   LINKS: M-DOCS-SITE
 // END_CONTRACT: readSpecReportFile
-export function readSpecReportFile(value: unknown): SpecReportFile | null {
+export function readSpecReportFile(
+  value: unknown,
+  expectedIds?: ReadonlyArray<string>,
+): SpecReportFile | null {
   if (value === null) return null;
   const root = objectAt(value, SPEC_REPORT, "file");
   const provenance = objectAt(root.provenance, SPEC_REPORT, "provenance");
@@ -141,6 +183,9 @@ export function readSpecReportFile(value: unknown): SpecReportFile | null {
   }
   const report = objectAt(root.report, SPEC_REPORT, "report");
   const results = decodeResults(report.results, SPEC_REPORT);
+  if (expectedIds !== undefined) {
+    checkAgainstCatalogue(results, expectedIds, SPEC_REPORT);
+  }
   const summary = objectAt(report.summary, SPEC_REPORT, "summary");
   const agrees =
     summary.total === results.length &&

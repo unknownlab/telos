@@ -12,18 +12,22 @@
 //   SITE_COMMIT - the commit the site was built from, "unknown" when the build did not record it
 // END_MODULE_MAP
 
+import { catalogue } from "@telos/locus-specs";
 import { readBuildInfo, readSpecReportFile } from "./build-data";
 import { buildInfoJson, specReportJson } from "./generated";
 import { siteCommitOf } from "./provenance";
 
 // START_CONTRACT: specReportFile
-//   PURPOSE: Hold the decoded build-time report, so that the verification page can show it or say that it was not run.
+//   PURPOSE: Hold the decoded build-time report, so that the verification page can show it or say that it was not run. The rows must be exactly the catalogue, in order.
 //   INPUTS: none (build-time constant)
 //   OUTPUTS: { SpecReportFile | null - the decoded report, or null when spec-report.json was not produced }
 //   SIDE_EFFECTS: none; a broken spec-report.json throws when this module loads, which fails the prerender
 //   LINKS: M-DOCS-SITE
 // END_CONTRACT: specReportFile
-export const specReportFile = readSpecReportFile(specReportJson);
+export const specReportFile = readSpecReportFile(
+  specReportJson,
+  catalogue.map((spec) => spec.id),
+);
 
 // START_CONTRACT: SITE_COMMIT
 //   PURPOSE: Name the commit the site was built from, for the browser provenance of WP14 and WP15.

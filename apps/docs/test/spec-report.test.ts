@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove that the build-time spec report keeps every record, derives its summary from the rows, deletes a stale report before a run and decodes the generated files strictly.
-//   SCOPE: createSpecReportFile, writeSpecReport with the real catalogue, a failing record kept as failing, a crashed run that leaves no report, the spec-report CLI exit code and output, and the decoders readSpecReportFile and readBuildInfo.
+//   SCOPE: createSpecReportFile, writeSpecReport with the real catalogue, a failing record kept as failing, a crashed run that leaves no report, the spec-report CLI exit code and output, the decoders readSpecReportFile and readBuildInfo, and the post-build verification check.
 //   DEPENDS: M-DOCS-SPEC-REPORT
 //   LINKS: V-M-DOCS-SPEC-REPORT
 //   ROLE: TEST
@@ -18,6 +18,9 @@
 //   twoResultReport - a report with one passing and one failing result, built by hand
 //   oneResultReport - a report with only the passing result of twoResultReport
 //   wireFile - a spec-report file as it is read back from JSON on disk
+//   catalogueIds - the catalogue record ids in catalogue order, as a fresh mutable array
+//   passingResults - one passing result for each id, in the order given
+//   reportOf - a report whose summary is derived from its rows
 // END_MODULE_MAP
 
 import { afterEach, describe, expect, test } from "bun:test";
@@ -34,6 +37,7 @@ import { join, resolve } from "node:path";
 import {
   type Specification,
   type SpecReport,
+  type SpecResult,
   catalogue,
 } from "@telos/locus-specs";
 import {
@@ -43,6 +47,7 @@ import {
 } from "../src/lib/build-data";
 import { PACKAGE_VERSIONS } from "../src/lib/provenance";
 import { createSpecReportFile, writeSpecReport } from "../scripts/spec-report";
+import { verificationProblem } from "../scripts/check-verification";
 
 const APP_DOCS = resolve(import.meta.dir, "..");
 const FAKE_GIT = () => ({ commit: "f00", dirty: false });
@@ -121,6 +126,34 @@ function wireFile(report: SpecReport = twoResultReport()): SpecReportFile {
       }),
     ),
   ) as SpecReportFile;
+}
+
+function catalogueIds(): string[] {
+  return catalogue.map((spec) => spec.id);
+}
+
+function passingResults(ids: ReadonlyArray<string>): SpecResult[] {
+  return ids.map((id) => ({
+    id: id as SpecResult["id"],
+    status: "pass",
+    expected: { valid: true },
+    observed: { valid: true },
+    durationMs: 1,
+  }));
+}
+
+function reportOf(results: ReadonlyArray<SpecResult>): SpecReport {
+  const count = (status: SpecResult["status"]): number =>
+    results.filter((result) => result.status === status).length;
+  return {
+    results,
+    summary: {
+      total: results.length,
+      passed: count("pass"),
+      failed: count("fail"),
+      errored: count("error"),
+    },
+  };
 }
 
 describe("createSpecReportFile", () => {
@@ -330,5 +363,174 @@ describe("readBuildInfo", () => {
     expect(() => readBuildInfo({ commit: "abc", dirty: "no" })).toThrow(
       "build-info.json: dirty is invalid",
     );
+  });
+});
+
+describe("readSpecReportFile refuses a report that is consistent but wrong", () => {
+  test("a duplicate record id is refused even though the summary counts it", () => {
+    const ids = catalogueIds();
+    ids[43] = "LOC-001";
+    const file = wireFile(reportOf(passingResults(ids)));
+    expect(() => readSpecReportFile(file)).toThrow(
+      "spec-report.json: report.results[43].id is invalid",
+    );
+  });
+
+  test("a duplicate record id is refused against the catalogue as well", () => {
+    const ids = catalogueIds();
+    ids[43] = "LOC-001";
+    const file = wireFile(reportOf(passingResults(ids)));
+    expect(() => readSpecReportFile(file, catalogueIds())).toThrow(
+      "spec-report.json: report.results[43].id is invalid",
+    );
+  });
+
+  test("an empty record id is refused", () => {
+    const ids = catalogueIds();
+    ids[2] = "";
+    const file = wireFile(reportOf(passingResults(ids)));
+    expect(() => readSpecReportFile(file)).toThrow(
+      "spec-report.json: report.results[2].id is invalid",
+    );
+  });
+
+  test("a record popped from the report is refused against the catalogue, though the summary agrees", () => {
+    const file = wireFile(
+      reportOf(passingResults(catalogueIds().slice(0, 43))),
+    );
+    expect(() => readSpecReportFile(file, catalogueIds())).toThrow(
+      "spec-report.json: report.results is invalid",
+    );
+  });
+
+  test("records out of catalogue order are refused against the catalogue", () => {
+    const ids = ["LOC-002", "LOC-001", ...catalogueIds().slice(2)];
+    const file = wireFile(reportOf(passingResults(ids)));
+    expect(() => readSpecReportFile(file, catalogueIds())).toThrow(
+      "spec-report.json: report.results[0].id is invalid",
+    );
+  });
+
+  test("the complete catalogue report is accepted with the catalogue ids", () => {
+    const file = wireFile(reportOf(passingResults(catalogueIds())));
+    expect(readSpecReportFile(file, catalogueIds())).toEqual(file);
+  });
+});
+
+describe("the summary counts of failed and errored records are checked", () => {
+  test("a failed count that disagrees with the rows is refused", () => {
+    const good = wireFile(twoResultReport());
+    const wrong = {
+      ...good,
+      report: {
+        ...good.report,
+        summary: { total: 2, passed: 1, failed: 0, errored: 0 },
+      },
+    };
+    expect(() => readSpecReportFile(wrong)).toThrow(
+      "spec-report.json: summary is invalid",
+    );
+  });
+
+  test("an errored count that disagrees with the rows is refused", () => {
+    const report: SpecReport = {
+      results: [
+        ...passingResults(["LOC-001"]),
+        {
+          id: "LOC-002" as SpecResult["id"],
+          status: "error",
+          expected: { valid: true },
+          observed: { error: "boom" },
+          durationMs: 1,
+        },
+      ],
+      summary: { total: 2, passed: 1, failed: 0, errored: 0 },
+    };
+    expect(() => readSpecReportFile(wireFile(report))).toThrow(
+      "spec-report.json: summary is invalid",
+    );
+  });
+
+  test("an errored count that agrees with the rows is accepted", () => {
+    const report: SpecReport = {
+      results: [
+        ...passingResults(["LOC-001"]),
+        {
+          id: "LOC-002" as SpecResult["id"],
+          status: "error",
+          expected: { valid: true },
+          observed: { error: "boom" },
+          durationMs: 1,
+        },
+      ],
+      summary: { total: 2, passed: 1, failed: 0, errored: 1 },
+    };
+    expect(readSpecReportFile(wireFile(report))?.report.summary).toEqual({
+      total: 2,
+      passed: 1,
+      failed: 0,
+      errored: 1,
+    });
+  });
+});
+
+describe("verificationProblem, the post-build check of the Verification page", () => {
+  const SHELL =
+    '<!doctype html><html><body><div id="root"></div></body></html>';
+
+  test("a page that carries the spec-report result passes", () => {
+    const page =
+      '<html><body><section data-result="spec-report" data-provenance="none">Not run</section></body></html>';
+    expect(verificationProblem(page)).toBeNull();
+  });
+
+  test("a missing page is reported as missing", () => {
+    expect(verificationProblem(null)).toContain("is missing");
+  });
+
+  test("a client shell without the spec-report result is reported", () => {
+    expect(verificationProblem(SHELL)).toContain('data-result="spec-report"');
+  });
+
+  test("the command exits 1 with the message when the page is missing", () => {
+    const dist = freshDir();
+    const run = Bun.spawnSync({
+      cmd: [process.execPath, "scripts/check-verification.ts", "--dist", dist],
+      cwd: APP_DOCS,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(run.exitCode).toBe(1);
+    expect(run.stderr.toString()).toContain("is missing");
+  });
+
+  test("the command exits 1 with the message for a client shell", () => {
+    const dist = freshDir();
+    mkdirSync(join(dist, "verification"), { recursive: true });
+    writeFileSync(join(dist, "verification/index.html"), SHELL);
+    const run = Bun.spawnSync({
+      cmd: [process.execPath, "scripts/check-verification.ts", "--dist", dist],
+      cwd: APP_DOCS,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(run.exitCode).toBe(1);
+    expect(run.stderr.toString()).toContain('data-result="spec-report"');
+  });
+
+  test("the command exits 0 for a page that carries the result", () => {
+    const dist = freshDir();
+    mkdirSync(join(dist, "verification"), { recursive: true });
+    writeFileSync(
+      join(dist, "verification/index.html"),
+      '<html><body><section data-result="spec-report" data-provenance="none">Not run</section></body></html>',
+    );
+    const run = Bun.spawnSync({
+      cmd: [process.execPath, "scripts/check-verification.ts", "--dist", dist],
+      cwd: APP_DOCS,
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    expect(run.exitCode).toBe(0);
   });
 });
