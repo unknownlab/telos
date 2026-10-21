@@ -163,7 +163,8 @@
       "notes": [
         "Unblocked: lane-e merges resolved manually",
         "Implemented; evidence in report",
-        "Review passed; two follow-ups noted (partial-staging docs, .spec-kitty format ignore)"
+        "Review passed; two follow-ups noted (partial-staging docs, .spec-kitty format ignore)",
+        "Review feedback 1 addressed"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
