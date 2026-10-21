@@ -1,7 +1,7 @@
 {
   "event_count": 9,
-  "last_event_id": "01M5E8K7VFYCJP4EWJ63V6HTGS",
-  "materialized_at": "2026-10-21T03:38:05.551428+00:00",
+  "last_event_id": "01M5E8KJ84GAT3PWW0FSKDN93C",
+  "materialized_at": "2026-10-21T03:38:16.196358+00:00",
   "mission_number": "",
   "mission_slug": "bun-monorepo-toolchain-01M5E4T4",
   "mission_type": "",
@@ -24,16 +24,16 @@
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "in_review",
-      "last_event_id": "01M5E8K7VFYCJP4EWJ63V6HTGS",
-      "last_transition_at": "2026-10-21T03:38:05.551428+00:00",
+      "last_event_id": "01M5E8KJ84GAT3PWW0FSKDN93C",
+      "last_transition_at": "2026-10-21T03:38:16.196358+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review"
       ],
       "provider": "__resolved_provider_absent__",
       "role": "reviewer",
-      "shell_pid": 73163,
-      "shell_pid_created_at": "1792553883.955316",
+      "shell_pid": 73289,
+      "shell_pid_created_at": "1792553894.592021",
       "subtasks": {
         "T001": "done",
         "T002": "done",
