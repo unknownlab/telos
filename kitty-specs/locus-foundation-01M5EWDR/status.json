@@ -94,7 +94,8 @@
       "last_transition_at": "2026-10-21T12:55:17.203606+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: 36f5635"
+        "Ready for review: 36f5635",
+        "Review passed (reviewer-renata, Sonnet): verify green 119 tests, Johnson cycles cross-checked vs brute force. Owner decision pending: unbounded refines-cycle report on dense graphs."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
