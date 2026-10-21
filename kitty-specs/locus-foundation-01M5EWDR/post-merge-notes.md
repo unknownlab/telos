@@ -14,3 +14,8 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 
 - WP03: add tests for a duplicate-id Locus pair with identical Charter problems (final de-duplication), an `owner.cycle` lead-in that sorts before the cycle, and `["", ""]` giving only `charter.entry-blank`.
 - WP04: add a `charter.purpose` case to `canonical.test.ts` that fails if purpose is trimmed or normalised.
+
+## 3. Guide and test wording after the cycle cap
+
+- WP10 guides and `apps/docs/test/guides.test.ts` hard-code 13 diagnostic codes. The cycle-cap follow-up adds `relation.refines-cycle-limit`, making 14: update the guide table and the test in the same commit.
+- WP07 narrowed the bundle check to `node:`/`bun:` in import position (`forbiddenBundleReferences`), because `validate.ts` has an object key `node:` and Effect has a guarded `getBuiltinModule("node:async_hooks")`. Reviewed in WP07.
