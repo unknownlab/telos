@@ -18,3 +18,11 @@ Verdict: REJECT, narrow rework. `bun run verify` is green (838 tests), the e2e s
 - Chromium only: acceptable (WP and R-08).
 - Static server: traversal, null byte, bad escape, double slash all return the 404 page with status 404; no directory listing; correct content types.
 - Follow-ups, NOT required now: React #418 hydration mismatch on unknown documents under a section (`/principles/no-such-id`); unknown URL page title is the site title instead of "Page not found"; no `/x` to `/x/` redirect in serve-static (WP does not require it).
+
+---
+# Cycle 2 (reviewer-renata): REJECT, one remaining fix
+
+Items 1, 2, 3 and 5 are fixed and proven by mutation (9 dist mutants on machine files, onReset/compute/stale-append source mutants, provenance non-vacuous). Item 4 is NOT fixed:
+
+- `apps/docs/e2e/keyboard.e2e.ts` ~line 158: the accessible-name loop now covers a..e, but its assertion `.toMatch(/"[^"]+"/)` runs against the first line of `ariaSnapshot()`. For a textarea that line includes the textarea's VALUE, which is JSON full of quotes (`- textbox: "{ \"id\": \"shop:system\", ...`), so it matches with no accessible name at all. Setting `label=""` on the Fabric JSON editor in `apps/docs/src/playground/components/fabric-scenario.tsx` (unnamed textarea in A, B, C) still passes (`-g "accessible name"` reports 1 passed). Two narrower mutants (unnamed only when `panels.length === 1`; only when `panels` includes "relations") also pass.
+- Fix: assert the accessible NAME itself, not the snapshot line: e.g. `await expect(locator).toHaveAccessibleName(/\S/)` per control (Playwright), or anchor on role + name such as `/^- \w+ "[^"]+"/` so `- textbox: "..."` (colon form, value) cannot match. Prove with mutations: `label=""` on the Fabric JSON editor must fail for scenarios A, B and C; an unnamed Validate button must fail; an unnamed control in D and E must fail. Revert each mutation and rebuild.
