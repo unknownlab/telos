@@ -28,7 +28,8 @@
       "last_transition_at": "2026-10-21T05:45:38.307775+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Implemented; evidence in report"
+        "Implemented; evidence in report",
+        "Review passed; follow-up: prefer 'error TS' line in failureMessage"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {

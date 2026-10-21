@@ -4,7 +4,7 @@ POSIX `sh`, executable, run by git through `core.hooksPath`. The hook first chan
 
 | # | Step | Command | On failure |
 |---|------|---------|------------|
-| 0a | Bookkeeping only | `git diff --cached --name-only`; every path matches `kitty-specs/*` or `.kittify/*` (and at least one path) | exits 0 silently, no further step runs (needs no installed dependencies) |
+| 0a | Bookkeeping only | `git -c core.quotePath=false diff --cached --name-only --no-renames`; every path matches `kitty-specs/*` or `.kittify/*` (and at least one path) | exits 0 silently, no further step runs (needs no installed dependencies) |
 | 0 | Bun present | `command -v bun` | `pre-commit: bun not found. See docs/tooling.md` |
 | 1 | Version | `bun scripts/check-bun-version.ts` | the guard's own message |
 | 1b | Dependencies installed | `[ -d node_modules ]` | `pre-commit: dependencies not installed. Run: bun install` |

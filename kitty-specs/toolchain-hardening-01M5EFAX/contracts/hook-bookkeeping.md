@@ -4,7 +4,7 @@ Applies to the hook defined in `kitty-specs/bun-monorepo-toolchain-01M5E4T4/cont
 
 ## Rule (new step 0a, after changing to the repository root and before step 0)
 
-1. Read the staged paths: `git diff --cached --name-only`.
+1. Read the staged paths with `git -c core.quotePath=false diff --cached --name-only --no-renames`. `--no-renames` lists both sides of a rename, so moving a code file into `kitty-specs/` is not mistaken for a bookkeeping change; `core.quotePath=false` keeps non-ASCII paths unquoted so they match.
 2. If there is at least one path and every path matches `kitty-specs/*` or `.kittify/*`, exit 0 immediately. No output, no check, no dependency needed.
 3. Otherwise continue with step 0 as before.
 
@@ -26,4 +26,6 @@ Applies to the hook defined in `kitty-specs/bun-monorepo-toolchain-01M5E4T4/cont
 | `kitty-specs-extra/a.md` | absent | blocked: same message |
 | `kitty-specs/m/a.md` + `scripts/x.ts` (lint error) | present | blocked: `pre-commit: lint failed` |
 | `docs/tooling.md` only | present | commit succeeds (full checks) |
+| `git mv scripts/x.ts kitty-specs/m/x.ts` (rename out of a code path) | absent | blocked: `pre-commit: dependencies not installed. Run: bun install` |
+| `kitty-specs/m/é.md` (non-ASCII name) only | absent | commit succeeds, hook silent |
 | bad message `update stuff`, only `kitty-specs/...` staged | absent | blocked by the commit-msg hook as before |
