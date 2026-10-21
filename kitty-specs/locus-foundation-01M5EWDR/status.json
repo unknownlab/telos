@@ -459,7 +459,8 @@
       "last_transition_at": "2026-10-21T16:21:52.472621+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: 3ad94ea"
+        "Ready for review: 3ad94ea",
+        "Review passed (reviewer-renata, Sonnet): verify green 686 tests, A-C checked in Chromium, results match Bun, axe 0 violations both themes, safety scan injection fails. Merge-time edit: innerHTML allow-list."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
