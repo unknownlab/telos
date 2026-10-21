@@ -217,7 +217,7 @@ describe("prerenderPaths", () => {
 });
 
 describe("real content", () => {
-  test("prerenders one page per document plus the two app pages", async () => {
+  test("prerenders one page per document plus every app page", async () => {
     const result = await compileContent({
       root: REPO_ROOT,
       git: () => ({ commit: "test", dirty: false }),
@@ -230,7 +230,14 @@ describe("real content", () => {
     const { content } = result.output;
     const paths = prerenderPaths(content);
 
-    expect(paths.length).toBe(content.documents.length + 2);
+    // The count follows APP_PAGES, so later WPs that append routes do not break it.
+    expect(paths.length).toBe(content.documents.length + APP_PAGES.length);
+    for (const doc of content.documents) {
+      expect(paths).toContain(doc.route);
+    }
+    for (const page of APP_PAGES) {
+      expect(paths).toContain(page);
+    }
     for (const route of [
       "/",
       "/philosophy",

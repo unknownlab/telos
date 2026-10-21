@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Inline the generated site data at build time, so the pages read the compiled documents and the optional spec report without any request.
-//   SCOPE: The content.json document list and the raw spec-report.json, when it exists. search.json is deliberately not listed, so it is not inlined.
+//   SCOPE: The content.json document list, the raw spec-report.json and the raw build-info.json, when they exist. search.json is deliberately not listed, so it is not inlined.
 //   DEPENDS: M-DOCS-CONTENT
 //   LINKS: M-DOCS-SITE
 //   ROLE: RUNTIME
@@ -10,13 +10,18 @@
 // START_MODULE_MAP
 //   content - the compiled documents, or an empty document list when content.json is absent
 //   specReportJson - the raw spec report, or null when it was not produced (NS-018)
+//   buildInfoJson - the raw build info, or null when spec-report.ts did not run
 // END_MODULE_MAP
 
 import type { ContentFile } from "./content-types";
 
 // Explicit paths, so search.json (WP12 loads it lazily) is not inlined here.
 const modules = import.meta.glob<{ default: unknown }>(
-  ["../generated/content.json", "../generated/spec-report.json"],
+  [
+    "../generated/content.json",
+    "../generated/spec-report.json",
+    "../generated/build-info.json",
+  ],
   { eager: true },
 );
 
@@ -39,3 +44,13 @@ export const content: ContentFile = (modules["../generated/content.json"]
 // END_CONTRACT: specReportJson
 export const specReportJson: unknown =
   modules["../generated/spec-report.json"]?.default ?? null;
+
+// START_CONTRACT: buildInfoJson
+//   PURPOSE: Hold the raw build info ({ commit, dirty }), which WP13 decodes into the site commit.
+//   INPUTS: none (build-time constant)
+//   OUTPUTS: { unknown - the parsed build-info.json, or null when spec-report.ts did not run }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-SITE
+// END_CONTRACT: buildInfoJson
+export const buildInfoJson: unknown =
+  modules["../generated/build-info.json"]?.default ?? null;

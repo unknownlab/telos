@@ -16,6 +16,7 @@ import { Route as FirstLocusRouteImport } from './routes/first-locus'
 import { Route as NotFoundRouteImport } from './routes/not-found'
 import { Route as PhilosophyRouteImport } from './routes/philosophy'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
+import { Route as VerificationRouteImport } from './routes/verification'
 import { Route as ArchitectureIndexRouteImport } from './routes/architecture/index'
 import { Route as ArchitectureIdRouteImport } from './routes/architecture/$id'
 import { Route as DecisionsIndexRouteImport } from './routes/decisions/index'
@@ -58,6 +59,11 @@ const PhilosophyRoute = PhilosophyRouteImport.update({
 const RoadmapRoute = RoadmapRouteImport.update({
   id: '/roadmap',
   path: '/roadmap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerificationRoute = VerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArchitectureIndexRoute = ArchitectureIndexRouteImport.update({
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/not-found': typeof NotFoundRoute
   '/philosophy': typeof PhilosophyRoute
   '/roadmap': typeof RoadmapRoute
+  '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
   '/principles/$id': typeof PrinciplesIdRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/not-found': typeof NotFoundRoute
   '/philosophy': typeof PhilosophyRoute
   '/roadmap': typeof RoadmapRoute
+  '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
   '/principles/$id': typeof PrinciplesIdRoute
@@ -144,6 +152,7 @@ export interface FileRoutesById {
   '/not-found': typeof NotFoundRoute
   '/philosophy': typeof PhilosophyRoute
   '/roadmap': typeof RoadmapRoute
+  '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
   '/principles/$id': typeof PrinciplesIdRoute
@@ -163,6 +172,7 @@ export interface FileRouteTypes {
     | '/not-found'
     | '/philosophy'
     | '/roadmap'
+    | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
     | '/principles/$id'
@@ -180,6 +190,7 @@ export interface FileRouteTypes {
     | '/not-found'
     | '/philosophy'
     | '/roadmap'
+    | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
     | '/principles/$id'
@@ -197,6 +208,7 @@ export interface FileRouteTypes {
     | '/not-found'
     | '/philosophy'
     | '/roadmap'
+    | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
     | '/principles/$id'
@@ -215,6 +227,7 @@ export interface RootRouteChildren {
   NotFoundRoute: typeof NotFoundRoute
   PhilosophyRoute: typeof PhilosophyRoute
   RoadmapRoute: typeof RoadmapRoute
+  VerificationRoute: typeof VerificationRoute
   ArchitectureIdRoute: typeof ArchitectureIdRoute
   DecisionsIdRoute: typeof DecisionsIdRoute
   PrinciplesIdRoute: typeof PrinciplesIdRoute
@@ -274,6 +287,13 @@ declare module '@tanstack/react-router' {
       path: '/roadmap'
       fullPath: '/roadmap'
       preLoaderRoute: typeof RoadmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verification': {
+      id: '/verification'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof VerificationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/architecture/': {
@@ -343,6 +363,7 @@ const rootRouteChildren: RootRouteChildren = {
   NotFoundRoute: NotFoundRoute,
   PhilosophyRoute: PhilosophyRoute,
   RoadmapRoute: RoadmapRoute,
+  VerificationRoute: VerificationRoute,
   ArchitectureIdRoute: ArchitectureIdRoute,
   DecisionsIdRoute: DecisionsIdRoute,
   PrinciplesIdRoute: PrinciplesIdRoute,

@@ -15,7 +15,11 @@
 import type { ContentFile } from "./content-types";
 
 /** App routes prerendered besides the content documents. WP13–WP15 append their routes here. */
-export const APP_PAGES: ReadonlyArray<string> = ["/architecture", "/not-found"];
+export const APP_PAGES: ReadonlyArray<string> = [
+  "/architecture",
+  "/not-found",
+  "/verification",
+];
 
 // START_CONTRACT: prerenderPaths
 //   PURPOSE: Give the complete, sorted list of routes to prerender, and refuse a route that would be written twice.
