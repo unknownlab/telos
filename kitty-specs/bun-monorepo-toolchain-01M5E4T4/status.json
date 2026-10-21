@@ -161,7 +161,8 @@
       "last_transition_at": "2026-10-21T05:04:18.820686+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Unblocked: lane-e merges resolved manually"
+        "Unblocked: lane-e merges resolved manually",
+        "Implemented; evidence in report"
       ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
