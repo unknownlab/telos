@@ -61,7 +61,8 @@
       "model": "__resolved_model_absent__",
       "notes": [
         "Implemented; evidence in report",
-        "Review feedback 1 addressed"
+        "Review feedback 1 addressed",
+        "Review passed (cycle 2)"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
