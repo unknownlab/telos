@@ -18,7 +18,7 @@ import {
   Scripts,
   useLocation,
 } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 import { MermaidRenderer } from "@/components/mermaid-renderer";
 import { NotFound } from "@/components/not-found";
 import { SiteLayout } from "@/components/site-layout";
@@ -54,10 +54,14 @@ export const Route = createRootRoute({
   }),
   shellComponent: RootDocument,
   component: RootLayout,
+  // RootLayout already wraps the outlet in the site layout, and the outlet renders this component
+  // for an unknown path, so this renders the page body only. Wrapping it again would repeat the header, navigation and footer.
+  // The outlet wraps a matched child route in a Suspense boundary but not this branch, so the boundary is added here:
+  // the server sends the prerendered not-found page for every unknown path, and hydration needs the same markup.
   notFoundComponent: () => (
-    <SiteLayout content={content} currentPath="">
+    <Suspense fallback={null}>
       <NotFound />
-    </SiteLayout>
+    </Suspense>
   ),
 });
 

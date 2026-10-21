@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove the shell and document components render the required markup, badges and navigation, and never claim a result is verified (FR-018).
-//   SCOPE: MaturityBadge and StatusBadge, DocumentPage (H1 once, outline without the H1, related links, source link), the FR-018 status and maturity sweep, SiteNav (section order, active section, current page), DocumentList and NotFound.
+//   SCOPE: MaturityBadge and StatusBadge, DocumentPage (H1 once, outline without the H1, related links, source link), the FR-018 status and maturity sweep, SiteNav (section order, active section, current page), DocumentList, NotFound, and the real route tree rendered at an unknown path, the not-found route and a document route (one site layout each).
 //   DEPENDS: M-DOCS-SITE
 //   LINKS: V-M-DOCS-SITE
 //   ROLE: TEST
@@ -15,10 +15,17 @@
 //   openingTag - the first anchor opening tag in html that contains the fragment
 //   countH1 - the number of h1 elements in html
 //   currentMarks - the number of aria-current="page" marks in html
+//   countOf - the number of matches of a global pattern in html
+//   bodyMarkup - the body of a rendered page with its scripts left out
 // END_MODULE_MAP
 
-import { describe, expect, test } from "bun:test";
-import { renderToStaticMarkup } from "react-dom/server";
+import { beforeAll, describe, expect, mock, test } from "bun:test";
+import {
+  createMemoryHistory,
+  createRouter,
+  RouterProvider,
+} from "@tanstack/react-router";
+import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import { MaturityBadge, StatusBadge } from "@/components/badges";
 import { DocumentList } from "@/components/document-list";
 import { DocumentPage } from "@/components/document-page";
@@ -84,6 +91,16 @@ function countH1(html: string): number {
 
 function currentMarks(html: string): number {
   return [...html.matchAll(/aria-current="page"/g)].length;
+}
+
+function countOf(html: string, pattern: RegExp): number {
+  return [...html.matchAll(pattern)].length;
+}
+
+// The body without its scripts: the head and the scripts differ by design (titles, scroll restoration, stream data).
+function bodyMarkup(html: string): string {
+  const body = html.slice(html.indexOf("<body"));
+  return body.replace(/<script\b[\s\S]*?<\/script>/g, "");
 }
 
 describe("badges", () => {
@@ -319,5 +336,80 @@ describe("NotFound", () => {
     expect(html).toContain('data-page="not-found"');
     expect(html).toContain("Page not found");
     expect(html).toContain('href="/"');
+  });
+});
+
+describe("the route tree", () => {
+  beforeAll(() => {
+    // Vite resolves the stylesheet URL import and the generated content, which bun test does not
+    // provide, so the route tree is loaded with a plain URL and this fixture: one term at a known route.
+    mock.module("../src/styles.css?url", () => ({ default: "/styles.css" }));
+    mock.module("@/lib/generated", () => ({
+      content: contentOf([
+        makeDoc({
+          id: "example-term",
+          kind: "term",
+          title: "Example term",
+          navSection: "terminology",
+          route: "/terminology/example-term",
+        }),
+      ]),
+      specReportJson: null,
+      buildInfoJson: null,
+    }));
+  });
+
+  // Renders the real route tree at a path, through the root route's layout and outlet. renderToString
+  // keeps the Suspense boundary comments that the streamed server HTML has and hydration matches.
+  async function renderPath(path: string): Promise<string> {
+    const { routeTree } = await import("@/routeTree.gen");
+    const router = createRouter({
+      routeTree,
+      history: createMemoryHistory({ initialEntries: [path] }),
+    });
+    await router.load();
+    return renderToString(<RouterProvider router={router} />);
+  }
+
+  // The skip link belongs to the site layout, so one skip link means one layout.
+  function expectOneSiteLayout(html: string): void {
+    expect(countOf(html, /href="#content"/g)).toBe(1);
+    expect(countOf(html, /<header[\s>]/g)).toBe(1);
+    expect(countOf(html, /aria-label="Sections"/g)).toBe(1);
+    expect(countOf(html, /data-nav-section="/g)).toBe(NAV_SECTIONS.length);
+    expect(countOf(html, /<main[\s>]/g)).toBe(1);
+  }
+
+  test.each([
+    ["an unknown path", "/no-such-page"],
+    ["an unknown document in a section", "/terminology/no-such-term"],
+  ])(
+    "%s renders one site layout around the not-found page",
+    async (_label, path) => {
+      const html = await renderPath(path);
+      expectOneSiteLayout(html);
+      expect(html).toContain('data-page="not-found"');
+    },
+  );
+
+  test("the prerendered not-found page renders one site layout", async () => {
+    const html = await renderPath("/not-found");
+    expectOneSiteLayout(html);
+    expect(html).toContain('data-page="not-found"');
+  });
+
+  // The server sends the prerendered not-found page for every unknown path, so the client must
+  // render the same markup for an unknown path or hydration fails (React error #418).
+  test("an unknown path renders the same markup as the prerendered not-found page", async () => {
+    const unknown = await renderPath("/no-such-page");
+    const prerendered = await renderPath("/not-found");
+    expect(bodyMarkup(unknown)).toBe(bodyMarkup(prerendered));
+  });
+
+  test("a document page renders one site layout around its document", async () => {
+    const html = await renderPath("/terminology/example-term");
+    expectOneSiteLayout(html);
+    expect(html).toContain('data-doc-id="example-term"');
+    expect(html).not.toContain('data-page="not-found"');
   });
 });
