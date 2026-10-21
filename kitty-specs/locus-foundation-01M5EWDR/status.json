@@ -61,7 +61,8 @@
       "last_transition_at": "2026-10-21T12:44:16.075213+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: c289388, 173a2ad"
+        "Ready for review: c289388, 173a2ad",
+        "Review passed (reviewer-renata, Sonnet): verify green 74 tests, contract match, 21 mutations caught."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
