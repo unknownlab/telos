@@ -67,7 +67,9 @@
         "Unblocked: lane merge conflicts resolved manually"
       ],
       "provider": "__resolved_provider_absent__",
-      "role": "implementer"
+      "role": "implementer",
+      "shell_pid": 80053,
+      "shell_pid_created_at": "1792558441.209046"
     },
     "WP03": {
       "actor": "claude",
