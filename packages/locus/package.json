@@ -1,0 +1,13 @@
+{
+  "name": "@telos/locus",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "effect": "4.0.4"
+  }
+}
