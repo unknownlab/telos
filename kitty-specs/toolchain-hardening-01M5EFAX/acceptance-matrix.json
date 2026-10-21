@@ -47,11 +47,11 @@
     {
       "criterion_id": "FR-005",
       "description": "Verify FR-005 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "manual",
+      "evidence": "WP02 reviews: kitty-specs plus code path, kitty-specs-extra/, renames out of code paths, lint error all keep full checks and blocking",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-21T05:49:00.173071+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
