@@ -155,7 +155,8 @@
       "last_transition_at": "2026-10-21T12:53:22.142222+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: b3333ea"
+        "Ready for review: b3333ea",
+        "Review passed (reviewer-renata, Sonnet): verify green 88 tests, 60 docs compile, 9 mutations caught."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
