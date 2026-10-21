@@ -12,7 +12,12 @@
 // END_MODULE_MAP
 
 import { describe, expect, test } from "bun:test";
-import { buildReport, escapeXml } from "./review-gate";
+import {
+  buildReport,
+  escapeXml,
+  failureMessage,
+  sanitizeText,
+} from "./review-gate";
 
 const BUN_JUNIT = `<?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="bun test" tests="1">
@@ -65,5 +70,76 @@ describe("buildReport", () => {
       report.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n<testsuites>'),
     ).toBe(true);
     expect(report.trimEnd().endsWith("</testsuites>")).toBe(true);
+  });
+});
+
+describe("sanitizeText", () => {
+  test("removes ANSI colour sequences but keeps the text", () => {
+    expect(sanitizeText("\u001b[31mfailed\u001b[0m")).toBe("failed");
+  });
+
+  test("removes characters XML 1.0 cannot represent", () => {
+    expect(sanitizeText("a\u0000b\u0001c\u000bd￾e")).toBe("abcde");
+  });
+
+  test("keeps tab, newline, carriage return and non-ASCII text", () => {
+    expect(sanitizeText("a\tb\nc\rd é 日本 😀")).toBe("a\tb\nc\rd é 日本 😀");
+  });
+
+  test("drops a lone surrogate but keeps a valid pair", () => {
+    expect(sanitizeText("x\ud800y😀")).toBe("xy😀");
+  });
+});
+
+describe("escapeXml and buildReport with escape codes", () => {
+  test("escapeXml strips escape codes before escaping", () => {
+    expect(escapeXml("\u001b[1m<a>\u001b[0m")).toBe("&lt;a&gt;");
+  });
+
+  test("buildReport never contains an ESC character, even from the bun test report", () => {
+    const report = buildReport(
+      [{ name: "typecheck", ok: false, message: "\u001b[31mTS2322\u001b[0m" }],
+      '<testsuites><testsuite name="x" tests="1" failures="0"><testcase name="a\u001b[0m" /></testsuite></testsuites>',
+    );
+    expect(report.includes("\u001b")).toBe(false);
+    expect(report).toContain('message="TS2322"');
+    expect(sanitizeText(report)).toBe(report);
+  });
+});
+
+describe("failureMessage", () => {
+  const wrapper = 'error: script "typecheck" exited with code 1';
+
+  test("prefers the first real error line over bun's wrapper line", () => {
+    expect(failureMessage(`a.ts(3,1): error TS2322: x\n${wrapper}\n`, 1)).toBe(
+      "a.ts(3,1): error TS2322: x",
+    );
+  });
+
+  test("shows the failing test line, not the summary", () => {
+    expect(
+      failureMessage("(fail) f\n 1 fail\nRan 12 tests across 3 files.\n", 1),
+    ).toBe("(fail) f");
+  });
+
+  test("falls back to the last real line when no line looks like an error", () => {
+    expect(
+      failureMessage(
+        'docs/tooling.md\n1 file needs formatting.\nerror: script "format:check" exited with code 1\n',
+        1,
+      ),
+    ).toBe("1 file needs formatting.");
+  });
+
+  test("falls back to the wrapper line, then to the exit code", () => {
+    expect(failureMessage(`${wrapper}\n`, 1)).toBe(wrapper);
+    expect(failureMessage("", 3)).toBe("exit code 3");
+  });
+
+  test("strips colour and limits the length to 300 characters", () => {
+    expect(failureMessage("\u001b[31merror: boom\u001b[0m", 1)).toBe(
+      "error: boom",
+    );
+    expect(failureMessage(`error: ${"x".repeat(500)}`, 1).length).toBe(300);
   });
 });
