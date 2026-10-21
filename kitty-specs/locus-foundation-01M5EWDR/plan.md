@@ -98,6 +98,7 @@ packages/
 │   │   ├── relation.ts            # RelationKind, Relation
 │   │   ├── locus.ts               # LocusDefinition, defineLocus (deep freeze, defaults)
 │   │   ├── fabric.ts              # Fabric, defineFabric
+│   │   ├── freeze.ts              # deep freeze helper (internal)
 │   │   ├── diagnostic.ts          # Diagnostic, codes, ordering
 │   │   ├── validate.ts            # validateFabric (pure, collects all diagnostics)
 │   │   ├── canonical.ts           # canonical semantic form + JSON serialisation
@@ -273,7 +274,7 @@ flowchart LR
 - **Purpose**: Keep GRACE, agent instructions and doctrine consistent with what was built.
 - **Relevant requirements**: FR-024, FR-025, FR-026, NFR-006
 - **Affected surfaces**: `.grace/graph/main.xml`, `.grace/verification/main.xml`, `AGENTS.md` (approved wording only), `.kittify/config.yaml` `path_conventions` (if approved), charter and glossary wording (if approved), foundation `maturity` fields (after merge)
-- **Sequencing/depends-on**: GRACE entries are added by each concern for its own modules. This concern does the final consistency pass after IC-10, and the maturity update after merge.
+- **Sequencing/depends-on**: each code concern writes only the file-level GRACE markup for its own modules. The graph and verification entries for all ten modules are registered together in WP17 (IC-10), after every file exists, because `grace lint` rejects a registered module whose files or tests are missing (see the deviation in `tasks.md`). This concern runs after IC-10 and does the maturity update on the mission branch, before the merge into `main`.
 - **Model**: Haiku (implementation), Sonnet (review)
 - **Risks**: the maturity update must reflect evidence, not intent.
 
@@ -306,7 +307,7 @@ These are owner decisions under `AGENTS.md` and the charter. **All were answered
 | 4 | Gate wiring | Approved: `docs:build` and `test:e2e` in `verify` and the review gate, not in pre-commit |
 | 5 | `AGENTS.md` pointer | Approved as worded |
 | 6 | Charter and glossary wording | Approved as worded |
-| 7 | `path_conventions` | Approved |
+| 7 | `path_conventions` | Approved. The schema takes one directory per key, so on 2026-10-21 the owner chose `packages/` for `workspace` and `tests` |
 
 The items as originally put to the owner:
 

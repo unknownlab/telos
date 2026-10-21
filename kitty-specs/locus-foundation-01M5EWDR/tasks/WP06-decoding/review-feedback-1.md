@@ -1,13 +1,3 @@
----
-affected_files: []
-cycle_number: 1
-mission_slug: locus-foundation-01M5EWDR
-reproduction_command:
-reviewed_at: '2026-10-21T13:13:14Z'
-reviewer_agent: claude
-wp_id: WP06
----
-
 # WP06 review feedback (cycle 1) — reviewer-renata
 
 Verdict: REJECT. `bun run verify` passes (202 tests), but the sort requirement is not really tested.
