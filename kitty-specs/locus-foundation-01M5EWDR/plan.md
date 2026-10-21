@@ -52,14 +52,14 @@ Items that need the owner's decision before implementation are listed in [Owner 
 | Charter rule | How the plan satisfies it | Status |
 | --- | --- | --- |
 | Test-first, no fake tests | Every work package starts from failing `bun test` or Playwright tests that encode its acceptance criteria. The spec runner has meta-tests: a specification with a deliberately wrong expectation must be reported as failed. No snapshot-only or always-true assertions. | Pass |
-| Blocking gates (`bun run verify`) | `verify` and the review gate gain `docs:build` and `test:e2e`. The pre-commit hook keeps its current fast set (no browser). | Pass, needs owner approval of the wiring (part of this plan) |
-| Bun only; dependencies are owner decisions with supply-chain checks | Bun stays the only toolchain. Vite runs under Bun (`bun --bun vite`). Every dependency is pinned exactly, at least 7 days old, and has no install scripts (R-01). | Pass, pending owner approval of R-01 |
+| Blocking gates (`bun run verify`) | `verify` and the review gate gain `docs:build` and `test:e2e`. The pre-commit hook keeps its current fast set (no browser). | Pass (owner approved 2026-10-21) |
+| Bun only; dependencies are owner decisions with supply-chain checks | Bun stays the only toolchain. Vite runs under Bun (`bun --bun vite`). Every dependency is pinned exactly, at least 7 days old, and has no install scripts (R-01). | Pass (owner approved 2026-10-21) |
 | Small, faithful changes; record decisions | Work packages map to implementation concerns below. Decisions are in `research.md`. Deviations need review before acceptance. | Pass |
 | One vocabulary (Spec Kitty glossary canonical) | ADR-0012 makes `docs/foundation/terminology` canonical for product terms. The owner approved rewording the charter line and the glossary `telos` entry (2026-10-21); applied in IC-11. | Pass |
 | Implementation on Haiku-class models | Every work package is implemented on Haiku (owner decision, 2026-10-21). Because Effect 4 and TanStack Start 1.169 are newer than small models' training data, each WP prompt quotes the exact APIs from [research.md R-02](research.md#r-02-effect-4-usage) and the contracts. | Pass |
 | WP review on Sonnet; mission planning and mission review on Opus, high effort | Unchanged (owner confirmed 2026-10-21) | Pass |
 | No CI (current exception) | Unchanged. The site shows CI provenance as "unavailable". | Pass |
-| Directive 051 supply-chain install safety | R-01: registry authenticity, freshness cutoff, no lifecycle scripts, empty `trustedDependencies`, lockfile committed. The Playwright browser download is listed as an explicit owner approval. | Pass, pending approval |
+| Directive 051 supply-chain install safety | R-01: registry authenticity, freshness cutoff, no lifecycle scripts, empty `trustedDependencies`, lockfile committed. The Playwright browser download is listed as an explicit owner approval. | Pass (owner approved 2026-10-21) |
 | Directive 036 black-box integration testing | Specifications use only the public API. Playwright treats the site as a black box. | Pass |
 | Directive 037 living documentation sync | The docs are compiled from `docs/`. Foundation maturity is updated after merge (FR-026). | Pass |
 
