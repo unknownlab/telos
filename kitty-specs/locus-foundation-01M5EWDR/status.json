@@ -526,7 +526,8 @@
       "last_transition_at": "2026-10-21T17:54:29.957436+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: 2eceac2, a572961, 7207645, 12bde85"
+        "Ready for review: 2eceac2, a572961, 7207645, 12bde85",
+        "Rework done: f7ac3bc"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
