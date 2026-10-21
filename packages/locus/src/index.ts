@@ -19,6 +19,10 @@
 //   RELATION_KINDS - the four Relation kinds in fixed order, frozen
 //   Relation - a typed, directed link from one Locus to a target Identity
 //   RelationKind - closed set of the four Relation kinds
+//   Diagnostic - one reported rule violation, with a stable code, subject, path and optional detail and members
+//   DiagnosticCode - stable machine codes for every rule violation; adding is allowed, renaming is breaking
+//   ValidationReport - the result of validating a Fabric; valid is true exactly when there are no diagnostics
+//   validateFabric - pure, total check of a Fabric against INV-001 to INV-008; reports every violation
 // END_MODULE_MAP
 
 export type { Charter } from "./charter";
@@ -26,3 +30,9 @@ export { defineFabric, type Fabric } from "./fabric";
 export { isIdentity, type Identity } from "./identity";
 export { defineLocus, type LocusDefinition, type LocusInput } from "./locus";
 export { RELATION_KINDS, type Relation, type RelationKind } from "./relation";
+export type {
+  Diagnostic,
+  DiagnosticCode,
+  ValidationReport,
+} from "./diagnostic";
+export { validateFabric } from "./validate";
