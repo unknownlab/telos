@@ -16,9 +16,6 @@ requirement_refs:
 planning_base_branch: feat/bun-monorepo-toolchain
 merge_target_branch: feat/bun-monorepo-toolchain
 branch_strategy: Planning artifacts for this mission were generated on feat/bun-monorepo-toolchain. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/bun-monorepo-toolchain unless the human explicitly redirects the landing branch.
-base_branch: kitty/mission-bun-monorepo-toolchain-01M5E4T4
-base_commit: bf1f5451684fccf89b53aa59f7ed2679b7b35a56
-created_at: '2026-10-21T03:34:52.636616+00:00'
 subtasks:
 - T001
 - T002
