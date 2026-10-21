@@ -26,3 +26,11 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - `packages/locus-specs/test/scan.ts`: add the backtick to `SPECIFIER_PATTERNS` so a template-literal `import(\`node:fs\`)` in source is caught.
 - `packages/locus-specs/src/model.ts`: `DEPENDS: M-LOCUS-SPECS` is a self-reference; use `M-LOCUS-MODEL` or none.
 - `runSpecification` dies if a spec has no `check` (outside the types); optional.
+
+## 5. WP11 review notes (non-blocking)
+
+- `apps/docs/src/components/document-page.tsx:47,60`: add a one-line comment that the HTML passed to `dangerouslySetInnerHTML` is the compiler's own pre-rendered output (no user input).
+- Mission review: confirm `content.ts` escapes raw HTML in Markdown bodies (not checked in WP09/WP11), since the pages inject compiled HTML.
+- Owner UX choice: `/architecture/foundation` and `/architecture/research` are in the sidebar only while current; both are reachable from the `/architecture` index.
+- Page weight: the 415 kB (112 kB gzip) shared chunk carries all document data on every page; revisit when search lands (WP12) if budgets complain.
+- WP16's static server must return `/not-found` with status 404 for unknown paths; directories redirect `/x` to `/x/` on a plain static server.
