@@ -1,0 +1,11 @@
+<GraceVerificationIndex graceVersion="4.0">
+  <VerificationDocuments>
+    <VD-MAIN>
+      <Path>verification/main.xml</Path>
+      <Owns>
+        <V-M-BUN-VERSION-GUARD />
+        <V-M-REVIEW-GATE />
+      </Owns>
+    </VD-MAIN>
+  </VerificationDocuments>
+</GraceVerificationIndex>
