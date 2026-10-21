@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Run the whole check suite for Spec Kitty's review gate and always write one JUnit report.
-//   SCOPE: Run every check step with colour off, record each as a JUnit test case whose failure message is the step's cause, sanitize all report text so it stays well-formed, merge in bun test's own JUnit suites, exit 1 on any failure.
+//   SCOPE: Install dependencies once when node_modules is missing, run every check step with colour off, record each as a JUnit test case whose failure message is the step's cause, sanitize all report text so it stays well-formed, merge in bun test's own JUnit suites, exit 1 on any failure.
 //   DEPENDS: M-BUN-VERSION-GUARD
 //   LINKS: M-REVIEW-GATE, V-M-REVIEW-GATE
 //   ROLE: RUNTIME
@@ -12,10 +12,17 @@
 //   sanitizeText - strip escape codes and characters XML cannot represent
 //   escapeXml - sanitize, then escape text for an XML attribute
 //   failureMessage - pick the first real error line of a failed step
+//   needsInstall - true when a directory has no node_modules yet
 //   buildReport - JUnit report with a "verify" suite plus bun test's suites
 // END_MODULE_MAP
 
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -150,6 +157,17 @@ export function failureMessage(output: string, exitCode: number): string {
   return pick.slice(0, 300);
 }
 
+// START_CONTRACT: needsInstall
+//   PURPOSE: Tell whether dependencies must be installed before the checks can run in a directory, such as a Spec Kitty worktree or a base-branch checkout.
+//   INPUTS: { dir: string - the project root directory }
+//   OUTPUTS: { boolean - true when join(dir, "node_modules") does not exist }
+//   SIDE_EFFECTS: reads the file system only
+//   LINKS: M-REVIEW-GATE
+// END_CONTRACT: needsInstall
+export function needsInstall(dir: string): boolean {
+  return !existsSync(join(dir, "node_modules"));
+}
+
 function readOptional(path: string): string | null {
   try {
     return readFileSync(path, "utf8");
@@ -187,7 +205,14 @@ if (import.meta.main) {
   // START_BLOCK_RUN_STEPS
   const tempDir = mkdtempSync(join(tmpdir(), "review-gate-"));
   const bunJunitPath = join(tempDir, "bun-test.xml");
-  const steps = [
+  // Base-branch checkouts have no node_modules, so every check would fail on
+  // missing type definitions. Install once; a failed install is its own step.
+  const steps: StepResult[] = [];
+  if (needsInstall(process.cwd())) {
+    const install = runStep("install", ["bun", "install", "--frozen-lockfile"]);
+    if (!install.ok) steps.push(install);
+  }
+  steps.push(
     runStep("check:bun", ["bun", "run", "check:bun"]),
     runStep("format:check", ["bun", "run", "format:check"]),
     runStep("lint", ["bun", "run", "lint"]),
@@ -200,7 +225,7 @@ if (import.meta.main) {
       `--reporter-outfile=${bunJunitPath}`,
     ]),
     runStep("grace:lint", ["bun", "run", "grace:lint"]),
-  ];
+  );
   // END_BLOCK_RUN_STEPS
 
   // START_BLOCK_WRITE_REPORT

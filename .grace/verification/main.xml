@@ -18,7 +18,9 @@
       <Scenario>bun test's own suites are kept in the same report under one testsuites root.</Scenario>
       <Scenario>The report stays well-formed when step output or bun test's JUnit contains escape codes.</Scenario>
       <Scenario>A failure message picks the first real error line, not bun's wrapper line or the summary.</Scenario>
-      <TraceAssertion>The buildReport, escapeXml, sanitizeText and failureMessage unit tests pass.</TraceAssertion>
+      <Scenario>A checkout without node_modules gets one frozen install before the checks, so type checks do not fail on missing type definitions. With node_modules present no install step is added.</Scenario>
+      <Scenario>A failed install is recorded as a failing verify.install case and the remaining checks still run.</Scenario>
+      <TraceAssertion>The buildReport, escapeXml, sanitizeText, failureMessage and needsInstall unit tests pass. The install scenarios are checked by running the gate in a clone without node_modules.</TraceAssertion>
     </V-M-REVIEW-GATE>
   </VD-MAIN>
 </GraceVerificationDocument>

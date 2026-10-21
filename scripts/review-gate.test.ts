@@ -12,10 +12,14 @@
 // END_MODULE_MAP
 
 import { describe, expect, test } from "bun:test";
+import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   buildReport,
   escapeXml,
   failureMessage,
+  needsInstall,
   sanitizeText,
 } from "./review-gate";
 
@@ -141,5 +145,26 @@ describe("failureMessage", () => {
       "error: boom",
     );
     expect(failureMessage(`error: ${"x".repeat(500)}`, 1).length).toBe(300);
+  });
+});
+
+describe("needsInstall", () => {
+  test("is true when the directory has no node_modules", () => {
+    const dir = mkdtempSync(join(tmpdir(), "needs-install-"));
+    try {
+      expect(needsInstall(dir)).toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("is false once node_modules exists in the directory", () => {
+    const dir = mkdtempSync(join(tmpdir(), "needs-install-"));
+    try {
+      mkdirSync(join(dir, "node_modules"));
+      expect(needsInstall(dir)).toBe(false);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
