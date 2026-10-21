@@ -291,7 +291,8 @@
       "last_transition_at": "2026-10-21T15:25:45.356262+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: 3caf2b6"
+        "Ready for review: 3caf2b6",
+        "Review passed (reviewer-renata, Sonnet): verify green 320 tests, examples re-derived from real package, mutations caught."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
