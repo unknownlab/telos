@@ -1,18 +1,18 @@
 {
-  "event_count": 31,
-  "last_event_id": "01M5EDBTY984NSYMS81VN2G1K6",
-  "materialized_at": "2026-10-21T05:01:25.833975+00:00",
+  "event_count": 32,
+  "last_event_id": "01M5EDCNYXR6DEFEAN26NBNV62",
+  "materialized_at": "2026-10-21T05:01:53.501582+00:00",
   "mission_number": "",
   "mission_slug": "bun-monorepo-toolchain-01M5E4T4",
   "mission_type": "",
   "summary": {
     "approved": 4,
-    "blocked": 1,
+    "blocked": 0,
     "canceled": 0,
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "in_review": 0,
     "planned": 0
   },
@@ -153,9 +153,9 @@
     "WP05": {
       "actor": "claude",
       "force_count": 0,
-      "lane": "blocked",
-      "last_event_id": "01M5EDBTY984NSYMS81VN2G1K6",
-      "last_transition_at": "2026-10-21T05:01:25.833975+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5EDCNYXR6DEFEAN26NBNV62",
+      "last_transition_at": "2026-10-21T05:01:53.501582+00:00"
     }
   }
 }
