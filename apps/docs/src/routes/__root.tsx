@@ -19,10 +19,12 @@ import {
   useLocation,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { MermaidRenderer } from "@/components/mermaid-renderer";
 import { NotFound } from "@/components/not-found";
 import { SiteLayout } from "@/components/site-layout";
 import { content } from "@/lib/generated";
 import { SITE_TITLE } from "@/lib/site";
+import { THEME_SCRIPT } from "@/lib/theme";
 import css from "../styles.css?url";
 
 // START_CONTRACT: Route
@@ -48,7 +50,7 @@ export const Route = createRootRoute({
         title: "llms.txt",
       },
     ],
-    scripts: [],
+    scripts: [{ children: THEME_SCRIPT }],
   }),
   shellComponent: RootDocument,
   component: RootLayout,
@@ -61,13 +63,13 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
         {children}
-        {/* site-wide widgets: WP12 */}
+        <MermaidRenderer />
         <Scripts />
       </body>
     </html>

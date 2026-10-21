@@ -11,6 +11,9 @@
 //   SiteHeader - the header of every page
 // END_MODULE_MAP
 
+import { SearchDialog } from "@/components/search-dialog";
+import { ThemeToggle } from "@/components/theme-toggle";
+
 // START_CONTRACT: SiteHeader
 //   PURPOSE: Show the site name as a link to the introduction, followed by the header actions slot.
 //   INPUTS: none
@@ -29,7 +32,8 @@ export function SiteHeader() {
           data-slot="header-actions"
           className="ml-auto flex items-center gap-2"
         >
-          {/* header actions: WP12 */}
+          <SearchDialog />
+          <ThemeToggle />
         </div>
       </div>
     </header>
