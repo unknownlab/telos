@@ -10,5 +10,7 @@
   "purpose_tldr": "Close the gaps found in the Bun toolchain review so the review gate and pre-commit hook never fail open or block Spec Kitty's own commits.",
   "slug": "toolchain-hardening-01M5EFAX",
   "target_branch": "feat/bun-monorepo-toolchain",
-  "topology": "single_branch"
+  "topology": "single_branch",
+  "vcs": "git",
+  "vcs_locked_at": "2026-10-21T05:41:13.710406+00:00"
 }
