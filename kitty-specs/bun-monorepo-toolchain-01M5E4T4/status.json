@@ -129,7 +129,8 @@
       "last_transition_at": "2026-10-21T05:00:29.854711+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Unblocked: lane-d merges resolved manually"
+        "Unblocked: lane-d merges resolved manually",
+        "Implemented; evidence in report"
       ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
