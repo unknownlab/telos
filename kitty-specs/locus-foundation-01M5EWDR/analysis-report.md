@@ -4,15 +4,15 @@ artifact_type: spec-kitty.analysis-report
 command: /spec-kitty.analyze
 mission_slug: locus-foundation-01M5EWDR
 mission_id: 01M5EWDRJV1S7AK53778A6M46R
-generated_at: '2026-10-21T12:30:26.599129+00:00'
+generated_at: '2026-10-21T12:30:45.289454+00:00'
 analyzer_agent: unknown
 input_artifacts:
   spec.md:
     path: kitty-specs/locus-foundation-01M5EWDR/spec.md
-    sha256: aa47844437d467837f6ecac16bfc7c21e9ee5a435d93958bf54a359b915aa0fe
+    sha256: 8c11a381c9e782f0d23597a18c66fda83b7cf5adf038cdbd5bbb0710a4d6d473
   plan.md:
     path: kitty-specs/locus-foundation-01M5EWDR/plan.md
-    sha256: bfdeb06311cae0062fe77a61554c50a35f0a3db75aeefff40e617ae8b1571183
+    sha256: 1005d3386ec031ad95aa3cc4ed2a9b24188f78e68ef2d4d97cac065acb919783
   tasks.md:
     path: kitty-specs/locus-foundation-01M5EWDR/tasks.md
     sha256: c4ba2b1ed5952cfcb56bd8e597dd07ca33593a925ea75a369db272de2e98eb94
@@ -21,8 +21,8 @@ input_artifacts:
     sha256: 878719e0c5f148bb8e772c930e1cf56bdaaeb668d9ef47744876bbde8b7d91e5
 verdict: ready
 issue_counts:
-  high: 0
   low: 4
+  high: 0
   medium: 2
   critical: 0
   info: 0
