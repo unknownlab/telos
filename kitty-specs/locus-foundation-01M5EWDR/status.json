@@ -257,7 +257,8 @@
       "last_transition_at": "2026-10-21T15:40:43.355876+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: ce215aa, 2966b12, 74f908a"
+        "Ready for review: ce215aa, 2966b12, 74f908a",
+        "Rework done: 973f34c"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
