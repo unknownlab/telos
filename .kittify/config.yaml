@@ -19,3 +19,4 @@ agents:
 policy:
   merge_gates:
     mode: block
+charter: .kittify/charter/charter.yaml

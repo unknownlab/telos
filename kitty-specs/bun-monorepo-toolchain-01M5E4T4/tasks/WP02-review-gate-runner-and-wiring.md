@@ -9,7 +9,7 @@ requirement_refs:
 - NFR-003
 planning_base_branch: feat/bun-monorepo-toolchain
 merge_target_branch: feat/bun-monorepo-toolchain
-branch_strategy: Planning artifacts for this mission were generated on feat/bun-monorepo-toolchain. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/bun-monorepo-toolchain unless the human explicitly redirects the landing branch.
+branch_strategy: Planning artifacts were generated on feat/bun-monorepo-toolchain; completed changes must merge back into feat/bun-monorepo-toolchain.
 subtasks:
 - T008
 - T009
@@ -18,9 +18,10 @@ subtasks:
 - T012
 phase: Phase 2 - Gates
 history:
-- at: '2026-10-21T03:16:03Z'
-  actor: system
-  action: Prompt generated via /spec-kitty.tasks
+- !!omap
+  - at: '2026-10-21T03:16:03Z'
+  - actor: system
+  - action: Prompt generated via /spec-kitty.tasks
 agent_profile: implementer-ivan
 authoritative_surface: scripts/review-gate.ts
 create_intent:
