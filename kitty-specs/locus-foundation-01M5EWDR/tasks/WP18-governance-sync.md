@@ -75,7 +75,7 @@ Done means:
 
 1. `AGENTS.md` has the **owner-approved** `## Telos foundation` section, word for word, and every earlier line of the file is unchanged (FR-024).
 2. The charter's "One vocabulary" rule and the glossary's `telos` entry carry the owner-approved wording. The charter interview answers say the same thing, so that regenerating the charter cannot bring back the old rule.
-3. `.kittify/config.yaml` `project.path_conventions` holds **the value the owner chose** (see T100), and Spec Kitty still loads it.
+3. `.kittify/config.yaml` `project.path_conventions` maps `workspace` and `tests` to `packages/` (owner decision, 2026-10-21), and Spec Kitty still loads it.
 4. Every foundation document that describes a Stage 0 element this mission implemented is marked `implemented`, and nothing else is (FR-026). An evidence table in the report backs each change.
 5. `docs/tooling.md` describes the new commands, the longer gate and the Chromium setup step, matching what was shipped.
 6. `bun run verify` passes. `spec-kitty charter status --json` reports `"status": "synced"`.
@@ -162,12 +162,7 @@ Prove that nothing else changed. `git diff --stat AGENTS.md` shows only insertio
 
 ### Subtask T100 – `path_conventions`
 
-The owner approved widening `workspace` and `tests` "to cover `packages/` and `apps/`". The schema allows only one directory per key, so that cannot be written literally. The coordinator asks the owner before dispatching this WP and records the choice in this prompt's Activity Log:
-
-- **Recommended**: `workspace: packages/` and `tests: packages/`. That is where the product code and most tests live; accept only checks that the directory exists.
-- Other choices the owner may make: keep `scripts/`, or another single directory.
-
-Apply exactly the recorded choice:
+The owner first approved widening `workspace` and `tests` "to cover `packages/` and `apps/`". The schema allows only one directory per key, so that cannot be written literally. Asked again on 2026-10-21, **the owner chose `packages/` for both keys**. That is where the product code and most tests live, and accept only checks that the directory exists. Apply exactly this:
 
 ```yaml
 project:
@@ -175,8 +170,6 @@ project:
     workspace: packages/
     tests: packages/
 ```
-
-**If the Activity Log records no owner choice, do not change the file.** Report that T100 is waiting on the owner, and finish the other subtasks.
 
 Then check the file still loads. Run `bun -e` to read `.kittify/config.yaml` back, or `spec-kitty agent mission check-prerequisites --mission locus-foundation-01M5EWDR --json`, and confirm there is no `PathConventionsConfigError`. Change no other key in `config.yaml`.
 
@@ -231,7 +224,7 @@ Update `docs/tooling.md` to match what was shipped, in its existing style: short
 - **Pre-commit hook**: add one sentence saying that the docs build and browser tests run in `verify` and the review gate, not in the hook (owner decision, 2026-10-21).
 - **Review gate**: mention the `verify.docs:build` and `verify.test:e2e` cases. Say that the gate's step list is tested against `verify`, so the two cannot drift.
 - **One-time setup**: add `bunx playwright install chromium` after `bun install`, with the comment `# browser for test:e2e; downloads into ~/Library/Caches/ms-playwright`.
-- **After a mission merge**: replace "points Spec Kitty's workspace and tests checks at `scripts/`" with the value T100 set. If T100 is waiting, leave it.
+- **After a mission merge**: replace "points Spec Kitty's workspace and tests checks at `scripts/`" with `packages/`.
 
 **Consistency pass.** Each check is a command; quote the output:
 
@@ -247,7 +240,7 @@ Update `docs/tooling.md` to match what was shipped, in its existing style: short
 
 - [ ] The `AGENTS.md` section is verbatim, and the diff is insertions only.
 - [ ] Charter, interview answers and glossary updated; charter status is synced.
-- [ ] `path_conventions` set to the owner's recorded choice, or left unchanged with the reason reported.
+- [ ] `path_conventions` maps `workspace` and `tests` to `packages/`.
 - [ ] Maturity changes match the evidence table, and nothing unimplemented is marked `implemented`.
 - [ ] `docs/tooling.md` matches the shipped scripts and gate.
 - [ ] All seven consistency checks pass and are quoted.
@@ -263,5 +256,5 @@ Update `docs/tooling.md` to match what was shipped, in its existing style: short
 
 - Compare the `AGENTS.md`, charter and glossary diffs character by character with `plan.md` **Owner approvals**.
 - Re-check two rows of the evidence table against `catalogue.ts` and the exported symbols.
-- Confirm `path_conventions` matches the Activity Log entry.
+- Confirm `path_conventions` is `packages/` for both keys and nothing else in `config.yaml` changed.
 - Run `bun run verify` and `spec-kitty charter status --json`.
