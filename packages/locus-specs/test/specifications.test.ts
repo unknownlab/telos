@@ -106,7 +106,7 @@ describe("catalogue integrity", () => {
 
   test("every record survives a JSON round trip unchanged", () => {
     for (const spec of catalogue) {
-      expect(JSON.parse(JSON.stringify(spec))).toEqual(spec);
+      expect(JSON.parse(JSON.stringify(spec))).toStrictEqual(spec);
     }
   });
 

@@ -9,6 +9,7 @@ import {
   validateFabric,
 } from "@telos/locus";
 import { catalogue } from "../src/catalogue";
+import { revisionGoldens as exportedGoldens } from "../src/goldens";
 
 // NFR-001 on the Bun side. The golden ids are recorded here, as the contract's
 // Determinism adapter requires. They were computed independently of this code with
@@ -55,6 +56,10 @@ const goldenOf = (key: string): string => {
 };
 
 describe("revision id goldens", () => {
+  test("the recorded literals equal the exported revisionGoldens", () => {
+    expect(exportedGoldens).toStrictEqual(revisionGoldens);
+  });
+
   test("every revision-compare record has both golden keys", () => {
     expect(revisionCompareRecords.length).toBe(4);
     for (const spec of revisionCompareRecords) {
