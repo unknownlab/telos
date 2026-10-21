@@ -191,7 +191,8 @@
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review: 168e462",
-        "Rework done: 2735b07"
+        "Rework done: 2735b07",
+        "Review passed on cycle 2 (reviewer-renata, Sonnet): verify green 211 tests, sort and never-throw mutants caught."
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
