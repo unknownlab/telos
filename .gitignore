@@ -37,3 +37,12 @@ node_modules/
 .kittify/workspaces/
 .worktrees/
 kitty-ops/ops-index.jsonl
+
+# docs app build output (locus-foundation)
+apps/docs/dist/
+apps/docs/src/generated/
+apps/docs/public/llms.txt
+apps/docs/public/index.json
+apps/docs/test-results/
+apps/docs/playwright-report/
+apps/docs/.tanstack/
