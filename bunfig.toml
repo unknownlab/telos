@@ -6,6 +6,14 @@ ignorePatterns = [
   ".kittify/**",
   ".grace/**",
   ".spec-kitty/**",
+  "apps/docs/src/routeTree.gen.ts",
+  "apps/docs/src/generated/**",
+  "apps/docs/dist/**",
+  "apps/docs/public/llms.txt",
+  "apps/docs/public/index.json",
+  "apps/docs/test-results/**",
+  "apps/docs/playwright-report/**",
+  "apps/docs/test/fixtures/**",
 ]
 
 [fmt]
@@ -19,6 +27,14 @@ ignorePatterns = [
   "bun.lock",
   "AGENTS.md",
   "CLAUDE.md",
+  "apps/docs/src/routeTree.gen.ts",
+  "apps/docs/src/generated/**",
+  "apps/docs/dist/**",
+  "apps/docs/public/llms.txt",
+  "apps/docs/public/index.json",
+  "apps/docs/test-results/**",
+  "apps/docs/playwright-report/**",
+  "apps/docs/test/fixtures/**",
 ]
 
 [test]
@@ -28,4 +44,7 @@ pathIgnorePatterns = [
   "kitty-specs/**",
   ".kittify/**",
   ".spec-kitty/**",
+  "apps/docs/e2e/**",
+  "apps/docs/dist/**",
+  "apps/docs/test/fixtures/**",
 ]
