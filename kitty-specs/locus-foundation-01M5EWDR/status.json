@@ -258,7 +258,8 @@
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review: ce215aa, 2966b12, 74f908a",
-        "Rework done: 973f34c"
+        "Rework done: 973f34c",
+        "Review passed on cycle 2 (reviewer-renata, Sonnet): verify green 424 tests, 44 records match contract, goldens recomputed, exported goldens restored."
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
