@@ -529,23 +529,24 @@
         "Ready for review: 2eceac2, a572961, 7207645, 12bde85"
       ],
       "provider": "__resolved_provider_absent__",
+      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP16-browser-tests/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP16-browser-tests/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "changes_requested"
       },
-      "role": "reviewer",
-      "shell_pid": 19981,
-      "shell_pid_created_at": "1792603910.97465",
+      "role": "implementer",
+      "shell_pid": null,
+      "shell_pid_created_at": null,
       "subtasks": {
-        "T086": "done",
-        "T087": "done",
-        "T088": "done",
-        "T089": "done",
-        "T090": "done",
-        "T091": "done",
-        "T092": "done"
+        "T086": "planned",
+        "T087": "planned",
+        "T088": "planned",
+        "T089": "planned",
+        "T090": "planned",
+        "T091": "planned",
+        "T092": "planned"
       }
     },
     "WP17": {
