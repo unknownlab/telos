@@ -493,7 +493,8 @@
       "last_transition_at": "2026-10-21T16:51:45.705401+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: fa0d73b"
+        "Ready for review: fa0d73b",
+        "Rework done: 026a9e3"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
