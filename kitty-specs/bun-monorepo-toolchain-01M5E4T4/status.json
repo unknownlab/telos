@@ -29,7 +29,8 @@
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review",
-        "Review feedback addressed: evidence logged"
+        "Review feedback addressed: evidence logged",
+        "Review passed"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
