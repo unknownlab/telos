@@ -1,7 +1,7 @@
 {
-  "event_count": 58,
-  "last_event_id": "01M5F9VKX7RPX6EB1V4MHK490S",
-  "materialized_at": "2026-10-21T13:19:23.047427+00:00",
+  "event_count": 60,
+  "last_event_id": "01M5F9WZPB8QP0RHMC4NHKCQYT",
+  "materialized_at": "2026-10-21T13:20:07.812990+00:00",
   "mission_number": "",
   "mission_slug": "locus-foundation-01M5EWDR",
   "mission_type": "",
@@ -12,9 +12,9 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "in_review": 0,
-    "planned": 11
+    "planned": 10
   },
   "work_packages": {
     "WP01": {
@@ -214,11 +214,19 @@
       }
     },
     "WP07": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5F45JQ3VX4HZ46K8M39310J",
-      "last_transition_at": "2026-10-21T11:39:58.051729+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5F9WZPB8QP0RHMC4NHKCQYT",
+      "last_transition_at": "2026-10-21T13:20:07.812990+00:00",
+      "model": "__resolved_model_absent__",
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer",
+      "shell_pid": 78434,
+      "shell_pid_created_at": "1792588795.762913"
     },
     "WP08": {
       "actor": "finalize-tasks",
