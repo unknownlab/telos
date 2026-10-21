@@ -25,7 +25,6 @@
   "purpose_context": "The repository has agent workflow tooling but no application toolchain yet. This mission sets up the Bun workspace skeleton, strict typing, built-in lint and format, version pinning, and a pre-commit check so later product missions start from a consistent, verified base.",
   "purpose_tldr": "Give the repository a working Bun-based monorepo foundation with local quality checks.",
   "slug": "bun-monorepo-toolchain-01M5E4T4",
-  "status_phase": "1",
   "target_branch": "feat/bun-monorepo-toolchain",
   "topology": "coord",
   "vcs": "git",

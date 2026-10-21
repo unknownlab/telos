@@ -1,0 +1,17 @@
+<GraceRequirements graceVersion="4.0">
+  <ProjectName>Telos</ProjectName>
+  <Annotation>An everything-as-code full-stack framework for next-generation software, developed as a Bun workspaces monorepo.</Annotation>
+  <Keywords>bun, typescript, monorepo, workspaces, everything-as-code, full-stack framework</Keywords>
+  <Goals>
+    <Goal>Provide a Bun-only monorepo skeleton (apps/*, packages/*) whose checks block wrong behavior before commit and review.</Goal>
+  </Goals>
+  <Users>
+    <User>The owner, who directs the work and makes product and architecture decisions.</User>
+    <User>Coding agents (Claude Code, Codex) that implement approved Spec Kitty work packages.</User>
+  </Users>
+  <Constraints>
+    <Constraint>Product changes go through Spec Kitty missions; Spec Kitty owns the change lifecycle, not .grace/changes.</Constraint>
+    <Constraint>Bun is the only tool: no CI, no Turborepo or Nx, no extra linter or formatter.</Constraint>
+    <Constraint>No fake tests, placeholder scripts, or checks that verify nothing.</Constraint>
+  </Constraints>
+</GraceRequirements>

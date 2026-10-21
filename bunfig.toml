@@ -1,0 +1,22 @@
+[lint]
+ignorePatterns = [
+  "node_modules/**",
+  ".worktrees/**",
+  "kitty-specs/**",
+  ".kittify/**",
+  ".grace/**",
+  ".spec-kitty/**",
+]
+
+[fmt]
+ignorePatterns = [
+  "node_modules/**",
+  ".worktrees/**",
+  "kitty-specs/**",
+  ".kittify/**",
+  ".grace/**",
+  ".spec-kitty/**",
+  "bun.lock",
+  "AGENTS.md",
+  "CLAUDE.md",
+]

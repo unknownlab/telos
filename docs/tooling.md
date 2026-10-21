@@ -4,11 +4,11 @@ Describe what you want in plain language. Claude Code or Codex chooses and runs 
 
 ## Who does what
 
-| Concern | Authority |
-| --- | --- |
-| Change lifecycle (spec → plan → tasks → implement/review → accept → merge), worktrees, reviews, integration | Spec Kitty 3.2.7 (`.kittify/`, `kitty-specs/`, `.worktrees/`) |
-| Architecture knowledge: contracts, module graph, verification, semantic-markup validation | GRACE 4.2.1 skills and `grace` CLI. Inactive until you approve `grace-init` |
-| Choosing tools, running checks, asking you for decisions | Claude Code / Codex |
+| Concern                                                                                                     | Authority                                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Change lifecycle (spec → plan → tasks → implement/review → accept → merge), worktrees, reviews, integration | Spec Kitty 3.2.7 (`.kittify/`, `kitty-specs/`, `.worktrees/`)                                                                                   |
+| Architecture knowledge: contracts, module graph, verification, semantic-markup validation                   | GRACE 4.2.1 skills and `grace` CLI. Active: `.grace/` models the code modules, and `grace lint` runs in the pre-commit hook and the review gate |
+| Choosing tools, running checks, asking you for decisions                                                    | Claude Code / Codex                                                                                                                             |
 
 ## What you will be asked
 
@@ -27,6 +27,8 @@ Enforced by the tools:
 - Spec Kitty merge gates block (`policy.merge_gates.mode: block` in `.kittify/config.yaml`). A mission can't merge until its reviews are approved, its dependencies are done and its lane risk is acceptable.
 - Spec Kitty's protected-branch guard keeps its commits off `main`/`master`.
 - The `commit-msg` hook in `.githooks/` rejects any commit message that doesn't follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) and any AI author or attribution line. It rewrites the four messages Spec Kitty writes in another format (for example `Add spec for feature <slug>` becomes `docs(<slug>): add spec`). It works only after `core.hooksPath` is set (see setup).
+- The `pre-commit` hook in `.githooks/` formats and restages your staged files, then blocks the commit on any lint, typecheck, test or `grace lint` failure. See [Toolchain](#toolchain).
+- Spec Kitty's review gate runs the whole check suite through `scripts/review-gate.ts` and blocks a review on any new failure (`review:` in `.kittify/config.yaml`).
 - Spec Kitty checks review artifacts at merge; bypassing that needs a recorded note.
 - Claude Code hooks (`.claude/settings.json`). `spec-kitty session-start` injects orientation and open Ops. `spec-kitty session-stop` reminds about open Ops.
 
@@ -35,23 +37,93 @@ Advisory: the instructions in `AGENTS.md`. Agents normally follow them, but noth
 - tool routing
 - reading state before work
 - approval boundaries
-- running typecheck, lint, format, tests and `grace lint`
+- running `bun run verify` before review, accept and merge
 
-Not in place yet: CI and code checks, because there is no code or toolchain. The mission that introduces the toolchain adds them, including CI and Spec Kitty's `review.test_command`.
+No CI, by owner decision. All checks run locally, in the pre-commit hook and in Spec Kitty's review gate.
+
+## Toolchain
+
+The repository is a Bun workspaces monorepo. Bun is the only tool: package manager, test runner, type checker (`bun check`), linter (`bun lint`) and formatter (`bun fmt`). There is no Turborepo, Nx, ESLint or Prettier.
+
+### Bun version
+
+You need Bun `1.4.4-canary.1` or later, because `bun lint` and `bun fmt` exist only in canary builds so far. The minimum lives in `engines.bun` in `package.json`. Bun does not enforce that field, so `scripts/check-bun-version.ts` does: `bun install`, `bun run verify` and the pre-commit hook stop on an older Bun with:
+
+```text
+Bun >=1.4.4-canary.1 required, found 1.4.3. Run: bun upgrade --canary
+```
+
+### Layout
+
+- `apps/`: applications, one directory per app.
+- `packages/`: library packages, one directory per package.
+- `scripts/`: repository scripts (the version guard and the review gate runner).
+- `tsconfig.base.json`: strict compiler options shared by every package. `tsconfig.json` at the root checks `scripts/` and lists packages under `references`.
+- `bunfig.toml`: linter and formatter settings. Spec Kitty, GRACE and generated files are excluded from both.
+
+Both areas are empty for now. A new package gets its own `package.json`, a reference `{ "path": "<area>/<name>" }` in the root `tsconfig.json`, and this `tsconfig.json`:
+
+```json
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "noEmit": false,
+    "emitDeclarationOnly": true
+  },
+  "include": ["src"]
+}
+```
+
+`bun run typecheck` checks every referenced package and writes no files.
+
+### Commands
+
+Run them from the repository root.
+
+| Command                                   | What it does                                                                                                    |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `bun install`                             | Installs dependencies. Run it once per clone and once in every Spec Kitty worktree.                             |
+| `bun run verify`                          | The whole check suite: version, format check, lint, typecheck, tests, `grace lint`. Stops at the first failure. |
+| `bun run typecheck`                       | `bun check -b`: the root and every referenced package.                                                          |
+| `bun run lint` / `bun run lint:fix`       | Lint, or lint and apply safe fixes. Warnings do not fail.                                                       |
+| `bun run format` / `bun run format:check` | Format files, or only report unformatted files.                                                                 |
+| `bun run test`                            | `bun test`. Passes when no test files exist.                                                                    |
+| `bun run grace:lint`                      | `grace lint --path . --assertions current`.                                                                     |
+| `bun run check:bun`                       | The version guard alone.                                                                                        |
+
+### Pre-commit hook
+
+`.githooks/pre-commit` runs on every commit once `core.hooksPath` is set (see setup). In order, it:
+
+1. checks that Bun is installed and new enough, and that `node_modules/` exists,
+2. formats your staged files and stages the result (`bun fmt --staged`),
+3. lints your staged files (`bun lint --staged`),
+4. type-checks and tests the whole repository,
+5. runs `grace lint`.
+
+Any failure stops the commit with a `pre-commit:` message. On the empty skeleton the hook takes under two seconds.
+
+Formatting restages whole files. If you staged only part of a file, the hook blocks the commit with `pre-commit: format failed` and nothing is committed. Fix it by staging the rest of the file (`git add <file>`), or by setting the unstaged changes aside with `git stash --keep-index`.
+
+### Review gate
+
+Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review. It runs every check, writes one JUnit report with a test case per check (`verify.lint`, `verify.typecheck`, and so on) plus every `bun test` result, and Spec Kitty blocks the review on any failure that is not already failing on the base branch.
 
 ## One-time setup on a new machine or fresh clone
 
 `.claude/`, `.codex/` and `.agents/skills/` are generated per machine and gitignored. Once you approve, an agent can run:
 
 ```sh
-git config core.hooksPath "$PWD/.githooks"    # commit message checks
+git config core.hooksPath "$PWD/.githooks"    # commit-msg and pre-commit hooks
 uv tool install spec-kitty-cli    # if missing; tested with 3.2.7
 spec-kitty doctor tool-surfaces --tool claude --fix
 spec-kitty doctor tool-surfaces --tool codex --fix
 git clone --depth 1 --branch v4.2.1 https://github.com/osovv/grace-marketplace /tmp/grace-marketplace
 cp -R /tmp/grace-marketplace/skills/grace/grace-* .claude/skills/
 cp -R /tmp/grace-marketplace/skills/grace/grace-* .agents/skills/
-bun upgrade && bun add -g @osovv/grace-cli    # the grace CLI needs Bun >= 1.3.14
+bun upgrade --canary && bun add -g @osovv/grace-cli    # Bun >= 1.4.4-canary.1; also installs the grace CLI
+bun install    # project dependencies; repeat in every Spec Kitty worktree
 ```
 
 Codex may ask once to trust the project directory.

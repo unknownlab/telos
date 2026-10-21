@@ -1,0 +1,22 @@
+<GraceVerificationDocument graceVersion="4.0">
+  <VD-MAIN>
+    <V-M-BUN-VERSION-GUARD>
+      <TestFiles>
+        <File>scripts/check-bun-version.test.ts</File>
+      </TestFiles>
+      <Command>bun test scripts/check-bun-version.test.ts</Command>
+      <Scenario>A Bun at or above the engines.bun minimum is accepted, including later canaries such as 1.4.5-canary.1.</Scenario>
+      <Scenario>A Bun below the minimum, such as 1.4.3, is rejected.</Scenario>
+      <TraceAssertion>The isSupported table test passes for every row of the version-guard contract.</TraceAssertion>
+    </V-M-BUN-VERSION-GUARD>
+    <V-M-REVIEW-GATE>
+      <TestFiles>
+        <File>scripts/review-gate.test.ts</File>
+      </TestFiles>
+      <Command>bun test scripts/review-gate.test.ts</Command>
+      <Scenario>A failing check step becomes a JUnit test case with a failure, so the review gate sees it as a new failure.</Scenario>
+      <Scenario>bun test's own suites are kept in the same report under one testsuites root.</Scenario>
+      <TraceAssertion>The buildReport and escapeXml unit tests pass.</TraceAssertion>
+    </V-M-REVIEW-GATE>
+  </VD-MAIN>
+</GraceVerificationDocument>
