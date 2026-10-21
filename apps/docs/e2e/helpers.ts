@@ -13,6 +13,7 @@
 //   readIndexFile - reads and parses dist/client/index.json from disk
 //   readIndex - the documents of dist/client/index.json, in the order the file has them
 //   docBySource - the document whose repository source path is given
+//   TrackOptions - the optional unknown document whose own browser 404 is excused once
 //   trackPageErrors - collects page errors and console errors from a page, and returns the check that fails on any of them
 //   caretToEnd - focuses a text field and places the caret after its last character, so that real key presses append to it
 // END_MODULE_MAP
@@ -82,25 +83,78 @@ export function docBySource(source: string): IndexDocument {
   return found;
 }
 
+/** The unknown document a suite navigates to on purpose, whose own browser 404 is excused once. */
+export interface TrackOptions {
+  readonly unknownDocument?: string;
+}
+
+// The console text Chromium writes for a resource that the server answered with 404.
+const NOT_FOUND_CONSOLE =
+  /Failed to load resource: the server responded with a status of 404/;
+
+// The path of a URL, or null when it is not a URL.
+function pathOf(url: string): string | null {
+  try {
+    return new URL(url).pathname;
+  } catch {
+    return null;
+  }
+}
+
 // START_CONTRACT: trackPageErrors
-//   PURPOSE: Record every uncaught page error and every console error of a page, so that a suite can fail when the site logs an error.
-//   INPUTS: { page: Page - the page to watch }
+//   PURPOSE: Record every uncaught page error and every console error of a page, so that a suite can fail when the site logs an error. A suite that navigates to one unknown document on purpose may excuse exactly one browser 404 console message, and only when it is that document's own navigation 404.
+//   INPUTS: { page: Page - the page to watch, options: TrackOptions - the optional unknown document whose own 404 is expected }
 //   OUTPUTS: { () => void - a check that fails the test listing every recorded error; it passes when none was recorded }
-//   SIDE_EFFECTS: attaches pageerror and console listeners to the page
+//   SIDE_EFFECTS: attaches pageerror, console and response listeners to the page
 //   LINKS: V-M-DOCS-SITE
 // END_CONTRACT: trackPageErrors
-export function trackPageErrors(page: Page): () => void {
-  const problems: string[] = [];
+export function trackPageErrors(
+  page: Page,
+  options: TrackOptions = {},
+): () => void {
+  const pageErrors: string[] = [];
+  const consoleErrors: Array<{ text: string; path: string | null }> = [];
+  const navigationNotFound = new Set<string>();
+
   page.on("pageerror", (error) => {
-    problems.push(`pageerror: ${error.message}`);
+    pageErrors.push(`pageerror: ${error.message}`);
   });
   page.on("console", (message) => {
-    if (message.type() === "error") {
-      problems.push(`console error: ${message.text()}`);
+    if (message.type() !== "error") return;
+    consoleErrors.push({
+      text: message.text(),
+      path: pathOf(message.location().url),
+    });
+  });
+  page.on("response", (response) => {
+    if (
+      response.status() === 404 &&
+      response.request().isNavigationRequest() &&
+      response.frame() === page.mainFrame()
+    ) {
+      const path = pathOf(response.url());
+      if (path !== null) navigationNotFound.add(path);
     }
   });
+
   return () => {
-    expect(problems, "the page logged errors").toEqual([]);
+    const unknown = options.unknownDocument;
+    let excused = false;
+    const problems = consoleErrors.flatMap((entry) => {
+      // The one excused message: a browser 404 whose location is the unknown document itself,
+      // and only when that document's navigation really got a 404. Any other 404 or error still fails.
+      const isOwnNotFound =
+        unknown !== undefined &&
+        NOT_FOUND_CONSOLE.test(entry.text) &&
+        entry.path === unknown &&
+        navigationNotFound.has(unknown);
+      if (isOwnNotFound && !excused) {
+        excused = true;
+        return [];
+      }
+      return [`console error: ${entry.text}`];
+    });
+    expect([...pageErrors, ...problems], "the page logged errors").toEqual([]);
   };
 }
 

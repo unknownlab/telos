@@ -130,7 +130,9 @@ test.describe("navigation", () => {
   test("an unknown path shows the not-found page with the full navigation", async ({
     page,
   }) => {
-    const check = trackPageErrors(page);
+    const check = trackPageErrors(page, {
+      unknownDocument: "/no-such-page",
+    });
     const response = await page.goto("/no-such-page");
     expect(response?.status()).toBe(404);
     const main = page.locator('main[data-page="not-found"]');
