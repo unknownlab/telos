@@ -21,16 +21,19 @@ Turn the repository root into a Bun workspaces monorepo skeleton (`apps/*`, `pac
 
 ## Charter Check
 
-Skipped: no charter exists (`.kittify/charter/charter.yaml` missing). Governance applied from `AGENTS.md`:
+Charter: `.kittify/charter/charter.yaml` (generated 2026-10-21, after the initial plan; re-checked post-design).
 
-| Rule | Status |
+| Charter rule | Status |
 |------|--------|
 | Product/architecture change via mission | Pass: this mission |
-| Dependency addition approved by owner | Pass: `@types/bun` (decision `01M5E5A78WNSD86240841QTRT0`) |
-| `grace-init` approved by owner | Pass: decision `01M5E5200J7KR9MEEBD6EX4R49` |
-| Toolchain mission wires checks into `review.test_command` | Pass: IC-04 |
-| Toolchain mission wires CI | Deviation, owner decision: no CI for now (local checks only) |
-| No fake tests / placeholder scripts | Pass: guard script is functional; `--pass-with-no-tests` instead of dummy tests |
+| Test-first (DIRECTIVE_034) | Pass: the version guard's logic is test-driven (`scripts/check-bun-version.test.ts` written before `isSupported`); hook and gate behaviors are verified by scripted scenarios in each WP |
+| Test and typecheck gate (DIRECTIVE_030) | Pass: `verify` runs in the pre-commit hook and the review gate |
+| Tests as scaffold, no fake tests (DIRECTIVE_041) | Pass: one real test file; `--pass-with-no-tests` only covers future empty packages |
+| Supply-chain install safety (DIRECTIVE_051) | Pass: one exact-pinned, owner-approved types package with no install scripts (research R-04) |
+| Specification fidelity (DIRECTIVE_010) | Pass: each WP maps to FR/NFR/C IDs |
+| Living documentation sync (DIRECTIVE_037) | Pass: `docs/tooling.md` updated in this mission |
+| Model routing (project policy) | Pass: WPs sized for Haiku-class implementers, Sonnet review, Opus high mission review |
+| Exceptions are owner decisions | Pass: "no CI" recorded as an owner decision; `AGENTS.md` staleness flagged, not edited |
 | `.kittify/config.yaml` edit needs approval | Pass: limited to the `review:` section approved in spec C-004 |
 
 ## Project Structure
@@ -42,11 +45,13 @@ kitty-specs/bun-monorepo-toolchain-01M5E4T4/
 ├── spec.md
 ├── plan.md          # this file
 ├── research.md      # prototype findings and decisions
+├── data-model.md    # configuration entities and invariants
+├── contracts/       # commands.md, version-guard.md, pre-commit-hook.md
 ├── quickstart.md    # how to verify the finished skeleton
 └── tasks/           # created by /spec-kitty.tasks
 ```
 
-No `data-model.md` or `contracts/`: the mission has no data or APIs. The command surface below is the interface.
+The mission has no application data. `data-model.md` models the configuration files, and `contracts/` defines the command surface, the version guard and the pre-commit hook. The contracts are authoritative over the summary table below.
 
 ### Source Code (repository root)
 
@@ -57,7 +62,8 @@ bunfig.toml               # [lint] and [fmt] sections
 tsconfig.base.json        # strict shared compiler options (packages extend it)
 tsconfig.json             # root: covers scripts/, references [] (packages append here)
 scripts/
-└── check-bun-version.ts  # minimum-Bun guard, reads engines.bun
+├── check-bun-version.ts       # version guard, reads engines.bun
+└── check-bun-version.test.ts  # first real test (isSupported table)
 apps/.gitkeep             # workspace area, empty
 packages/.gitkeep         # workspace area, empty
 .githooks/
@@ -78,14 +84,14 @@ docs/tooling.md           # toolchain section
 | `preinstall` | `$npm_execpath scripts/check-bun-version.ts` | guard (runs with the invoking Bun) |
 | `check:bun` | `bun scripts/check-bun-version.ts` | guard |
 | `typecheck` | `bun check` | read-only |
-| `lint` | `bun lint` | read-only |
-| `format` | `bun fmt` | writes |
-| `format:check` | `bun fmt --check` | read-only |
+| `lint` | `bun lint --no-script` | read-only |
+| `format` | `bun fmt --no-script` | writes |
+| `format:check` | `bun fmt --no-script --check` | read-only |
 | `test` | `bun test --pass-with-no-tests` | read-only |
 | `grace:lint` | `grace lint --path . --assertions current` | read-only |
 | `verify` | `check:bun`, `format:check`, `lint`, `typecheck`, `test`, `grace:lint` in sequence, stop on first failure | read-only |
 
-Scripts that share a name with a built-in (`lint`, `test`) are invoked as `bun run <name>`; the built-ins themselves use `--no-script` where needed to avoid recursion.
+Bare `bun lint` runs a `lint` package script when one exists (verified), so the scripts and the hook call the built-ins with `--no-script`.
 
 ## Implementation Concern Map
 
@@ -99,9 +105,9 @@ Scripts that share a name with a built-in (`lint`, `test`) are invoked as `bun r
 
 ### IC-02 — Version guard, lint and format configuration
 
-- **Purpose**: Enforce `>=1.4.4-canary.1` with a guard that compares via `Bun.semver.order`; configure `bun lint` / `bun fmt` in `bunfig.toml`; define the script surface including `verify`.
+- **Purpose**: Enforce `>=1.4.4-canary.1` with a test-first guard (`isSupported`, table test) that compares via `Bun.semver.order`; configure `bun lint` / `bun fmt` in `bunfig.toml`; define the script surface including `verify`.
 - **Relevant requirements**: FR-004, FR-005, FR-007, NFR-001
-- **Affected surfaces**: `scripts/check-bun-version.ts`, `bunfig.toml`, `package.json` scripts
+- **Affected surfaces**: `scripts/check-bun-version.ts`, `scripts/check-bun-version.test.ts`, `bunfig.toml`, `package.json` scripts
 - **Sequencing/depends-on**: IC-01
 - **Risks**: `Bun.semver.satisfies` rejects later-tuple prereleases (`1.4.5-canary.1`), so `order` is required; the guard must run with `$npm_execpath`, not `bun` on PATH.
 
