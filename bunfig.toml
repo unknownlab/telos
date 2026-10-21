@@ -20,3 +20,12 @@ ignorePatterns = [
   "AGENTS.md",
   "CLAUDE.md",
 ]
+
+[test]
+pathIgnorePatterns = [
+  "node_modules/**",
+  ".worktrees/**",
+  "kitty-specs/**",
+  ".kittify/**",
+  ".spec-kitty/**",
+]
