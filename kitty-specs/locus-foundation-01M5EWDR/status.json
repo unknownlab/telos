@@ -1,7 +1,7 @@
 {
-  "event_count": 110,
-  "last_event_id": "01M5FNJHBVBYA5ZK7P4G9C4Z8H",
-  "materialized_at": "2026-10-21T16:44:08.364199+00:00",
+  "event_count": 111,
+  "last_event_id": "01M5FP0FX9WDV012BJZFFGV1QV",
+  "materialized_at": "2026-10-21T16:51:45.705401+00:00",
   "mission_number": "",
   "mission_slug": "locus-foundation-01M5EWDR",
   "mission_type": "",
@@ -11,8 +11,8 @@
     "canceled": 0,
     "claimed": 0,
     "done": 0,
-    "for_review": 0,
-    "in_progress": 1,
+    "for_review": 1,
+    "in_progress": 0,
     "in_review": 0,
     "planned": 3
   },
@@ -488,9 +488,9 @@
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
-      "lane": "in_progress",
-      "last_event_id": "01M5FNJHBVBYA5ZK7P4G9C4Z8H",
-      "last_transition_at": "2026-10-21T16:44:08.364199+00:00",
+      "lane": "for_review",
+      "last_event_id": "01M5FP0FX9WDV012BJZFFGV1QV",
+      "last_transition_at": "2026-10-21T16:51:45.705401+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review: fa0d73b"
@@ -507,10 +507,10 @@
       "shell_pid": null,
       "shell_pid_created_at": null,
       "subtasks": {
-        "T082": "planned",
-        "T083": "planned",
-        "T084": "planned",
-        "T085": "planned"
+        "T082": "done",
+        "T083": "done",
+        "T084": "done",
+        "T085": "done"
       }
     },
     "WP16": {
