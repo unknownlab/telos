@@ -1,19 +1,19 @@
 {
-  "event_count": 42,
-  "last_event_id": "01M5F8QZ8ZM1XNEP57W9V0YY37",
-  "materialized_at": "2026-10-21T12:59:55.039678+00:00",
+  "event_count": 43,
+  "last_event_id": "01M5F8V2F94K9K17681DG89Q68",
+  "materialized_at": "2026-10-21T13:01:36.617443+00:00",
   "mission_number": "",
   "mission_slug": "locus-foundation-01M5EWDR",
   "mission_type": "",
   "summary": {
-    "approved": 4,
+    "approved": 5,
     "blocked": 0,
     "canceled": 0,
     "claimed": 0,
     "done": 0,
     "for_review": 0,
     "in_progress": 0,
-    "in_review": 1,
+    "in_review": 0,
     "planned": 13
   },
   "work_packages": {
@@ -122,14 +122,20 @@
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "in_review",
-      "last_event_id": "01M5F8QZ8ZM1XNEP57W9V0YY37",
-      "last_transition_at": "2026-10-21T12:59:55.039678+00:00",
+      "lane": "approved",
+      "last_event_id": "01M5F8V2F94K9K17681DG89Q68",
+      "last_transition_at": "2026-10-21T13:01:36.617443+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review: cdf1ce6"
       ],
       "provider": "__resolved_provider_absent__",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP04-revisions-and-change-sets/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP04-revisions-and-change-sets/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
       "role": "reviewer",
       "shell_pid": 70230,
       "shell_pid_created_at": "1792587587.618497",
