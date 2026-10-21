@@ -16,10 +16,13 @@ import { Route as FirstLocusRouteImport } from './routes/first-locus'
 import { Route as NotFoundRouteImport } from './routes/not-found'
 import { Route as PhilosophyRouteImport } from './routes/philosophy'
 import { Route as RoadmapRouteImport } from './routes/roadmap'
+import { Route as VerificationRouteImport } from './routes/verification'
 import { Route as ArchitectureIndexRouteImport } from './routes/architecture/index'
 import { Route as ArchitectureIdRouteImport } from './routes/architecture/$id'
 import { Route as DecisionsIndexRouteImport } from './routes/decisions/index'
 import { Route as DecisionsIdRouteImport } from './routes/decisions/$id'
+import { Route as PlaygroundIndexRouteImport } from './routes/playground/index'
+import { Route as PlaygroundScenarioRouteImport } from './routes/playground/$scenario'
 import { Route as PrinciplesIndexRouteImport } from './routes/principles/index'
 import { Route as PrinciplesIdRouteImport } from './routes/principles/$id'
 import { Route as TerminologyIndexRouteImport } from './routes/terminology/index'
@@ -60,6 +63,11 @@ const RoadmapRoute = RoadmapRouteImport.update({
   path: '/roadmap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VerificationRoute = VerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArchitectureIndexRoute = ArchitectureIndexRouteImport.update({
   id: '/architecture/',
   path: '/architecture/',
@@ -78,6 +86,16 @@ const DecisionsIndexRoute = DecisionsIndexRouteImport.update({
 const DecisionsIdRoute = DecisionsIdRouteImport.update({
   id: '/decisions/$id',
   path: '/decisions/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaygroundIndexRoute = PlaygroundIndexRouteImport.update({
+  id: '/playground/',
+  path: '/playground/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlaygroundScenarioRoute = PlaygroundScenarioRouteImport.update({
+  id: '/playground/$scenario',
+  path: '/playground/$scenario',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrinciplesIndexRoute = PrinciplesIndexRouteImport.update({
@@ -109,12 +127,15 @@ export interface FileRoutesByFullPath {
   '/not-found': typeof NotFoundRoute
   '/philosophy': typeof PhilosophyRoute
   '/roadmap': typeof RoadmapRoute
+  '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
+  '/playground/$scenario': typeof PlaygroundScenarioRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture/': typeof ArchitectureIndexRoute
   '/decisions/': typeof DecisionsIndexRoute
+  '/playground/': typeof PlaygroundIndexRoute
   '/principles/': typeof PrinciplesIndexRoute
   '/terminology/': typeof TerminologyIndexRoute
 }
@@ -126,12 +147,15 @@ export interface FileRoutesByTo {
   '/not-found': typeof NotFoundRoute
   '/philosophy': typeof PhilosophyRoute
   '/roadmap': typeof RoadmapRoute
+  '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
+  '/playground/$scenario': typeof PlaygroundScenarioRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture': typeof ArchitectureIndexRoute
   '/decisions': typeof DecisionsIndexRoute
+  '/playground': typeof PlaygroundIndexRoute
   '/principles': typeof PrinciplesIndexRoute
   '/terminology': typeof TerminologyIndexRoute
 }
@@ -144,12 +168,15 @@ export interface FileRoutesById {
   '/not-found': typeof NotFoundRoute
   '/philosophy': typeof PhilosophyRoute
   '/roadmap': typeof RoadmapRoute
+  '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
+  '/playground/$scenario': typeof PlaygroundScenarioRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture/': typeof ArchitectureIndexRoute
   '/decisions/': typeof DecisionsIndexRoute
+  '/playground/': typeof PlaygroundIndexRoute
   '/principles/': typeof PrinciplesIndexRoute
   '/terminology/': typeof TerminologyIndexRoute
 }
@@ -163,12 +190,15 @@ export interface FileRouteTypes {
     | '/not-found'
     | '/philosophy'
     | '/roadmap'
+    | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
+    | '/playground/$scenario'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture/'
     | '/decisions/'
+    | '/playground/'
     | '/principles/'
     | '/terminology/'
   fileRoutesByTo: FileRoutesByTo
@@ -180,12 +210,15 @@ export interface FileRouteTypes {
     | '/not-found'
     | '/philosophy'
     | '/roadmap'
+    | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
+    | '/playground/$scenario'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture'
     | '/decisions'
+    | '/playground'
     | '/principles'
     | '/terminology'
   id:
@@ -197,12 +230,15 @@ export interface FileRouteTypes {
     | '/not-found'
     | '/philosophy'
     | '/roadmap'
+    | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
+    | '/playground/$scenario'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture/'
     | '/decisions/'
+    | '/playground/'
     | '/principles/'
     | '/terminology/'
   fileRoutesById: FileRoutesById
@@ -215,12 +251,15 @@ export interface RootRouteChildren {
   NotFoundRoute: typeof NotFoundRoute
   PhilosophyRoute: typeof PhilosophyRoute
   RoadmapRoute: typeof RoadmapRoute
+  VerificationRoute: typeof VerificationRoute
   ArchitectureIdRoute: typeof ArchitectureIdRoute
   DecisionsIdRoute: typeof DecisionsIdRoute
+  PlaygroundScenarioRoute: typeof PlaygroundScenarioRoute
   PrinciplesIdRoute: typeof PrinciplesIdRoute
   TerminologyIdRoute: typeof TerminologyIdRoute
   ArchitectureIndexRoute: typeof ArchitectureIndexRoute
   DecisionsIndexRoute: typeof DecisionsIndexRoute
+  PlaygroundIndexRoute: typeof PlaygroundIndexRoute
   PrinciplesIndexRoute: typeof PrinciplesIndexRoute
   TerminologyIndexRoute: typeof TerminologyIndexRoute
 }
@@ -276,6 +315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoadmapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/verification': {
+      id: '/verification'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof VerificationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/architecture/': {
       id: '/architecture/'
       path: '/architecture'
@@ -302,6 +348,20 @@ declare module '@tanstack/react-router' {
       path: '/decisions/$id'
       fullPath: '/decisions/$id'
       preLoaderRoute: typeof DecisionsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playground/': {
+      id: '/playground/'
+      path: '/playground'
+      fullPath: '/playground/'
+      preLoaderRoute: typeof PlaygroundIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/playground/$scenario': {
+      id: '/playground/$scenario'
+      path: '/playground/$scenario'
+      fullPath: '/playground/$scenario'
+      preLoaderRoute: typeof PlaygroundScenarioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/principles/': {
@@ -343,12 +403,15 @@ const rootRouteChildren: RootRouteChildren = {
   NotFoundRoute: NotFoundRoute,
   PhilosophyRoute: PhilosophyRoute,
   RoadmapRoute: RoadmapRoute,
+  VerificationRoute: VerificationRoute,
   ArchitectureIdRoute: ArchitectureIdRoute,
   DecisionsIdRoute: DecisionsIdRoute,
+  PlaygroundScenarioRoute: PlaygroundScenarioRoute,
   PrinciplesIdRoute: PrinciplesIdRoute,
   TerminologyIdRoute: TerminologyIdRoute,
   ArchitectureIndexRoute: ArchitectureIndexRoute,
   DecisionsIndexRoute: DecisionsIndexRoute,
+  PlaygroundIndexRoute: PlaygroundIndexRoute,
   PrinciplesIndexRoute: PrinciplesIndexRoute,
   TerminologyIndexRoute: TerminologyIndexRoute,
 }
