@@ -1,0 +1,83 @@
+{
+  "event_count": 12,
+  "last_event_id": "01M5E8NYVJE7SJ75KZJ2X3DQR4",
+  "materialized_at": "2026-10-21T03:39:34.580240+00:00",
+  "mission_number": "",
+  "mission_slug": "bun-monorepo-toolchain-01M5E4T4",
+  "mission_type": "software-dev",
+  "summary": {
+    "approved": 0,
+    "blocked": 0,
+    "canceled": 0,
+    "claimed": 0,
+    "done": 0,
+    "for_review": 0,
+    "in_progress": 1,
+    "in_review": 0,
+    "planned": 4
+  },
+  "work_packages": {
+    "WP01": {
+      "actor": "claude",
+      "agent": null,
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
+      "force_count": 1,
+      "lane": "in_progress",
+      "last_event_id": "01M5E8NYVJE7SJ75KZJ2X3DQR4",
+      "last_transition_at": "2026-10-21T03:39:34.580240+00:00",
+      "model": "__resolved_model_absent__",
+      "notes": [
+        "Ready for review"
+      ],
+      "provider": "__resolved_provider_absent__",
+      "review": null,
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/bun-monorepo-toolchain-01M5E4T4/tasks/WP01-workspace-foundation-and-version-guard/review-cycle-1.md",
+        "reference": "review-cycle://bun-monorepo-toolchain-01M5E4T4/WP01-workspace-foundation-and-version-guard/review-cycle-1.md",
+        "reviewer": "user",
+        "verdict": "changes_requested"
+      },
+      "role": "implementer",
+      "shell_pid": null,
+      "shell_pid_created_at": null,
+      "subtasks": {
+        "T001": "planned",
+        "T002": "planned",
+        "T003": "planned",
+        "T004": "planned",
+        "T005": "planned",
+        "T006": "planned",
+        "T007": "planned"
+      }
+    },
+    "WP02": {
+      "actor": "finalize-tasks",
+      "force_count": 0,
+      "lane": "planned",
+      "last_event_id": "01M5E7PCTEQ2FAWYDW8QMH97HP",
+      "last_transition_at": "2026-10-21T03:22:20.366232+00:00"
+    },
+    "WP03": {
+      "actor": "finalize-tasks",
+      "force_count": 0,
+      "lane": "planned",
+      "last_event_id": "01M5E7PD9EZJC8726FR6836Z9H",
+      "last_transition_at": "2026-10-21T03:22:20.846724+00:00"
+    },
+    "WP04": {
+      "actor": "finalize-tasks",
+      "force_count": 0,
+      "lane": "planned",
+      "last_event_id": "01M5E7PDT46YM0G7JBH1NRHBN9",
+      "last_transition_at": "2026-10-21T03:22:21.380493+00:00"
+    },
+    "WP05": {
+      "actor": "finalize-tasks",
+      "force_count": 0,
+      "lane": "planned",
+      "last_event_id": "01M5E7PE9XNH61BXPPYR9KHZHW",
+      "last_transition_at": "2026-10-21T03:22:21.885324+00:00"
+    }
+  }
+}
