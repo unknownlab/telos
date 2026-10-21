@@ -80,7 +80,7 @@ Separate checks (not catalogue records):
 
 - INV-013: Playwright suites (provenance coverage, "not run" state) and content-pipeline tests. See [docs-site.md](docs-site.md).
 - INV-014: `packages/locus-specs/test/core-independence.test.ts` scans `packages/locus/src/**` and `packages/locus/package.json`. It fails on any import of `@telos/locus-specs`, `bun:test`, `@playwright/*` or a test runner, and on any such dependency. `portability.test.ts` enforces the portability rule from locus-api.md.
-- NFR-002: a timed Bun test in `packages/locus-specs/test/` that generates 1,000 Loci with 3 Relations each and asserts that validation finishes in under 1 s.
+- NFR-002: a timed Bun test, `packages/locus/test/validate-performance.test.ts`, generates 1,000 Loci with 3 Relations each and asserts that validation finishes in under 1 s.
 
 ## Catalogue (version 1)
 
