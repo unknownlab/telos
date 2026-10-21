@@ -260,22 +260,23 @@
         "Ready for review: ce215aa, 2966b12, 74f908a"
       ],
       "provider": "__resolved_provider_absent__",
+      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP08-catalogue-and-adapter/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP08-catalogue-and-adapter/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "changes_requested"
       },
-      "role": "reviewer",
-      "shell_pid": 90319,
-      "shell_pid_created_at": "1792596915.362739",
+      "role": "implementer",
+      "shell_pid": null,
+      "shell_pid_created_at": null,
       "subtasks": {
-        "T039": "done",
-        "T040": "done",
-        "T041": "done",
-        "T042": "done",
-        "T043": "done",
-        "T044": "done"
+        "T039": "planned",
+        "T040": "planned",
+        "T041": "planned",
+        "T042": "planned",
+        "T043": "planned",
+        "T044": "planned"
       }
     },
     "WP09": {
