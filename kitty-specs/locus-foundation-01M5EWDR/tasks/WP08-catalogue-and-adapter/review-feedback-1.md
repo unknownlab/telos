@@ -1,13 +1,3 @@
----
-affected_files: []
-cycle_number: 1
-mission_slug: locus-foundation-01M5EWDR
-reproduction_command:
-reviewed_at: '2026-10-21T15:38:48Z'
-reviewer_agent: claude
-wp_id: WP08
----
-
 # WP08 review feedback (cycle 1) — reviewer-renata
 
 Verdict: APPROVE in substance (44 records match the contract, mutation pass and goldens independently confirmed). One required fix before approval, because downstream WPs depend on it.
