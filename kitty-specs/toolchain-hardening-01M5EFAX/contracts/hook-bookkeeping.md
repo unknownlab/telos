@@ -16,6 +16,8 @@ Applies to the hook defined in `kitty-specs/bun-monorepo-toolchain-01M5E4T4/cont
 - Runtime of a bookkeeping-only commit without `node_modules/` is under 2 s (NFR-002); the full run stays under 5 s (NFR-003).
 - `.githooks/commit-msg` is not modified (C-003).
 
+- The skip is safe only because `bun test` ignores `kitty-specs/**`, `.kittify/**`, `.worktrees/**` and `.spec-kitty/**` (`[test] pathIgnorePatterns` in `bunfig.toml`); a test file placed there is never run, so skipping the checks cannot hide a failing test.
+
 ## Acceptance examples
 
 | Staged | `node_modules/` | Expected |

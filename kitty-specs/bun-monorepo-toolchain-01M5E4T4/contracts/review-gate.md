@@ -32,7 +32,7 @@ No other key in `.kittify/config.yaml` changes (C-004).
   2. Every `<testsuite>` element from `bun test`'s JUnit file, with characters XML cannot represent removed (everything else unchanged). When `bun test` wrote no file (no test files exist), nothing is added.
 - **Console**: one line per step, `PASS verify.<step>` or `FAIL verify.<step>: <message>`.
 - **Exit code**: 0 when every step passed, otherwise 1.
-- **Environment**: steps run with `NO_COLOR=1` and without `FORCE_COLOR`. The report is well-formed XML for any step output, because text is sanitized before it is embedded (toolchain-hardening mission, `contracts/review-gate-report.md`).
+- **Environment**: steps run with `NO_COLOR=1` and without `FORCE_COLOR`, `CLAUDECODE` and `CLAUDE_CODE_ENTRYPOINT`; when `node_modules` is missing the runner first installs with `bun install --frozen-lockfile` (extra case `verify.install` only if that fails). The report is well-formed XML for any step output, because text is sanitized before it is embedded (toolchain-hardening mission, `contracts/review-gate-report.md`).
 - **Side effects**: writes `<junit-output-file>` and one temp directory under the OS temp dir, which it removes. It modifies 0 tracked files (NFR-003).
 
 ## Pure functions (unit-tested in `scripts/review-gate.test.ts`)
