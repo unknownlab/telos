@@ -7,6 +7,7 @@
     <M-REVIEW-GATE>
       <Summary>Runs the whole check suite for Spec Kitty's review gate and writes one JUnit report with a test case per check.</Summary>
       <Path>scripts/review-gate.ts</Path>
+      <M-BUN-VERSION-GUARD />
     </M-REVIEW-GATE>
   </GD-MAIN>
 </GraceGraphDocument>

@@ -61,7 +61,7 @@ Bun >=1.4.4-canary.1 required, found 1.4.3. Run: bun upgrade --canary
 - `packages/`: library packages, one directory per package.
 - `scripts/`: repository scripts (the version guard and the review gate runner).
 - `tsconfig.base.json`: strict compiler options shared by every package. `tsconfig.json` at the root checks `scripts/` and lists packages under `references`.
-- `bunfig.toml`: linter and formatter settings. Spec Kitty, GRACE and generated files are excluded from both.
+- `bunfig.toml`: linter, formatter and test-discovery settings. Spec Kitty, GRACE and generated files are excluded from the linter and formatter. `bun test` skips Spec Kitty's folders (`kitty-specs/`, `.kittify/`, `.spec-kitty/`), `.worktrees/` and `node_modules/`.
 
 Both areas are empty for now. A new package gets its own `package.json`, a reference `{ "path": "<area>/<name>" }` in the root `tsconfig.json`, and this `tsconfig.json`:
 
@@ -83,16 +83,16 @@ Both areas are empty for now. A new package gets its own `package.json`, a refer
 
 Run them from the repository root.
 
-| Command                                   | What it does                                                                                                    |
-| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `bun install`                             | Installs dependencies. Run it once per clone and once in every Spec Kitty worktree.                             |
-| `bun run verify`                          | The whole check suite: version, format check, lint, typecheck, tests, `grace lint`. Stops at the first failure. |
-| `bun run typecheck`                       | `bun check -b`: the root and every referenced package.                                                          |
-| `bun run lint` / `bun run lint:fix`       | Lint, or lint and apply safe fixes. Warnings do not fail.                                                       |
-| `bun run format` / `bun run format:check` | Format files, or only report unformatted files.                                                                 |
-| `bun run test`                            | `bun test`. Passes when no test files exist.                                                                    |
-| `bun run grace:lint`                      | `grace lint --path . --assertions current`.                                                                     |
-| `bun run check:bun`                       | The version guard alone.                                                                                        |
+| Command                                   | What it does                                                                                                                                      |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bun install`                             | Installs dependencies. Run it once per clone and once in every Spec Kitty worktree.                                                               |
+| `bun run verify`                          | The whole check suite: version, format check, lint, typecheck, tests, `grace lint`. Stops at the first failure.                                   |
+| `bun run typecheck`                       | `bun check -b`: the root and every referenced package.                                                                                            |
+| `bun run lint` / `bun run lint:fix`       | Lint, or lint and apply safe fixes. Warnings do not fail.                                                                                         |
+| `bun run format` / `bun run format:check` | Format files, or only report unformatted files.                                                                                                   |
+| `bun run test`                            | `bun test`. Passes when no test files exist. Test discovery skips `kitty-specs/`, `.kittify/`, `.spec-kitty/`, `.worktrees/` and `node_modules/`. |
+| `bun run grace:lint`                      | `grace lint --path . --assertions current`.                                                                                                       |
+| `bun run check:bun`                       | The version guard alone.                                                                                                                          |
 
 ### Pre-commit hook
 
@@ -106,7 +106,7 @@ Run them from the repository root.
 
 Any failure stops the commit with a `pre-commit:` message. On the empty skeleton the hook takes under two seconds.
 
-Commits that stage only files under `kitty-specs/` or `.kittify/` (Spec Kitty's bookkeeping commits) pass at once: the hook exits silently, without running the checks and without installed dependencies. Any other staged path brings back the full run above, including the `dependencies not installed` message when `node_modules/` is absent. A commit that moves a file out of any other directory runs the full checks too, because the old path counts as a staged path.
+Commits that stage only files under `kitty-specs/` or `.kittify/` (Spec Kitty's bookkeeping commits) pass at once: the hook exits silently, without running the checks and without installed dependencies. `bun test` never runs test files in those folders (see [Commands](#commands)), so this exception cannot hide a failing test. Any other staged path brings back the full run above, including the `dependencies not installed` message when `node_modules/` is absent. A commit that moves a file out of any other directory runs the full checks too, because the old path counts as a staged path.
 
 Formatting restages whole files. If you staged only part of a file, the hook blocks the commit with `pre-commit: format failed` and nothing is committed. Fix it by staging the rest of the file (`git add <file>`), or by setting the unstaged changes aside with `git stash --keep-index`.
 
@@ -114,7 +114,9 @@ Formatting restages whole files. If you staged only part of a file, the hook blo
 
 Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review. It runs every check, writes one JUnit report with a test case per check (`verify.lint`, `verify.typecheck`, and so on) plus every `bun test` result, and Spec Kitty blocks the review on any failure that is not already failing on the base branch.
 
-The report is always well-formed XML. Escape codes and other characters that XML cannot represent are removed from messages. A failed check's message shows the first real error line of that check, not the wrapper line that `bun run` prints. The checks run without colour.
+If `node_modules/` is missing, as in the base-branch checkout that Spec Kitty uses to tell new failures from old ones, the gate first runs `bun install --frozen-lockfile` once. A failed install appears as a failing `verify.install` case, and the other checks still run. When dependencies are already installed, the gate adds no install case.
+
+The report is always well-formed XML. Escape codes and other characters that XML cannot represent are removed from messages. A failed check's message shows the first real error line of that check, not the wrapper line that `bun run` prints. The checks run without colour, and their environment drops `CLAUDECODE`, `CLAUDE_CODE_ENTRYPOINT` and `FORCE_COLOR`, so the tools print plain messages instead of agent-specific formats such as `<error code="...">` tags.
 
 ## One-time setup on a new machine or fresh clone
 

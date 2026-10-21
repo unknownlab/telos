@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove the review gate report marks every failing step as a JUnit failure and keeps bun test's suites.
-//   SCOPE: Unit tests of escapeXml and buildReport.
+//   SCOPE: Unit tests of sanitizeText, escapeXml, buildReport, failureMessage, needsInstall and cleanEnv, including the escape-code cases and the no-mutation case for cleanEnv.
 //   DEPENDS: M-REVIEW-GATE
 //   LINKS: V-M-REVIEW-GATE
 //   ROLE: TEST
