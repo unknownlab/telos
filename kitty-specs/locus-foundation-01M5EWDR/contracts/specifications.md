@@ -13,7 +13,7 @@ export type ScenarioId = `NS-${string}`     // negative scenarios from spec.md
 export interface Specification {
   readonly id: `LOC-${string}`              // LOC-001 …, three digits, never reused
   readonly title: string                    // one sentence, reader-facing
-  readonly invariants: ReadonlyArray<InvariantId> // may be empty only for decode checks
+  readonly invariants: ReadonlyArray<InvariantId> // may be empty only for decode checks and LOC-044 (empty Fabric)
   readonly scenarios: ReadonlyArray<ScenarioId>
   readonly polarity: "positive" | "negative" // positive: input is accepted or equal; negative: input is rejected or distinguished
   readonly check: SpecCheck
@@ -72,7 +72,7 @@ Rules:
 | Bun test | `packages/locus-specs/test/specifications.test.ts` | one `test(id + " " + title)` per catalogue record; a test fails when `status !== "pass"` and prints expected and observed |
 | Runner meta-tests | `packages/locus-specs/test/runner.meta.test.ts` | for every check kind, take a catalogue record, alter its expectation, and assert the runner reports `fail`; also assert that a fixture that does not decode reports `error` |
 | Catalogue integrity | `packages/locus-specs/test/specifications.test.ts` | ids are unique, sequential and three-digit; every INV-001 to INV-012 has at least one positive and one negative record (NFR-007); every NS-001 to NS-017 that the package can check is referenced |
-| Determinism | `packages/locus-specs/test/determinism.test.ts` | Revision ids of every `revision-compare` fixture equal golden values recorded in the test file (NFR-001; the same goldens are checked in Chromium by the browser tests) |
+| Determinism | `packages/locus-specs/test/determinism.test.ts` | Revision ids of every `revision-compare` fixture equal golden values recorded in the test file and mirrored by the exported `revisionGoldens` in `src/goldens.ts`, which a test asserts equal (NFR-001; the same goldens are checked in Chromium by the browser tests and shown in the playground) |
 | Build report | `apps/docs/scripts/spec-report.ts` | runs `runSpecifications(catalogue)` under Bun at build time and writes `apps/docs/src/generated/spec-report.json` with `bun-build` provenance |
 | Playground | `apps/docs/src/playground/` | scenario E runs `runSpecifications(catalogue)` in the browser and labels the report `browser` |
 
