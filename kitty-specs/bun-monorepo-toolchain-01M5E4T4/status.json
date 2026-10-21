@@ -65,7 +65,8 @@
       "model": "__resolved_model_absent__",
       "notes": [
         "Unblocked: lane merge conflicts resolved manually",
-        "Implemented; evidence in report"
+        "Implemented; evidence in report",
+        "Review passed"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
