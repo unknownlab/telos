@@ -7,7 +7,7 @@ requirement_refs:
 - FR-011
 planning_base_branch: feat/bun-monorepo-toolchain
 merge_target_branch: feat/bun-monorepo-toolchain
-branch_strategy: Planning artifacts were generated on feat/bun-monorepo-toolchain; completed changes must merge back into feat/bun-monorepo-toolchain.
+branch_strategy: Planning artifacts for this mission were generated on feat/bun-monorepo-toolchain. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/bun-monorepo-toolchain unless the human explicitly redirects the landing branch.
 subtasks:
 - T013
 - T014
@@ -15,10 +15,9 @@ subtasks:
 - T016
 phase: Phase 2 - Gates
 history:
-- !!omap
-  - at: '2026-10-21T03:16:03Z'
-  - actor: system
-  - action: Prompt generated via /spec-kitty.tasks
+- at: '2026-10-21T03:16:03Z'
+  actor: system
+  action: Prompt generated via /spec-kitty.tasks
 agent_profile: implementer-ivan
 authoritative_surface: docs/
 create_intent: []
