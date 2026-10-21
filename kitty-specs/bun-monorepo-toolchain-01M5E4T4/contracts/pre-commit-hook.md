@@ -21,7 +21,7 @@ Every failure message goes to stderr and is prefixed with `pre-commit:`, matchin
 - No `--no-verify` guidance in any message.
 - `--no-script` is required: when a `lint` script exists, bare `bun lint` runs that script instead of the linter (verified on 1.4.4-canary.1).
 - With zero matching staged files, `bun fmt --staged` and `bun lint --staged` print "No staged files…" and exit 0 (verified). Steps 4–7 still run.
-- `bun fmt --staged` restages whole files. A partially staged file gets its unstaged hunks staged too. This is documented in `docs/tooling.md`, not worked around.
+- `bun fmt --staged` refuses a partially staged file ("has both staged and unstaged changes"), so the hook blocks with `pre-commit: format failed`. Nothing extra is committed. The fix (stage the rest, or `git stash --keep-index`) is documented in `docs/tooling.md`, not worked around.
 - Total runtime on the skeleton < 5 s (NFR-002).
 - `.githooks/commit-msg` is not modified (C-003).
 
