@@ -1,13 +1,3 @@
----
-affected_files: []
-cycle_number: 1
-mission_slug: locus-foundation-01M5EWDR
-reproduction_command:
-reviewed_at: '2026-10-21T16:44:02Z'
-reviewer_agent: claude
-wp_id: WP15
----
-
 # WP15 review feedback (cycle 1) — reviewer-renata
 
 Verdict: REJECT. `bun run verify` is green (737 tests) and the behaviour of D and E is correct in Chromium (stale refusal leaves history unchanged, 44/44 browser run equals Bun, goldens match), but the items below break NFR-004 (axe clean in both themes), a contract hook that WP16 reads, and test protection of the core logic. Keep every change inside this WP's owned files.
