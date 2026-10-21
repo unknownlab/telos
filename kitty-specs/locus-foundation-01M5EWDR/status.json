@@ -28,7 +28,8 @@
       "last_transition_at": "2026-10-21T12:38:40.730020+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: a87596e"
+        "Ready for review: a87596e",
+        "Review passed (reviewer-renata, Sonnet): verify green, pins exact, manifest tests and typecheck mutations fail correctly. tsconfig deviation justified."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
