@@ -1,108 +1,108 @@
 {
   "mission_slug": "toolchain-hardening-01M5EFAX",
-  "mission_number": "",
+  "mission_number": "2",
   "mission_type": "software-dev",
   "overall_verdict": "pass",
   "criteria": [
     {
       "criterion_id": "FR-001",
-      "description": "Verify FR-001 is satisfied",
+      "description": "FR-001: Well-formed review report",
       "proof_type": "automated_test",
-      "evidence": "WP01 review: FORCE_COLOR=1 run with a type error gives a report that passes xmllint and Spec Kitty _parse_junit_xml; pre-fix report failed both (PCDATA invalid Char value 27)",
+      "evidence": "WP01 review: FORCE_COLOR=1 run with a type error gives a report that passes xmllint and Spec Kitty _parse_junit_xml; pre-fix report failed both (an invalid character error)",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:48:51.234384+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-002",
-      "description": "Verify FR-002 is satisfied",
+      "description": "FR-002: Escape-code regression test",
       "proof_type": "automated_test",
       "evidence": "scripts/review-gate.test.ts: ESC/NUL/surrogate tests; mutation (sanitizeText returns input) fails 6 tests, restored",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:48:53.437062+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-003",
-      "description": "Verify FR-003 is satisfied",
+      "description": "FR-003: Useful failure messages",
       "proof_type": "automated_test",
       "evidence": "failureMessage tests (wrapper skipped, (fail) line, last real line, exit code, 300 limit); reviewer mutation fails the (fail) test; real typecheck message names file/code (see follow-up on TS text)",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:48:55.695327+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-004",
-      "description": "Verify FR-004 is satisfied",
+      "description": "FR-004: Bookkeeping commits pass",
       "proof_type": "manual",
       "evidence": "WP02 reviews cycle 1 and 2: bookkeeping-only commits pass silently without node_modules in throwaway clones (0.07-1.3 s)",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:48:57.960725+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-005",
-      "description": "Verify FR-005 is satisfied",
+      "description": "FR-005: Mixed commits unchanged",
       "proof_type": "manual",
       "evidence": "WP02 reviews: kitty-specs plus code path, kitty-specs-extra/, renames out of code paths, lint error all keep full checks and blocking",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:49:00.173071+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-006",
-      "description": "Verify FR-006 is satisfied",
+      "description": "FR-006: Contract and docs updated",
       "proof_type": "manual",
       "evidence": "docs/tooling.md reviewed against contracts; hook-bookkeeping.md and review-gate-report.md written in this mission; previous mission contracts and data model updated in commits fa54c09 and c4d7c39",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:49:21.663458+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-007",
-      "description": "Verify FR-007 is satisfied",
+      "description": "FR-007: Ignore the review lock folder",
       "proof_type": "automated_test",
       "evidence": "git check-ignore confirms .spec-kitty/ ignored (WP02 review)",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:49:04.592225+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-008",
-      "description": "Verify FR-008 is satisfied",
+      "description": "FR-008: Data model matches config",
       "proof_type": "manual",
       "evidence": "data-model.md ignore list lists .spec-kitty; bunfig.toml ignores .spec-kitty/** (WP02 read-only check)",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:49:06.889518+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-009",
-      "description": "Verify FR-009 is satisfied",
+      "description": "FR-009: Guard on every check",
       "proof_type": "automated_test",
       "evidence": "bun run lint/typecheck/test start with bun run check:bun (WP02 review)",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:49:09.102380+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     },
     {
       "criterion_id": "FR-010",
-      "description": "Verify FR-010 is satisfied",
+      "description": "FR-010: GRACE kept in sync",
       "proof_type": "automated_test",
       "evidence": "grace lint --path . --assertions current: 0 errors; M-REVIEW-GATE ready; module map lists sanitizeText and failureMessage",
       "pass_fail": "pass",
       "verified_by": "claude",
       "verified_at": "2026-10-21T05:49:11.301465+00:00",
-      "notes": "TODO: replace with a real acceptance criterion"
+      "notes": ""
     }
   ],
   "negative_invariants": []

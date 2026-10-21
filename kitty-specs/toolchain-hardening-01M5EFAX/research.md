@@ -17,7 +17,7 @@
 
 - **Evidence**: Spec Kitty commits status and planning files in coordination and lane worktrees that have no `node_modules`. The hook's dependency check blocks them. `bunfig.toml` already excludes `kitty-specs/**` and `.kittify/**` from lint and format, and neither directory holds code that the type checker, tests or GRACE govern.
 - **Decision**: right after changing to the repository root, read the staged paths with `git diff --cached --name-only`; if there is at least one and every path matches `kitty-specs/*` or `.kittify/*` (shell `case`), print nothing and exit 0. Anything else follows the existing steps unchanged. An empty staged set keeps today's behavior.
-- **Rationale**: smallest change that satisfies the spec edge case; skipping checks that cannot be affected by these paths costs nothing. Paths that git quotes (non-ASCII) do not match and fall through to the full checks.
+- **Rationale**: smallest change that satisfies the spec edge case; skipping checks that cannot be affected by these paths costs nothing. Superseded during review: the staged paths are read with `git -c core.quotePath=false diff --cached --name-only --no-renames`, so non-ASCII names are matched and a rename out of a code path is seen as a code change (see `contracts/hook-bookkeeping.md`).
 - **Alternatives**: skip only the dependency check (still runs typecheck and tests, which need dependencies and gain nothing); a hook environment variable (hidden state).
 
 ## R-04 `.spec-kitty/` ignore (finding F7)

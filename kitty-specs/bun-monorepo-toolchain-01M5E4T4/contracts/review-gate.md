@@ -29,7 +29,7 @@ No other key in `.kittify/config.yaml` changes (C-004).
 
 - **Report** written to `<junit-output-file>`: one `<testsuites>` root containing
   1. `<testsuite name="verify" tests="<n>" failures="<f>">` with one `<testcase classname="verify" name="<step>">` per step. A failed step has a `<failure message="<failure message>" />` child, where the message is the first real error line of the step's output (see `failureMessage` below). Spec Kitty reads its identity as `verify.<step>`.
-  2. Every `<testsuite>` element from `bun test`'s JUnit file, unchanged. When `bun test` wrote no file (no test files exist), nothing is added.
+  2. Every `<testsuite>` element from `bun test`'s JUnit file, with characters XML cannot represent removed (everything else unchanged). When `bun test` wrote no file (no test files exist), nothing is added.
 - **Console**: one line per step, `PASS verify.<step>` or `FAIL verify.<step>: <message>`.
 - **Exit code**: 0 when every step passed, otherwise 1.
 - **Environment**: steps run with `NO_COLOR=1` and without `FORCE_COLOR`. The report is well-formed XML for any step output, because text is sanitized before it is embedded (toolchain-hardening mission, `contracts/review-gate-report.md`).
