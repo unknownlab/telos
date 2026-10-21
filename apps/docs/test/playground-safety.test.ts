@@ -146,8 +146,10 @@ describe("the two known raw-HTML exceptions stay exceptions", () => {
     ]);
   });
 
-  test("innerHTML occurs in no site source at this point in the mission", async () => {
-    expect(await filesContaining("innerHTML")).toEqual([]);
+  test("innerHTML occurs only in the Mermaid renderer, which renders strict-mode SVG of repository content", async () => {
+    expect(await filesContaining("innerHTML")).toEqual([
+      "src/components/mermaid-renderer.tsx",
+    ]);
   });
 
   test("the document page exception is the one that the scan reads", async () => {
