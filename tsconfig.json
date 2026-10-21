@@ -1,5 +1,11 @@
 {
   "extends": "./tsconfig.base.json",
   "include": ["scripts"],
-  "references": []
+  "references": [
+    { "path": "packages/locus" },
+    { "path": "packages/locus/test" },
+    { "path": "packages/locus-specs" },
+    { "path": "packages/locus-specs/test" },
+    { "path": "apps/docs" }
+  ]
 }
