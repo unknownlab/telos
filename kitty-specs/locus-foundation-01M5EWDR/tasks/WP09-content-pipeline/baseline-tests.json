@@ -1,0 +1,13 @@
+{
+  "wp_id": "WP09",
+  "captured_at": "2026-10-21T12:40:18Z",
+  "base_branch": "feat/locus-foundation",
+  "base_commit": "30cc6052a076900d307aa7fe6173e4e7ab7022e7",
+  "test_runner": "custom",
+  "total": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "failures": [],
+  "source_identity": "DeclaredCommandScopeSource/junit_xml"
+}
