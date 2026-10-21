@@ -2,7 +2,7 @@
   "mission_slug": "toolchain-hardening-01M5EFAX",
   "mission_number": "",
   "mission_type": "software-dev",
-  "overall_verdict": "pending",
+  "overall_verdict": "pass",
   "criteria": [
     {
       "criterion_id": "FR-001",
@@ -98,10 +98,10 @@
       "criterion_id": "FR-010",
       "description": "Verify FR-010 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "grace lint --path . --assertions current: 0 errors; M-REVIEW-GATE ready; module map lists sanitizeText and failureMessage",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-21T05:49:11.301465+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     }
   ],
