@@ -2,7 +2,7 @@
 
 **Mission Branch**: `feat/locus-foundation` (planning base and merge target)
 **Created**: 2026-10-21
-**Status**: Draft
+**Status**: Approved (owner, 2026-10-21)
 **Input**: User description: "Locus Foundation — Semantic Identity and Ownership: first executable slice of Telos CAP-01 (package @telos/locus) plus the documentation site (apps/docs) and controlled playground, per docs/foundation and ADR-0002..ADR-0014"
 
 ## Context

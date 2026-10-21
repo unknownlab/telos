@@ -19,3 +19,10 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 
 - WP10 guides and `apps/docs/test/guides.test.ts` hard-code 13 diagnostic codes. The cycle-cap follow-up adds `relation.refines-cycle-limit`, making 14: update the guide table and the test in the same commit.
 - WP07 narrowed the bundle check to `node:`/`bun:` in import position (`forbiddenBundleReferences`), because `validate.ts` has an object key `node:` and Effect has a guarded `getBuiltinModule("node:async_hooks")`. Reviewed in WP07.
+
+## 4. WP07 review gaps (non-blocking)
+
+- `packages/locus-specs/test/runner.meta.test.ts`: add a validate record with two or more diagnostics and an `expect` whose keys are written in reversed order (must pass), plus its order-swapped variant (must fail); add a `sameLocus: false` revision-compare record. Survivors found: key-order-sensitive comparison, truncated or reversed diagnostics, validate-stable running once.
+- `packages/locus-specs/test/scan.ts`: add the backtick to `SPECIFIER_PATTERNS` so a template-literal `import(\`node:fs\`)` in source is caught.
+- `packages/locus-specs/src/model.ts`: `DEPENDS: M-LOCUS-SPECS` is a self-reference; use `M-LOCUS-MODEL` or none.
+- `runSpecification` dies if a spec has no `check` (outside the types); optional.
