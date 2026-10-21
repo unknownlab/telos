@@ -11,7 +11,7 @@ Phase 0 output. Each entry: Decision, Rationale, Alternatives considered. Dates 
 | `effect` | 4.0.4 † | 2026-10-13 | locus, locus-specs, docs | runtime | none | Errors, services, layers, Schema (ADR-0004); 0 dependencies |
 | `@tanstack/react-start` | 1.169.2 † | 2026-10-14 | docs | runtime | none | Framework mandated by the directive; static prerendering |
 | `@tanstack/react-router` | 1.170.44 † | 2026-10-12 | docs | runtime | none | Routing (peer of Start) |
-| `@tanstack/router-plugin` | 1.168.46 † | 2026-10-14 | docs | dev | none | File-route generation |
+| `@tanstack/router-plugin` | — (not added directly) | — | — | — | — | Start's Vite plugin generates the route tree itself and depends on the router plugin transitively (task-phase spike, 2026-10-21) |
 | `react`, `react-dom` | 19.3.1 | 2026-10-14 | docs | runtime | none | UI |
 | `vite` | 8.3.4 † | 2026-10-08 | docs | dev | none | Build tool required by Start (peer `>=8`) |
 | `@vitejs/plugin-react` | 6.1.2 | 2026-10-05 | docs | dev | none | React transform (peer `vite ^8`) |
@@ -96,6 +96,8 @@ It then writes `src/generated/content.json`, `public/llms.txt` and `public/index
 
 **Decision**: use TanStack Start's static prerender option, crawling from `/` with every route listed explicitly, and run Vite under Bun (`bun --bun vite build`). IC-08 starts with a spike: one prerendered route plus one client-only island. If prerendering under Bun fails, the fallback is SPA mode with a prerendered shell plus a Bun script that renders each content route to HTML through the router's server entry. The fallback is recorded as a deviation for review.
 
+**Spike result (task phase, 2026-10-21)**: with the pinned versions, `tanstackStart({ prerender: { enabled: true, crawlLinks: true, failOnError: true }, pages: [{ path: "/" }] })` under `bun --bun vite build` wrote static `dist/client/index.html` and `dist/client/<route>/index.html` containing the rendered content; the result type-checks with `tsconfig.base.json` plus `jsx: react-jsx` and DOM libraries. The fallback is not needed.
+
 **Rationale**: NFR-005 requires content readable without JavaScript, and C-008 rules out a server.
 
 **Alternatives considered**: running a server (out of scope); a plain Vite SPA (fails NFR-005).
@@ -125,7 +127,7 @@ It then writes `src/generated/content.json`, `public/llms.txt` and `public/index
 
 ## R-08 Browser test scope
 
-**Decision**: Playwright runs against `vite preview` of the production build, in Chromium only. Suites:
+**Decision**: Playwright runs against the static output `apps/docs/dist/client`, served by a small Bun static file server (`apps/docs/scripts/serve-static.ts`, `Bun.serve`), in Chromium only. (Changed in the task phase: `vite preview` of a Start build runs the server bundle and would hide a missing prerendered page; serving the files proves NFR-005 and C-008.) Suites:
 
 - navigation (every section, every document);
 - search;
