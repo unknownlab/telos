@@ -7,7 +7,7 @@ requirement_refs:
 - FR-011
 planning_base_branch: feat/bun-monorepo-toolchain
 merge_target_branch: feat/bun-monorepo-toolchain
-branch_strategy: Planning artifacts for this mission were generated on feat/bun-monorepo-toolchain. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/bun-monorepo-toolchain unless the human explicitly redirects the landing branch.
+branch_strategy: Planning artifacts were generated on feat/bun-monorepo-toolchain; completed changes must merge back into feat/bun-monorepo-toolchain.
 subtasks:
 - T013
 - T014
@@ -15,9 +15,10 @@ subtasks:
 - T016
 phase: Phase 2 - Gates
 history:
-- at: '2026-10-21T03:16:03Z'
-  actor: system
-  action: Prompt generated via /spec-kitty.tasks
+- !!omap
+  - at: '2026-10-21T03:16:03Z'
+  - actor: system
+  - action: Prompt generated via /spec-kitty.tasks
 agent_profile: implementer-ivan
 authoritative_surface: docs/
 create_intent: []
@@ -85,7 +86,7 @@ Hard rules:
 
 - Keep the file's style: plain, short sentences, second person ("you"), no marketing words.
 - Keep every existing section that is still true (Who does what, What you will be asked, Global footprint, Upgrading). Change only what this mission makes stale, plus the new section.
-- **Do not edit `AGENTS.md`**. It is a governance file; editing it is an owner decision.
+- **Do not edit `AGENTS.md`**, even though its line "No app toolchain exists yet. Never add fake tests, placeholder scripts, or checks that verify nothing." is now stale. Editing it is an owner decision. Record the staleness in the Activity Log (T016) so the owner sees it.
 - Conventional Commits, e.g. `docs(tooling): document the bun toolchain, hook and review gate`. No AI names. Never `--no-verify`.
 
 ## Branch Strategy
@@ -212,13 +213,14 @@ Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review.
 - Re-read the whole file once. Every command and message must match the contracts exactly (`pre-commit:` prefix, `bun upgrade --canary`, script names).
 - In the Activity Log, record:
   - the `format:check` result,
+  - this exact owner note: "AGENTS.md still says 'No app toolchain exists yet. Never add fake tests, placeholder scripts, or checks that verify nothing.' This is stale after this mission. Editing AGENTS.md needs owner approval, so it is left unchanged."
 
 ## Definition of Done
 
 - [ ] T013 edits made; no "not in place yet" or "adds CI" statements remain.
 - [ ] Toolchain section inserted before the setup section.
 - [ ] Setup block updated; file formatted; `bun run format:check` exits 0.
-- [ ] Only `docs/tooling.md` changed; `format:check` result recorded.
+- [ ] Only `docs/tooling.md` changed; the AGENTS.md note is recorded.
 
 ## Risks & Mitigations
 
@@ -231,7 +233,7 @@ Reviewer: Claude Sonnet (`reviewer-renata` profile).
 
 - Check each command, message and file path against `contracts/commands.md`, `contracts/pre-commit-hook.md` and `contracts/review-gate.md`.
 - Confirm `bun run format:check` exits 0 in the worktree.
-- Confirm `AGENTS.md` is unchanged.
+- Confirm `AGENTS.md` is unchanged and the staleness note is recorded.
 
 ## Activity Log
 
