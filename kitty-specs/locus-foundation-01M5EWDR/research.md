@@ -69,7 +69,7 @@ Supply-chain checks:
 
 ## R-03 Validation shape
 
-**Decision**: `validateFabric` is a total pure function returning `{ valid, diagnostics }`. Diagnostics are sorted by (subject, code, path, detail). Cycles are reported once per cycle, as a list rotated to start at its smallest identity, with the subject being that smallest identity. Duplicate checks key on values, not array positions, so reordering input cannot change output.
+**Decision**: `validateFabric` is a total pure function returning `{ valid, diagnostics }`. Diagnostics are sorted by (subject, code, path, detail). Cycles are reported once per cycle, as a list rotated to start at its smallest identity, with the subject being that smallest identity. At most 100 `relation.refines-cycle` diagnostics are reported per Fabric, then one `relation.refines-cycle-limit` (owner decision, 2026-10-21; see the contract). Duplicate checks key on values, not array positions, so reordering input cannot change output.
 
 **Rationale**: the technical direction keeps pure functions out of `Effect`; P10 and INV-009 require complete, deterministic results; positional paths would make output depend on order (spec, User Story 1 scenario 3).
 
