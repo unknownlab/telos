@@ -1,7 +1,7 @@
 {
-  "event_count": 9,
-  "last_event_id": "01M5F45KW71DW4B8YAY4Q583KJ",
-  "materialized_at": "2026-10-21T11:39:59.239211+00:00",
+  "event_count": 10,
+  "last_event_id": "01M5F45MDFFBFR16Q6E7T733FG",
+  "materialized_at": "2026-10-21T11:39:59.791475+00:00",
   "mission_number": "",
   "mission_slug": "locus-foundation-01M5EWDR",
   "mission_type": "",
@@ -14,7 +14,7 @@
     "for_review": 0,
     "in_progress": 0,
     "in_review": 0,
-    "planned": 9
+    "planned": 10
   },
   "work_packages": {
     "WP01": {
@@ -79,6 +79,13 @@
       "lane": "planned",
       "last_event_id": "01M5F45KW71DW4B8YAY4Q583KJ",
       "last_transition_at": "2026-10-21T11:39:59.239211+00:00"
+    },
+    "WP10": {
+      "actor": "finalize-tasks",
+      "force_count": 0,
+      "lane": "planned",
+      "last_event_id": "01M5F45MDFFBFR16Q6E7T733FG",
+      "last_transition_at": "2026-10-21T11:39:59.791475+00:00"
     }
   }
 }
