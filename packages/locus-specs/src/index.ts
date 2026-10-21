@@ -22,7 +22,6 @@
 //   runSpecifications - runs a list in input order and counts the statuses
 //   catalogue - the 44 executable specification records LOC-001 to LOC-044 in id order
 //   examples - playground starting inputs: valid, invalid, relations and history
-//   revisionGoldens - golden Revision ids keyed by "<record id>.a" and "<record id>.b"
 // END_MODULE_MAP
 
 export type {
@@ -39,4 +38,3 @@ export { runSpecification, runSpecifications } from "./runner";
 export { canonicalJson, jsonEqual } from "./canonical-json";
 export { catalogue } from "./catalogue";
 export { examples } from "./examples";
-export { revisionGoldens } from "./goldens";
