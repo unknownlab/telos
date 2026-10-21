@@ -58,10 +58,10 @@
       "criterion_id": "FR-006",
       "description": "Verify FR-006 is satisfied",
       "proof_type": "manual",
-      "evidence": "docs/tooling.md reviewed against contracts; hook-bookkeeping.md, review-gate-report.md and previous mission contracts updated (fa54c09, 6f0c1e8)",
+      "evidence": "docs/tooling.md reviewed against contracts; hook-bookkeeping.md and review-gate-report.md written in this mission; previous mission contracts and data model updated in commits fa54c09 and c4d7c39",
       "pass_fail": "pass",
       "verified_by": "claude",
-      "verified_at": "2026-10-21T05:49:02.374077+00:00",
+      "verified_at": "2026-10-21T05:49:21.663458+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
