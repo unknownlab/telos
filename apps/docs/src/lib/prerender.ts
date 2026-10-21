@@ -19,6 +19,10 @@ export const APP_PAGES: ReadonlyArray<string> = [
   "/architecture",
   "/not-found",
   "/verification",
+  "/playground",
+  "/playground/a",
+  "/playground/b",
+  "/playground/c",
 ];
 
 // START_CONTRACT: prerenderPaths
