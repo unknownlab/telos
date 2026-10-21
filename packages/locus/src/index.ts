@@ -38,6 +38,11 @@
 //   diffRevisions - fails for different Loci; otherwise returns the ordered change set
 //   RevisionHistory - Effect service: head, entries, get and compare-and-set append per Locus
 //   RevisionHistoryInMemory - layer that builds fresh, empty in-memory state each time it is provided
+//   LocusJson - JSON shape of one Locus; identical to LocusInput
+//   FabricJson - JSON shape of a Fabric
+//   decodeLocus - decodes one Locus object into a frozen LocusDefinition or a DecodeError
+//   decodeFabric - decodes a Fabric object into a frozen Fabric or a DecodeError
+//   decodeFabricJson - decodes Fabric JSON text, refusing text over 1,048,576 code units
 // END_MODULE_MAP
 
 export type { Charter } from "./charter";
@@ -64,3 +69,5 @@ export { createRevision } from "./revision";
 export type { Change, ChangeSet, SetPart } from "./diff";
 export { diffRevisions } from "./diff";
 export { RevisionHistory, RevisionHistoryInMemory } from "./history";
+export type { FabricJson, LocusJson } from "./decode";
+export { decodeFabric, decodeFabricJson, decodeLocus } from "./decode";
