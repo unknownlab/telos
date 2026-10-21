@@ -36,6 +36,8 @@
 //   ChangeSet - the ordered changes between two Revisions of one Locus
 //   SetPart - the four set-valued parts of a definition that produce added and removed changes
 //   diffRevisions - fails for different Loci; otherwise returns the ordered change set
+//   RevisionHistory - Effect service: head, entries, get and compare-and-set append per Locus
+//   RevisionHistoryInMemory - layer that builds fresh, empty in-memory state each time it is provided
 // END_MODULE_MAP
 
 export type { Charter } from "./charter";
@@ -61,3 +63,4 @@ export type { Revision, RevisionId } from "./revision";
 export { createRevision } from "./revision";
 export type { Change, ChangeSet, SetPart } from "./diff";
 export { diffRevisions } from "./diff";
+export { RevisionHistory, RevisionHistoryInMemory } from "./history";
