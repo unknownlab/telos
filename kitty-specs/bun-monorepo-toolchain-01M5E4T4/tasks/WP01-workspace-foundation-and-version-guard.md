@@ -379,11 +379,11 @@ If `bun run format:check` lists any file of yours, run `bun run format` and re-c
 
 ## Definition of Done
 
-- [ ] All ten owned files exist with the exact contents above; `bun.lock` is committed.
-- [ ] T001's failing run is recorded before T002.
-- [ ] `bun install --frozen-lockfile`, `check:bun`, `typecheck`, `lint` and `test` all exit 0.
-- [ ] `format:check` reports only `docs/tooling.md`.
-- [ ] Malformed-engines check done; old-Bun check done or explicitly skipped with a reason.
+- [x] All ten owned files exist with the exact contents above; `bun.lock` is committed.
+- [x] T001's failing run is recorded before T002.
+- [x] `bun install --frozen-lockfile`, `check:bun`, `typecheck`, `lint` and `test` all exit 0.
+- [x] `format:check` reports only `docs/tooling.md`.
+- [x] Malformed-engines check done; old-Bun check done or explicitly skipped with a reason.
 - [ ] No other files changed (`git status` clean after commit).
 
 ## Risks & Mitigations
