@@ -48,10 +48,10 @@
       "criterion_id": "FR-005",
       "description": "Verify FR-005 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "lane-e: bun run format and format:check exist; format:check exit 0 within verify; WP03 review showed fail-before/pass-after",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-21T05:18:49.528634+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
