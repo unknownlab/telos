@@ -424,7 +424,8 @@
       "last_transition_at": "2026-10-21T16:01:04.136690+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: fa0feef, e5d810f"
+        "Ready for review: fa0feef, e5d810f",
+        "Rework done: 4d507d8, 7d94fac"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
