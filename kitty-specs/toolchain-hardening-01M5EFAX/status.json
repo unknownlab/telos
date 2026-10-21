@@ -1,7 +1,7 @@
 {
-  "event_count": 2,
-  "last_event_id": "01M5EFKQ789B37FKT2HWHTBV8V",
-  "materialized_at": "2026-10-21T05:40:41.320248+00:00",
+  "event_count": 4,
+  "last_event_id": "01M5EFMQ9D5MQWJ0EVQWK81QTV",
+  "materialized_at": "2026-10-21T05:41:14.157198+00:00",
   "mission_number": "",
   "mission_slug": "toolchain-hardening-01M5EFAX",
   "mission_type": "software-dev",
@@ -12,17 +12,20 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "in_review": 0,
-    "planned": 2
+    "planned": 1
   },
   "work_packages": {
     "WP01": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5EFKP4Z3Z2A12F29AJFFPTG",
-      "last_transition_at": "2026-10-21T05:40:40.223407+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5EFMQ9D5MQWJ0EVQWK81QTV",
+      "last_transition_at": "2026-10-21T05:41:14.157198+00:00",
+      "shell_pid": 16616,
+      "shell_pid_created_at": "1792561271.128644"
     },
     "WP02": {
       "actor": "finalize-tasks",
