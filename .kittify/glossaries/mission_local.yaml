@@ -1,0 +1,9 @@
+terms:
+  - surface: skeleton
+    definition: The workspace with root configuration only and no workspace packages, as delivered by the bun-monorepo-toolchain mission.
+    confidence: 1.0
+    status: active
+  - surface: canary
+    definition: A Bun pre-release build from the main branch (version like 1.4.4-canary.N), installed with "bun upgrade --canary".
+    confidence: 1.0
+    status: active
