@@ -164,7 +164,9 @@
         "Unblocked: lane-e merges resolved manually"
       ],
       "provider": "__resolved_provider_absent__",
-      "role": "implementer"
+      "role": "implementer",
+      "shell_pid": 90396,
+      "shell_pid_created_at": "1792558910.943307"
     }
   }
 }
