@@ -1,7 +1,7 @@
 {
-  "event_count": 77,
-  "last_event_id": "01M5FHTYMZ46PS8MDGKHEC5QW4",
-  "materialized_at": "2026-10-21T15:38:49.887472+00:00",
+  "event_count": 79,
+  "last_event_id": "01M5FHV3TMTEDEWE409975FXKE",
+  "materialized_at": "2026-10-21T15:38:55.092467+00:00",
   "mission_number": "",
   "mission_slug": "locus-foundation-01M5EWDR",
   "mission_type": "",
@@ -12,9 +12,9 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "in_review": 1,
-    "planned": 8
+    "planned": 7
   },
   "work_packages": {
     "WP01": {
@@ -252,9 +252,9 @@
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
-      "lane": "planned",
-      "last_event_id": "01M5FHTYMZ46PS8MDGKHEC5QW4",
-      "last_transition_at": "2026-10-21T15:38:49.887472+00:00",
+      "lane": "in_progress",
+      "last_event_id": "01M5FHV3TMTEDEWE409975FXKE",
+      "last_transition_at": "2026-10-21T15:38:55.092467+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review: ce215aa, 2966b12, 74f908a"
