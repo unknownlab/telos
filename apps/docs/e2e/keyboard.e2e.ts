@@ -146,16 +146,25 @@ test.describe("keyboard only", () => {
   }) => {
     for (const id of ["a", "b", "c", "d", "e"]) {
       await openScenario(page, id);
+      // Run the scenario first: scenario D's history controls exist only after Compute.
+      await page.locator('[data-action="run"]').click();
+      await expect(page.locator("[data-result]").first()).toBeVisible();
+      if (id === "d") {
+        await expect(page.locator('[data-slot="expected-head"]')).toHaveCount(
+          1,
+        );
+      }
       const controls = page.locator(PLAYGROUND_CONTROLS);
       const count = await controls.count();
       expect(count, `controls in scenario ${id}`).toBeGreaterThan(0);
       for (let index = 0; index < count; index += 1) {
-        const snapshot = await controls.nth(index).ariaSnapshot();
-        const firstLine = snapshot.split("\n")[0] ?? "";
-        expect(
-          firstLine,
-          `control ${index} in scenario ${id}: ${firstLine}`,
-        ).toMatch(/"[^"]+"/);
+        // The computed accessible name, not the snapshot text: a textarea's value is in the snapshot too.
+        await expect
+          .soft(
+            controls.nth(index),
+            `control ${index} in scenario ${id} has an accessible name`,
+          )
+          .toHaveAccessibleName(/\S/);
       }
     }
   });
