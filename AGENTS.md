@@ -40,6 +40,7 @@ Resume only the work that matches the owner's current request. Report any other 
 - **Stuck workflow**: use `spk-run-blocked-recovery`. **Broken tooling**: use `spk-admin-setup-doctor`.
 - **GRACE** owns architecture knowledge and its validation: contracts, the module graph, verification, and semantic markup. The skills are `grace-status`, `grace-ask`, `grace-cli`, `grace-reviewer`, `grace-verification`, `grace-refresh`, `grace-fix`, `grace-refactor`, and `grace-explainer`. When `.grace/` exists, every mission keeps `.grace/` and the code markup in sync inside its own work packages. The mission must also pass `grace lint --path . --assertions current`.
 - **Spec Kitty** owns the change lifecycle. Do not use `grace-spec`, `grace-plan`, `grace-execute`, `grace-setup-subagents`, or `.grace/changes/`. The mission is the change record.
+- **Model routing for missions**: when implementing a mission, the main session only coordinates. Implement each work package in its own subagent, using the WP's `agent_profile` and `model` frontmatter, at high effort. Run work packages with no dependency between them in parallel. Review each WP with `reviewer-renata` on Sonnet. After merge, run the mission review with an Opus subagent at high effort. If a WP is rejected twice, ask the owner before retrying it on a stronger model.
 - If `.grace/` is absent, do not create it yourself. Offer `grace-init` when a mission first defines architecture. If GRACE proposes rules that conflict with this file, this file wins. Tell the owner about the conflict.
 
 ## Owner decisions
@@ -58,7 +59,7 @@ Everything else proceeds without asking: inspecting, running checks, implementin
 
 ## Verification
 
-- No app toolchain exists yet. Never add fake tests, placeholder scripts, or checks that verify nothing.
+- Never add fake tests, placeholder scripts, or checks that verify nothing.
 - Before implementing, read the work package's acceptance criteria. Run the existing checks to get a baseline.
 - Run every check the repo declares (typecheck, lint, format, tests) before review, and again before accept or merge. Add `grace lint` when `.grace/` exists. Report the results exactly. If a check does not exist, say so; never claim it passed.
 - The mission that introduces a toolchain also wires its checks into CI and into Spec Kitty's review gate (`review.test_command`). That wiring is part of the plan the owner approves.
