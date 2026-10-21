@@ -4,6 +4,7 @@ POSIX `sh`, executable, run by git through `core.hooksPath`. The hook first chan
 
 | # | Step | Command | On failure |
 |---|------|---------|------------|
+| 0a | Bookkeeping only | `git diff --cached --name-only`; every path matches `kitty-specs/*` or `.kittify/*` (and at least one path) | exits 0 silently, no further step runs (needs no installed dependencies) |
 | 0 | Bun present | `command -v bun` | `pre-commit: bun not found. See docs/tooling.md` |
 | 1 | Version | `bun scripts/check-bun-version.ts` | the guard's own message |
 | 1b | Dependencies installed | `[ -d node_modules ]` | `pre-commit: dependencies not installed. Run: bun install` |
@@ -25,6 +26,8 @@ Every failure message goes to stderr and is prefixed with `pre-commit:`, matchin
 - Total runtime on the skeleton < 5 s (NFR-002).
 - `.githooks/commit-msg` is not modified (C-003).
 
+- Step 0a lets Spec Kitty's bookkeeping commits pass in worktrees without `node_modules/`. A path counts only with the slash (`kitty-specs-extra/x` does not match), and an empty staged set does not trigger it. See the toolchain-hardening mission, `contracts/hook-bookkeeping.md`.
+
 ## Acceptance examples
 
 | Staged change | Expected |
@@ -34,5 +37,6 @@ Every failure message goes to stderr and is prefixed with `pre-commit:`, matchin
 | `scripts/x.ts`: `export const n: number = "x";` | commit blocked, `pre-commit: typecheck failed` |
 | failing `scripts/x.test.ts` | commit blocked, `pre-commit: tests failed` |
 | `docs/tooling.md` only | commit succeeds |
-| any change, `node_modules/` absent | commit blocked, `pre-commit: dependencies not installed. Run: bun install` |
+| only `kitty-specs/...` or `.kittify/...` paths, `node_modules/` absent | commit succeeds, hook silent |
+| any other change, `node_modules/` absent | commit blocked, `pre-commit: dependencies not installed. Run: bun install` |
 | bad message `update stuff` | blocked by the commit-msg hook as before |

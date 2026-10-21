@@ -28,15 +28,18 @@ No other key in `.kittify/config.yaml` changes (C-004).
 | `grace:lint` | `bun run grace:lint` |
 
 - **Report** written to `<junit-output-file>`: one `<testsuites>` root containing
-  1. `<testsuite name="verify" tests="<n>" failures="<f>">` with one `<testcase classname="verify" name="<step>">` per step. A failed step has a `<failure message="<last non-empty output line>" />` child. Spec Kitty reads its identity as `verify.<step>`.
+  1. `<testsuite name="verify" tests="<n>" failures="<f>">` with one `<testcase classname="verify" name="<step>">` per step. A failed step has a `<failure message="<failure message>" />` child, where the message is the first real error line of the step's output (see `failureMessage` below). Spec Kitty reads its identity as `verify.<step>`.
   2. Every `<testsuite>` element from `bun test`'s JUnit file, unchanged. When `bun test` wrote no file (no test files exist), nothing is added.
 - **Console**: one line per step, `PASS verify.<step>` or `FAIL verify.<step>: <message>`.
 - **Exit code**: 0 when every step passed, otherwise 1.
+- **Environment**: steps run with `NO_COLOR=1` and without `FORCE_COLOR`. The report is well-formed XML for any step output, because text is sanitized before it is embedded (toolchain-hardening mission, `contracts/review-gate-report.md`).
 - **Side effects**: writes `<junit-output-file>` and one temp directory under the OS temp dir, which it removes. It modifies 0 tracked files (NFR-003).
 
 ## Pure functions (unit-tested in `scripts/review-gate.test.ts`)
 
-- `escapeXml(text: string): string` escapes `&`, `<`, `>`, `"`, `'`.
+- `sanitizeText(text: string): string` removes ANSI CSI escape sequences and every character XML 1.0 cannot represent.
+- `escapeXml(text: string): string` sanitizes, then escapes `&`, `<`, `>`, `"`, `'`.
+- `failureMessage(output: string, exitCode: number): string` picks the first non-wrapper line containing `error` (case-insensitive) or starting with `(fail)`, else the last non-empty non-wrapper line, else the wrapper line (`error: script "<name>" exited with code <n>`), else `exit code <n>`; at most 300 characters.
 - `buildReport(steps: StepResult[], bunJunit: string | null): string`, where `StepResult = { name: string; ok: boolean; message: string }`.
 
 ## Acceptance examples
