@@ -1,0 +1,23 @@
+#!/bin/sh
+# Format and restage staged files, then block the commit on any check failure.
+# Contract: kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md
+# Enabled per clone: git config core.hooksPath "$(git rev-parse --show-toplevel)/.githooks"
+
+fail() {
+  echo "pre-commit: $1" >&2
+  exit 1
+}
+
+cd "$(git rev-parse --show-toplevel)" || fail "cannot find the repository root"
+
+command -v bun >/dev/null 2>&1 || fail "bun not found. See docs/tooling.md"
+bun scripts/check-bun-version.ts || exit 1
+[ -d node_modules ] || fail "dependencies not installed. Run: bun install"
+
+bun fmt --no-script --staged || fail "format failed"
+bun lint --no-script --staged || fail "lint failed"
+bun check -b || fail "typecheck failed"
+bun test --pass-with-no-tests || fail "tests failed"
+
+command -v grace >/dev/null 2>&1 || fail "grace not found. See docs/tooling.md"
+grace lint --path . --assertions current || fail "grace lint failed"
