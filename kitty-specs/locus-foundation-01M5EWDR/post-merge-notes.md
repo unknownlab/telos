@@ -34,3 +34,11 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - Owner UX choice: `/architecture/foundation` and `/architecture/research` are in the sidebar only while current; both are reachable from the `/architecture` index.
 - Page weight: the 415 kB (112 kB gzip) shared chunk carries all document data on every page; revisit when search lands (WP12) if budgets complain.
 - WP16's static server must return `/not-found` with status 404 for unknown paths; directories redirect `/x` to `/x/` on a plain static server.
+
+## 6. WP12/WP13 review notes (non-blocking)
+
+- WP12: entry chunk grew about 18 kB gzip per page (Radix dialog, icons). Option for a later performance pass: lazy-load the dialog content on first open and keep only the trigger and the `/`, Ctrl+K handlers in the entry.
+- WP12: Mermaid diagrams use the `neutral` theme on a fixed light card in both themes; a dark palette is a follow-up if wanted.
+- WP12: `mermaid-renderer.tsx` marks `data-mermaid` before the `disposed` check; under React StrictMode (not used) a first effect cleanup could leave blocks pending. Moot today.
+- WP12: search results are plain links (full page load); no DOM-level unit tests for the dialog/renderer, e2e in WP16 covers them.
+- WP13: a release build must come from a clean checkout (else the Verification label carries "uncommitted changes"); `build:site` alone reuses the existing report, use `build`; `bun test` stays the gate.
