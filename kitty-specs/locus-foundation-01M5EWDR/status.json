@@ -193,21 +193,22 @@
         "Ready for review: 168e462"
       ],
       "provider": "__resolved_provider_absent__",
+      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP06-decoding/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP06-decoding/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "changes_requested"
       },
-      "role": "reviewer",
-      "shell_pid": 75214,
-      "shell_pid_created_at": "1792588281.481289",
+      "role": "implementer",
+      "shell_pid": null,
+      "shell_pid_created_at": null,
       "subtasks": {
-        "T028": "done",
-        "T029": "done",
-        "T030": "done",
-        "T031": "done",
-        "T032": "done"
+        "T028": "planned",
+        "T029": "planned",
+        "T030": "planned",
+        "T031": "planned",
+        "T032": "planned"
       }
     },
     "WP07": {
