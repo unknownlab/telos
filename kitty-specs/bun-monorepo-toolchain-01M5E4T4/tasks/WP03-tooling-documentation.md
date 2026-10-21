@@ -85,7 +85,7 @@ Hard rules:
 
 - Keep the file's style: plain, short sentences, second person ("you"), no marketing words.
 - Keep every existing section that is still true (Who does what, What you will be asked, Global footprint, Upgrading). Change only what this mission makes stale, plus the new section.
-- **Do not edit `AGENTS.md`**, even though its line "No app toolchain exists yet. Never add fake tests, placeholder scripts, or checks that verify nothing." is now stale. Editing it is an owner decision. Record the staleness in the Activity Log (T016) so the owner sees it.
+- **Do not edit `AGENTS.md`**. It is a governance file; editing it is an owner decision.
 - Conventional Commits, e.g. `docs(tooling): document the bun toolchain, hook and review gate`. No AI names. Never `--no-verify`.
 
 ## Branch Strategy
@@ -212,14 +212,13 @@ Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review.
 - Re-read the whole file once. Every command and message must match the contracts exactly (`pre-commit:` prefix, `bun upgrade --canary`, script names).
 - In the Activity Log, record:
   - the `format:check` result,
-  - this exact owner note: "AGENTS.md still says 'No app toolchain exists yet. Never add fake tests, placeholder scripts, or checks that verify nothing.' This is stale after this mission. Editing AGENTS.md needs owner approval, so it is left unchanged."
 
 ## Definition of Done
 
 - [ ] T013 edits made; no "not in place yet" or "adds CI" statements remain.
 - [ ] Toolchain section inserted before the setup section.
 - [ ] Setup block updated; file formatted; `bun run format:check` exits 0.
-- [ ] Only `docs/tooling.md` changed; the AGENTS.md note is recorded.
+- [ ] Only `docs/tooling.md` changed; `format:check` result recorded.
 
 ## Risks & Mitigations
 
@@ -232,7 +231,7 @@ Reviewer: Claude Sonnet (`reviewer-renata` profile).
 
 - Check each command, message and file path against `contracts/commands.md`, `contracts/pre-commit-hook.md` and `contracts/review-gate.md`.
 - Confirm `bun run format:check` exits 0 in the worktree.
-- Confirm `AGENTS.md` is unchanged and the staleness note is recorded.
+- Confirm `AGENTS.md` is unchanged.
 
 ## Activity Log
 
