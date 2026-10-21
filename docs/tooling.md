@@ -136,6 +136,12 @@ bun install    # project dependencies; repeat in every Spec Kitty worktree
 
 Codex may ask once to trust the project directory.
 
+## After a mission merge
+
+Spec Kitty 3.2.7 resets `mission_number` to `null` in the mission's `meta.json` when it merges (an upstream bug). After every merge, check `kitty-specs/<number>-<slug>/meta.json`. If `mission_number` is `null`, set it back to the number in the directory name and commit the fix.
+
+Accept runs strictly. `project.path_conventions` in `.kittify/config.yaml` points Spec Kitty's workspace and tests checks at `scripts/`, so `--lenient` is not needed.
+
 ## Global footprint
 
 Skills live only in the project (`.claude/skills/`, `.agents/skills/`). Spec Kitty 3.2.7 also writes into your home directory, and no setting turns that off:

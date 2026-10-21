@@ -18,8 +18,18 @@ Also fixed during the mission: rename out of a code path and non-ASCII paths sli
 ## Not fixed here (upstream or owner decision)
 
 - Spec Kitty's merge bookkeeping resets `meta.json` `mission_number` to null; it was repaired by hand after each merge. Report upstream; check `meta.json` after every merge.
-- Spec Kitty's mission-number commit runs in a temporary worktree without `node_modules`; the old hook blocked it, so the fixed hook was committed to `feat` before the merge (`103fec8`, content identical to reviewed `00df7d0`).
+- Spec Kitty's mission-number commit runs in a temporary worktree without `node_modules`; the old hook blocked it, so the fixed hook was committed to `feat` before the merge (`0481906`, content identical to reviewed `afa736c`).
 - Review provenance is thin: events record the reviewer as `user` with no model or profile.
 - Failure-message heuristic (first line containing "error") sometimes picks a weak line (for example `Errors: 1` from `grace lint`).
 - Acceptance ran with `--lenient` because the Software Dev mission expects `src/` and `tests/`; setting `project.path_conventions` in `.kittify/config.yaml` would allow strict runs (needs owner approval).
 - Mission directories are now prefixed with their number (`001-`, `002-`) for sorting; machine-written records (event logs, `status.json`, analysis reports, retrospectives) still contain the old unprefixed paths on purpose.
+
+## Follow-up closeout
+
+| Open item | Resolution |
+|---|---|
+| Post-review fixes landed as direct commits, not a mission | Owner approved ("do it without a mission"); recorded here |
+| `[claude]` in Spec Kitty commit subjects | Stripped from 8 local, unpushed commit subjects; trees unchanged; commit hashes cited above updated to the rewritten ones |
+| `--lenient` needed on accept | `project.path_conventions` (workspace and tests: `scripts/`) added to `.kittify/config.yaml` with owner approval |
+| `mission_number` reset by merge | Upstream bug; manual check documented in `docs/tooling.md` |
+| `bun install` in fresh checkouts | Already documented in `docs/tooling.md` |
