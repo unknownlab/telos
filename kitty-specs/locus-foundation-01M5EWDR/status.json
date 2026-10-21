@@ -494,7 +494,8 @@
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review: fa0d73b",
-        "Rework done: 026a9e3"
+        "Rework done: 026a9e3",
+        "Review passed on cycle 2 (reviewer-renata, Sonnet): verify green 757 tests, axe clean 32 snapshots both themes both widths, real data-revision-id values, history rules protected by 39 unit tests."
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
