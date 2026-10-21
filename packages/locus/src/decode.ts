@@ -123,78 +123,113 @@ const toDecodeError = (issue: SchemaIssue.Issue): DecodeError => {
   });
 };
 
+// An unexpected throw while decoding, such as a getter that throws, becomes a
+// DecodeError at path "" so that the decoders never throw.
+const recoverDefects = <A>(
+  effect: Effect.Effect<A, DecodeError>,
+): Effect.Effect<A, DecodeError> =>
+  Effect.catchDefect(effect, (defect) =>
+    Effect.fail(
+      new DecodeError({
+        issues: [
+          {
+            path: "",
+            message:
+              defect instanceof Error
+                ? `Input could not be read: ${defect.message}`
+                : "Input could not be read.",
+          },
+        ],
+      }),
+    ),
+  );
+
 const decodeOptions = { onExcessProperty: "error", errors: "all" } as const;
 
 // START_CONTRACT: decodeLocus
 //   PURPOSE: Decode one Locus object from the wire format into a frozen definition.
 //   INPUTS: { input: unknown - a value parsed from JSON or built by a caller }
 //   OUTPUTS: { Effect<LocusDefinition, DecodeError> - the definition built with defineLocus, or every located issue }
-//   SIDE_EFFECTS: none. Unknown keys, wrong types, missing keys and unknown Relation kinds fail. Identity grammar, blank strings and duplicates do not fail; validation reports them.
+//   SIDE_EFFECTS: none. Unknown keys, wrong types, missing keys and unknown Relation kinds fail. Identity grammar, blank strings and duplicates do not fail; validation reports them. Never throws; an unexpected throw while decoding gives one issue at path "".
 //   LINKS: M-LOCUS-DECODE
 // END_CONTRACT: decodeLocus
 /** Decodes one Locus object. Errors are located; rule violations are not decode errors. */
 export const decodeLocus = (
   input: unknown,
 ): Effect.Effect<LocusDefinition, DecodeError> =>
-  Schema.decodeUnknownEffect(LocusJsonSchema)(input, decodeOptions).pipe(
-    Effect.mapError((e) => toDecodeError(e.issue)),
-    Effect.map((json) => defineLocus(json)),
+  recoverDefects(
+    Effect.suspend(() =>
+      Schema.decodeUnknownEffect(LocusJsonSchema)(input, decodeOptions),
+    ).pipe(
+      Effect.mapError((e) => toDecodeError(e.issue)),
+      Effect.map((json) => defineLocus(json)),
+    ),
   );
 
 // START_CONTRACT: decodeFabric
 //   PURPOSE: Decode a Fabric object from the wire format into a frozen Fabric.
 //   INPUTS: { input: unknown - a value parsed from JSON or built by a caller }
 //   OUTPUTS: { Effect<Fabric, DecodeError> - the Fabric built with defineFabric and defineLocus, or every located issue }
-//   SIDE_EFFECTS: none. Unknown keys, wrong types, missing keys and unknown Relation kinds fail. Identity grammar, blank strings and duplicates do not fail; validation reports them.
+//   SIDE_EFFECTS: none. Unknown keys, wrong types, missing keys and unknown Relation kinds fail. Identity grammar, blank strings and duplicates do not fail; validation reports them. Never throws; an unexpected throw while decoding gives one issue at path "".
 //   LINKS: M-LOCUS-DECODE
 // END_CONTRACT: decodeFabric
 /** Decodes a Fabric object. Errors are located; rule violations are not decode errors. */
 export const decodeFabric = (
   input: unknown,
 ): Effect.Effect<Fabric, DecodeError> =>
-  Schema.decodeUnknownEffect(FabricJsonSchema)(input, decodeOptions).pipe(
-    Effect.mapError((e) => toDecodeError(e.issue)),
-    Effect.map((json) =>
-      defineFabric({
-        id: json.id,
-        loci: json.loci.map((l) => defineLocus(l)),
-      }),
+  recoverDefects(
+    Effect.suspend(() =>
+      Schema.decodeUnknownEffect(FabricJsonSchema)(input, decodeOptions),
+    ).pipe(
+      Effect.mapError((e) => toDecodeError(e.issue)),
+      Effect.map((json) =>
+        defineFabric({
+          id: json.id,
+          loci: json.loci.map((l) => defineLocus(l)),
+        }),
+      ),
     ),
   );
 
 // START_CONTRACT: decodeFabricJson
 //   PURPOSE: Decode Fabric JSON text, refusing over-long text before any parsing.
 //   INPUTS: { text: string - JSON text, at most MAX_INPUT_LENGTH code units }
-//   OUTPUTS: { Effect<Fabric, DecodeError> - a frozen Fabric, or a single issue at path "" for over-long or unparseable text, or the decodeFabric issues }
-//   SIDE_EFFECTS: none. Parses the text with JSON.parse only after the length check.
+//   OUTPUTS: { Effect<Fabric, DecodeError> - a frozen Fabric, or a single issue at path "" for input that is not a string, over-long text, or unparseable text, or the decodeFabric issues }
+//   SIDE_EFFECTS: none. Checks the type and then the length before JSON.parse runs. Never throws.
 //   LINKS: M-LOCUS-DECODE
 // END_CONTRACT: decodeFabricJson
 /** Decodes Fabric JSON text. Over-long text and JSON syntax errors give one issue at path "". */
 export const decodeFabricJson = (
   text: string,
 ): Effect.Effect<Fabric, DecodeError> =>
-  text.length > MAX_INPUT_LENGTH
+  typeof text !== "string"
     ? Effect.fail(
         new DecodeError({
-          issues: [
-            {
-              path: "",
-              message: `Input is longer than ${MAX_INPUT_LENGTH} characters.`,
-            },
-          ],
+          issues: [{ path: "", message: "Input must be a string." }],
         }),
       )
-    : Effect.try({
-        try: () => JSON.parse(text) as unknown,
-        catch: (e) =>
+    : text.length > MAX_INPUT_LENGTH
+      ? Effect.fail(
           new DecodeError({
             issues: [
               {
                 path: "",
-                message:
-                  (e instanceof Error ? e.message : String(e)) ||
-                  "Invalid JSON",
+                message: `Input is longer than ${MAX_INPUT_LENGTH} characters.`,
               },
             ],
           }),
-      }).pipe(Effect.flatMap(decodeFabric));
+        )
+      : Effect.try({
+          try: () => JSON.parse(text) as unknown,
+          catch: (e) =>
+            new DecodeError({
+              issues: [
+                {
+                  path: "",
+                  message:
+                    (e instanceof Error ? e.message : String(e)) ||
+                    "Invalid JSON",
+                },
+              ],
+            }),
+        }).pipe(Effect.flatMap(decodeFabric));

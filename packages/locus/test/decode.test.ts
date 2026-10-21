@@ -328,4 +328,107 @@ describe("issue order", () => {
       "loci[2].charter",
     ]);
   });
+
+  test("two problems in one Locus are sorted by path, not by Effect's order", async () => {
+    // Effect reports the excess key "extra" before the non-string purpose.
+    // Only the sort puts "loci[0].charter.purpose" first.
+    const error = await Effect.runPromise(
+      Effect.flip(
+        decodeFabricJson(
+          '{"id":"x","loci":[{"id":"a","extra":1,"charter":{"purpose":3,"responsibilities":[]}}]}',
+        ),
+      ),
+    );
+    expect(issuesOf(error)).toEqual([
+      { path: "loci[0].charter.purpose", message: "Expected string" },
+      { path: "loci[0].extra", message: "Expected no excess property" },
+    ]);
+  });
+
+  test("two issues at one path string are ordered by message", async () => {
+    // A key named "charter.responsibilities" gives the same path string as the
+    // real field, so both issues carry the path "loci[0].charter.responsibilities".
+    // Effect reports "Expected no excess property" first; the message tiebreak
+    // puts "Expected array" first.
+    const error = await Effect.runPromise(
+      Effect.flip(
+        decodeFabricJson(
+          '{"id":"x","loci":[{"id":"a","charter":{"purpose":"p","responsibilities":"x"},"charter.responsibilities":["y"]}]}',
+        ),
+      ),
+    );
+    expect(issuesOf(error)).toEqual([
+      {
+        path: "loci[0].charter.responsibilities",
+        message: "Expected array",
+      },
+      {
+        path: "loci[0].charter.responsibilities",
+        message: "Expected no excess property",
+      },
+    ]);
+  });
+});
+
+describe("decoders never throw", () => {
+  test.each([
+    ["undefined", undefined],
+    ["null", null],
+    ["a number", 42],
+    ["an object", { id: "shop:system", loci: [] }],
+  ])(
+    "decodeFabricJson with %s gives one issue at path '' and does not throw",
+    async (_label, text) => {
+      const error = await Effect.runPromise(
+        Effect.flip(decodeFabricJson(text as unknown as string)),
+      );
+      expect(error).toBeInstanceOf(DecodeError);
+      expect(issuesOf(error)).toEqual([
+        { path: "", message: "Input must be a string." },
+      ]);
+    },
+  );
+
+  test("decodeFabric with a getter that throws gives one issue at path '' and does not throw", async () => {
+    const input = {
+      get id(): string {
+        throw new Error("boom");
+      },
+      loci: [],
+    };
+    const error = await Effect.runPromise(Effect.flip(decodeFabric(input)));
+    expect(error).toBeInstanceOf(DecodeError);
+    expect(issuesOf(error)).toHaveLength(1);
+    expect(pathsOf(error)).toEqual([""]);
+    expect(issuesOf(error)[0]?.message).toContain("boom");
+  });
+
+  test("decodeFabric with a nested getter that throws gives one issue and does not throw", async () => {
+    const locus = {
+      id: "shop:a",
+      get charter(): unknown {
+        throw new Error("boom");
+      },
+    };
+    const error = await Effect.runPromise(
+      Effect.flip(decodeFabric(withLoci([locus]))),
+    );
+    expect(issuesOf(error)).toHaveLength(1);
+    expect(pathsOf(error)).toEqual([""]);
+    expect(issuesOf(error)[0]?.message).toContain("boom");
+  });
+
+  test("decodeLocus with a getter that throws gives one issue at path '' and does not throw", async () => {
+    const input = {
+      id: "shop:a",
+      get charter(): unknown {
+        throw new Error("boom");
+      },
+    };
+    const error = await Effect.runPromise(Effect.flip(decodeLocus(input)));
+    expect(error).toBeInstanceOf(DecodeError);
+    expect(issuesOf(error)).toHaveLength(1);
+    expect(pathsOf(error)).toEqual([""]);
+    expect(issuesOf(error)[0]?.message).toContain("boom");
+  });
 });
