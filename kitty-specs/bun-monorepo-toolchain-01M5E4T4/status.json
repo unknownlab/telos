@@ -1,10 +1,10 @@
 {
-  "event_count": 5,
-  "last_event_id": "01M5E7PE9XNH61BXPPYR9KHZHW",
-  "materialized_at": "2026-10-21T03:22:21.885324+00:00",
+  "event_count": 7,
+  "last_event_id": "01M5E8DBMXDSGP0VG8ZCQT4B55",
+  "materialized_at": "2026-10-21T03:34:52.828477+00:00",
   "mission_number": "",
   "mission_slug": "bun-monorepo-toolchain-01M5E4T4",
-  "mission_type": "",
+  "mission_type": "software-dev",
   "summary": {
     "approved": 0,
     "blocked": 0,
@@ -12,17 +12,25 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "in_review": 0,
-    "planned": 5
+    "planned": 4
   },
   "work_packages": {
     "WP01": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5E7PC8S90XKYBBTENTPQFJM",
-      "last_transition_at": "2026-10-21T03:22:19.801685+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5E8DBMXDSGP0VG8ZCQT4B55",
+      "last_transition_at": "2026-10-21T03:34:52.828477+00:00",
+      "model": "__resolved_model_absent__",
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer",
+      "shell_pid": 71801,
+      "shell_pid_created_at": "1792553687.269554"
     },
     "WP02": {
       "actor": "finalize-tasks",
