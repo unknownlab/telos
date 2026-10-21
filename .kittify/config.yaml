@@ -1,0 +1,21 @@
+project:
+  uuid: 8e518045-a4f7-48ce-93bf-ef741bbe8afb
+  slug: telos
+  node_id: 589acd92f78d
+  build_id: 4fff4dac-81e1-5ca8-8a1b-29ee8c006eaa
+mission_type_activations:
+- software-dev
+- documentation
+- research
+- plan
+vcs:
+  type: git
+agents:
+  available:
+  - claude
+  - codex
+  auto_commit: true
+  lint_on_edit: false
+policy:
+  merge_gates:
+    mode: block
