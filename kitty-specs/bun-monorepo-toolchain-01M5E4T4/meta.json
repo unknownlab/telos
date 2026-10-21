@@ -4,7 +4,7 @@
   "flattened": false,
   "friendly_name": "Bun Monorepo Toolchain",
   "mission_id": "01M5E4T4WERCN71DVFXECG7GPC",
-  "mission_number": null,
+  "mission_number": 1,
   "mission_slug": "bun-monorepo-toolchain-01M5E4T4",
   "mission_type": "software-dev",
   "pr_bound": true,
