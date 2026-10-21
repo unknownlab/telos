@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-10-21T05:35:53.315971+00:00",
+  "flattened": false,
+  "friendly_name": "Toolchain Hardening",
+  "mission_id": "01M5EFAXV2FB9N9Q7ENJFG212Q",
+  "mission_number": null,
+  "mission_slug": "toolchain-hardening-01M5EFAX",
+  "mission_type": "software-dev",
+  "purpose_context": "The post-merge review of the Bun monorepo toolchain found that the review gate can accept failing checks when colour output is forced, that the pre-commit hook blocks Spec Kitty bookkeeping commits in worktrees without installed dependencies, and that failure messages and ignore lists are incomplete. This mission fixes those gaps without adding tools or dependencies.",
+  "purpose_tldr": "Close the gaps found in the Bun toolchain review so the review gate and pre-commit hook never fail open or block Spec Kitty's own commits.",
+  "slug": "toolchain-hardening-01M5EFAX",
+  "target_branch": "feat/bun-monorepo-toolchain",
+  "topology": "single_branch"
+}
