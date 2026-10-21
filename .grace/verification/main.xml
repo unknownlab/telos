@@ -16,7 +16,9 @@
       <Command>bun test scripts/review-gate.test.ts</Command>
       <Scenario>A failing check step becomes a JUnit test case with a failure, so the review gate sees it as a new failure.</Scenario>
       <Scenario>bun test's own suites are kept in the same report under one testsuites root.</Scenario>
-      <TraceAssertion>The buildReport and escapeXml unit tests pass.</TraceAssertion>
+      <Scenario>The report stays well-formed when step output or bun test's JUnit contains escape codes.</Scenario>
+      <Scenario>A failure message picks the first real error line, not bun's wrapper line or the summary.</Scenario>
+      <TraceAssertion>The buildReport, escapeXml, sanitizeText and failureMessage unit tests pass.</TraceAssertion>
     </V-M-REVIEW-GATE>
   </VD-MAIN>
 </GraceVerificationDocument>

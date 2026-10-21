@@ -13,12 +13,12 @@
   "scripts": {
     "preinstall": "$npm_execpath scripts/check-bun-version.ts",
     "check:bun": "bun scripts/check-bun-version.ts",
-    "typecheck": "bun check -b",
-    "lint": "bun lint --no-script",
+    "typecheck": "bun run check:bun && bun check -b",
+    "lint": "bun run check:bun && bun lint --no-script",
     "lint:fix": "bun lint --no-script --fix",
     "format": "bun fmt --no-script",
     "format:check": "bun fmt --no-script --check",
-    "test": "bun test --pass-with-no-tests",
+    "test": "bun run check:bun && bun test --pass-with-no-tests",
     "grace:lint": "grace lint --path . --assertions current",
     "verify": "bun run check:bun && bun run format:check && bun run lint && bun run typecheck && bun run test && bun run grace:lint"
   },

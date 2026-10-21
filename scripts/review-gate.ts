@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Run the whole check suite for Spec Kitty's review gate and always write one JUnit report.
-//   SCOPE: Run every check step, record each as a JUnit test case, merge in bun test's own JUnit suites, exit 1 on any failure.
+//   SCOPE: Run every check step with colour off, record each as a JUnit test case whose failure message is the step's cause, sanitize all report text so it stays well-formed, merge in bun test's own JUnit suites, exit 1 on any failure.
 //   DEPENDS: M-BUN-VERSION-GUARD
 //   LINKS: M-REVIEW-GATE, V-M-REVIEW-GATE
 //   ROLE: RUNTIME
@@ -9,7 +9,9 @@
 //
 // START_MODULE_MAP
 //   StepResult - outcome of one check step
-//   escapeXml - escape text for an XML attribute
+//   sanitizeText - strip escape codes and characters XML cannot represent
+//   escapeXml - sanitize, then escape text for an XML attribute
+//   failureMessage - pick the first real error line of a failed step
 //   buildReport - JUnit report with a "verify" suite plus bun test's suites
 // END_MODULE_MAP
 
@@ -23,15 +25,69 @@ export type StepResult = {
   message: string;
 };
 
+function isXmlChar(point: number): boolean {
+  return (
+    point === 0x9 ||
+    point === 0xa ||
+    point === 0xd ||
+    (point >= 0x20 && point <= 0xd7ff) ||
+    (point >= 0xe000 && point <= 0xfffd) ||
+    (point >= 0x10000 && point <= 0x10ffff)
+  );
+}
+
+// START_CONTRACT: sanitizeText
+//   PURPOSE: Remove ANSI colour sequences and every character XML 1.0 cannot represent, so text can go into a report.
+//   INPUTS: { text: string - raw text, possibly with escape codes or control characters }
+//   OUTPUTS: { string - the text without ESC [ ... final-byte sequences and without XML-invalid characters; tab, newline, carriage return and all other text are kept }
+//   SIDE_EFFECTS: none
+//   LINKS: M-REVIEW-GATE
+// END_CONTRACT: sanitizeText
+export function sanitizeText(text: string): string {
+  let out = "";
+  let i = 0;
+  while (i < text.length) {
+    if (text.charCodeAt(i) === 0x1b && text[i + 1] === "[") {
+      // ANSI CSI: ESC [ parameter bytes, intermediate bytes, one final byte
+      let j = i + 2;
+      while (
+        j < text.length &&
+        text.charCodeAt(j) >= 0x30 &&
+        text.charCodeAt(j) <= 0x3f
+      )
+        j++;
+      while (
+        j < text.length &&
+        text.charCodeAt(j) >= 0x20 &&
+        text.charCodeAt(j) <= 0x2f
+      )
+        j++;
+      if (
+        j < text.length &&
+        text.charCodeAt(j) >= 0x40 &&
+        text.charCodeAt(j) <= 0x7e
+      ) {
+        i = j + 1;
+        continue;
+      }
+    }
+    const point = text.codePointAt(i) ?? 0;
+    const width = point > 0xffff ? 2 : 1;
+    if (isXmlChar(point)) out += text.slice(i, i + width);
+    i += width;
+  }
+  return out;
+}
+
 // START_CONTRACT: escapeXml
 //   PURPOSE: Escape text so it is safe inside a double-quoted XML attribute.
 //   INPUTS: { text: string - raw text }
-//   OUTPUTS: { string - text with & < > " ' escaped }
+//   OUTPUTS: { string - text sanitized first, then with & < > " ' escaped }
 //   SIDE_EFFECTS: none
 //   LINKS: M-REVIEW-GATE
 // END_CONTRACT: escapeXml
 export function escapeXml(text: string): string {
-  return text
+  return sanitizeText(text)
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
@@ -56,7 +112,9 @@ export function buildReport(
     if (step.ok) return `${open} />`;
     return `${open}>\n      <failure message="${escapeXml(step.message)}" />\n    </testcase>`;
   });
-  const bunSuites = bunJunit?.match(/<testsuite[\s>][\s\S]*<\/testsuite>/)?.[0];
+  const bunSuites = sanitizeText(bunJunit ?? "").match(
+    /<testsuite[\s>][\s\S]*<\/testsuite>/,
+  )?.[0];
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     "<testsuites>",
@@ -69,8 +127,27 @@ export function buildReport(
   ].join("\n");
 }
 
-function lastLine(text: string): string {
-  return text.trim().split("\n").at(-1) ?? "";
+const WRAPPER_LINE = /^error: script "[^"]*" exited with code \d+$/;
+
+// START_CONTRACT: failureMessage
+//   PURPOSE: Pick the line of a failed step's output that shows its cause, for the report and the console.
+//   INPUTS: { output: string - the step's stdout and stderr, exitCode: number - the step's exit code }
+//   OUTPUTS: { string - the first non-wrapper line containing "error" (case-insensitive) or starting with "(fail)"; else the last non-wrapper line; else the wrapper line; else "exit code <n>"; at most 300 characters }
+//   SIDE_EFFECTS: none
+//   LINKS: M-REVIEW-GATE
+// END_CONTRACT: failureMessage
+export function failureMessage(output: string, exitCode: number): string {
+  const lines = sanitizeText(output)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  const real = lines.filter((line) => !WRAPPER_LINE.test(line));
+  const pick =
+    real.find((line) => /error/i.test(line) || line.startsWith("(fail)")) ??
+    real.at(-1) ??
+    lines.at(-1) ??
+    `exit code ${exitCode}`;
+  return pick.slice(0, 300);
 }
 
 function readOptional(path: string): string | null {
@@ -82,10 +159,19 @@ function readOptional(path: string): string | null {
 }
 
 function runStep(name: string, command: string[]): StepResult {
-  const result = Bun.spawnSync(command, { stdout: "pipe", stderr: "pipe" });
+  const env: Record<string, string | undefined> = {
+    ...process.env,
+    NO_COLOR: "1",
+  };
+  delete env.FORCE_COLOR;
+  const result = Bun.spawnSync(command, {
+    stdout: "pipe",
+    stderr: "pipe",
+    env,
+  });
   const output = `${result.stdout.toString()}\n${result.stderr.toString()}`;
   const ok = result.exitCode === 0;
-  const message = ok ? "" : lastLine(output) || `exit code ${result.exitCode}`;
+  const message = ok ? "" : failureMessage(output, result.exitCode);
   return { name, ok, message };
 }
 
