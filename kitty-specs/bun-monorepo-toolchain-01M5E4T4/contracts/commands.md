@@ -6,7 +6,7 @@ Every command runs from the repository root. "Read-only" means the command modif
 |---|---|---|---|
 | `preinstall` | `$npm_execpath scripts/check-bun-version.ts` | guard | FR-007 |
 | `check:bun` | `bun scripts/check-bun-version.ts` | guard | FR-007 |
-| `typecheck` | `bun check` | read-only | FR-003 |
+| `typecheck` | `bun check -b` | read-only | FR-003 |
 | `lint` | `bun lint --no-script` | read-only | FR-004 |
 | `lint:fix` | `bun lint --no-script --fix` | writes | FR-004 |
 | `format` | `bun fmt --no-script` | writes | FR-005 |
@@ -21,6 +21,7 @@ Every command runs from the repository root. "Read-only" means the command modif
 - `verify` stops at the first failing step. Its exit code is that step's exit code.
 - Output is Bun's own. No wrapper reformats it.
 - Lint warnings never fail `lint` (Bun exits 0 when there are only warnings).
+- `typecheck` uses `-b`: plain `bun check` checks only the root project and silently skips projects listed in `references` (verified on 1.4.4-canary.1, research R-10). `-b` checks them without writing any output files.
 
 ## Acceptance examples
 

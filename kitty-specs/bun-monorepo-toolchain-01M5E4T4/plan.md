@@ -46,7 +46,7 @@ kitty-specs/bun-monorepo-toolchain-01M5E4T4/
 ├── plan.md          # this file
 ├── research.md      # prototype findings and decisions
 ├── data-model.md    # configuration entities and invariants
-├── contracts/       # commands.md, version-guard.md, pre-commit-hook.md
+├── contracts/       # commands.md, version-guard.md, pre-commit-hook.md, review-gate.md
 ├── quickstart.md    # how to verify the finished skeleton
 └── tasks/           # created by /spec-kitty.tasks
 ```
@@ -63,7 +63,9 @@ tsconfig.base.json        # strict shared compiler options (packages extend it)
 tsconfig.json             # root: covers scripts/, references [] (packages append here)
 scripts/
 ├── check-bun-version.ts       # version guard, reads engines.bun
-└── check-bun-version.test.ts  # first real test (isSupported table)
+├── check-bun-version.test.ts  # first real test (isSupported table)
+├── review-gate.ts             # review gate runner: every check as a JUnit test case
+└── review-gate.test.ts        # unit tests for the report builder
 apps/.gitkeep             # workspace area, empty
 packages/.gitkeep         # workspace area, empty
 .githooks/
@@ -83,7 +85,7 @@ docs/tooling.md           # toolchain section
 |--------|---------|------|
 | `preinstall` | `$npm_execpath scripts/check-bun-version.ts` | guard (runs with the invoking Bun) |
 | `check:bun` | `bun scripts/check-bun-version.ts` | guard |
-| `typecheck` | `bun check` | read-only |
+| `typecheck` | `bun check -b` (follows project references) | read-only |
 | `lint` | `bun lint --no-script` | read-only |
 | `format` | `bun fmt --no-script` | writes |
 | `format:check` | `bun fmt --no-script --check` | read-only |
@@ -113,7 +115,7 @@ Bare `bun lint` runs a `lint` package script when one exists (verified), so the 
 
 ### IC-03 — Pre-commit hook
 
-- **Purpose**: POSIX `sh` hook: guard, `bun fmt --staged` (restages), `bun lint --staged`, `bun check`, `bun test --pass-with-no-tests`, `grace lint`; clear messages when Bun or `grace` is missing.
+- **Purpose**: POSIX `sh` hook: guard, dependencies-installed check, `bun fmt --staged` (restages), `bun lint --staged`, `bun check -b`, `bun test --pass-with-no-tests`, `grace lint`; clear messages when Bun, `node_modules` or `grace` is missing (research R-09).
 - **Relevant requirements**: FR-008, NFR-002, C-003
 - **Affected surfaces**: `.githooks/pre-commit`
 - **Sequencing/depends-on**: IC-02, IC-05 (needs `.grace/` for `grace lint`)
@@ -121,24 +123,24 @@ Bare `bun lint` runs a `lint` package script when one exists (verified), so the 
 
 ### IC-04 — Review gate wiring
 
-- **Purpose**: `review.test_command: "bun run verify && bun test --pass-with-no-tests --reporter=junit --reporter-outfile={output_file}"`, `review.fail_on_pre_review_regression: true`.
+- **Purpose**: A test-first runner, `scripts/review-gate.ts`, runs every check step and always writes one JUnit report with a test case per step plus `bun test`'s suites. `.kittify/config.yaml` gets `review.test_command: bun scripts/review-gate.ts {output_file}`, `test_output_format: junit_xml`, `fail_on_pre_review_regression: true` ([contracts/review-gate.md](contracts/review-gate.md)).
 - **Relevant requirements**: FR-009, NFR-003, C-004
-- **Affected surfaces**: `.kittify/config.yaml` (`review:` only)
-- **Sequencing/depends-on**: IC-02, IC-05
-- **Risks**: The gate parses JUnit; a non-test failure (lint, typecheck) produces no JUnit file. Implementation must confirm the gate blocks in that case and, if not, make `verify` failures visible through the gate's `FAIL <name>` text convention.
+- **Affected surfaces**: `scripts/review-gate.ts`, `scripts/review-gate.test.ts`, `.kittify/config.yaml` (`review:` only)
+- **Sequencing/depends-on**: IC-02
+- **Risks**: Resolved in research R-05. A plain `verify && bun test --reporter=junit` command fails open: when `verify` fails, no JUnit file exists, and Spec Kitty classifies the run as `SOURCE_MISMATCH`, which only warns. The runner always writes JUnit, so the parse mode never changes between baseline and head.
 
 ### IC-05 — GRACE initialisation
 
-- **Purpose**: Run `grace-init` to create `.grace/` describing the workspace skeleton (root tooling, `apps/`, `packages/` areas) and pass `grace lint --path . --assertions current`.
+- **Purpose**: Create `.grace/` from the `grace-init` templates (keeping the existing `AGENTS.md`), model the two real modules `M-BUN-VERSION-GUARD` and `M-REVIEW-GATE` with `V-M-*` entries, and pass `grace lint --path . --assertions current` with both modules `ready` (research R-08).
 - **Relevant requirements**: FR-010
 - **Affected surfaces**: `.grace/`
-- **Sequencing/depends-on**: IC-01
-- **Risks**: Keep `.grace/` minimal and truthful; no modules that do not exist.
+- **Sequencing/depends-on**: IC-01, IC-04 (both modules must exist)
+- **Risks**: Keep `.grace/` minimal and truthful; no modules that do not exist. The script markup (`START_MODULE_CONTRACT`) is written with the scripts, in IC-02 and IC-04.
 
 ### IC-06 — Tooling documentation
 
 - **Purpose**: Update `docs/tooling.md`: Bun canary requirement and upgrade, command table, hook behavior, review gate, GRACE status, remove "no toolchain yet" statements.
 - **Relevant requirements**: FR-011
 - **Affected surfaces**: `docs/tooling.md`
-- **Sequencing/depends-on**: IC-01..IC-05
+- **Sequencing/depends-on**: IC-01. Written from the contracts, which are authoritative, and formatted with `bun fmt`, so `format:check` is clean before the hook and the review gate start enforcing it (research R-07). The final end-to-end check in the pre-commit hook work package confirms the docs match the shipped behavior.
 - **Risks**: `AGENTS.md` still says "No app toolchain exists yet"; it is a governance file, so the mission flags it for a separate owner-approved edit instead of changing it.
