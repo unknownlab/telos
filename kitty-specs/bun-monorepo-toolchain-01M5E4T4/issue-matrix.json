@@ -23,6 +23,18 @@
       "title": null,
       "verdict": "verified-already-fixed",
       "wp": "WP01"
+    },
+    "#45482": {
+      "evidence_ref": "research.md R-01: upstream oven-sh/bun PR merged; verified working on Bun 1.4.4-canary.1; minimum enforced by version guard",
+      "fr": null,
+      "nfr": null,
+      "repo": null,
+      "sc": null,
+      "scope": null,
+      "source_file": null,
+      "title": null,
+      "verdict": "verified-already-fixed",
+      "wp": "WP01"
     }
   },
   "schema_version": 1
