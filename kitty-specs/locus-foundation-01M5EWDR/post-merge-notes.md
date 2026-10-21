@@ -42,3 +42,14 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - WP12: `mermaid-renderer.tsx` marks `data-mermaid` before the `disposed` check; under React StrictMode (not used) a first effect cleanup could leave blocks pending. Moot today.
 - WP12: search results are plain links (full page load); no DOM-level unit tests for the dialog/renderer, e2e in WP16 covers them.
 - WP13: a release build must come from a clean checkout (else the Verification label carries "uncommitted changes"); `build:site` alone reuses the existing report, use `build`; `bun test` stays the gate.
+
+## 7. MERGE-TIME ACTIONS (required)
+
+- After WP12 (lane-l) and WP14 (lane-n) are both merged: `apps/docs/test/playground-safety.test.ts` test "innerHTML occurs in no site source at this point in the mission" fails because `src/components/mermaid-renderer.tsx:100` (`figure.innerHTML = svg`, Mermaid strict-mode SVG) is now present. Change the assertion to `expect(await filesContaining("innerHTML")).toEqual(["src/components/mermaid-renderer.tsx"])` and rename the test to "innerHTML occurs only in the Mermaid renderer, which renders strict-mode SVG of repository content". One commit on `feat/locus-foundation`, then `bun run verify`. The playground-specific scan still forbids innerHTML in `src/playground`.
+- WP17 must keep `check-verification.ts` in the root `docs:build` (already written into its task file).
+
+## 8. WP14 review gaps (non-blocking)
+
+- `run-fabric.ts` cycle rule: `d.members.includes(target)` mutated to `true` survives; add a test with a `refines` relation from a cycle member to a non-member that must not be flagged.
+- `fabric-scenario.tsx` wiring (Validate onClick, `provenanceFor(state, text)`) has no unit test; WP16 e2e must cover them via `data-valid`, `data-action="run"`, `data-diagnostic-code` (not text).
+- `safety-scan.ts` MODULE_MAP lists `stripComments` twice (cosmetic).
