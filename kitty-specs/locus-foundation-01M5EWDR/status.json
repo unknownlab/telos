@@ -127,7 +127,8 @@
       "last_transition_at": "2026-10-21T13:01:36.617443+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: cdf1ce6"
+        "Ready for review: cdf1ce6",
+        "Review passed (reviewer-renata, Sonnet): verify green 166 tests, goldens recomputed, 16 mutations caught."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
