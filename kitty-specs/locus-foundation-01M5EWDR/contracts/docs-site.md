@@ -43,7 +43,8 @@ Unknown fields are build errors. That way a typo cannot silently drop data.
 - Relative links to other content files become site routes. A `#fragment` must match a heading id in the target, using GitHub-style slugs.
 - Relative links to other repository files become `https://github.com/unknownlab/telos/blob/main/<path>`. The target file must exist.
 - ```` ```mermaid ```` blocks are rendered client-side with `securityLevel: "strict"`. Without JavaScript the source text is shown.
-- No content file may claim a result was verified (FR-018). The build fails on the words `verified`, `passing` or `all tests pass` in a status or maturity position, meaning a front matter value or a table cell in a column named Status or Maturity.
+- Links that start with `/` must name a document route or one of the app routes (`/architecture`, `/playground`, `/playground/a` … `/playground/e`, `/verification`). Guides use them to link to the playground.
+- No content file may claim a result was verified (FR-018). The build fails on the words `verified`, `passing` or `all tests pass` in a status or maturity position, meaning a front matter value or a table cell in a column named Status or Maturity. One exemption, named in the script and covered by a test: the table under the heading "Maturity vocabulary" in `docs/foundation/README.md`, which defines the word `verified` rather than claiming it (task phase, 2026-10-21).
 
 ### Build failures (NS-020)
 
@@ -53,7 +54,8 @@ The content script exits non-zero and lists each problem as `<file>: <problem>` 
 - a duplicate `id`;
 - an unresolved `related` id;
 - a broken relative link or fragment;
-- a link to a missing repository file;
+- a link to a missing repository file, or a `/` link to an unknown site route;
+- two documents mapped to the same route;
 - a forbidden verification claim.
 
 ## Routes and sections (FR-013)
@@ -110,7 +112,7 @@ Rendering rules (INV-013, FR-021):
 
 | Scenario | Route | Input | Output |
 | --- | --- | --- | --- |
-| A Define | `/playground/a` | Fabric JSON (starts from `examples.valid`) | decode result, then validation report (valid) |
+| A Define | `/playground/a` | Fabric JSON (starts from `examples.valid`) | decode result, validation report (valid) and the Revision id of each Locus |
 | B Invalid | `/playground/b` | Fabric JSON (starts from `examples.invalid`) | decode errors with paths, or diagnostics listed with code, subject, path, detail |
 | C Relations | `/playground/c` | Fabric JSON (starts from `examples.relations`) | validation report plus a relation table; `refines` cycles highlighted |
 | D Revisions | `/playground/d` | two Locus JSON editors, "A" and "B" (starts from `examples.history`) | both Revision ids, the change set, and a history panel with append buttons, an editable expected head, and the outcome of each append |
@@ -145,4 +147,4 @@ Rules:
 | content pipeline | `apps/docs/test/content.test.ts` (Bun) | parsing, each NS-020 failure with a fixture tree, link rewriting, slugging, `llms.txt` and `index.json` shape |
 | spec report | `apps/docs/test/spec-report.test.ts` (Bun) | provenance fields, `dirty` flag, failing records shown as failing |
 | playground safety | `apps/docs/test/playground-safety.test.ts` (Bun) | source scan for forbidden constructs |
-| browser | `apps/docs/e2e/*.e2e.ts` (Playwright, Chromium, against `vite preview`) | the R-08 suites: navigation, search, theme, machine files, playground A–E, browser/Bun id equality, provenance coverage, NS-018, keyboard use, axe in both themes |
+| browser | `apps/docs/e2e/*.e2e.ts` (Playwright, Chromium, against `dist/client` served by `scripts/serve-static.ts`) | the R-08 suites: navigation, search, theme, machine files, playground A–E, browser/Bun id equality, provenance coverage, NS-018, keyboard use, axe in both themes |
