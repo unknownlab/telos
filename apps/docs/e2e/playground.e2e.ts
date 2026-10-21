@@ -15,6 +15,7 @@
 //   openScenario - opens one scenario and waits until its playground is hydrated
 //   revisionIdsOf - the locus-to-Revision-id map of every Revision id on the page
 //   historyOutcomes - the outcome of every history step, in order
+//   historyEntries - the Revision ids of the history log, in order
 //   fabricInputWith - the example Fabric with the purpose of loci[1] replaced
 // END_MODULE_MAP
 
@@ -61,6 +62,21 @@ async function revisionIdsOf(page: Page): Promise<Map<string, string>> {
       ]),
     );
   return new Map(pairs as Array<[string, string]>);
+}
+
+// START_CONTRACT: historyEntries
+//   PURPOSE: Read the Revision id of each entry of the history log of scenario D, in order.
+//   INPUTS: { page: Page - the page of scenario D }
+//   OUTPUTS: { Promise<Array<string | null>> - the data-history-entry of each entry }
+//   SIDE_EFFECTS: none
+//   LINKS: V-M-DOCS-PLAYGROUND
+// END_CONTRACT: historyEntries
+async function historyEntries(page: Page): Promise<Array<string | null>> {
+  return page
+    .locator("[data-history-entry]")
+    .evaluateAll((rows) =>
+      rows.map((row) => row.getAttribute("data-history-entry")),
+    );
 }
 
 // START_CONTRACT: historyOutcomes
@@ -286,6 +302,9 @@ test.describe("scenario D", () => {
       page.locator('[data-side="b"] [data-revision-id]'),
     ).toBeVisible();
     await expect(page.locator('[data-slot="expected-head"]')).toHaveValue("");
+    await expect(
+      page.locator('[data-slot="results"][aria-live="polite"]'),
+    ).toHaveCount(1);
 
     await page.locator('[data-action="append-a"]').click();
     await expect(page.locator('[data-history-step="0"]')).toHaveAttribute(
@@ -296,6 +315,12 @@ test.describe("scenario D", () => {
     await expect(page.locator('[data-history-step="1"]')).toHaveAttribute(
       "data-history-outcome",
       "stale",
+    );
+    // The refusal changed nothing: the log still holds only A, and the head is still A.
+    expect(await historyEntries(page)).toEqual([CHECKOUT_REVISION_A]);
+    await expect(page.locator("[data-history-head]")).toHaveAttribute(
+      "data-history-head",
+      CHECKOUT_REVISION_A,
     );
     await page.locator('[data-action="use-head"]').click();
     await page.locator('[data-action="append-b"]').click();
@@ -320,12 +345,89 @@ test.describe("scenario D", () => {
       "data-history-head",
       REVISION_B,
     );
-    const entries = await page
-      .locator("[data-history-entry]")
-      .evaluateAll((rows) =>
-        rows.map((row) => row.getAttribute("data-history-entry")),
-      );
-    expect(entries).toEqual([CHECKOUT_REVISION_A, REVISION_B]);
+    expect(await historyEntries(page)).toEqual([
+      CHECKOUT_REVISION_A,
+      REVISION_B,
+    ]);
+    check();
+  });
+
+  test("Reset history empties the log, and the next append starts a new history", async ({
+    page,
+  }) => {
+    const check = trackPageErrors(page);
+    await openScenario(page, "d");
+    await page.locator('[data-action="run"]').click();
+    await expect(
+      page.locator('[data-side="b"] [data-revision-id]'),
+    ).toBeVisible();
+    await page.locator('[data-action="append-a"]').click();
+    await expect(page.locator('[data-history-step="0"]')).toHaveAttribute(
+      "data-history-outcome",
+      "appended",
+    );
+    await page.locator('[data-action="append-b"]').click();
+    await expect(page.locator('[data-history-step="1"]')).toHaveAttribute(
+      "data-history-outcome",
+      "stale",
+    );
+    await page.locator('[data-action="use-head"]').click();
+    await page.locator('[data-action="append-b"]').click();
+    await expect(page.locator('[data-history-step="2"]')).toHaveAttribute(
+      "data-history-outcome",
+      "appended",
+    );
+    await expect(page.locator("[data-history-entry]")).toHaveCount(2);
+
+    await page.getByRole("button", { name: "Reset history" }).click();
+    await expect(page.locator("[data-history-step]")).toHaveCount(0);
+    await expect(page.locator("[data-history-entry]")).toHaveCount(0);
+    await expect(page.locator("[data-history-head]")).toHaveCount(0);
+    await expect(
+      page
+        .locator('[data-result="history-state"]')
+        .getByText("The history is empty. Append A or B to start it."),
+    ).toBeVisible();
+
+    // A new history: the head the field still holds is cleared, and A is appended on its own.
+    await page.locator('[data-slot="expected-head"]').fill("");
+    await page.locator('[data-action="append-a"]').click();
+    await expect(page.locator('[data-history-step="0"]')).toHaveAttribute(
+      "data-history-outcome",
+      "appended",
+    );
+    await expect(page.locator("[data-history-step]")).toHaveCount(1);
+    expect(await historyEntries(page)).toEqual([CHECKOUT_REVISION_A]);
+    check();
+  });
+
+  test("a second Compute clears the history log", async ({ page }) => {
+    const check = trackPageErrors(page);
+    await openScenario(page, "d");
+    await page.locator('[data-action="run"]').click();
+    await expect(
+      page.locator('[data-side="b"] [data-revision-id]'),
+    ).toBeVisible();
+    await page.locator('[data-action="append-a"]').click();
+    await expect(page.locator('[data-history-step="0"]')).toHaveAttribute(
+      "data-history-outcome",
+      "appended",
+    );
+    await page.locator('[data-action="append-b"]').click();
+    await expect(page.locator('[data-history-step="1"]')).toHaveAttribute(
+      "data-history-outcome",
+      "stale",
+    );
+    await expect(page.locator("[data-history-step]")).toHaveCount(2);
+
+    await page.locator('[data-action="run"]').click();
+    await expect(page.locator("[data-history-step]")).toHaveCount(0);
+    await expect(page.locator("[data-history-entry]")).toHaveCount(0);
+    await expect(
+      page
+        .locator('[data-result="history-state"]')
+        .getByText("The history is empty. Append A or B to start it."),
+    ).toBeVisible();
     check();
   });
 
@@ -371,6 +473,11 @@ test.describe("scenario D", () => {
     ).toBeVisible();
     await caretToEnd(page.locator("#locus-b-input"));
     await page.keyboard.type(" ");
+    await expect(
+      page.locator('[data-slot="results"] > p', {
+        hasText: "The input has changed since this run",
+      }),
+    ).toBeVisible();
     await expect(
       page.locator(
         '[data-result="history-state"][data-provenance="historical"]',

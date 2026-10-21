@@ -144,7 +144,7 @@ test.describe("keyboard only", () => {
   test("every control in a playground has a non-empty accessible name", async ({
     page,
   }) => {
-    for (const id of ["a", "d", "e"]) {
+    for (const id of ["a", "b", "c", "d", "e"]) {
       await openScenario(page, id);
       const controls = page.locator(PLAYGROUND_CONTROLS);
       const count = await controls.count();

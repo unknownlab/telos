@@ -13,10 +13,21 @@
 //   MATURITIES - the closed set of maturity values in index.json
 //   REQUIRED_STRING_FIELDS - the string fields every index.json document has
 //   headingsOf - the level-two headings of an llms.txt body, in order
+//   APP_PAGE_LINES - the two llms.txt bullets that name app pages rather than documents
+//   readContentFile - reads the compiled content file the build wrote, the source the served files must match
+//   compareIds - orders two documents by id, by code unit, the way index.json sorts them
+//   expectedIndexDocuments - the index.json entries that the content file implies, sorted by id
+//   documentLine - the llms.txt bullet that one document must have
 // END_MODULE_MAP
 
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
-import { NAV_SECTIONS } from "../src/lib/content-types";
+import {
+  type ContentDocument,
+  type ContentFile,
+  NAV_SECTIONS,
+} from "../src/lib/content-types";
 import { type IndexFile, readIndexFile, trackPageErrors } from "./helpers";
 
 const KINDS: ReadonlyArray<string> = [
@@ -67,6 +78,74 @@ function headingsOf(text: string): string[] {
     .map((line) => line.slice(3));
 }
 
+// The two llms.txt bullets that name app pages. content.ts writes them, not a document.
+const APP_PAGE_LINES: ReadonlyArray<string> = [
+  "- [Playground](/playground): Scenarios A to E run the real @telos/locus package in your browser.",
+  "- [Verification](/verification): The specification report from the build-time Bun run, with its provenance.",
+];
+
+// START_CONTRACT: readContentFile
+//   PURPOSE: Read the compiled content file that the build wrote, which is the source the served index.json and llms.txt must match.
+//   INPUTS: none
+//   OUTPUTS: { ContentFile - the parsed apps/docs/src/generated/content.json }
+//   SIDE_EFFECTS: reads apps/docs/src/generated/content.json
+//   LINKS: V-M-DOCS-SITE
+// END_CONTRACT: readContentFile
+function readContentFile(): ContentFile {
+  const path = fileURLToPath(
+    new URL("../src/generated/content.json", import.meta.url),
+  );
+  return JSON.parse(readFileSync(path, "utf8")) as ContentFile;
+}
+
+// START_CONTRACT: compareIds
+//   PURPOSE: Order two documents by id with code-unit comparison, the same order index.json uses.
+//   INPUTS: { a: { id: string }, b: { id: string } - two documents }
+//   OUTPUTS: { number - negative, zero or positive }
+//   SIDE_EFFECTS: none
+//   LINKS: V-M-DOCS-SITE
+// END_CONTRACT: compareIds
+function compareIds(
+  a: { readonly id: string },
+  b: { readonly id: string },
+): number {
+  return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+}
+
+// START_CONTRACT: expectedIndexDocuments
+//   PURPOSE: Derive the index.json entries that a content file implies, so that the served index can be compared with them field by field.
+//   INPUTS: { content: ContentFile - the compiled content }
+//   OUTPUTS: { Array<{ id, title, kind, status, maturity, summary, related, url, source }> - one entry per document, sorted by id }
+//   SIDE_EFFECTS: none
+//   LINKS: V-M-DOCS-SITE
+// END_CONTRACT: expectedIndexDocuments
+function expectedIndexDocuments(content: ContentFile) {
+  return content.documents
+    .map((doc) => ({
+      id: doc.id,
+      title: doc.title,
+      kind: doc.kind,
+      status: doc.status,
+      maturity: doc.maturity,
+      summary: doc.summary,
+      related: [...doc.related],
+      url: doc.route,
+      source: doc.source,
+    }))
+    .sort(compareIds);
+}
+
+// START_CONTRACT: documentLine
+//   PURPOSE: Give the llms.txt bullet that one document must have, in the format of the llms.txt contract.
+//   INPUTS: { doc: ContentDocument - one compiled document }
+//   OUTPUTS: { string - the bullet "- [title](route): summary" }
+//   SIDE_EFFECTS: none
+//   LINKS: V-M-DOCS-SITE
+// END_CONTRACT: documentLine
+function documentLine(doc: ContentDocument): string {
+  return `- [${doc.title}](${doc.route}): ${doc.summary}`;
+}
+
 test.describe("llms.txt", () => {
   test("is plain text, opens with the site heading and a summary, and lists every document", async ({
     request,
@@ -82,6 +161,23 @@ test.describe("llms.txt", () => {
     for (const doc of readIndexFile().documents) {
       expect(text, doc.id).toContain(`](${doc.url})`);
     }
+  });
+
+  test("lists each document once with its exact bullet, and no other document bullet", async ({
+    request,
+  }) => {
+    const text = await (await request.get("/llms.txt")).text();
+    const bullets = text.split("\n").filter((line) => line.startsWith("- ["));
+    const expected = readContentFile().documents.map(documentLine);
+    for (const line of expected) {
+      expect(
+        bullets.filter((bullet) => bullet === line),
+        line,
+      ).toHaveLength(1);
+    }
+    expect(bullets.filter((bullet) => !expected.includes(bullet))).toEqual(
+      APP_PAGE_LINES,
+    );
   });
 
   test("its level-two headings are the navigation sections, in navigation order", async ({
@@ -140,6 +236,15 @@ test.describe("index.json", () => {
         );
       }
     }
+  });
+
+  test("matches the content file document by document, with no extra and no missing document", async ({
+    request,
+  }) => {
+    const served = (await (
+      await request.get("/index.json")
+    ).json()) as IndexFile;
+    expect(served.documents).toEqual(expectedIndexDocuments(readContentFile()));
   });
 
   test("every document URL is served with status 200", async ({ request }) => {

@@ -152,15 +152,11 @@ test.describe("results name their origin", () => {
   }) => {
     for (const id of ["a", "d"]) {
       await openScenario(page, id);
-      const origins = await page
-        .locator("[data-result]")
-        .evaluateAll((panels) =>
-          panels.map((panel) => panel.getAttribute("data-provenance")),
-        );
-      expect(
-        origins.every((origin) => origin === "none"),
-        `scenario ${id}`,
-      ).toBe(true);
+      // The results area is there and says what to press, and it holds no panel yet.
+      await expect(page.locator('[data-slot="results"]')).toContainText(
+        "Press",
+      );
+      await expect(page.locator("[data-result]")).toHaveCount(0);
     }
   });
 
