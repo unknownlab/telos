@@ -23,6 +23,19 @@
 //   DiagnosticCode - stable machine codes for every rule violation; adding is allowed, renaming is breaking
 //   ValidationReport - the result of validating a Fabric; valid is true exactly when there are no diagnostics
 //   validateFabric - pure, total check of a Fabric against INV-001 to INV-008; reports every violation
+//   DigestError - Web Crypto is unavailable or the digest failed
+//   LocusMismatchError - two Revisions of different Loci were compared
+//   StaleBaselineError - an append stated an expected head that is not the current head
+//   RevisionNotFoundError - no Revision with this id was recorded
+//   DecodeError - external input could not be decoded; carries at least one located issue
+//   canonicalForm - canonical JSON, version 1, of a definition
+//   Revision - an immutable, content-addressed snapshot of one Locus definition
+//   RevisionId - "sha256:" followed by 64 lowercase hex digits
+//   createRevision - computes the Revision of a definition through Web Crypto
+//   Change - one changed, added or removed part of a definition
+//   ChangeSet - the ordered changes between two Revisions of one Locus
+//   SetPart - the four set-valued parts of a definition that produce added and removed changes
+//   diffRevisions - fails for different Loci; otherwise returns the ordered change set
 // END_MODULE_MAP
 
 export type { Charter } from "./charter";
@@ -36,3 +49,15 @@ export type {
   ValidationReport,
 } from "./diagnostic";
 export { validateFabric } from "./validate";
+export {
+  DecodeError,
+  DigestError,
+  LocusMismatchError,
+  RevisionNotFoundError,
+  StaleBaselineError,
+} from "./errors";
+export { canonicalForm } from "./canonical";
+export type { Revision, RevisionId } from "./revision";
+export { createRevision } from "./revision";
+export type { Change, ChangeSet, SetPart } from "./diff";
+export { diffRevisions } from "./diff";
