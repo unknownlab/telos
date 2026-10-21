@@ -102,9 +102,9 @@ Run them from the repository root.
 4. type-checks and tests the whole repository,
 5. runs `grace lint`.
 
-Any failure stops the commit with a `pre-commit:` message. On the empty skeleton the hook takes about half a second.
+Any failure stops the commit with a `pre-commit:` message. On the empty skeleton the hook takes under two seconds.
 
-Formatting restages whole files. If you staged only part of a file, the rest of that file is committed too.
+Formatting restages whole files. If you staged only part of a file, the hook blocks the commit with `pre-commit: format failed` and nothing is committed. Fix it by staging the rest of the file (`git add <file>`), or by setting the unstaged changes aside with `git stash --keep-index`.
 
 ### Review gate
 
