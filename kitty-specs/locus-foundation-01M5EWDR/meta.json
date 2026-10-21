@@ -12,5 +12,7 @@
   "purpose_tldr": "Make Telos's core idea real: people and agents can define a Locus, check it, track how it changes, and see real results in the docs.",
   "slug": "locus-foundation-01M5EWDR",
   "target_branch": "feat/locus-foundation",
-  "topology": "coord"
+  "topology": "coord",
+  "vcs": "git",
+  "vcs_locked_at": "2026-10-21T12:31:11.776713+00:00"
 }

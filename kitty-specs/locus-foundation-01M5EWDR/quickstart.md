@@ -67,7 +67,7 @@ bun test packages/locus-specs     # one test per LOC-### record, plus runner met
 ```bash
 bun run --filter @telos/docs dev       # local development server
 bun run --filter @telos/docs build     # content check, spec report, static build
-bun run --filter @telos/docs preview   # serve the static build
+bun run --filter @telos/docs preview   # serve dist/client with scripts/serve-static.ts
 bun run --filter @telos/docs test:e2e  # Playwright, Chromium
 ```
 
