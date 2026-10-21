@@ -5,6 +5,7 @@ ignorePatterns = [
   "kitty-specs/**",
   ".kittify/**",
   ".grace/**",
+  ".spec-kitty/**",
 ]
 
 [fmt]
@@ -14,6 +15,7 @@ ignorePatterns = [
   "kitty-specs/**",
   ".kittify/**",
   ".grace/**",
+  ".spec-kitty/**",
   "bun.lock",
   "AGENTS.md",
   "CLAUDE.md",
