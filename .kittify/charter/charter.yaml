@@ -1,0 +1,770 @@
+schema_version: 2.0.0
+governance:
+  testing:
+    min_coverage: 0
+    tdd_required: false
+    framework: ''
+    type_checking: ''
+  quality:
+    linting: ''
+    pr_approvals: 1
+    pre_commit_hooks: false
+  commits: {}
+  performance:
+    cli_timeout_seconds: 2.0
+    dashboard_max_wps: 100
+  branch_strategy:
+    main_branch: main
+    rules: []
+  charter:
+    selected_paradigms: []
+    selected_directives: []
+    selected_tactics: []
+    selected_styleguides: []
+    selected_toolguides: []
+    selected_procedures: []
+    selected_agent_profiles: []
+    selected_mission_step_contracts: []
+    selected_glossary_packs: []
+    selected_assets: []
+    available_tools: []
+    authority_paths: []
+    governance_references: []
+  activations: []
+  enforcement: {}
+directives:
+  directives: []
+catalog:
+  mission: software-dev
+  template_set: software-dev-default
+  languages:
+  - typescript
+  references:
+  - id: USER:PROJECT_PROFILE
+    kind: user_profile
+    title: User Project Profile
+    summary: Project-specific interview answers captured for charter compilation.
+    source_path: .kittify/charter/interview/answers.yaml
+    local_path: _LIBRARY/user-project-profile.md
+  - id: PARADIGM:behaviour-driven-development
+    kind: paradigm
+    title: Behaviour-Driven Development
+    summary: "BDD is a collaboration practice, not a testing methodology. It operates through three cyclical phases: Discovery (structured Three Amigos conversations — product owner, developer, tester — produce concrete, validated behavioral examples before any code is written), Formulation (validated examples are expressed in plain-language Given/When/Then specifications that serve as the canonical behavioral contract), and Automation (formulated specifications are connected to executable tests that fail when the system diverges from the spec, producing living documentation that cannot become stale). BDD does not replace unit testing — it sits above the test pyramid and is reserved for behaviors with genuine cross-functional business value. The Three Amigos is the minimum collaboration unit: one person representing the business need, one who will build it, one who will verify it. Distinct from Specification by Example (the broader technique); BDD mandates the collaboration process and executable automation as the canonical specification form.\n"
+    source_path: ${SPEC_KITTY_PACKS_ROOT}/built-in/paradigms/behaviour-driven-development.paradigm.yaml
+    local_path: _LIBRARY/paradigm-behaviour-driven-development.md
+  - id: PARADIGM:deep-module-design
+    kind: paradigm
+    title: Deep Module Design
+    summary: "Shape modules so a small, stable interface gives callers high leverage over a substantial implementation. The interface includes every fact a caller must know to use the module correctly: names, types, invariants, ordering, error modes, configuration, and performance expectations. Deep modules improve locality because changes, bugs, and knowledge concentrate behind the interface instead of spreading across callers and tests.\n"
+    source_path: ${SPEC_KITTY_PACKS_ROOT}/built-in/paradigms/deep-module-design.paradigm.yaml
+    local_path: _LIBRARY/paradigm-deep-module-design.md
+  - id: PARADIGM:domain-driven-design
+    kind: paradigm
+    title: Domain-Driven Design
+    summary: "Software design guided by a deep model of the business domain. Strategic design decomposes a system into Bounded Contexts connected through explicit Context Mapping patterns (ACL, OHS, Shared Kernel, Published Language, etc.). Within each context a Ubiquitous Language keeps code, model, and domain expert communication aligned. Tactical patterns (Aggregates, Entities, Value Objects, Domain Events, Repositories, Domain Services) enforce invariants at the model boundary. DDD treats the domain model as the primary artifact — code is a direct expression of that model, not a translation layer above a database schema or UI framework.\n"
+    source_path: ${SPEC_KITTY_PACKS_ROOT}/built-in/paradigms/domain-driven-design.paradigm.yaml
+    local_path: _LIBRARY/paradigm-domain-driven-design.md
+  - id: PARADIGM:specification-by-example
+    kind: paradigm
+    title: Specification by Example
+    summary: "Shared understanding of behavior is built from concrete, business-readable examples that become the canonical source of truth for requirements, acceptance checks, and living documentation. Teams refine examples collaboratively, turn stable examples into executable acceptance tests, and keep narrative specs in sync whenever behavior changes.\n"
+    source_path: ${SPEC_KITTY_PACKS_ROOT}/built-in/paradigms/specification-by-example.paradigm.yaml
+    local_path: _LIBRARY/paradigm-specification-by-example.md
+  - id: DIRECTIVE:DIRECTIVE_001
+    kind: directive
+    title: Architectural Integrity Standard
+    summary: "System designs must maintain clear separation of concerns and well-defined component boundaries so that each part of the system is independently understandable, testable, and replaceable without cascading changes.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-001.md
+  - id: DIRECTIVE:DIRECTIVE_003
+    kind: directive
+    title: Decision Documentation Requirement
+    summary: "Material technical and governance decisions must be captured with enough context that future contributors can understand why a path was chosen and what constraints must remain true.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-003.md
+  - id: DIRECTIVE:DIRECTIVE_010
+    kind: directive
+    title: Specification Fidelity Requirement
+    summary: "Implemented behavior and produced artifacts must remain faithful to approved specifications, with any necessary deviations explicitly documented and reviewed before acceptance.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-010.md
+  - id: DIRECTIVE:DIRECTIVE_024
+    kind: directive
+    title: Locality of Change
+    summary: "Changes should stay close to the problem being solved to reduce blast radius, simplify review, and lower regression risk.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-024.md
+  - id: DIRECTIVE:DIRECTIVE_025
+    kind: directive
+    title: DIRECTIVE_025
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-025.md
+  - id: DIRECTIVE:DIRECTIVE_028
+    kind: directive
+    title: DIRECTIVE_028
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-028.md
+  - id: DIRECTIVE:DIRECTIVE_029
+    kind: directive
+    title: Agent Commit Signing Policy
+    summary: "Agent-authored commits must avoid GPG or SSH signing in unattended workflows so automation does not fail on missing key material or unverifiable signatures.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-029.md
+  - id: DIRECTIVE:DIRECTIVE_030
+    kind: directive
+    title: Test and Typecheck Quality Gate
+    summary: "Code changes must pass the relevant automated tests and static validation gates before handoff so regressions and interface drift are caught early.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-030.md
+  - id: DIRECTIVE:DIRECTIVE_031
+    kind: directive
+    title: DIRECTIVE_031
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-031.md
+  - id: DIRECTIVE:DIRECTIVE_032
+    kind: directive
+    title: Conceptual Alignment
+    summary: "Agents must never assume that shared vocabulary implies shared meaning. Before acting on any task that contains domain-specific, ambiguous, or overloaded terminology, the agent must explicitly state its interpretation of each key term and confirm that interpretation with the requester. Misaligned understanding discovered after implementation is far more costly than a brief clarification exchange before it begins.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-032.md
+  - id: DIRECTIVE:DIRECTIVE_033
+    kind: directive
+    title: Targeted Staging Policy
+    summary: "Agent-authored commits must stage only the expected deliverables for the current work package. Blanket staging commands that could inadvertently include unrelated changes, secrets, or build artefacts are prohibited.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-033.md
+  - id: DIRECTIVE:DIRECTIVE_034
+    kind: directive
+    title: Test-First Development
+    summary: "Require test-first behavior across acceptance and implementation layers, selecting tactics based on scope and risk. Tests define the contract before production code is written.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-034.md
+  - id: DIRECTIVE:DIRECTIVE_035
+    kind: directive
+    title: Bulk Edit Occurrence Classification
+    summary: "Codebase-wide renames, terminology migrations, and bulk string changes must classify string occurrences by semantic context before edits begin. Different contexts (code symbols, imports, filesystem paths, serialized keys, CLI commands, docs, tests, logs) may have different change rules.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-035.md
+  - id: DIRECTIVE:DIRECTIVE_036
+    kind: directive
+    title: Black-Box Integration Testing
+    summary: "Exercise the system under test through its external interfaces only, without reference to its internal code structure, implementation details, or internal paths. Test cases derive from specifications, requirements, and design parameters, and assertions are made on observable outputs returned through those external interfaces. \"Black-box\" refers to the technique (absence of structural knowledge) and is independent of test scope — the scope is selected separately by responsibility, not by default to end-to-end.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-036.md
+  - id: DIRECTIVE:DIRECTIVE_037
+    kind: directive
+    title: Living Documentation Sync
+    summary: "Behavior-describing artifacts must evolve together. When observable behavior changes, the canonical examples, acceptance checks, narrative specifications, user documentation, glossary terms, code-level documentation, and architecture records must be updated in the same change so no reader is left with a stale picture of the system.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-037.md
+  - id: DIRECTIVE:DIRECTIVE_040
+    kind: directive
+    title: DIRECTIVE_040
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-040.md
+  - id: DIRECTIVE:DIRECTIVE_041
+    kind: directive
+    title: Tests as Scaffold, Not Friction
+    summary: "Tests must protect change, not obstruct it. A test earns its place by failing exactly when the contract is violated and passing otherwise. Tests that pass for the wrong reason (mocked-out behavior, tautological or wiring-only assertions) or fail on correct, behavior-neutral changes (implementation-coupled assertions, line-pinned ratchets) are friction: they hide regressions and pressure engineers to revert good changes.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-041.md
+  - id: DIRECTIVE:DIRECTIVE_043
+    kind: directive
+    title: Close Defect Classes by Construction
+    summary: "A repeating defect class signals a missing structural constraint. The correct response is to eliminate the recurrence path with a structural mechanism — an AST call-site gate, a type invariant, or a shrink-only ratchet — rather than adding another process rule or discipline reminder. Structural enforcement closes the class permanently; process rules merely defer the next occurrence.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-043.md
+  - id: DIRECTIVE:DIRECTIVE_045
+    kind: directive
+    title: PRs-Only and Read-Intent Before High-Risk Operations
+    summary: "All changes to the remote main branch go through pull requests — agents never push directly or merge without explicit operator instruction. Before executing any high-risk git operation (merge, rebase, deletion, force operations), agents must read the mission spec and current context first. Neither rule may be bypassed under time pressure or assumed from a task title alone.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-045.md
+  - id: DIRECTIVE:DIRECTIVE_050
+    kind: directive
+    title: Credential Handling Discipline
+    summary: "Any agent operation that uses an authentication credential (token, key, password, session cookie) to call an external system must never log, echo, or otherwise surface that credential in output, error messages, or artifacts. The discipline is prevention-first: the credential must be kept out of any surface that could be logged or written in the first place, rather than surfaced and then scrubbed after the fact.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-050.md
+  - id: DIRECTIVE:DIRECTIVE_051
+    kind: directive
+    title: Supply-Chain Install Safety
+    summary: "Install-time and dependency-resolution decisions must be evaluated against a threat-CLASS model, not a static package denylist. Worm-style supply-chain compromises (credential-harvesting postinstall scripts, typosquatted or namespace-confused packages, rapid-republish attacks during an active incident window) recur across ecosystems faster than any hand-maintained list of bad package/version pairs can track. Agents and mission workflows must therefore default to five threat-class controls for every dependency addition or upgrade: (1) official registry authenticity — the resolved package and version must come from the approved official registry, not an unexpected mirror or namespace; (2) package freshness visibility — first-publish and latest-publish/update timestamps must be surfaced so an operator can see when a version is suspiciously new or was substantially reworked; (3) deny-by-default lifecycle-script approval — `preinstall`/`install`/`postinstall` scripts are never auto-approved and must be explicitly allowlisted with a documented justification when required for legitimate native builds; (4) Node Active LTS awareness — the project/runtime Node version is checked against current Active LTS and any skew is explicitly disclosed with rationale, never silently accepted; (5) incident-list and IoC/persistence posture — known active-incident package/version lists and indicator-of-compromise (IoC) or persistence patterns (unexpected postinstall network calls, credential/token exfiltration attempts, self-propagating install scripts) are treated as class-level risk signals to check for, with CAS/vendor incident feeds as the external authority of record — this directive never hardcodes specific incident package names or versions as core truth, because that list changes faster than doctrine can be re-authored.\n"
+    source_path: ''
+    local_path: _LIBRARY/directive-directive-051.md
+  - id: DIRECTIVE:RECONCILE_CHANGE_SCOPE_TENSIONS
+    kind: directive
+    title: RECONCILE_CHANGE_SCOPE_TENSIONS
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/directive-reconcile-change-scope-tensions.md
+  - id: DIRECTIVE:USE_MUTATION_TESTING_TO_VALIDATE_TEST_QUALITY
+    kind: directive
+    title: USE_MUTATION_TESTING_TO_VALIDATE_TEST_QUALITY
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/directive-use-mutation-testing-to-validate-test-quality.md
+  - id: TACTIC:acceptance-test-first
+    kind: tactic
+    title: Acceptance Test Driven Development (ATDD)
+    summary: Anchor implementation work in externally observable behavior before internal coding begins.
+    source_path: ''
+    local_path: _LIBRARY/tactic-acceptance-test-first.md
+  - id: TACTIC:adversarial-qa-handoff
+    kind: tactic
+    title: Adversarial QA Handoff
+    summary: "Prepare code as if review and QA will probe every weak assumption. The agent should identify likely failure modes before handoff and leave clear evidence that behavior, typing, and edge cases were verified.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-adversarial-qa-handoff.md
+  - id: TACTIC:aggregate-boundary-design
+    kind: tactic
+    title: Aggregate Boundary Design
+    summary: "Define transactional consistency boundaries within a bounded context by identifying aggregates and their roots. An aggregate is a cluster of domain objects that are treated as a single unit for data changes; the aggregate root is the sole entry point for all modifications. Correct aggregate boundaries enforce invariants without creating unnecessary coupling or oversized transaction scopes. Based on Eric Evans's tactical DDD patterns and Vaughn Vernon's aggregate design rules.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-aggregate-boundary-design.md
+  - id: TACTIC:ammerse-impact-analysis
+    kind: tactic
+    title: AMMERSE Impact Analysis
+    summary: "Evaluate the first- and second-order impact of a decision, practice, or architectural choice against the seven AMMERSE values (Agile, Minimal, Maintainable, Environmental, Reachable, Solvable, Extensible) to surface hidden trade-offs and align choices with strategic goals. Reserve the full numeric interaction-matrix analysis for high-stakes decisions; first-order reasoning alone is sufficient for routine choices.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-ammerse-impact-analysis.md
+  - id: TACTIC:anti-corruption-layer
+    kind: tactic
+    title: Anti-Corruption Layer
+    summary: "Isolate your domain model from external or legacy systems by placing a translation layer at the boundary. The ACL translates between the foreign system's semantics and your own ubiquitous language, preventing external models from leaking into and corrupting your domain design. Originally described by Eric Evans in Domain-Driven Design; also known as Gateway when the emphasis is on translation rather than defense.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-anti-corruption-layer.md
+  - id: TACTIC:architectural-gate-non-vacuity
+    kind: tactic
+    title: Architectural Gate Non-Vacuity
+    summary: "Concrete recipe for building an AST call-site gate that cannot silently pass because the codebase happens to have zero relevant calls, and cannot be defeated by allowlisting every violation. The four elements — concrete floor, self-mutation test, shrink-only allowlist, and routed-count floor — together ensure the gate remains meaningful as the codebase evolves.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-architectural-gate-non-vacuity.md
+  - id: TACTIC:atdd-adversarial-acceptance
+    kind: tactic
+    title: Adversarial Acceptance Test Definition
+    summary: Strengthen acceptance criteria by deliberately exploring how a feature could fail in real usage, then converting selected failure scenarios into adversarial acceptance tests that define reject, constrain, or degrade boundaries.
+    source_path: ''
+    local_path: _LIBRARY/tactic-atdd-adversarial-acceptance.md
+  - id: TACTIC:behavior-driven-development
+    kind: tactic
+    title: Behavior-Driven Development
+    summary: "Define system behavior through concrete examples before implementation, ensuring shared understanding between stakeholders and implementers. BDD scenarios serve as behavioral contracts, acceptance criteria, and executable test definitions simultaneously. Apply when: a feature or business rule is being defined and stakeholders are available, the behavior can be expressed in observable outcomes, or behavioral ambiguity must be resolved before implementation begins. Not applicable: implementation-only tasks with no behavioral ambiguity, purely technical refactoring, or when behavior is already unambiguously specified.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-behavior-driven-development.md
+  - id: TACTIC:black-box-integration-testing
+    kind: tactic
+    title: Black-Box Integration Testing
+    summary: "Validate the functionality of an application under test without peering into its internal structures or workings, by driving it through an external interface and asserting on observable outputs. Tests are derived from external descriptions of the software — specifications, requirements, and design parameters — rather than from its code. \"Black-box\" describes the testing technique (no structural knowledge of the system under test), not the size of the slice under test. Applied here at the integration boundary — exercising more than one collaborator together through a single external interface — but the same discipline also applies at the module, acceptance, and system levels.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-black-box-integration-testing.md
+  - id: TACTIC:bounded-context-canvas-fill
+    kind: tactic
+    title: Bounded Context Canvas Fill
+    summary: "Guide the reasoning process for completing a Bounded Context Canvas -- a structured one-page summary that captures a context's name, purpose, strategic classification, domain roles, communication patterns, ubiquitous language, business decisions, assumptions, verification metrics, and open questions. This tactic focuses on the analytical thinking required to fill each section well; the fillable canvas itself is a separate template. Based on the DDD Crew Bounded Context Canvas v5.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-bounded-context-canvas-fill.md
+  - id: TACTIC:bounded-context-identification
+    kind: tactic
+    title: Bounded Context Identification
+    summary: "Identify and draw boundaries around regions of a system where a single consistent domain model and ubiquitous language apply. Instead of forcing one unified model across an entire organization, accept that different contexts need different models and define explicit integration points between them. Based on Eric Evans's DDD strategic design and Martin Fowler's Bounded Context pattern.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-bounded-context-identification.md
+  - id: TACTIC:change-apply-smallest-viable-diff
+    kind: tactic
+    title: Change Apply Smallest Viable Diff
+    summary: Introduce changes using the smallest possible modification that achieves the stated goal, minimising unintended side effects.
+    source_path: ''
+    local_path: _LIBRARY/tactic-change-apply-smallest-viable-diff.md
+  - id: TACTIC:clean-linear-commit-history
+    kind: tactic
+    title: Clean Linear Commit History via Snapshot Chain
+    summary: "Compress a long-running integration branch that has accumulated many small administrative or bookkeeping commits into a short, clean, linear chain before it is shared in a pull request or rebased onto a moving base. The compression rebuilds history from existing tree states with git plumbing — never by replaying or reordering individual commits — so every snapshot is a real, once-tested tree and the result is byte-identical to the original branch tip. This yields a reviewable pull-request-sized history, conflict-once rebases, and slice-granular bisection without risking silently dropped intent.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-clean-linear-commit-history.md
+  - id: TACTIC:code-documentation-analysis
+    kind: tactic
+    title: Code and Documentation Analysis for Boundary Discovery
+    summary: "Extract terminology from a codebase and its documentation to identify semantic clusters that reveal implicit context boundaries. Used during domain modelling and architectural review to surface unacknowledged bounded contexts before they calcify into accidental coupling. Success criteria: 100-500 terms extracted, clustered by semantic similarity, clusters mapped to team/directory ownership, proposed boundaries validated with domain experts, and cross-boundary risks identified and documented.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-code-documentation-analysis.md
+  - id: TACTIC:code-review-incremental
+    kind: tactic
+    title: Incremental Code Review
+    summary: Review a change set to identify correctness, structural, and architectural risks without rewriting or expanding scope. Formulate feedback as observations and questions, not instructions.
+    source_path: ''
+    local_path: _LIBRARY/tactic-code-review-incremental.md
+  - id: TACTIC:connascence-analysis
+    kind: tactic
+    title: Connascence Analysis
+    summary: "Diagnose coupling between software components by classifying it using the connascence taxonomy — examining strength, degree, and locality — and recommend targeted reductions that improve maintainability without unnecessary abstraction.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-connascence-analysis.md
+  - id: TACTIC:context-boundary-inference
+    kind: tactic
+    title: Context Boundary Inference
+    summary: "Detect bounded context boundaries from team ownership patterns and terminology conflicts. Use systematic organizational and linguistic analysis to surface implicit domain boundaries before they calcify into accidental coupling. Apply when: a monolith is growing beyond a single team's cognitive bandwidth, teams disagree on what a shared term means, cross-team coupling makes deployment or testing painful, or a strategic design effort is beginning. Success criteria: each proposed context has explicit ownership, ubiquitous language documented per context, translation rules defined at each boundary, no shared mutable state across context boundaries, proposed boundaries validated with domain experts.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-context-boundary-inference.md
+  - id: TACTIC:context-mapping-classification
+    kind: tactic
+    title: Context Mapping Classification
+    summary: "Systematically classify every relationship between bounded contexts using the nine canonical DDD context mapping patterns and three relationship types. Produces an explicit map that reveals coupling, power asymmetries, and integration risk across the system. Based on Eric Evans's strategic design patterns and the DDD Crew context-mapping notation.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-context-mapping-classification.md
+  - id: TACTIC:decision-marker-capture
+    kind: tactic
+    title: Decision Marker Capture
+    summary: Ensure architectural decisions made during implementation are captured as traceable records with rationale, alternatives, and consequences, so future maintainers can understand why a choice was made.
+    source_path: ''
+    local_path: _LIBRARY/tactic-decision-marker-capture.md
+  - id: TACTIC:delete-the-assertion-not-the-test
+    kind: tactic
+    title: Delete the Assertion, Not the Test
+    summary: "Remediate a friction test (one that passes for the wrong reason, false-reds a correct change, or asserts an implementation detail) by replacing its wrong assertion with a contract-pinned, red-first one while PRESERVING the test's setup and excavated edge-cases. Reserve outright deletion for tests that provably carry no unique coverage. This discharges \"never delete a test to fix it\" rigorously: never delete COVERAGE to dodge a failure."
+    source_path: ''
+    local_path: _LIBRARY/tactic-delete-the-assertion-not-the-test.md
+  - id: TACTIC:dependency-hygiene
+    kind: tactic
+    title: Dependency Hygiene
+    summary: "Keep a project's dependency tree free of known vulnerabilities and non-compliant licenses. Apply at project creation, when adding any dependency, and as part of regular pre-release maintenance. Apply when: starting a new project, adding or upgrading any dependency, a vulnerability scanner reports new CVEs, or preparing a release. For JavaScript/TypeScript projects specifically, dependency hygiene also covers install-time supply-chain safety (registry authenticity, package freshness, lifecycle-script discipline, lockfile behavior, and Node runtime baseline) per the supply-chain-install-safety directive and tactic — see the JS/TS-specific steps below.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-dependency-hygiene.md
+  - id: TACTIC:development-bdd
+    kind: tactic
+    title: BDD as Behavioral Contract Design
+    summary: "Use Behaviour-Driven Development principles to define observable behavioral contracts before implementation begins, ensuring system boundaries are expressed in terms stakeholders can validate. Apply during design to establish what the system must do at its public interfaces — not how to write test scenarios (see the behavior-driven-development tactic for that). Outputs of this tactic serve as the behavioral contract that step definitions later implement.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-development-bdd.md
+  - id: TACTIC:domain-event-capture
+    kind: tactic
+    title: Domain Event Capture
+    summary: "Funnel significant state changes through immutable Domain Event objects that are persisted before processing. Separates input recording from business reaction, enabling auditability, replay, and decoupled system evolution. Based on Martin Fowler's Domain Event pattern and Eric Evans's DDD events.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-domain-event-capture.md
+  - id: TACTIC:eisenhower-prioritisation
+    kind: tactic
+    title: Eisenhower Prioritisation
+    summary: "Assign each pending task an importance and urgency rating so that the most valuable work is tackled first and low-value work is explicitly eliminated or delegated. Prevents constant busyness from masking a lack of meaningful progress.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-eisenhower-prioritisation.md
+  - id: TACTIC:entity-value-object-classification
+    kind: tactic
+    title: Entity vs Value Object Classification
+    summary: "Classify every domain object as either an Entity (has identity, mutable lifecycle) or a Value Object (defined solely by its attributes, immutable, no identity). The default heuristic is to prefer Value Objects; promote to Entity only when the domain requires tracking identity across state changes. Correct classification reduces complexity, improves testability, and makes the domain model more expressive. Based on Eric Evans's DDD tactical patterns.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-entity-value-object-classification.md
+  - id: TACTIC:five-paradigm-parallel-debugging
+    kind: tactic
+    title: Five-Paradigm Parallel Debugging
+    summary: "Investigate stubborn, recurring, or shape-shifting bugs by dispatching five sub-agents in parallel, each constrained to a different debugging epistemology. Independent investigations converge on a single structural fix while each surfaces findings the others structurally cannot. Produces one structural intervention, not five point-fixes.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-five-paradigm-parallel-debugging.md
+  - id: TACTIC:forensic-repository-audit
+    kind: tactic
+    title: Forensic Repository Audit
+    summary: "Extract durable, evidence-backed signals about the health of an unfamiliar codebase from version control history and surface them as concrete questions a maintainer must answer: where is risk concentrated, who knows this code, is the project alive, does the team trust the pipeline, is anything abandoned, and is complexity load-bearing? The output is not a verdict but a structured inventory of hotspots, ownership, velocity, and firefighting frequency that other doctrine artifacts (triage, prioritisation, premortem, connascence analysis) can act on.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-forensic-repository-audit.md
+  - id: TACTIC:formalized-constraint-testing
+    kind: tactic
+    title: Formalized Constraint Testing
+    summary: "Verify mathematical invariants and structural contracts of components using property-based patterns rather than example-based spot-checks. Covers four pattern families: round-trip symmetry, equality contracts, hash-code alignment, and sparse serialization.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-formalized-constraint-testing.md
+  - id: TACTIC:frozen-baseline-shrink-only-ratchet
+    kind: tactic
+    title: Frozen-Baseline Shrink-Only Ratchet
+    summary: "Track the current count of a gated allowlist (call sites, dead symbols, legacy entries, or any other countable technical-debt category) in a committed baseline file. CI fails if the live count grows beyond the committed baseline, and warns (but does not fail) if it shrinks. The baseline is updated only by deliberate human action with a recorded rationale. The allowed direction is shrink-or-stay; growth is a gate failure.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-frozen-baseline-shrink-only-ratchet.md
+  - id: TACTIC:function-over-form-testing
+    kind: tactic
+    title: Function Over Form Testing
+    summary: "Prioritize behavioral validation over structural verification in test suites. Tests should prove that the system does what it is supposed to do, not that it was assembled from the right parts. Construction details (constructors, builders, accessors) get tested indirectly through functional tests that exercise the objects they create. Core principle: when behavior is tested thoroughly, construction coverage follows naturally.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-function-over-form-testing.md
+  - id: TACTIC:glossary-curation-interview
+    kind: tactic
+    title: Glossary Curation Interview
+    summary: Systematically expand a living glossary through structured HiC-led curation rounds, ensuring all new terms are clear, well-grouped, and approved before inclusion.
+    source_path: ''
+    local_path: _LIBRARY/tactic-glossary-curation-interview.md
+  - id: TACTIC:input-validation-fail-fast
+    kind: tactic
+    title: Input Validation with Fail-Fast Feedback
+    summary: Validate input data comprehensively before processing to avoid wasting resources on invalid data. Provide clear, actionable feedback on errors while protecting system internals from exposure.
+    source_path: ''
+    local_path: _LIBRARY/tactic-input-validation-fail-fast.md
+  - id: TACTIC:language-driven-design
+    kind: tactic
+    title: Language-Driven Design
+    summary: "Treat language drift as an architectural signal. When terminology becomes inconsistent or ambiguous across code, docs, and conversation, it predicts deeper structural problems. Reviewers use linguistic checks to catch architectural issues before they manifest as bugs or coupling.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-language-driven-design.md
+  - id: TACTIC:mutation-testing-workflow
+    kind: tactic
+    title: Mutation Testing Workflow
+    summary: "Verify that tests detect real bugs — not merely execute code. Mutation testing answers \"if I introduced a bug here, would my tests fail?\" where coverage only answers \"did my tests run this line?\".\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-mutation-testing-workflow.md
+  - id: TACTIC:no-parallel-duplicate-test-runs
+    kind: tactic
+    title: No Parallel Duplicate Test Runs
+    summary: "Prevent agents from launching multiple concurrent runs of the same test suite. Doing so wastes resources, makes output ambiguous, and degrades the developer experience. A single authoritative run must be started, and the agent must wait for its result before deciding on next steps.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-no-parallel-duplicate-test-runs.md
+  - id: TACTIC:occurrence-classification-workflow
+    kind: tactic
+    title: Occurrence Classification Workflow
+    summary: "Guide mission authors through classifying string occurrences by semantic context before performing bulk edits.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-occurrence-classification-workflow.md
+  - id: TACTIC:paula-patterns-architecture-scout-review
+    kind: tactic
+    title: Paula Patterns Architecture Scout Review
+    summary: "Review recurring boundary leaks, whack-a-field fixes, ownership confusion, and compatibility regressions by dispatching five architecture scouts with different lenses, then synthesizing one pragmatic matrix that separates the smallest release-safe fix from deferred architecture repair.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-paula-patterns-architecture-scout-review.md
+  - id: TACTIC:pr-agent-worktree-isolation
+    kind: tactic
+    title: PR Agent Worktree Isolation and No-Version Prescription
+    summary: "Govern two complementary constraints on how agents interact with PR branches: (1) agents that review or rebase a PR must execute in an isolated worktree, not in an active mission checkout; (2) scope documents must not assign patch or version numbers, because version decisions belong to the product owner at release time. Together these prevent cross-contamination of mission state and preserve the product owner's authority over the release boundary.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-pr-agent-worktree-isolation.md
+  - id: TACTIC:premortem-risk-identification
+    kind: tactic
+    title: Premortem Risk Identification
+    summary: Proactively surface failure modes for a plan or decision by deliberately attempting to sabotage it before execution.
+    source_path: ''
+    local_path: _LIBRARY/tactic-premortem-risk-identification.md
+  - id: TACTIC:problem-decomposition
+    kind: tactic
+    title: Problem Decomposition
+    summary: "Break a complex, ambiguous problem into a set of smaller, independently tractable sub-problems before selecting a solution approach. Decomposition prevents premature convergence on a solution that addresses only part of the problem, exposes hidden scope, and creates a structured basis for work-package planning and parallel progress.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-problem-decomposition.md
+  - id: TACTIC:quality-gate-verification
+    kind: tactic
+    title: Quality Gate Verification
+    summary: Verify the relevant test and static validation gates for a change before review handoff and distinguish introduced failures from pre-existing debt.
+    source_path: ''
+    local_path: _LIBRARY/tactic-quality-gate-verification.md
+  - id: TACTIC:refactoring-strangler-fig
+    kind: tactic
+    title: Refactoring Strangler Fig
+    summary: Replace existing functionality incrementally by running a new implementation alongside the old and rerouting behavior step by step.
+    source_path: ''
+    local_path: _LIBRARY/tactic-refactoring-strangler-fig.md
+  - id: TACTIC:reverse-speccing
+    kind: tactic
+    title: Reverse Specification from Tests
+    summary: "Reconstruct system understanding purely from test code, then compare against actual implementation and design docs. Measures how effectively tests serve as executable specifications. Gaps between reconstruction and reality reveal under-documented behavior, missing architectural rationale, or invisible operational context.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-reverse-speccing.md
+  - id: TACTIC:review-intent-and-risk-first
+    kind: tactic
+    title: Review Intent and Risk First
+    summary: Review work by first understanding intent and surfacing risks before suggesting changes or solutions.
+    source_path: ''
+    local_path: _LIBRARY/tactic-review-intent-and-risk-first.md
+  - id: TACTIC:safe-to-fail-experiment
+    kind: tactic
+    title: Safe-to-Fail Experiment
+    summary: "Reframe a learning or exploration goal as a deliberately low-stakes experiment so that failure produces signal rather than shame. Running time-boxed, isolated experiments with pre-defined hypotheses accelerates skill development, surfaces assumptions early, and normalises sharing what was learned — including negative results.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-safe-to-fail-experiment.md
+  - id: TACTIC:secure-design-checklist
+    kind: tactic
+    title: Secure Design Checklist
+    summary: "Apply the nine foundational secure design principles (Saltzer & Schroeder) at the design phase of a new feature or component so that security properties are built in rather than retrofitted. Apply before implementation begins, not after. Principles: (1) Least Privilege — minimum access for minimum time. (2) Fail-Safe Defaults — deny by default, permit explicitly. (3) Economy of Mechanism — keep security paths simple and centralized. (4) Complete Mediation — check every access every time, no indefinite caching. (5) Open Design — security must hold even if the attacker knows the source code. (6) Separation of Privilege — no single condition sufficient to grant access. (7) Least Common Mechanism — do not share access mechanisms unnecessarily. (8) Psychological Acceptability — security must not significantly impede usability. (9) Defense in Depth — layer independent barriers; assume each layer can fail.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-secure-design-checklist.md
+  - id: TACTIC:stakeholder-alignment
+    kind: tactic
+    title: Stakeholder Alignment
+    summary: "Identify everyone with a meaningful stake in a decision or initiative, surface their primary concerns and success criteria, and expose tensions between groups early — before design choices embed assumptions that conflict with stakeholder reality. Unaddressed stakeholder conflict is the most common source of technically correct but organisationally rejected solutions.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-stakeholder-alignment.md
+  - id: TACTIC:strategic-domain-classification
+    kind: tactic
+    title: Strategic Domain Classification
+    summary: "Classify each bounded context as Core Domain, Supporting Subdomain, or Generic Subdomain to guide investment, staffing, and build-vs-buy decisions. Core domains receive the deepest modelling effort because they are the source of competitive advantage. Supporting subdomains are necessary but not differentiating. Generic subdomains are commodity concerns best served by off-the-shelf solutions. Based on Eric Evans's strategic classification and the Bounded Context Canvas (section 3).\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-strategic-domain-classification.md
+  - id: TACTIC:supply-chain-install-safety
+    kind: tactic
+    title: Supply-Chain Install Safety Checklist
+    summary: "Provide the concrete, operational checklist that turns the supply-chain-install-safety directive's policy pillars into checks an implementer runs before accepting a dependency change and evidence a reviewer requires before approving one. Apply whenever a mission adds, upgrades, or removes a dependency during `plan`, `implement`, or `review` — the checklist below is executed, not merely acknowledged; each step produces a recorded result, not an aspirational statement of intent. This tactic is advisory at the transition-gate level in v1 (no new fail-closed handler is introduced), but the checklist itself is not optional: an unexamined default counts as a gap in evidence, not a pass.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-supply-chain-install-safety.md
+  - id: TACTIC:tdd-red-green-refactor
+    kind: tactic
+    title: Test Driven Development (TDD)
+    summary: Enforce short, verifiable coding loops that improve design while keeping behavior safe.
+    source_path: ''
+    local_path: _LIBRARY/tactic-tdd-red-green-refactor.md
+  - id: TACTIC:terminology-extraction-mapping
+    kind: tactic
+    title: Terminology Extraction and Mapping
+    summary: "Systematically extract domain terms from multiple sources (code, docs, transcripts, specs) and map their relationships to build a comprehensive, maintainable glossary. Use when a project lacks a shared vocabulary, when terminology drift is causing communication failures, or as a follow-up to code-documentation-analysis.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-terminology-extraction-mapping.md
+  - id: TACTIC:test-boundaries-by-responsibility
+    kind: tactic
+    title: Test Boundaries by Functional Responsibility
+    summary: Determine test scope by identifying which components are directly responsible for the behavior under test, rather than following structural layer boundaries. Reduces brittle tests while ensuring meaningful validation.
+    source_path: ''
+    local_path: _LIBRARY/tactic-test-boundaries-by-responsibility.md
+  - id: TACTIC:test-minimisation
+    kind: tactic
+    title: Test Minimisation
+    summary: Remove redundant tests while preserving full behavioral coverage, keeping the suite fast and easy to maintain.
+    source_path: ''
+    local_path: _LIBRARY/tactic-test-minimisation.md
+  - id: TACTIC:test-pyramid-progression
+    kind: tactic
+    title: Test Pyramid Progression
+    summary: "Run tests bottom-up through pyramid layers to get fast feedback and avoid wasting time on slow tests when fast tests fail. The execution order mirrors the ROI order: the cheapest, fastest tests run first because they catch the most bugs per second of CI time.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-test-pyramid-progression.md
+  - id: TACTIC:test-readability-clarity-check
+    kind: tactic
+    title: Test Readability and Clarity Check
+    summary: "Validate whether a test suite effectively documents system behavior by attempting to reconstruct system understanding purely from test code. Tests that allow accurate reconstruction without external documentation serve as executable specifications. Use during code review, documentation audits, or when a new team member needs to understand a system. Not applicable to pure unit tests for trivial pure functions.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-test-readability-clarity-check.md
+  - id: TACTIC:test-to-system-reconstruction
+    kind: tactic
+    title: Test-to-System Reconstruction
+    summary: "Dual-agent validation that reconstructs system understanding purely from test code, measuring how effectively tests serve as executable specifications. Produces a scored gap analysis identifying where tests fail to communicate behavioral, architectural, or operational intent. Target overall accuracy: >=85% (behavioral 50% weight >=90%, architectural 30% weight >=80%, operational 20% weight >=75%). Score formula: (behavioral * 0.5) + (architectural * 0.3) + (operational * 0.2). Apply when: after major test suite refactoring, before significant releases, quarterly quality audits, or onboarding validation. Minimum scope: 20 tests. Recommended scope: 50-100 tests. Estimated time: 60-90 minutes.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-test-to-system-reconstruction.md
+  - id: TACTIC:traceable-decisions
+    kind: tactic
+    title: Traceable Decisions
+    summary: "Ensure that material architectural and governance decisions are captured with enough context that future contributors can understand why a path was chosen and what constraints must remain true. Apply when: establishing a new pattern, choosing between alternative implementations with meaningful trade-offs, making a trade-off that accepts known costs or risks, or beginning any task with architectural implications.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-traceable-decisions.md
+  - id: TACTIC:usage-examples-sync
+    kind: tactic
+    title: Usage Examples Sync
+    summary: "Keep canonical usage examples, acceptance checks, and the narrative artifacts that quote or reference them in step with behavior changes so no downstream reader is left with stale examples.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-usage-examples-sync.md
+  - id: TACTIC:work-package-completion-validation
+    kind: tactic
+    title: Work Package Completion Validation
+    summary: "Validate that a work package meets all required quality gates before its status is advanced to for_review or done. Prevents premature transitions that accumulate technical debt in the review queue.\n"
+    source_path: ''
+    local_path: _LIBRARY/tactic-work-package-completion-validation.md
+  - id: TACTIC:zombies-tdd
+    kind: tactic
+    title: ZOMBIES TDD
+    summary: Drive implementation through tiny behavior increments using failing tests to control complexity.
+    source_path: ''
+    local_path: _LIBRARY/tactic-zombies-tdd.md
+  - id: STYLEGUIDE:adversarial-squad-cadence
+    kind: styleguide
+    title: Adversarial Squad Cadence
+    summary: "Run a bounded multi-profile adversarial squad at each planning point-cut as strong guidance, not a gate. A mission is not blocked for skipping the squad.\n"
+    source_path: ''
+    local_path: _LIBRARY/styleguide-adversarial-squad-cadence.md
+  - id: STYLEGUIDE:aggregate-design-rules
+    kind: styleguide
+    title: Aggregate Design Rules
+    summary: "Reference other aggregates by identity only: an aggregate must not hold a direct object reference to another aggregate. Use the other aggregate's ID instead to prevent transaction scope from spanning multiple aggregates."
+    source_path: ''
+    local_path: _LIBRARY/styleguide-aggregate-design-rules.md
+  - id: STYLEGUIDE:given-when-then-authoring
+    kind: styleguide
+    title: Given-When-Then Scenario Authoring
+    summary: 'A scenario has three parts: Given (the precondition/context), When (the single trigger), Then (the observable outcome). This is the same behavioural skeleton the specs in this repository already use — one scenario describes one behaviour.'
+    source_path: ''
+    local_path: _LIBRARY/styleguide-given-when-then-authoring.md
+  - id: STYLEGUIDE:kitty-glossary-writing
+    kind: styleguide
+    title: Kitty Glossary Writing Styleguide
+    summary: 'Clear, not clever: definitions exist to help the reader understand, not to demonstrate expertise.'
+    source_path: ''
+    local_path: _LIBRARY/styleguide-kitty-glossary-writing.md
+  - id: STYLEGUIDE:mutation-aware-test-design
+    kind: styleguide
+    title: Mutation-Aware Test Design
+    summary: 'Test boundary values: provide a test at the exact equality point for every >= or <= comparison, plus one step either side.'
+    source_path: ''
+    local_path: _LIBRARY/styleguide-mutation-aware-test-design.md
+  - id: STYLEGUIDE:python-conventions
+    kind: styleguide
+    title: python-conventions
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/styleguide-python-conventions.md
+  - id: STYLEGUIDE:quadruple-a-test-format
+    kind: styleguide
+    title: Quadruple-A Test Format
+    summary: 'A test has four phases: Arrange, Assumption checks, Act, Assert. Naming them turns a test into the canonical skeleton for pinning ONE behaviour.'
+    source_path: ''
+    local_path: _LIBRARY/styleguide-quadruple-a-test-format.md
+  - id: STYLEGUIDE:test-desiderata-and-boundaries
+    kind: styleguide
+    title: Test Desiderata and Clear Test Boundaries
+    summary: 'Desiderata are trade-offs: choose which properties a given test optimizes; do not pretend one test maximizes all twelve at once.'
+    source_path: ''
+    local_path: _LIBRARY/styleguide-test-desiderata-and-boundaries.md
+  - id: STYLEGUIDE:testing-principles
+    kind: styleguide
+    title: Testing Principles Styleguide
+    summary: 'Fast: tests execute quickly enough that running them after every small change is not a burden.'
+    source_path: ''
+    local_path: _LIBRARY/styleguide-testing-principles.md
+  - id: STYLEGUIDE:tiered-standards
+    kind: styleguide
+    title: Tiered Coding Standards
+    summary: 'Rigour must match risk: the closer a package is to mission-critical state management or runtime execution, the higher the quality bar it must meet.'
+    source_path: ''
+    local_path: _LIBRARY/styleguide-tiered-standards.md
+  - id: TOOLGUIDE:contextive
+    kind: toolguide
+    title: Contextive
+    summary: "Reference guide for using Contextive to manage ubiquitous language in software projects. Covers glossary file setup, term definition syntax, multi-context repository layouts, IDE integration, and alignment with Spec Kitty glossary curation workflows.\n"
+    source_path: ''
+    local_path: _LIBRARY/toolguide-contextive.md
+  - id: TOOLGUIDE:efficient-local-tooling
+    kind: toolguide
+    title: Efficient Local Tooling
+    summary: Operation-oriented guidance for using efficient local tools during repository work.
+    source_path: ''
+    local_path: _LIBRARY/toolguide-efficient-local-tooling.md
+  - id: TOOLGUIDE:gherkin
+    kind: toolguide
+    title: The Gherkin Scenario Language
+    summary: "Reference for the Gherkin DSL itself — the language, not any runner. Covers Feature, Background, Scenario, Scenario Outline, the Given/When/Then/And/But steps, Examples tables, tags, and doc strings / data tables. Explicitly scoped to the notation only; the runner that executes Gherkin (Cucumber, behave, SpecFlow, and others) is out of scope and named only to draw the boundary.\n"
+    source_path: ''
+    local_path: _LIBRARY/toolguide-gherkin.md
+  - id: TOOLGUIDE:git-agent-commit-signing
+    kind: toolguide
+    title: Git Agent Commit Signing
+    summary: Unsigned commit guidance for agent-authored git commits.
+    source_path: ''
+    local_path: _LIBRARY/toolguide-git-agent-commit-signing.md
+  - id: TOOLGUIDE:python-mutation-tools
+    kind: toolguide
+    title: python-mutation-tools
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/toolguide-python-mutation-tools.md
+  - id: TOOLGUIDE:python-review-checks
+    kind: toolguide
+    title: python-review-checks
+    summary: Definition unavailable in bundled doctrine.
+    source_path: ''
+    local_path: _LIBRARY/toolguide-python-review-checks.md
+  - id: TOOLGUIDE:sonar
+    kind: toolguide
+    title: SonarQube Static Analysis and Quality Gate
+    summary: "Operator reference for SonarQube static analysis and its quality gate. Covers the four measure families (new-code coverage, code smells / maintainability, security hotspots and vulnerabilities, duplication), why the gate is evaluated on NEW code rather than the whole project, and the loopback-safe handling of a local Sonar or control-plane URL (do not force HTTPS on 127.0.0.1).\n"
+    source_path: ''
+    local_path: _LIBRARY/toolguide-sonar.md
+  - id: TOOLGUIDE:typescript-mutation-tools
+    kind: toolguide
+    title: TypeScript Mutation Testing with Stryker
+    summary: "Operator reference and Stryker workflow for TypeScript/JavaScript mutation testing. Covers JS/TS-specific mutation families (optional chaining ?., nullish coalescing ??, some/every, array literals) and the Stryker run/incremental/HTML-report cycle.\n"
+    source_path: ''
+    local_path: _LIBRARY/toolguide-typescript-mutation-tools.md
+  - id: PROCEDURE:adversarial-squad-deployment
+    kind: procedure
+    title: Adversarial Squad Deployment
+    summary: "Deploy a small, bounded set of profile-loaded subagents in parallel at high-leverage review point-cuts so independent doctrine lenses converge on findings no single reviewer would catch. Turns review from one perspective into a cheap adversarial panel that resists laziness, accidental-pass, and single-lens blind spots. Optional and charter- or memory-activated — it enriches the flow, it does not gate it.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-adversarial-squad-deployment.md
+  - id: PROCEDURE:bdd-scenario-lifecycle
+    kind: procedure
+    title: BDD Scenario Lifecycle
+    summary: "Guide the Formulation, Automation, and Maintenance phases of the BDD cycle, picking up where the Example Mapping Workshop (Discovery phase) leaves off. Covers translating validated examples into Gherkin specifications, wiring them to executable step definitions, and maintaining them as living documentation as the system evolves. Toolchain-agnostic — applicable with Cucumber-JVM, Cucumber-JS, Behave, SpecFlow, or any Given/When/Then runner.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-bdd-scenario-lifecycle.md
+  - id: PROCEDURE:event-storming-discovery
+    kind: procedure
+    title: Event Storming Discovery
+    summary: "Discover domain events, commands, aggregates, policies, read models, and bounded context boundaries through a structured analysis of business flows. The procedure produces a shared domain model grounded in real business behaviour rather than technical assumptions. Based on Alberto Brandolini's Event Storming technique, adapted for agent-assisted discovery with human-in-charge validation at key decision points.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-event-storming-discovery.md
+  - id: PROCEDURE:example-mapping-workshop
+    kind: procedure
+    title: Example Mapping Workshop
+    summary: "Turn a behavior request into concrete rules, examples, and open questions that stakeholders and implementers can share as a canonical specification set.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-example-mapping-workshop.md
+  - id: PROCEDURE:legacy-codebase-triage
+    kind: procedure
+    title: Legacy Codebase Triage
+    summary: "Convert an unfamiliar brownfield codebase into a defensible action plan by gathering version-control evidence, overlaying structural and complexity signals, optionally classifying domains, and bucketing the resulting findings into fix-this-week, fix-this-quarter, do-not-worry, and parallelisable work. The output is a triage document that anchors subsequent planning conversations and ADRs; it is not a replacement for deeper investigation, only a fast, evidence-backed first pass.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-legacy-codebase-triage.md
+  - id: PROCEDURE:mission-tracer-files
+    kind: procedure
+    title: Mission Tracer Files
+    summary: "Give every mission a lightweight running log of tooling friction, approach evolution, and design rationale through three sparse tracer files. The files are seeded at mission start, appended to during implementation, and assessed at mission close. Captured friction and rationale feed the next mission's planning and make recurring tool and process gaps visible instead of repeatedly re-discovered.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-mission-tracer-files.md
+  - id: PROCEDURE:post-merge-arch-gate-adjudication
+    kind: procedure
+    title: Post-Merge Arch-Gate Adjudication
+    summary: "After merging one or more lane branches, architectural gate failures may appear that were not visible during per-lane review. This procedure distinguishes pre-existing failures (present on the mission base branch before any lane work) from regressions introduced by the merge. Correct adjudication prevents teams from either ignoring real regressions or blocking on failures they did not cause.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-post-merge-arch-gate-adjudication.md
+  - id: PROCEDURE:red-main-release-discipline
+    kind: procedure
+    title: Red Main & Release Discipline
+    summary: "Keep the mainline CI signal honest and authoritative for release. A red main is a true signal of known release-blocking (P0) defects, never something to hide by reverting an honest failure or declining a bug's reproduction test. Mainline CI status is the single authoritative release gate; expensive QA and manual testing are not spent on a known-broken base; and red main is worked down as top priority. Consensus policy (CEO/product owner, QA lead, maintainers); governing decision ADR 2026-07-17-1, operational guide docs/development/red-main-and-release-readiness.md.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-red-main-release-discipline.md
+  - id: PROCEDURE:situational-assessment
+    kind: procedure
+    title: Situational Assessment
+    summary: "Establish a shared, documented understanding of the context, stakeholders, constraints, and problem structure before any solution is designed or selected. A situational assessment ensures that architectural decisions are grounded in operational reality rather than technology preference, and that the trade-off assessments that follow address the right problem.\n"
+    source_path: ''
+    local_path: _LIBRARY/procedure-situational-assessment.md
+  - id: TEMPLATE_SET:software-dev-default
+    kind: template_set
+    title: software-dev-default
+    summary: Build high-quality software with structured workflows and test-driven development
+    source_path: /Users/unknownhero/.local/share/uv/tools/spec-kitty-cli/lib/python3.14/site-packages/packs/built-in/missions/software-dev/mission.yaml
+    local_path: _LIBRARY/template-set-software-dev-default.md
+overrides: {}
+metadata:
+  generated_at: '2026-10-21T03:07:00Z'
+  bundle_schema_version: 2
+mission_type_activations:
+- software-dev
+- documentation
+- research
+- plan
+activated_directives:
+- 001-architectural-integrity-standard
+- 003-decision-documentation-requirement
+- 010-specification-fidelity-requirement
+- 024-locality-of-change
+- 029-agent-commit-signing-policy
+- 030-test-and-typecheck-quality-gate
+- 032-conceptual-alignment
+- 033-targeted-staging-policy
+- 034-test-first-development
+- 035-bulk-edit-occurrence-classification
+- 036-black-box-integration-testing
+- 037-living-documentation-sync
+- 041-tests-as-scaffold-not-friction
+- 043-close-defect-class-by-construction
+- 045-prs-only-and-read-intent
+- 050-credential-handling-discipline
+- 051-supply-chain-install-safety
+activated_paradigms:
+- behaviour-driven-development
+- deep-module-design
+- domain-driven-design
+- specification-by-example
