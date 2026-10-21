@@ -106,7 +106,7 @@ Run them from the repository root.
 
 Any failure stops the commit with a `pre-commit:` message. On the empty skeleton the hook takes under two seconds.
 
-Commits that stage only files under `kitty-specs/` or `.kittify/` (Spec Kitty's bookkeeping commits) pass at once: the hook exits silently, without running the checks and without installed dependencies. Any other staged path brings back the full run above, including the `dependencies not installed` message when `node_modules/` is absent.
+Commits that stage only files under `kitty-specs/` or `.kittify/` (Spec Kitty's bookkeeping commits) pass at once: the hook exits silently, without running the checks and without installed dependencies. Any other staged path brings back the full run above, including the `dependencies not installed` message when `node_modules/` is absent. A commit that moves a file out of any other directory runs the full checks too, because the old path counts as a staged path.
 
 Formatting restages whole files. If you staged only part of a file, the hook blocks the commit with `pre-commit: format failed` and nothing is committed. Fix it by staging the rest of the file (`git add <file>`), or by setting the unstaged changes aside with `git stash --keep-index`.
 
