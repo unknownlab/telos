@@ -159,7 +159,8 @@
       "last_transition_at": "2026-10-21T13:06:24.191202+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: 8618afd"
+        "Ready for review: 8618afd",
+        "Review passed (reviewer-renata, Sonnet): verify green 180 tests, atomic Ref.modify, order mutation caught."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
