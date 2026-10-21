@@ -1,13 +1,3 @@
----
-affected_files: []
-cycle_number: 1
-mission_slug: locus-foundation-01M5EWDR
-reproduction_command:
-reviewed_at: '2026-10-21T17:46:28Z'
-reviewer_agent: claude
-wp_id: WP16
----
-
 # WP16 review feedback (cycle 1) — reviewer-renata
 
 Verdict: REJECT, narrow rework. `bun run verify` is green (838 tests), the e2e suite is 106/106 on three runs and `--repeat-each=3` is stable. Most mutations are caught (Revision ids, provenance labels, stale refusal, shortcut, theme, low-contrast CSS in both themes, nav section, narrow 404 exception). The gaps below were confirmed by mutations that still passed. Change only WP16-owned e2e files.

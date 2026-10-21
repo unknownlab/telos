@@ -60,3 +60,11 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - Add a two-Locus case for `currentHeadOf` in `playground-revisions.test.ts` (mutant taking `loci[0]` survives).
 - `decideAppend` order of invalid-head vs stale/no-revision checks only changes the refusal reason when both apply (button disabled then); tolerable.
 - The golden "Expected" cell has no `data-revision-id` by design (static catalogue text); tests read the observed cell.
+
+## 10. WP16 findings and follow-ups
+
+- Mission-log: commit 7207645 fixed a real app defect found by the WP16 browser suite outside WP16's owned files: after hydration, unknown URLs rendered the site header/nav/footer twice (root layout + `notFoundComponent` both wrapped in `SiteLayout`). Fix in `apps/docs/src/routes/__root.tsx` (+ route-tree render test in `components.test.tsx`).
+- Follow-up (reproduced, low to medium): unknown documents under a section (`/principles/no-such-id`, `/terminology/nope`) log React error #418 (hydration mismatch): `SiteNav` marks the section active in the client but not in the served `/not-found` HTML. Write a failing test first. Not required by the spec.
+- Follow-up (cosmetic): `<title>` of unknown URLs is the site title, not "Page not found".
+- Follow-up: `serve-static.ts` does not redirect `/x` to `/x/` (directory index served at both); `/not-found` returns 200; `statSync` follows symlinks in `dist` (moot for a static build).
+- Mission review limit: browser tests run Chromium only.
