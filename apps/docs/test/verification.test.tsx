@@ -225,6 +225,26 @@ describe("ResultPanel and ProvenanceLabel", () => {
     expect(labelTexts(markup)[0]?.startsWith("Historical:")).toBe(true);
   });
 
+  test("a historical result is marked by its dashed border and its label, and its text is not dimmed", () => {
+    const historical = toHistorical({
+      origin: "browser",
+      at: "2026-10-21T10:18:46.123Z",
+      packages: PACKAGES,
+      siteCommit: HEX40,
+    });
+    const markup = renderToStaticMarkup(
+      <ResultPanel kind="spec-result" provenance={historical} title="Stale run">
+        <p>Body</p>
+      </ResultPanel>,
+    );
+    const panel = openingTags(markup).find((tag) =>
+      tag.includes('data-result="spec-result"'),
+    );
+    expect(panel).toContain("border-dashed");
+    expect(markup).not.toMatch(/opacity-/);
+    expect(markup).toContain('data-slot="provenance-label"');
+  });
+
   test("a fresh result is not marked stale", () => {
     const markup = renderToStaticMarkup(
       <ResultPanel kind="spec-result" provenance={null} title="No run">

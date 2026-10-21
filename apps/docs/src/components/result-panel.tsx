@@ -27,9 +27,9 @@ export type ResultKind =
   | "spec-result";
 
 // START_CONTRACT: ResultPanel
-//   PURPOSE: Show one result with its provenance label first. A historical result keeps its content and is visibly marked as stale.
+//   PURPOSE: Show one result with its provenance label first. A historical result keeps its content at full contrast and is marked as stale by its dashed border, its label, its icon and data-stale; its text is never dimmed.
 //   INPUTS: { kind: ResultKind - the result kind, provenance: Provenance | null - its provenance, title: string - the accessible name, children: ReactNode - the result content }
-//   OUTPUTS: { JSX.Element - a section with data-result, data-provenance ("none" when null), data-stale="true" when historical, aria-label and the ProvenanceLabel }
+//   OUTPUTS: { JSX.Element - a section with data-result, data-provenance ("none" when null), data-stale="true" when historical, a dashed border when historical, aria-label and the ProvenanceLabel }
 //   SIDE_EFFECTS: none
 //   LINKS: M-DOCS-SITE
 // END_CONTRACT: ResultPanel
@@ -53,7 +53,7 @@ export function ResultPanel({
       aria-label={title}
       className={cn(
         "flex flex-col gap-3 rounded-lg border p-4",
-        historical && "border-dashed opacity-75",
+        historical && "border-dashed",
       )}
     >
       <ProvenanceLabel provenance={provenance} />
