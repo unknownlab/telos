@@ -197,20 +197,22 @@ export function GoldenView({
               data-golden-key={row.key}
               data-golden-match={String(row.match)}
             >
-              <TableCell className="font-mono">{row.key}</TableCell>
-              <TableCell className="break-all">
+              <TableCell className="font-mono whitespace-normal [overflow-wrap:anywhere]">
+                {row.key}
+              </TableCell>
+              <TableCell className="whitespace-normal [overflow-wrap:anywhere]">
                 <code>{row.expected}</code>
               </TableCell>
               <TableCell
                 className={cn(
-                  "break-all",
+                  "whitespace-normal [overflow-wrap:anywhere]",
                   !row.match && "text-destructive font-semibold",
                 )}
               >
                 {row.observed === null ? (
                   "Not computed"
                 ) : (
-                  <code data-revision-id>{row.observed}</code>
+                  <code data-revision-id={row.observed}>{row.observed}</code>
                 )}
               </TableCell>
             </TableRow>

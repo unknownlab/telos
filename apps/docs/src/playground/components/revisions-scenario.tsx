@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Give scenario D its two Locus editors, its Compute and Reset actions, its Revision and change-set results and its history panel, so that the reader sees the Revision ids, the change set and the compare-and-set outcome of each append (FR-019, FR-021, INV-013).
-//   SCOPE: RevisionsScenario and HistoryPanel. Out: the Revision step (run-revisions.ts), the views (revision-results.tsx), the editor (json-editor.tsx) and the run state (run-state.ts). The history is replayed on each append, never kept in a long-lived runtime.
+//   SCOPE: RevisionsScenario and HistoryPanel. The history state lives in RevisionsScenario and changes only through historyReducer, so a Compute starts an empty history. Out: the Revision step and the history rules (run-revisions.ts), the views (revision-results.tsx), the editor (json-editor.tsx) and the run state (run-state.ts). The history is replayed on each append, never kept in a long-lived runtime.
 //   DEPENDS: M-DOCS-PLAYGROUND, M-DOCS-SITE, M-LOCUS-REVISION, M-LOCUS-HISTORY
 //   LINKS: M-DOCS-PLAYGROUND
 //   ROLE: RUNTIME
@@ -11,40 +11,48 @@
 //   RevisionsScenario - the two editors, the actions, the Revision and change-set results and the history panel of scenario D
 // END_MODULE_MAP
 
-import type { Revision, RevisionId } from "@telos/locus";
+import type { Revision } from "@telos/locus";
 import { examples } from "@telos/locus-specs";
-import { useRef, useState } from "react";
+import { useReducer, useRef, useState } from "react";
+import { ResultPanel } from "@/components/result-panel";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ResultPanel } from "@/components/result-panel";
-import {
-  type BrowserProvenance,
-  browserProvenance,
-  toHistorical,
-} from "@/lib/provenance";
+import { browserProvenance } from "@/lib/provenance";
+import { JsonEditor } from "@/playground/components/json-editor";
 import {
   ChangeSetView,
   SideView,
 } from "@/playground/components/revision-results";
-import { JsonEditor } from "@/playground/components/json-editor";
 import {
-  type AppendStep,
-  type HistoryReplay,
+  appendAllowed,
+  currentHeadOf,
+  decideAppend,
+  EMPTY_HISTORY,
+  type HistoryModel,
+  historyProvenance,
+  historyReducer,
+  type LabelledStep,
   isRevisionId,
   replayHistory,
   type RevisionsOutcome,
   revisionsKey,
   runRevisions,
+  type SideOutcome,
 } from "@/playground/run-revisions";
 import { isStale, provenanceFor } from "@/playground/run-state";
 import { useRun } from "@/playground/use-run";
 
+// The Revision of one side of a finished run, or null when the side did not compute.
+function revisionOf(outcome: SideOutcome): Revision | null {
+  return "revision" in outcome ? outcome.revision : null;
+}
+
 // START_CONTRACT: RevisionsScenario
-//   PURPOSE: Let the reader edit two Locus texts and compute their Revisions and change set on an explicit press, and append them to a history whose expected head the reader sets.
+//   PURPOSE: Let the reader edit two Locus texts and compute their Revisions and change set on an explicit press, and append them to a history whose expected head the reader sets. A new Compute starts an empty history.
 //   INPUTS: { siteCommit: string - the commit the site was built from }
 //   OUTPUTS: { JSX.Element - the two editors, the Compute and Reset actions, a results region with aria-live polite and, when the run is done, the history panel }
-//   SIDE_EFFECTS: Runs the package on a Compute press only. Reset restores both example texts and does not run. Each history append replays the steps.
+//   SIDE_EFFECTS: Runs the package on a Compute press only. Reset restores both example texts and does not run. Each history append replays the steps. Compute and reset dispatch to the history reducer.
 //   LINKS: M-DOCS-PLAYGROUND
 // END_CONTRACT: RevisionsScenario
 /** Scenario D: two Locus editors, the Revision and change-set results, and the history. */
@@ -57,7 +65,6 @@ export function RevisionsScenario({
   const initialB = JSON.stringify(examples.history.b, null, 2);
   const [textA, setTextA] = useState(initialA);
   const [textB, setTextB] = useState(initialB);
-  const [runNumber, setRunNumber] = useState(0);
   const { state, start } = useRun<RevisionsOutcome>(
     siteCommit,
     (key: string) => {
@@ -66,10 +73,42 @@ export function RevisionsScenario({
       return runRevisions(a, b);
     },
   );
+  const [history, dispatchHistory] = useReducer(historyReducer, EMPTY_HISTORY);
+  // The steps asked for so far. A ref, so that a second press before the first replay ends is not lost.
+  const pending = useRef<ReadonlyArray<LabelledStep>>([]);
 
   const currentKey = revisionsKey(textA, textB);
   const provenance = provenanceFor(state, currentKey);
   const stale = isStale(state, currentKey);
+  const revisionA = state.status === "done" ? revisionOf(state.result.a) : null;
+  const revisionB = state.status === "done" ? revisionOf(state.result.b) : null;
+
+  // Appends one side. The decision is made by decideAppend, and a replay that a newer press or a reset has superseded is dropped.
+  function requestAppend(side: "a" | "b", expectedText: string) {
+    const decision = decideAppend({
+      side,
+      revision: side === "a" ? revisionA : revisionB,
+      expectedText,
+      stale,
+    });
+    if (!decision.ok) return;
+    const next = [...pending.current, decision.step];
+    pending.current = next;
+    void replayHistory(next).then((replay) => {
+      if (pending.current !== next) return;
+      dispatchHistory({
+        type: "replayed",
+        steps: next,
+        replay,
+        provenance: browserProvenance(new Date(), siteCommit),
+      });
+    });
+  }
+
+  function resetHistory() {
+    pending.current = [];
+    dispatchHistory({ type: "reset" });
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -97,7 +136,8 @@ export function RevisionsScenario({
           data-action="run"
           disabled={state.status === "running"}
           onClick={() => {
-            setRunNumber((n) => n + 1);
+            pending.current = [];
+            dispatchHistory({ type: "compute" });
             start(currentKey);
           }}
         >
@@ -152,11 +192,12 @@ export function RevisionsScenario({
             />
             <ChangeSetView diff={state.result.diff} provenance={provenance} />
             <HistoryPanel
-              key={runNumber}
-              a={"revision" in state.result.a ? state.result.a.revision : null}
-              b={"revision" in state.result.b ? state.result.b.revision : null}
+              history={history}
+              a={revisionA}
+              b={revisionB}
               stale={stale}
-              siteCommit={siteCommit}
+              onAppend={requestAppend}
+              onReset={resetHistory}
             />
           </>
         ) : null}
@@ -165,81 +206,35 @@ export function RevisionsScenario({
   );
 }
 
-// A step of the log, with the side it appended from.
-interface LabelledStep extends AppendStep {
-  readonly side: "a" | "b";
-}
-
-// The steps and the replay that the panel shows, with the browser provenance of the replay.
-interface HistoryView {
-  readonly steps: ReadonlyArray<LabelledStep>;
-  readonly replay: HistoryReplay;
-  readonly provenance: BrowserProvenance;
-}
-
 // START_CONTRACT: HistoryPanel
-//   PURPOSE: Append the Revisions of the current run to a history one step at a time, with the expected head the reader sets, and show every outcome, so that a stale baseline is refused and the history is left unchanged.
-//   INPUTS: { a: Revision | null - the Revision of A, b: Revision | null - the Revision of B, stale: boolean - whether the run's input has changed, siteCommit: string - the commit the site was built from }
+//   PURPOSE: Show the history of the current run and its append controls, with the expected head the reader sets, so that a stale baseline is refused and the history is left unchanged. It decides nothing itself; the decisions are in run-revisions.ts.
+//   INPUTS: { history: HistoryModel - the history state, a: Revision | null - the Revision of A, b: Revision | null - the Revision of B, stale: boolean - whether the run's input has changed, onAppend: (side, expectedText) => void - asks for one append, onReset: () => void - empties the history }
 //   OUTPUTS: { JSX.Element - a ResultPanel of kind history-state with the expected head field, the append, head and reset actions, the append log and the head and entries of each Locus }
-//   SIDE_EFFECTS: Each append replays the steps against a fresh history and reads the clock once for its provenance. Nothing runs on an edit of the expected head.
+//   SIDE_EFFECTS: none. The expected head field is local state and is not changed by an append.
 //   LINKS: M-DOCS-PLAYGROUND
 // END_CONTRACT: HistoryPanel
 /** The history of one run: the appends, their outcomes, and the head of each Locus. */
 function HistoryPanel({
+  history,
   a,
   b,
   stale,
-  siteCommit,
+  onAppend,
+  onReset,
 }: {
+  readonly history: HistoryModel;
   readonly a: Revision | null;
   readonly b: Revision | null;
   readonly stale: boolean;
-  readonly siteCommit: string;
+  readonly onAppend: (side: "a" | "b", expectedText: string) => void;
+  readonly onReset: () => void;
 }) {
-  const [view, setView] = useState<HistoryView | null>(null);
   const [expectedText, setExpectedText] = useState("");
-  // The steps asked for so far, kept in a ref so that a second press before the first replay ends is not lost.
-  const pending = useRef<ReadonlyArray<LabelledStep>>([]);
-
   const trimmed = expectedText.trim();
   const expectedInvalid = trimmed !== "" && !isRevisionId(trimmed);
-  const primaryLocus = (a ?? b)?.locus;
-  const currentHead =
-    view?.replay.loci.find((locus) => locus.locus === primaryLocus)?.head ??
-    null;
-
-  function append(side: "a" | "b") {
-    const revision = side === "a" ? a : b;
-    if (revision === null || stale || expectedInvalid) return;
-    const expectedHead = trimmed === "" ? null : (trimmed as RevisionId);
-    const next: ReadonlyArray<LabelledStep> = [
-      ...pending.current,
-      { side, revision, expectedHead },
-    ];
-    pending.current = next;
-    void replayHistory(next).then((replay) => {
-      // A newer press or a reset has superseded this replay; its result is not shown.
-      if (pending.current !== next) return;
-      setView({
-        steps: next,
-        replay,
-        provenance: browserProvenance(new Date(), siteCommit),
-      });
-    });
-  }
-
-  function reset() {
-    pending.current = [];
-    setView(null);
-  }
-
-  const provenance =
-    view === null
-      ? null
-      : stale
-        ? toHistorical(view.provenance)
-        : view.provenance;
-  const expecting = (step: AppendStep) => step.expectedHead ?? "none";
+  const primaryLocus = (a ?? b)?.locus ?? null;
+  const provenance = historyProvenance(history, stale);
+  const expecting = (step: LabelledStep) => step.expectedHead ?? "none";
 
   return (
     <ResultPanel kind="history-state" provenance={provenance} title="History">
@@ -275,24 +270,26 @@ function HistoryPanel({
           type="button"
           variant="outline"
           data-action="use-head"
-          disabled={primaryLocus === undefined}
-          onClick={() => setExpectedText(currentHead ?? "")}
+          disabled={primaryLocus === null}
+          onClick={() =>
+            setExpectedText(currentHeadOf(history, primaryLocus) ?? "")
+          }
         >
           Use current head
         </Button>
         <Button
           type="button"
           data-action="append-a"
-          disabled={a === null || stale}
-          onClick={() => append("a")}
+          disabled={!appendAllowed(a, stale)}
+          onClick={() => onAppend("a", expectedText)}
         >
           Append A
         </Button>
         <Button
           type="button"
           data-action="append-b"
-          disabled={b === null || stale}
-          onClick={() => append("b")}
+          disabled={!appendAllowed(b, stale)}
+          onClick={() => onAppend("b", expectedText)}
         >
           Append B
         </Button>
@@ -300,19 +297,19 @@ function HistoryPanel({
           type="button"
           variant="outline"
           data-action="reset-history"
-          onClick={reset}
+          onClick={onReset}
         >
           Reset history
         </Button>
       </div>
       {stale ? <p>Compute again to append the edited input.</p> : null}
-      {view === null ? (
+      {history.replay === null ? (
         <p>The history is empty. Append A or B to start it.</p>
       ) : (
         <>
           <ol className="flex flex-col gap-2">
-            {view.steps.map((step, index) => {
-              const outcome = view.replay.outcomes[index];
+            {history.steps.map((step, index) => {
+              const outcome = history.replay?.outcomes[index];
               if (outcome === undefined) return null;
               const prefix = `Append ${step.side === "a" ? "A" : "B"} expecting ${expecting(step)}`;
               const text =
@@ -326,20 +323,24 @@ function HistoryPanel({
                   key={`${index}-${step.side}`}
                   data-history-step={index}
                   data-history-outcome={outcome.outcome}
+                  className="[overflow-wrap:anywhere]"
                 >
                   {text}
                 </li>
               );
             })}
           </ol>
-          {view.replay.loci.map((locus) => (
+          {history.replay.loci.map((locus) => (
             <div key={locus.locus} className="flex flex-col gap-2">
               <p>
-                <code>{locus.locus}</code>
+                <code className="break-all">{locus.locus}</code>
               </p>
               <p>
                 Head:{" "}
-                <code data-history-head={locus.head ?? "none"}>
+                <code
+                  data-history-head={locus.head ?? "none"}
+                  className="break-all"
+                >
                   {locus.head ?? "none"}
                 </code>
               </p>

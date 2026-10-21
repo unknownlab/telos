@@ -158,9 +158,21 @@ describe("SideView", () => {
     expect(markup).toContain('data-result="revision-id"');
     expect(countOf(markup, "data-revision-id")).toBe(1);
     expect(markup).toContain(
-      "sha256:666edf2862a0c96b032bfe46e7c0862f017b30e55d35f0b991636f3a3f6cc6c6",
+      'data-revision-id="sha256:666edf2862a0c96b032bfe46e7c0862f017b30e55d35f0b991636f3a3f6cc6c6"',
     );
+    expect(markup).toContain('data-locus="shop:checkout"');
     expect(markup).toContain('data-provenance="browser"');
+    expect(markup).not.toContain('data-revision-id="true"');
+  });
+
+  test("a Revision result says plainly that its id does not mean the Locus is valid", async () => {
+    const outcome = await history();
+    const markup = renderToStaticMarkup(
+      <SideView side="a" outcome={outcome.a} provenance={BROWSER} />,
+    );
+    expect(markup).toContain(
+      "A Revision id does not mean that the Locus is valid.",
+    );
   });
 
   test("a side that does not decode says so with its issue count, and has no Revision id", () => {
@@ -345,7 +357,11 @@ describe("GoldenView", () => {
     expect(tagsWith(markup, "tr", "data-golden-match").length).toBe(2);
     expect(countOf(markup, 'data-golden-match="false"')).toBe(1);
     expect(countOf(markup, 'data-golden-match="true"')).toBe(1);
-    expect(countOf(markup, "data-revision-id")).toBe(2);
+    expect(markup).toContain(
+      `data-revision-id="${revisionGoldens["LOC-008.a"]}"`,
+    );
+    expect(markup).toContain(`data-revision-id="sha256:${"0".repeat(64)}"`);
+    expect(markup).not.toContain('data-revision-id="true"');
     expect(markup).toContain("Revision ids of the revision fixtures");
   });
 });

@@ -13,6 +13,12 @@
 //   MAX_LENGTH - the largest accepted text length, in code units
 //   revisionOf - the Revision of an outcome side, failing the test for a side that did not compute
 //   otherIdentity - a copy of the A example with a different Locus identity
+//   INSTANT - the fixed instant of the browser provenance in the history model tests
+//   SITE_COMMIT - the site commit of the browser provenance in the history model tests
+//   PACKAGES - the package versions of the browser provenance in the history model tests
+//   PROVENANCE - the browser provenance of a replay at INSTANT
+//   stepsOf - the appends of the A and B example history, in the order of the walk-through
+//   replayedModel - a history model built by the reducer from a replay of those appends
 // END_MODULE_MAP
 
 import { describe, expect, test } from "bun:test";
@@ -20,12 +26,22 @@ import { createRevision, decodeLocus, type Revision } from "@telos/locus";
 import { examples } from "@telos/locus-specs";
 import { Effect } from "effect";
 import { decodeLocusText, MAX_INPUT_LENGTH } from "@/playground/locus-text";
+import { browserProvenance, toHistorical } from "@/lib/provenance";
 import {
+  appendAllowed,
+  currentHeadOf,
+  decideAppend,
+  EMPTY_HISTORY,
+  type HistoryModel,
+  historyProvenance,
+  historyReducer,
   isRevisionId,
   replayHistory,
+  revisionsKey,
   runRevisions,
   type SideOutcome,
 } from "@/playground/run-revisions";
+import { done, isStale } from "@/playground/run-state";
 
 const A_ID =
   "sha256:666edf2862a0c96b032bfe46e7c0862f017b30e55d35f0b991636f3a3f6cc6c6";
@@ -277,5 +293,224 @@ describe("isRevisionId", () => {
     expect(isRevisionId(A_ID.toUpperCase().replace("SHA256", "sha256"))).toBe(
       false,
     );
+  });
+});
+
+const INSTANT = new Date("2026-10-21T10:18:46.123Z");
+const SITE_COMMIT = "0123456789abcdef0123456789abcdef01234567";
+const PACKAGES = { "@telos/locus": "0.1.0", "@telos/locus-specs": "0.1.0" };
+const PROVENANCE = browserProvenance(INSTANT, SITE_COMMIT, PACKAGES);
+
+async function stepsOf() {
+  const outcome = await runRevisions(
+    JSON.stringify(examples.history.a),
+    JSON.stringify(examples.history.b),
+  );
+  const a = revisionOf(outcome.a);
+  const b = revisionOf(outcome.b);
+  return {
+    a,
+    b,
+    steps: [
+      { side: "a" as const, revision: a, expectedHead: null },
+      { side: "b" as const, revision: b, expectedHead: null },
+      { side: "b" as const, revision: b, expectedHead: a.id },
+      { side: "b" as const, revision: b, expectedHead: b.id },
+    ],
+  };
+}
+
+async function replayedModel(): Promise<HistoryModel> {
+  const { steps } = await stepsOf();
+  const replay = await replayHistory(steps);
+  return historyReducer(EMPTY_HISTORY, {
+    type: "replayed",
+    steps,
+    replay,
+    provenance: PROVENANCE,
+  });
+}
+
+describe("historyReducer: Compute starts an empty history", () => {
+  test("a Compute press empties a history that held appends", async () => {
+    const model = await replayedModel();
+    expect(model.steps.length).toBe(4);
+    expect(historyReducer(model, { type: "compute" })).toEqual(EMPTY_HISTORY);
+  });
+
+  test("a reset empties the history as well", async () => {
+    const model = await replayedModel();
+    expect(historyReducer(model, { type: "reset" })).toEqual(EMPTY_HISTORY);
+  });
+
+  test("a replayed history keeps its steps, replay and provenance", async () => {
+    const model = await replayedModel();
+    expect(model.steps.map((step) => step.side)).toEqual(["a", "b", "b", "b"]);
+    expect(model.replay?.outcomes.map((o) => o.outcome)).toEqual([
+      "appended",
+      "stale",
+      "appended",
+      "no-op",
+    ]);
+    expect(model.provenance).toEqual(PROVENANCE);
+  });
+});
+
+describe("decideAppend", () => {
+  test("the expected head the reader typed is the one appended", async () => {
+    const { a, b } = await stepsOf();
+    const decision = decideAppend({
+      side: "b",
+      revision: b,
+      expectedText: a.id,
+      stale: false,
+    });
+    expect(decision).toEqual({
+      ok: true,
+      step: { side: "b", revision: b, expectedHead: a.id },
+    });
+  });
+
+  test("an empty expected head means no head", async () => {
+    const { a } = await stepsOf();
+    const decision = decideAppend({
+      side: "a",
+      revision: a,
+      expectedText: "",
+      stale: false,
+    });
+    expect(decision).toMatchObject({ ok: true, step: { expectedHead: null } });
+  });
+
+  test("surrounding spaces in the expected head are trimmed", async () => {
+    const { a } = await stepsOf();
+    const decision = decideAppend({
+      side: "a",
+      revision: a,
+      expectedText: `  ${a.id} `,
+      stale: false,
+    });
+    expect(decision).toMatchObject({
+      ok: true,
+      step: { expectedHead: a.id },
+    });
+  });
+
+  test("text that is not a Revision id is refused as an invalid head", async () => {
+    const { a } = await stepsOf();
+    expect(
+      decideAppend({
+        side: "a",
+        revision: a,
+        expectedText: "sha256:xyz",
+        stale: false,
+      }),
+    ).toEqual({ ok: false, reason: "invalid-head" });
+  });
+
+  test("a side with no Revision is refused", () => {
+    expect(
+      decideAppend({
+        side: "a",
+        revision: null,
+        expectedText: "",
+        stale: false,
+      }),
+    ).toEqual({ ok: false, reason: "no-revision" });
+  });
+
+  test("every append is refused while the results are stale, even with the right head", async () => {
+    const { a, b } = await stepsOf();
+    expect(
+      decideAppend({ side: "b", revision: b, expectedText: a.id, stale: true }),
+    ).toEqual({ ok: false, reason: "stale" });
+  });
+});
+
+describe("appendAllowed", () => {
+  test("allowed for a side with a Revision while the results are current", async () => {
+    const { a } = await stepsOf();
+    expect(appendAllowed(a, false)).toBe(true);
+  });
+
+  test("not allowed for a side with no Revision", () => {
+    expect(appendAllowed(null, false)).toBe(false);
+  });
+
+  test("not allowed while the results are stale", async () => {
+    const { a } = await stepsOf();
+    expect(appendAllowed(a, true)).toBe(false);
+  });
+});
+
+describe("historyProvenance: results from an edited input are historical", () => {
+  test("no provenance while nothing has been appended", () => {
+    expect(historyProvenance(EMPTY_HISTORY, false)).toBeNull();
+  });
+
+  test("the browser provenance while the input is unchanged", async () => {
+    const model = await replayedModel();
+    expect(historyProvenance(model, false)).toEqual(PROVENANCE);
+  });
+
+  test("the historical form, with the same instant, once the input has changed", async () => {
+    const model = await replayedModel();
+    expect(historyProvenance(model, true)).toEqual(toHistorical(PROVENANCE));
+    expect(historyProvenance(model, true)?.origin).toBe("historical");
+  });
+
+  test("an edit after a run makes the run stale, and then appends are not allowed", async () => {
+    const { a, b } = await stepsOf();
+    const outcome = await runRevisions(
+      JSON.stringify(examples.history.a),
+      JSON.stringify(examples.history.b),
+    );
+    const state = done(
+      revisionsKey(
+        JSON.stringify(examples.history.a),
+        JSON.stringify(examples.history.b),
+      ),
+      outcome,
+      PROVENANCE,
+    );
+    const editedKey = revisionsKey(
+      `${JSON.stringify(examples.history.a)} `,
+      JSON.stringify(examples.history.b),
+    );
+    const stale = isStale(state, editedKey);
+    expect(stale).toBe(true);
+    expect(appendAllowed(a, stale)).toBe(false);
+    expect(appendAllowed(b, stale)).toBe(false);
+  });
+});
+
+describe("currentHeadOf", () => {
+  test("the head of the Locus after the replay", async () => {
+    const { a, b } = await stepsOf();
+    const model = await replayedModel();
+    expect(currentHeadOf(model, a.locus)).toBe(b.id);
+  });
+
+  test("no head for no Locus or an empty history", async () => {
+    expect(currentHeadOf(EMPTY_HISTORY, "shop:checkout")).toBeNull();
+    expect(currentHeadOf(EMPTY_HISTORY, null)).toBeNull();
+  });
+});
+
+describe("a refused stale append leaves the entries unchanged", () => {
+  test("B with no head after A is refused, and the history still holds only A", async () => {
+    const { a, b } = await stepsOf();
+    const replay = await replayHistory([
+      { revision: a, expectedHead: null },
+      { revision: b, expectedHead: null },
+    ]);
+    expect(replay.outcomes[1]).toEqual({
+      outcome: "stale",
+      expected: null,
+      actual: a.id,
+    });
+    expect(replay.loci).toEqual([
+      { locus: "shop:checkout", head: a.id, entries: [a.id] },
+    ]);
   });
 });

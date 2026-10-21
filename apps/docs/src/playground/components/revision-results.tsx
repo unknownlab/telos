@@ -50,14 +50,22 @@ export function SideView({
         <ResultPanel kind="revision-id" provenance={provenance} title={title}>
           <h2 className="text-lg font-semibold">{title}</h2>
           <p>
-            Identity <code data-locus>{outcome.revision.locus}</code>
+            Identity{" "}
+            <code data-locus={outcome.revision.locus} className="break-all">
+              {outcome.revision.locus}
+            </code>
           </p>
           <p>
             Revision id{" "}
-            <code data-revision-id data-locus className="break-all">
+            <code
+              data-revision-id={outcome.revision.id}
+              data-locus={outcome.revision.locus}
+              className="break-all"
+            >
               {outcome.revision.id}
             </code>
           </p>
+          <p>A Revision id does not mean that the Locus is valid.</p>
         </ResultPanel>
       </div>
     );
@@ -132,11 +140,13 @@ export function ChangeSetView({
                     data-change-part={change.part}
                     data-change-kind={change.kind}
                   >
-                    <TableCell>
+                    <TableCell className="whitespace-normal [overflow-wrap:anywhere]">
                       <code>{change.part}</code>
                     </TableCell>
-                    <TableCell>{change.kind}</TableCell>
-                    <TableCell className="whitespace-normal break-all">
+                    <TableCell className="whitespace-normal">
+                      {change.kind}
+                    </TableCell>
+                    <TableCell className="whitespace-normal [overflow-wrap:anywhere]">
                       {"value" in change
                         ? change.value
                         : `${change.from ?? "none"} → ${change.to ?? "none"}`}

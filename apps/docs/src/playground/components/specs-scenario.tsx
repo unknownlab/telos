@@ -35,7 +35,7 @@ const NO_INPUT = "";
 // START_CONTRACT: SpecsScenario
 //   PURPOSE: Run the catalogue in the browser on an explicit press, and show the build-time report next to the run, with the comparison and the golden check.
 //   INPUTS: { siteCommit: string - the commit the site was built from, buildReport: SpecReportFile | null - the build-time report or null }
-//   OUTPUTS: { JSX.Element - the build-time report, a Run all action labelled with the catalogue size, and a results region with aria-live polite }
+//   OUTPUTS: { JSX.Element - a Run all action labelled with the catalogue size, the build-time report, and a results region with aria-live polite }
 //   SIDE_EFFECTS: Runs the specifications in the browser on a Run all press only.
 //   LINKS: M-DOCS-PLAYGROUND
 // END_CONTRACT: SpecsScenario
@@ -54,7 +54,6 @@ export function SpecsScenario({
 
   return (
     <div className="flex flex-col gap-6">
-      <BuildReportView file={buildReport} specs={catalogue} />
       <div className="flex flex-wrap gap-3">
         <Button
           type="button"
@@ -65,6 +64,7 @@ export function SpecsScenario({
           {`Run all ${catalogue.length} specifications`}
         </Button>
       </div>
+      <BuildReportView file={buildReport} specs={catalogue} />
       <div
         data-slot="results"
         aria-live="polite"

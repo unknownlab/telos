@@ -18,6 +18,16 @@
 //   revisionsKey - the run key of two texts, which the run state compares for staleness
 //   replayHistory - run the appends in order against one fresh in-memory history
 //   isRevisionId - true for the text of a sha256 Revision id in lower case
+//   LabelledStep - one append with the side it came from
+//   HistoryModel - the steps of the history panel, their replay and the browser provenance of the replay
+//   EMPTY_HISTORY - the history before any append, and after each Compute or reset
+//   HistoryAction - what the history panel can do: start over on Compute, reset, or store a finished replay
+//   historyReducer - the one place where the history panel's state changes
+//   appendAllowed - true when a side with a Revision may append while the results are current
+//   AppendDecision - the outcome of an append request: the step, or the reason it was refused
+//   decideAppend - decide one append request from the side, its Revision, the expected head text and staleness
+//   historyProvenance - the provenance of the history, historical once the run's input has changed
+//   currentHeadOf - the head of one Locus in the replayed history, or null
 // END_MODULE_MAP
 
 import {
@@ -31,6 +41,11 @@ import {
   RevisionHistoryInMemory,
 } from "@telos/locus";
 import { Effect, Result } from "effect";
+import {
+  type BrowserProvenance,
+  type HistoricalProvenance,
+  toHistorical,
+} from "@/lib/provenance";
 import { decodeLocusText } from "@/playground/locus-text";
 import type { DecodeIssue } from "@/playground/run-fabric";
 
@@ -245,5 +260,151 @@ export async function replayHistory(
   });
   return Effect.runPromise(
     Effect.provide(program, RevisionHistoryInMemory, { local: true }),
+  );
+}
+
+/** One append of the history, with the side it came from. */
+export interface LabelledStep extends AppendStep {
+  readonly side: "a" | "b";
+}
+
+/** The history panel state: its steps, their replay and the provenance of that replay. */
+export interface HistoryModel {
+  readonly steps: ReadonlyArray<LabelledStep>;
+  readonly replay: HistoryReplay | null;
+  readonly provenance: BrowserProvenance | null;
+}
+
+/** The history before any append, and after each Compute or reset. */
+export const EMPTY_HISTORY: HistoryModel = {
+  steps: [],
+  replay: null,
+  provenance: null,
+};
+
+/** The actions of the history panel. */
+export type HistoryAction =
+  | { readonly type: "compute" }
+  | { readonly type: "reset" }
+  | {
+      readonly type: "replayed";
+      readonly steps: ReadonlyArray<LabelledStep>;
+      readonly replay: HistoryReplay;
+      readonly provenance: BrowserProvenance;
+    };
+
+// START_CONTRACT: historyReducer
+//   PURPOSE: Change the history panel state, so that a new Compute and a reset both start an empty history and only a finished replay stores steps.
+//   INPUTS: { model: HistoryModel - the current state, action: HistoryAction - what happened }
+//   OUTPUTS: { HistoryModel - EMPTY_HISTORY for compute and reset; the stored steps, replay and provenance for replayed }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-PLAYGROUND
+// END_CONTRACT: historyReducer
+/** The state changes of the history panel. */
+export function historyReducer(
+  _model: HistoryModel,
+  action: HistoryAction,
+): HistoryModel {
+  switch (action.type) {
+    case "compute":
+    case "reset":
+      return EMPTY_HISTORY;
+    case "replayed":
+      return {
+        steps: action.steps,
+        replay: action.replay,
+        provenance: action.provenance,
+      };
+  }
+}
+
+// START_CONTRACT: appendAllowed
+//   PURPOSE: Tell whether a side may append, so that no append is offered for a side with no Revision or while the results are stale (INV-013).
+//   INPUTS: { revision: Revision | null - the side's Revision, stale: boolean - whether the run's input has changed }
+//   OUTPUTS: { boolean - true only for a Revision while the results are current }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-PLAYGROUND
+// END_CONTRACT: appendAllowed
+/** True when a side with a Revision may append while the results are current. */
+export function appendAllowed(
+  revision: Revision | null,
+  stale: boolean,
+): boolean {
+  return revision !== null && !stale;
+}
+
+/** The outcome of one append request. */
+export type AppendDecision =
+  | { readonly ok: true; readonly step: LabelledStep }
+  | {
+      readonly ok: false;
+      readonly reason: "no-revision" | "stale" | "invalid-head";
+    };
+
+// START_CONTRACT: decideAppend
+//   PURPOSE: Decide one append request, so that the step carries the expected head the reader typed and a refused request never reaches the history.
+//   INPUTS: { side: "a" | "b" - the side, revision: Revision | null - its Revision, expectedText: string - the expected head as typed, stale: boolean - whether the run is stale }
+//   OUTPUTS: { AppendDecision - ok with the labelled step, or refused with the reason: no-revision, stale or invalid-head }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-PLAYGROUND
+// END_CONTRACT: decideAppend
+/** Decides one append request. Blank expected text means no head. */
+export function decideAppend(input: {
+  readonly side: "a" | "b";
+  readonly revision: Revision | null;
+  readonly expectedText: string;
+  readonly stale: boolean;
+}): AppendDecision {
+  if (!appendAllowed(input.revision, input.stale)) {
+    return {
+      ok: false,
+      reason: input.revision === null ? "no-revision" : "stale",
+    };
+  }
+  const trimmed = input.expectedText.trim();
+  if (trimmed !== "" && !isRevisionId(trimmed)) {
+    return { ok: false, reason: "invalid-head" };
+  }
+  return {
+    ok: true,
+    step: {
+      side: input.side,
+      revision: input.revision as Revision,
+      expectedHead: trimmed === "" ? null : (trimmed as RevisionId),
+    },
+  };
+}
+
+// START_CONTRACT: historyProvenance
+//   PURPOSE: Give the provenance of the history, marked historical once the run's input has changed, so that a stale history is never shown as current (INV-013).
+//   INPUTS: { model: HistoryModel - the history state, stale: boolean - whether the run's input has changed }
+//   OUTPUTS: { BrowserProvenance | HistoricalProvenance | null - null before any replay, the historical form when stale, otherwise the browser provenance }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-PLAYGROUND
+// END_CONTRACT: historyProvenance
+/** The provenance of the history for the current input. */
+export function historyProvenance(
+  model: HistoryModel,
+  stale: boolean,
+): BrowserProvenance | HistoricalProvenance | null {
+  if (model.provenance === null) return null;
+  return stale ? toHistorical(model.provenance) : model.provenance;
+}
+
+// START_CONTRACT: currentHeadOf
+//   PURPOSE: Give the head of one Locus in the replayed history, which "Use current head" fills into the expected head field.
+//   INPUTS: { model: HistoryModel - the history state, locus: Identity | null - the Locus }
+//   OUTPUTS: { RevisionId | null - the head, or null when there is no Locus or no head }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-PLAYGROUND
+// END_CONTRACT: currentHeadOf
+/** The head of one Locus in the replayed history, or null. */
+export function currentHeadOf(
+  model: HistoryModel,
+  locus: Identity | null,
+): RevisionId | null {
+  if (locus === null) return null;
+  return (
+    model.replay?.loci.find((entry) => entry.locus === locus)?.head ?? null
   );
 }
