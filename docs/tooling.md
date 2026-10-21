@@ -26,6 +26,7 @@ Enforced by the tools:
 
 - Spec Kitty merge gates block (`policy.merge_gates.mode: block` in `.kittify/config.yaml`). A mission can't merge until its reviews are approved, its dependencies are done and its lane risk is acceptable.
 - Spec Kitty's protected-branch guard keeps its commits off `main`/`master`.
+- The `commit-msg` hook in `.githooks/` rejects any commit message that doesn't follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/) and any AI author or attribution line. It rewrites the four messages Spec Kitty writes in another format (for example `Add spec for feature <slug>` becomes `docs(<slug>): add spec`). It works only after `core.hooksPath` is set (see setup).
 - Spec Kitty checks review artifacts at merge; bypassing that needs a recorded note.
 - Claude Code hooks (`.claude/settings.json`). `spec-kitty session-start` injects orientation and open Ops. `spec-kitty session-stop` reminds about open Ops.
 
@@ -43,6 +44,7 @@ Not in place yet: CI and code checks, because there is no code or toolchain. The
 `.claude/`, `.codex/` and `.agents/skills/` are generated per machine and gitignored. Once you approve, an agent can run:
 
 ```sh
+git config core.hooksPath "$PWD/.githooks"    # commit message checks
 uv tool install spec-kitty-cli    # if missing; tested with 3.2.7
 spec-kitty doctor tool-surfaces --tool claude --fix
 spec-kitty doctor tool-surfaces --tool codex --fix

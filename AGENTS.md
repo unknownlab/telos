@@ -67,5 +67,7 @@ Everything else proceeds without asking: inspecting, running checks, implementin
 ## Git and setup
 
 - Spec Kitty owns mission branches, `.worktrees/`, and its own commits (`spk-admin-git-workflow`). Never commit mission work directly to `main`.
-- Commits and PRs carry no AI author or co-author lines.
+- Every commit message follows Conventional Commits 1.0.0 (https://www.conventionalcommits.org/en/v1.0.0/): `<type>[optional scope][!]: <description>`, then an optional body and optional footers, each after one blank line. Add a scope (a noun for the affected area, e.g. `chore(git):`) whenever one fits. Use `feat` for features and `fix` for bug fixes; other types such as `docs`, `chore`, `refactor`, `test`, `ci` and `build` are allowed. Mark breaking changes with `!` or a `BREAKING CHANGE:` footer.
+- Commits and PRs carry no AI author or co-author lines, and no AI names in the message.
+- The `.githooks/commit-msg` hook enforces both rules. Never bypass it with `--no-verify`.
 - If `spec-kitty`, `grace`, or the project skills are missing on a machine, point the owner to the one-time setup in `docs/tooling.md` instead of installing anything globally.
