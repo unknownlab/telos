@@ -49,11 +49,13 @@ Ask the owner about the following. Ask one short question with your recommended 
 - Product: scope, requirements, behavior, UX, acceptance criteria. Never fill these gaps with assumptions.
 - Approval of each mission's spec and plan before implementation starts.
 - Architecture: new modules or boundaries, public contracts, the data model, adding or upgrading dependencies, `grace-init`.
-- Accepting or merging into `main`, pushing, opening PRs, releasing, deploying.
-- Destructive actions: force-push, history rewrites, deleting unmerged branches or worktrees, discarding work, closing or abandoning missions.
+- Releasing and deploying.
+- Destructive actions outside git: discarding uncommitted work you did not create, closing or abandoning missions.
 - Gate bypasses: `--force`, `--skip-*`, `*_DISABLE` environment variables.
 - Anything outside this repo: global installs or upgrades (`bun add -g`, `bun upgrade`, `uv tool`), `~/.claude`, `~/.codex`, credentials, external or paid services.
 - Edits to `AGENTS.md`, `CLAUDE.md`, `.kittify/config.yaml`, or the charter.
+
+The owner is not a git operator. Agents run all git operations themselves without asking: commit, branch, merge into `main`, push, open PRs, rebase, rewrite history, delete branches and worktrees. Merge into `main` once the owner approves the implementation. Never force-push `main`, and keep a backup branch before rewriting pushed history.
 
 Everything else proceeds without asking: inspecting, running checks, implementing and reviewing approved work packages in their Spec Kitty worktrees, letting Spec Kitty commit, and fixing in-scope check failures.
 
