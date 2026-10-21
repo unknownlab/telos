@@ -1,7 +1,7 @@
 {
-  "event_count": 18,
-  "last_event_id": "01M5F45RQHAMKHJAZ484628RQE",
-  "materialized_at": "2026-10-21T11:40:04.209878+00:00",
+  "event_count": 20,
+  "last_event_id": "01M5F73F063SEYVGRBE6S5MFS2",
+  "materialized_at": "2026-10-21T12:31:14.437950+00:00",
   "mission_number": "",
   "mission_slug": "locus-foundation-01M5EWDR",
   "mission_type": "",
@@ -12,17 +12,20 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "in_review": 0,
-    "planned": 18
+    "planned": 17
   },
   "work_packages": {
     "WP01": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5F45FDX4XP5676R2M7244DR",
-      "last_transition_at": "2026-10-21T11:39:54.685484+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5F73F063SEYVGRBE6S5MFS2",
+      "last_transition_at": "2026-10-21T12:31:14.437950+00:00",
+      "shell_pid": 54460,
+      "shell_pid_created_at": "1792585867.865636"
     },
     "WP02": {
       "actor": "finalize-tasks",
