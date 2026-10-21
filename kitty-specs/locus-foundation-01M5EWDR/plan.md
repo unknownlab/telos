@@ -306,7 +306,7 @@ These are owner decisions under `AGENTS.md` and the charter. **All were answered
 | 4 | Gate wiring | Approved: `docs:build` and `test:e2e` in `verify` and the review gate, not in pre-commit |
 | 5 | `AGENTS.md` pointer | Approved as worded |
 | 6 | Charter and glossary wording | Approved as worded |
-| 7 | `path_conventions` | Approved |
+| 7 | `path_conventions` | Approved. The schema takes one directory per key, so on 2026-10-21 the owner chose `packages/` for `workspace` and `tests` |
 
 The items as originally put to the owner:
 
