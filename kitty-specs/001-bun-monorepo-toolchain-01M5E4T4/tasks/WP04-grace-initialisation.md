@@ -83,8 +83,8 @@ Done means:
 
 ## Context & Constraints
 
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/research.md`: R-08 (prototype results)
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/data-model.md`: GraceModel
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/research.md`: R-08 (prototype results)
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/data-model.md`: GraceModel
 - `.claude/skills/grace-init/SKILL.md` (for background; this prompt already contains the resulting files)
 
 Hard rules:

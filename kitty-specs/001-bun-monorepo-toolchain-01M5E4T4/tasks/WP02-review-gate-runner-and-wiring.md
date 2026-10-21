@@ -83,10 +83,10 @@ Done means:
 
 ## Context & Constraints
 
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/review-gate.md` (**authoritative**)
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/research.md`: R-05
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/data-model.md`: ReviewGateConfig, ReviewGateRunner
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/plan.md`: IC-04
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/review-gate.md` (**authoritative**)
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/research.md`: R-05
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/data-model.md`: ReviewGateConfig, ReviewGateRunner
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/plan.md`: IC-04
 - `.kittify/charter/charter.md`: test-first; editing `.kittify/config.yaml` is limited to the `review:` section (spec C-004)
 
 Hard rules:

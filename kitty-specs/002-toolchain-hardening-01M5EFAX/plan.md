@@ -1,7 +1,7 @@
 # Implementation Plan: Toolchain Hardening
 
 **Branch**: `feat/bun-monorepo-toolchain` | **Date**: 2026-10-21 | **Spec**: [spec.md](spec.md)
-**Input**: Feature specification from `kitty-specs/toolchain-hardening-01M5EFAX/spec.md`
+**Input**: Feature specification from `kitty-specs/002-toolchain-hardening-01M5EFAX/spec.md`
 
 ## Summary
 
@@ -39,7 +39,7 @@ Close the gaps from the post-merge review of `bun-monorepo-toolchain`. The revie
 ### Documentation (this mission)
 
 ```
-kitty-specs/toolchain-hardening-01M5EFAX/
+kitty-specs/002-toolchain-hardening-01M5EFAX/
 ├── spec.md
 ├── plan.md          # this file
 ├── research.md      # decisions and the evidence behind them
@@ -61,7 +61,7 @@ package.json                  # lint/typecheck/test run the guard (WP02)
 docs/tooling.md               # hook rule, report/message behavior (WP02)
 ```
 
-Planning-branch documents owned by the orchestrator, not by a lane (lanes may not change `kitty-specs/`): `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md`, `.../contracts/review-gate.md` and `.../data-model.md` are updated in place to match this mission's contracts (FR-006, FR-008).
+Planning-branch documents owned by the orchestrator, not by a lane (lanes may not change `kitty-specs/`): `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md`, `.../contracts/review-gate.md` and `.../data-model.md` are updated in place to match this mission's contracts (FR-006, FR-008).
 
 ## Implementation Concern Map
 
@@ -85,6 +85,6 @@ Planning-branch documents owned by the orchestrator, not by a lane (lanes may no
 
 - **Purpose**: Update the two contracts and the data model of the previous mission so they match what ships.
 - **Relevant requirements**: FR-006, FR-008
-- **Affected surfaces**: `kitty-specs/bun-monorepo-toolchain-01M5E4T4/{contracts/pre-commit-hook.md,contracts/review-gate.md,data-model.md}`
+- **Affected surfaces**: `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/{contracts/pre-commit-hook.md,contracts/review-gate.md,data-model.md}`
 - **Sequencing/depends-on**: done during planning, before tasks
 - **Risks**: none beyond keeping the wording identical to this mission's contracts.

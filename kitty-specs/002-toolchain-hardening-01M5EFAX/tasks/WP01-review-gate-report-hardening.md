@@ -81,8 +81,8 @@ Done means:
 
 Read, in this order:
 
-- `kitty-specs/toolchain-hardening-01M5EFAX/contracts/review-gate-report.md` (**authoritative**)
-- `kitty-specs/toolchain-hardening-01M5EFAX/research.md` R-01 and R-02
+- `kitty-specs/002-toolchain-hardening-01M5EFAX/contracts/review-gate-report.md` (**authoritative**)
+- `kitty-specs/002-toolchain-hardening-01M5EFAX/research.md` R-01 and R-02
 - `scripts/review-gate.ts`, `scripts/review-gate.test.ts` (existing code)
 - `AGENTS.md` (rules: Conventional Commits, no AI author lines, no `--no-verify`)
 

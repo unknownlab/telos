@@ -1,13 +1,3 @@
----
-affected_files: []
-cycle_number: 1
-mission_slug: toolchain-hardening-01M5EFAX
-reproduction_command:
-reviewed_at: '2026-10-21T05:46:12Z'
-reviewer_agent: user
-wp_id: WP02
----
-
 **Verdict: approved on behavior, but one real gap must be closed (orchestrator decision).**
 
 **Issue 1 (rename gap)**: `git diff --cached --name-only` reports only the destination of a rename. `git mv scripts/check-bun-version.ts kitty-specs/m/x.ts` stages only `kitty-specs/m/x.ts`, so the early exit skips all checks for a commit that deletes a code file. Change the hook's staged-path line to:
@@ -23,4 +13,4 @@ wp_id: WP02
 2. Stage `kitty-specs/probe/é.md` only: expect commit succeeds, hook silent.
 3. Re-run cases 1, 3 and 4 from the WP prompt to show nothing regressed.
 
-The contract `kitty-specs/toolchain-hardening-01M5EFAX/contracts/hook-bookkeeping.md` and the previous mission's `pre-commit-hook.md` were already updated by the orchestrator with these two rules and acceptance rows. Add one sentence about renames to the hook paragraph in `docs/tooling.md` if it fits ("a commit that moves a file out of any other directory runs the full checks"). Only `.githooks/pre-commit` and `docs/tooling.md` should change. Do not touch `kitty-specs/` in the lane.
+The contract `kitty-specs/002-toolchain-hardening-01M5EFAX/contracts/hook-bookkeeping.md` and the previous mission's `pre-commit-hook.md` were already updated by the orchestrator with these two rules and acceptance rows. Add one sentence about renames to the hook paragraph in `docs/tooling.md` if it fits ("a commit that moves a file out of any other directory runs the full checks"). Only `.githooks/pre-commit` and `docs/tooling.md` should change. Do not touch `kitty-specs/` in the lane.

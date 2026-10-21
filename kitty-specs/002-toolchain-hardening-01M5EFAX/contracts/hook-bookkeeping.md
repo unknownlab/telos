@@ -1,6 +1,6 @@
 # Contract: pre-commit hook, bookkeeping rule (amends `.githooks/pre-commit`)
 
-Applies to the hook defined in `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md`; every other step and message there is unchanged.
+Applies to the hook defined in `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md`; every other step and message there is unchanged.
 
 ## Rule (new step 0a, after changing to the repository root and before step 0)
 

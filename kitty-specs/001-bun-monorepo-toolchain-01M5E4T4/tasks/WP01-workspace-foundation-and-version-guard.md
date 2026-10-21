@@ -109,12 +109,12 @@ Done means:
 
 Read these before you start. The contracts are authoritative. If this prompt and a contract disagree, the contract wins; report the conflict in the Activity Log.
 
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/spec.md`: FR-001..FR-007, NFR-001, C-001, C-002
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/plan.md`: IC-01, IC-02
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/data-model.md`: RootManifest, Lockfile, BunConfig, TypeScriptBase, TypeScriptRoot, WorkspaceArea, VersionGuard
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/commands.md`
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/version-guard.md`
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/research.md`: R-01..R-04, R-07, R-08
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/spec.md`: FR-001..FR-007, NFR-001, C-001, C-002
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/plan.md`: IC-01, IC-02
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/data-model.md`: RootManifest, Lockfile, BunConfig, TypeScriptBase, TypeScriptRoot, WorkspaceArea, VersionGuard
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/commands.md`
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/version-guard.md`
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/research.md`: R-01..R-04, R-07, R-08
 - `.kittify/charter/charter.md`: test-first, no fake tests, Bun only
 
 Hard rules:

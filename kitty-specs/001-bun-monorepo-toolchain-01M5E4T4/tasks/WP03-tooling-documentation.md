@@ -75,11 +75,11 @@ Done means:
 
 Write from the contracts. They are authoritative, and the code they describe is built in parallel (WP02, WP04, WP05).
 
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/commands.md`
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md`
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/review-gate.md`
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/quickstart.md`
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/research.md`: R-01 (canary), R-07 (format scope), R-08 (GRACE), R-09 (fresh worktrees)
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/commands.md`
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md`
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/review-gate.md`
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/quickstart.md`
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/research.md`: R-01 (canary), R-07 (format scope), R-08 (GRACE), R-09 (fresh worktrees)
 
 Hard rules:
 

@@ -1,6 +1,6 @@
 # Work Packages: Toolchain Hardening
 
-**Inputs**: `kitty-specs/toolchain-hardening-01M5EFAX/` (spec.md, plan.md, research.md, contracts/, quickstart.md)
+**Inputs**: `kitty-specs/002-toolchain-hardening-01M5EFAX/` (spec.md, plan.md, research.md, contracts/, quickstart.md)
 **Routing (owner policy)**: implementers are Claude Haiku-class models at high effort; WP review by Claude Sonnet (`reviewer-renata`); mission review after merge by Claude Opus, high effort.
 **Rule**: every WP prompt carries the exact code and commands. Contracts in `contracts/` are authoritative. Lanes may not change `kitty-specs/`; the previous mission's contracts and data model were already synced by the orchestrator (plan IC-03).
 

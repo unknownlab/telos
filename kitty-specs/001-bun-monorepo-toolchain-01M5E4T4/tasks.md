@@ -1,6 +1,6 @@
 # Work Packages: Bun Monorepo Toolchain
 
-**Inputs**: `kitty-specs/bun-monorepo-toolchain-01M5E4T4/` (spec.md, plan.md, research.md, data-model.md, contracts/, quickstart.md)
+**Inputs**: `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/` (spec.md, plan.md, research.md, data-model.md, contracts/, quickstart.md)
 **Routing (owner policy)**: implementers are Claude Haiku-class models (mid to max effort); WP review by Claude Sonnet (`reviewer-renata`); mission review after merge by Claude Opus, high effort.
 **Rule**: every WP prompt carries the exact file contents and commands, prototyped on Bun `1.4.4-canary.1`. Contracts are authoritative.
 

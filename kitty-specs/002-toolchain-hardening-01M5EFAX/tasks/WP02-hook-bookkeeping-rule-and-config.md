@@ -80,9 +80,9 @@ Done means each change works as the acceptance table below says, `bun run verify
 
 Read, in this order:
 
-- `kitty-specs/toolchain-hardening-01M5EFAX/contracts/hook-bookkeeping.md` (**authoritative** for the hook)
-- `kitty-specs/toolchain-hardening-01M5EFAX/contracts/review-gate-report.md` (for the docs text)
-- `kitty-specs/toolchain-hardening-01M5EFAX/research.md` R-03, R-04, R-05
+- `kitty-specs/002-toolchain-hardening-01M5EFAX/contracts/hook-bookkeeping.md` (**authoritative** for the hook)
+- `kitty-specs/002-toolchain-hardening-01M5EFAX/contracts/review-gate-report.md` (for the docs text)
+- `kitty-specs/002-toolchain-hardening-01M5EFAX/research.md` R-03, R-04, R-05
 - `.githooks/pre-commit`, `package.json`, `.gitignore`, `docs/tooling.md`
 - `AGENTS.md` (Conventional Commits, no AI author lines, no `--no-verify`)
 
@@ -173,7 +173,7 @@ Use valid Conventional Commit messages (for example `chore: probe`) in cases 1â€
 
 ### Subtask T011 â€“ Check the synced documents; run everything
 
-1. The orchestrator already updated, on the planning branch, `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md`, `.../contracts/review-gate.md` and `.../data-model.md`. **Read-only check**: confirm the data model's `[lint]` row lists `.spec-kitty` and that `bunfig.toml` ignores `.spec-kitty/**` in both `[lint]` and `[fmt]`. Report a mismatch, do not edit `kitty-specs/`.
+1. The orchestrator already updated, on the planning branch, `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md`, `.../contracts/review-gate.md` and `.../data-model.md`. **Read-only check**: confirm the data model's `[lint]` row lists `.spec-kitty` and that `bunfig.toml` ignores `.spec-kitty/**` in both `[lint]` and `[fmt]`. Report a mismatch, do not edit `kitty-specs/`.
 2. Run `bun run verify` (exit 0), `bun run lint`, `bun run typecheck`, `bun run test` individually (exit 0), `grace lint --path . --assertions current` (0 errors).
 3. Confirm `.githooks/commit-msg` is unchanged: `git diff <merge-target>...HEAD -- .githooks/commit-msg` is empty.
 4. `git status --porcelain` shows only your four owned files before the commit and is clean after.
@@ -200,7 +200,7 @@ Reviewer: Claude Sonnet (`reviewer-renata` profile).
 - Reproduce at least cases 1, 3, 4 and 5 yourself in your own throwaway clone; time case 1.
 - Confirm the hook diff is only the inserted block, the mode is still `100755`, and `commit-msg` is unchanged.
 - Run `bun run lint`, `typecheck`, `test` and check they run the guard first (`bun run lint` output starts with the guard command).
-- Check `docs/tooling.md` against the two contracts in `kitty-specs/toolchain-hardening-01M5EFAX/contracts/`.
+- Check `docs/tooling.md` against the two contracts in `kitty-specs/002-toolchain-hardening-01M5EFAX/contracts/`.
 
 ## Activity Log
 

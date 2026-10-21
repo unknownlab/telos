@@ -1,6 +1,6 @@
 #!/bin/sh
 # Format and restage staged files, then block the commit on any check failure.
-# Contract: kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md
+# Contract: kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md
 # Enabled per clone: git config core.hooksPath "$(git rev-parse --show-toplevel)/.githooks"
 
 fail() {

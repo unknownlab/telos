@@ -1,7 +1,7 @@
 # Implementation Plan: Bun Monorepo Toolchain
 
 **Branch**: `feat/bun-monorepo-toolchain` | **Date**: 2026-10-21 | **Spec**: [spec.md](spec.md)
-**Input**: Feature specification from `kitty-specs/bun-monorepo-toolchain-01M5E4T4/spec.md`
+**Input**: Feature specification from `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/spec.md`
 
 ## Summary
 
@@ -41,7 +41,7 @@ Charter: `.kittify/charter/charter.yaml` (generated 2026-10-21, after the initia
 ### Documentation (this mission)
 
 ```
-kitty-specs/bun-monorepo-toolchain-01M5E4T4/
+kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/
 ├── spec.md
 ├── plan.md          # this file
 ├── research.md      # prototype findings and decisions

@@ -1,6 +1,6 @@
 # Contract: review gate report (amends `scripts/review-gate.ts`)
 
-Applies to the runner defined in `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/review-gate.md`; wiring, steps, console lines and exit codes are unchanged.
+Applies to the runner defined in `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/review-gate.md`; wiring, steps, console lines and exit codes are unchanged.
 
 ## New and changed pure functions (unit-tested in `scripts/review-gate.test.ts`)
 

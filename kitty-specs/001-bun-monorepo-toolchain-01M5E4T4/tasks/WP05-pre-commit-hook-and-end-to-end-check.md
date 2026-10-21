@@ -79,10 +79,10 @@ Done means:
 
 ## Context & Constraints
 
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md` (**authoritative**)
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/commands.md`, `contracts/review-gate.md`
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/quickstart.md`
-- `kitty-specs/bun-monorepo-toolchain-01M5E4T4/research.md`: R-06, R-09
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md` (**authoritative**)
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/commands.md`, `contracts/review-gate.md`
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/quickstart.md`
+- `kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/research.md`: R-06, R-09
 - `.githooks/commit-msg`: copy its style (POSIX `sh`, `fail()` helper, prefix in messages)
 
 Hard rules:
@@ -118,7 +118,7 @@ Create `.githooks/pre-commit` with exactly this content, then `chmod +x .githook
 ```sh
 #!/bin/sh
 # Format and restage staged files, then block the commit on any check failure.
-# Contract: kitty-specs/bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md
+# Contract: kitty-specs/001-bun-monorepo-toolchain-01M5E4T4/contracts/pre-commit-hook.md
 # Enabled per clone: git config core.hooksPath "$(git rev-parse --show-toplevel)/.githooks"
 
 fail() {
