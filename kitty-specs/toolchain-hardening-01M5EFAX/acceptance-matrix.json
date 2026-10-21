@@ -18,10 +18,10 @@
       "criterion_id": "FR-002",
       "description": "Verify FR-002 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "scripts/review-gate.test.ts: ESC/NUL/surrogate tests; mutation (sanitizeText returns input) fails 6 tests, restored",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-21T05:48:53.437062+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
