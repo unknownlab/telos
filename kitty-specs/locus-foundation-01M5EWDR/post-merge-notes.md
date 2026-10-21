@@ -53,3 +53,10 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - `run-fabric.ts` cycle rule: `d.members.includes(target)` mutated to `true` survives; add a test with a `refines` relation from a cycle member to a non-member that must not be flagged.
 - `fabric-scenario.tsx` wiring (Validate onClick, `provenanceFor(state, text)`) has no unit test; WP16 e2e must cover them via `data-valid`, `data-action="run"`, `data-diagnostic-code` (not text).
 - `safety-scan.ts` MODULE_MAP lists `stripComments` twice (cosmetic).
+
+## 9. WP15 review notes
+
+- WP16 e2e must cover the playground wiring that `bun test` cannot (no DOM test env): Compute dispatches `compute` and clears the log (a second Compute shows 0 steps); Append A/B disabled while stale with the "Compute again…" note and results `data-provenance="historical"`; `expectedText` reaches `onAppend` (stale refusal visible, entries unchanged); "Use current head" fills the head; invalid head `aria-invalid` and no append; Reset history empties the log; an older replay is dropped after a newer press.
+- Add a two-Locus case for `currentHeadOf` in `playground-revisions.test.ts` (mutant taking `loci[0]` survives).
+- `decideAppend` order of invalid-head vs stale/no-revision checks only changes the refusal reason when both apply (button disabled then); tolerable.
+- The golden "Expected" cell has no `data-revision-id` by design (static catalogue text); tests read the observed cell.
