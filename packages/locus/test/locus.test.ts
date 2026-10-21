@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { RELATION_KINDS } from "../src/relation";
 import {
   defineLocus,
   type LocusDefinition,
@@ -152,5 +153,24 @@ describe("defineLocus never throws", () => {
     );
     expect(def.charter.purpose).toBe("Café — ✓");
     expect(def.charter.responsibilities).toEqual(["Naïve ✓"]);
+  });
+});
+
+describe("RELATION_KINDS", () => {
+  test("lists the four kinds in the fixed order", () => {
+    expect([...RELATION_KINDS]).toEqual([
+      "depends-on",
+      "refines",
+      "satisfies",
+      "verifies",
+    ]);
+  });
+
+  test("is frozen", () => {
+    expect(Object.isFrozen(RELATION_KINDS)).toBe(true);
+    expect(() => {
+      (RELATION_KINDS as string[]).push("extra");
+    }).toThrow(TypeError);
+    expect(RELATION_KINDS).toHaveLength(4);
   });
 });
