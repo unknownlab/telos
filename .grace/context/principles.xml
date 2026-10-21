@@ -1,0 +1,6 @@
+<GracePrinciples graceVersion="4.0">
+  <Principle>Test-first: every behavior change starts with a failing bun test that encodes the acceptance criterion.</Principle>
+  <Principle>Blocking gates: format, lint, typecheck, tests and grace lint block commits and reviews.</Principle>
+  <Principle>Keep semantic anchors stable and grep-friendly.</Principle>
+  <Principle>Model only what exists: no module without code, no code module without a verification entry.</Principle>
+</GracePrinciples>

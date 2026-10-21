@@ -1,0 +1,4 @@
+<GraceDeployment graceVersion="4.0">
+  <Applicability>not-applicable</Applicability>
+  <Reason>Nothing is deployed yet; the repository is a toolchain skeleton with no apps. There is no CI by owner decision.</Reason>
+</GraceDeployment>
