@@ -22,6 +22,10 @@ These rules apply to every coding agent in this repo. Codex reads this file, and
 
 The owner directs the work in plain language and makes the decisions. You choose and run the tools, skills, and commands yourself. Never ask the owner to run a command or to name a tool, skill, or workflow phase.
 
+## Telos foundation
+
+Telos by UnknownLab is defined in `docs/foundation/README.md` (doctrine, principles, terminology, conceptual model), `docs/decisions/` (architecture decision records) and `docs/research/`. Read the foundation README before product work. Product terms are defined in `docs/foundation/terminology/`; use them as defined there. The documentation site in `apps/docs` is generated from these files; never edit content in the app.
+
 ## Read state before working
 
 Before starting or resuming work (not needed for pure questions), query the native state. Do not keep your own notes or trackers.
