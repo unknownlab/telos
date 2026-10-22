@@ -3,7 +3,7 @@ id: ADR-0005
 title: Revisions are immutable and content-addressed; baselines advance by compare-and-set
 kind: decision
 status: proposed
-maturity: proposed
+maturity: implemented
 date: 2026-10-21
 summary: A Revision id is the SHA-256 of a canonical JSON form of the semantic definition; histories are append-only and a new head is accepted only against the expected current head.
 related:
@@ -25,10 +25,10 @@ related:
 ## Decision
 
 1. A [Revision](../foundation/terminology/revision.md) is an immutable value holding one Locus definition's semantic content.
-2. Its id is `sha256:<hex>` of a canonical JSON form: object keys sorted, set-valued fields (responsibilities, exclusions, success conditions, relations) sorted and de-duplicated, no insignificant whitespace, metadata such as source location excluded.
+2. Its id is `sha256:<hex>` of the canonical JSON form, version 1, as the locus API contract (`kitty-specs/003-locus-foundation-01M5EWDR/contracts/locus-api.md`, section "Canonical form (version 1)") specifies. The form is `JSON.stringify` of `{v, id, charter, owner, relations}` with keys in exactly that fixed order and no insignificant whitespace. `charter` holds `purpose`, `responsibilities`, `excluded` and `successConditions`, in that order. The three string sets (`responsibilities`, `excluded`, `successConditions`) are de-duplicated and sorted ascending by UTF-16 code unit. Relations are de-duplicated by kind and target and sorted by kind, then target. Strings are used exactly as given, with no trimming and no Unicode normalisation. `owner` is `null` when absent. Metadata such as source location is excluded.
 3. Hashing uses Web Crypto (`crypto.subtle.digest`), so the same code runs in Bun and in browsers, and the operation returns an `Effect`.
 4. A Locus history is append-only. Appending takes the expected current head; if it differs from the actual head, the append fails with a stale-baseline error and the history is unchanged.
-5. Appending a Revision equal to the current head is a no-op, not a new entry.
+5. The stale check runs first. Appending a Revision equal to the current head is a no-op, not a new entry, only when the expected head is also the current head; otherwise the append fails as stale.
 6. Two Revisions can be diffed into a structured change set (fields added, removed, changed).
 
 ## Alternatives

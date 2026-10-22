@@ -59,7 +59,7 @@ const GUIDE_SPECS = [
     title: "Introduction",
     order: 1,
     section: "introduction",
-    maturity: "proposed",
+    maturity: "implemented",
   },
   {
     file: "first-locus",
