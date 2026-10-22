@@ -124,7 +124,7 @@ Execution worktrees are allocated per computed lane from `lanes.json`. Start wit
 Add to root `package.json` `scripts`, keeping every existing script byte-for-byte:
 
 ```json
-"docs:build": "bun run --cwd apps/docs build",
+"docs:build": "bun run --cwd apps/docs build && bun apps/docs/scripts/check-verification.ts",
 "docs:preview": "bun run --cwd apps/docs preview",
 "test:e2e": "bun run --cwd apps/docs test:e2e",
 ```
@@ -134,6 +134,8 @@ Change `verify` to:
 ```json
 "verify": "bun run check:bun && bun run format:check && bun run lint && bun run typecheck && bun run test && bun run docs:build && bun run test:e2e && bun run grace:lint"
 ```
+
+`docs:build` ends with `apps/docs/scripts/check-verification.ts` (created in WP13). It exits 1 if `dist/client/verification/index.html` lacks `data-result="spec-report"`, because a malformed `spec-report.json` makes the prerender log an error while `vite build` still exits 0. Without this step an invalid report would not fail `verify` (review of WP13; INV-013). T097 must show it failing with a crafted bad `apps/docs/src/generated/spec-report.json` and passing after a rebuild.
 
 `docs:build` comes before `test:e2e`, because the browser tests read `dist/client`. Both come before `grace:lint`, so the cheap source checks fail first.
 
