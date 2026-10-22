@@ -38,10 +38,10 @@
       "criterion_id": "FR-004",
       "description": "Verify FR-004 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "packages/locus/test/fabric.test.ts; defineFabric/validateFabric(fabric) take id+loci (probe: frozen Fabric, malformed fabric id reported at fabric scope); LOC-005, LOC-044 (empty Fabric valid)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:00.355019+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
