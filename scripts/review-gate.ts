@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Run the whole check suite for Spec Kitty's review gate and always write one JUnit report.
-//   SCOPE: Install dependencies once when node_modules is missing, run every check step with colour off, record each as a JUnit test case whose failure message is the step's cause, sanitize all report text so it stays well-formed, merge in bun test's own JUnit suites, exit 1 on any failure.
+//   SCOPE: Install dependencies once when node_modules is missing, run every check step of CHECK_STEPS in the order of the root verify script with colour off, record each as a JUnit test case whose failure message is the step's cause, sanitize all report text so it stays well-formed, merge in bun test's own JUnit suites, exit 1 on any failure.
 //   DEPENDS: M-BUN-VERSION-GUARD
 //   LINKS: M-REVIEW-GATE, V-M-REVIEW-GATE
 //   ROLE: RUNTIME
@@ -9,6 +9,9 @@
 //
 // START_MODULE_MAP
 //   StepResult - outcome of one check step
+//   CheckStep - one check step: its report name and the command that runs it
+//   CHECK_STEPS - the check steps in verify order, the single list the gate runs
+//   verifyStepNames - the step names the root verify script runs, parsed from its text
 //   sanitizeText - strip escape codes and characters XML cannot represent
 //   escapeXml - sanitize, then escape text for an XML attribute
 //   failureMessage - pick the first real error line of a failed step
@@ -32,6 +35,46 @@ export type StepResult = {
   ok: boolean;
   message: string;
 };
+
+export type CheckStep = {
+  readonly name: string;
+  readonly command: ReadonlyArray<string>;
+};
+
+// START_CONTRACT: CHECK_STEPS
+//   PURPOSE: Name every check step the review gate runs, in the order of the root verify script, so the gate and verify cannot drift apart.
+//   INPUTS: {}
+//   OUTPUTS: { ReadonlyArray<CheckStep> - check:bun, format:check, lint, typecheck, test, docs:build, test:e2e, grace:lint; the test step runs bun test without reporter flags, which the gate adds at run time }
+//   SIDE_EFFECTS: none
+//   LINKS: M-REVIEW-GATE
+// END_CONTRACT: CHECK_STEPS
+export const CHECK_STEPS: ReadonlyArray<CheckStep> = [
+  { name: "check:bun", command: ["bun", "run", "check:bun"] },
+  { name: "format:check", command: ["bun", "run", "format:check"] },
+  { name: "lint", command: ["bun", "run", "lint"] },
+  { name: "typecheck", command: ["bun", "run", "typecheck"] },
+  { name: "test", command: ["bun", "test", "--pass-with-no-tests"] },
+  { name: "docs:build", command: ["bun", "run", "docs:build"] },
+  { name: "test:e2e", command: ["bun", "run", "test:e2e"] },
+  { name: "grace:lint", command: ["bun", "run", "grace:lint"] },
+];
+
+// START_CONTRACT: verifyStepNames
+//   PURPOSE: Read the step names out of the root verify script, so a test can compare them with CHECK_STEPS.
+//   INPUTS: { verifyScript: string - the text of the verify script, a chain of "bun run <name>" joined by "&&" }
+//   OUTPUTS: { string[] - the <name> of each part, in order }
+//   SIDE_EFFECTS: none; throws an Error when a part is not exactly "bun run <name>", so an edit that adds any other form fails the tests
+//   LINKS: M-REVIEW-GATE
+// END_CONTRACT: verifyStepNames
+export function verifyStepNames(verifyScript: string): string[] {
+  return verifyScript.split("&&").map((part) => {
+    const match = /^bun run ([^\s;|&<>]+)$/.exec(part.trim());
+    if (!match?.[1]) {
+      throw new Error(`verify step is not "bun run <name>": ${part.trim()}`);
+    }
+    return match[1];
+  });
+}
 
 function isXmlChar(point: number): boolean {
   return (
@@ -225,20 +268,17 @@ if (import.meta.main) {
     const install = runStep("install", ["bun", "install", "--frozen-lockfile"]);
     if (!install.ok) steps.push(install);
   }
-  steps.push(
-    runStep("check:bun", ["bun", "run", "check:bun"]),
-    runStep("format:check", ["bun", "run", "format:check"]),
-    runStep("lint", ["bun", "run", "lint"]),
-    runStep("typecheck", ["bun", "run", "typecheck"]),
-    runStep("test", [
-      "bun",
-      "test",
-      "--pass-with-no-tests",
-      "--reporter=junit",
-      `--reporter-outfile=${bunJunitPath}`,
-    ]),
-    runStep("grace:lint", ["bun", "run", "grace:lint"]),
-  );
+  for (const step of CHECK_STEPS) {
+    const command =
+      step.name === "test"
+        ? [
+            ...step.command,
+            "--reporter=junit",
+            `--reporter-outfile=${bunJunitPath}`,
+          ]
+        : [...step.command];
+    steps.push(runStep(step.name, command));
+  }
   // END_BLOCK_RUN_STEPS
 
   // START_BLOCK_WRITE_REPORT

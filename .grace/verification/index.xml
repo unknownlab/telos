@@ -5,6 +5,16 @@
       <Owns>
         <V-M-BUN-VERSION-GUARD />
         <V-M-REVIEW-GATE />
+        <V-M-LOCUS-MODEL />
+        <V-M-LOCUS-VALIDATION />
+        <V-M-LOCUS-REVISION />
+        <V-M-LOCUS-HISTORY />
+        <V-M-LOCUS-DECODE />
+        <V-M-LOCUS-SPECS />
+        <V-M-DOCS-CONTENT />
+        <V-M-DOCS-SPEC-REPORT />
+        <V-M-DOCS-SITE />
+        <V-M-DOCS-PLAYGROUND />
       </Owns>
     </VD-MAIN>
   </VerificationDocuments>

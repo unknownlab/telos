@@ -21,7 +21,184 @@
       <Scenario>A checkout without node_modules gets one frozen install before the checks, so type checks do not fail on missing type definitions. With node_modules present no install step is added.</Scenario>
       <Scenario>A failed install is recorded as a failing verify.install case and the remaining checks still run.</Scenario>
       <Scenario>Check steps run without colour and without CLAUDECODE, CLAUDE_CODE_ENTRYPOINT or FORCE_COLOR, so a failing type check reports readable text instead of agent-specific XML tags.</Scenario>
-      <TraceAssertion>The buildReport, escapeXml, sanitizeText, failureMessage, needsInstall and cleanEnv unit tests pass. The install scenarios are checked by running the gate in a clone without node_modules.</TraceAssertion>
+      <Scenario>The gate runs the check steps in the order of the root verify script, and the no-drift test fails when the two lists differ, so a step cannot be added to one and not the other.</Scenario>
+      <Scenario>The docs:build and test:e2e steps each produce their own verify test case, and a failing docs:build is reported as a failing verify.docs:build case.</Scenario>
+      <TraceAssertion>The buildReport, escapeXml, sanitizeText, failureMessage, needsInstall and cleanEnv unit tests pass. The CHECK_STEPS no-drift test ("verifyStepNames of the verify script equals the gate's step names, in order") and the verifyStepNames tests pass. The install scenarios are checked by running the gate in a clone without node_modules.</TraceAssertion>
     </V-M-REVIEW-GATE>
+    <V-M-LOCUS-MODEL>
+      <TestFiles>
+        <File>packages/locus/test/identity.test.ts</File>
+        <File>packages/locus/test/locus.test.ts</File>
+        <File>packages/locus/test/fabric.test.ts</File>
+        <File>packages/locus/test/manifest.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/locus/test/identity.test.ts packages/locus/test/locus.test.ts packages/locus/test/fabric.test.ts packages/locus/test/manifest.test.ts</Command>
+      <Scenario>An Identity is accepted only as namespace:name with lowercase parts, and only up to 128 characters long.</Scenario>
+      <Scenario>defineLocus keeps the order and duplicates of responsibilities and relations, and fills missing optional sets with empty arrays.</Scenario>
+      <Scenario>A defined Locus and a defined Fabric are deeply frozen, and defineLocus copies its input, so later changes to the input do not change the result and the input is not frozen by the call.</Scenario>
+      <Scenario>The @telos/locus package depends on effect 4.0.4 and nothing else.</Scenario>
+      <TraceAssertion>The "accepts exactly 128 characters and rejects 129" identity test, the defineLocus and defineFabric freezing and order tests, the RELATION_KINDS tests and "depends on effect 4.0.4 and nothing else" pass.</TraceAssertion>
+    </V-M-LOCUS-MODEL>
+    <V-M-LOCUS-VALIDATION>
+      <TestFiles>
+        <File>packages/locus/test/diagnostic.test.ts</File>
+        <File>packages/locus/test/validate.test.ts</File>
+        <File>packages/locus/test/validate-determinism.test.ts</File>
+        <File>packages/locus/test/validate-performance.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/locus/test/diagnostic.test.ts packages/locus/test/validate.test.ts packages/locus/test/validate-determinism.test.ts packages/locus/test/validate-performance.test.ts</Command>
+      <Scenario>A Fabric with a malformed identity, a blank purpose and a missing relation target gets every violation reported in one report, not only the first.</Scenario>
+      <Scenario>Reordering Loci, responsibilities or Relations gives identical JSON, and validating the same Fabric 100 times gives byte-identical output.</Scenario>
+      <Scenario>Diagnostics are ordered by subject, code, path, detail and members, comparing by UTF-16 code unit.</Scenario>
+      <Scenario>1,000 Loci with 3 Relations each validate in under one second.</Scenario>
+      <TraceAssertion>The "US1-2: malformed identity, blank purpose and missing target are all reported" and "US1-3: reordering Loci, responsibilities and Relations gives identical JSON" tests, the "validating the same Fabric 100 times" determinism test, the compareDiagnostics order tests and "1,000 Loci with 3 Relations each validate in under 1 s" pass.</TraceAssertion>
+    </V-M-LOCUS-VALIDATION>
+    <V-M-LOCUS-REVISION>
+      <TestFiles>
+        <File>packages/locus/test/errors.test.ts</File>
+        <File>packages/locus/test/canonical.test.ts</File>
+        <File>packages/locus/test/revision.test.ts</File>
+        <File>packages/locus/test/diff.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/locus/test/errors.test.ts packages/locus/test/canonical.test.ts packages/locus/test/revision.test.ts packages/locus/test/diff.test.ts</Command>
+      <Scenario>The canonical form of a full definition is exactly the contract string, and an absent owner is written as null.</Scenario>
+      <Scenario>Responsibility order, duplicated set entries and metadata do not change a Revision id, and a changed purpose or an added responsibility does.</Scenario>
+      <Scenario>The Revision ids match the ids computed independently with shasum.</Scenario>
+      <Scenario>diffRevisions fails with LocusMismatchError for two different Loci, and otherwise lists the changes in the fixed part order.</Scenario>
+      <TraceAssertion>The "gives exactly the contract string for a full definition" canonical test, the createRevision identity rules tests, the "golden revision ids" tests that compare with shasum, and the "revisions of two different loci fail with LocusMismatchError" and "one change of every kind comes out in the fixed part order" tests pass.</TraceAssertion>
+    </V-M-LOCUS-REVISION>
+    <V-M-LOCUS-HISTORY>
+      <TestFiles>
+        <File>packages/locus/test/history.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/locus/test/history.test.ts</Command>
+      <Scenario>Appending with an expected head that is not the current head fails with StaleBaselineError, whatever the Revision.</Scenario>
+      <Scenario>Appending the current head again is a no-op.</Scenario>
+      <Scenario>Appending with a non-null expected head to an empty history is stale.</Scenario>
+      <Scenario>Twenty concurrent appends with the same expected head produce exactly one success.</Scenario>
+      <Scenario>Getting a Revision id that was never recorded fails with RevisionNotFoundError.</Scenario>
+      <TraceAssertion>The "US2-5 / NS-014: a stale expected head fails and leaves the history unchanged" test, "the stale check comes before the no-op check", "appending the current head against itself is a no-op", "NS-015: a non-null expected head on an empty history is stale", "get fails with RevisionNotFoundError for an unknown id" and "twenty concurrent appends with the same expected head produce exactly one success" pass.</TraceAssertion>
+    </V-M-LOCUS-HISTORY>
+    <V-M-LOCUS-DECODE>
+      <TestFiles>
+        <File>packages/locus/test/decode.test.ts</File>
+        <File>packages/locus/test/public-surface.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/locus/test/decode.test.ts packages/locus/test/public-surface.test.ts</Command>
+      <Scenario>A Relation kind that is not one of the four gives exactly one issue, located at its path.</Scenario>
+      <Scenario>Wrong shapes are reported at their paths, in sorted order.</Scenario>
+      <Scenario>A decoded Fabric is frozen all the way down, and decodes to the same Fabric as defineFabric and defineLocus.</Scenario>
+      <Scenario>The runtime exports of @telos/locus are exactly the contract list, and every exported declaration in src has TSDoc and a START_CONTRACT block (NFR-006).</Scenario>
+      <TraceAssertion>The "NS-008: a Relation kind that is not one of the four gives exactly one issue at its path" and "NS-017: wrong shapes are reported at their paths, sorted" tests, "decodes to the same Fabric as defineFabric and defineLocus", "runtime exports are exactly the contract list" and "every exported declaration in src has TSDoc and a START_CONTRACT block" pass.</TraceAssertion>
+    </V-M-LOCUS-DECODE>
+    <V-M-LOCUS-SPECS>
+      <TestFiles>
+        <File>packages/locus-specs/test/canonical-json.test.ts</File>
+        <File>packages/locus-specs/test/catalogue-mutation.test.ts</File>
+        <File>packages/locus-specs/test/core-independence.test.ts</File>
+        <File>packages/locus-specs/test/determinism.test.ts</File>
+        <File>packages/locus-specs/test/examples.test.ts</File>
+        <File>packages/locus-specs/test/manifest.test.ts</File>
+        <File>packages/locus-specs/test/portability.test.ts</File>
+        <File>packages/locus-specs/test/runner.meta.test.ts</File>
+        <File>packages/locus-specs/test/scan.test.ts</File>
+        <File>packages/locus-specs/test/specifications.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/locus-specs/test/canonical-json.test.ts packages/locus-specs/test/catalogue-mutation.test.ts packages/locus-specs/test/core-independence.test.ts packages/locus-specs/test/determinism.test.ts packages/locus-specs/test/examples.test.ts packages/locus-specs/test/manifest.test.ts packages/locus-specs/test/portability.test.ts packages/locus-specs/test/runner.meta.test.ts packages/locus-specs/test/scan.test.ts packages/locus-specs/test/specifications.test.ts</Command>
+      <Scenario>The catalogue holds the 44 records LOC-001 to LOC-044, unique and in sequence, and covers INV-001 to INV-012 and NS-001 to NS-017.</Scenario>
+      <Scenario>Every catalogue record passes with its correct expectation, and each record fails when its expectation is mutated.</Scenario>
+      <Scenario>The runner meta-tests prove that each check kind passes a correct expectation, fails at least two wrong ones, and reports a fixture that does not decode as an error, not as a pass or a fail.</Scenario>
+      <Scenario>The Revision id goldens equal the recorded literals, and validating LOC-030 100 times gives byte-identical output.</Scenario>
+      <Scenario>No source file in locus or locus-specs depends on Bun, Node built-ins or the browser, and the core imports nothing but effect (INV-014, NFR-003, C-004).</Scenario>
+      <TraceAssertion>The catalogue integrity tests and the per-record specification tests in specifications.test.ts pass for LOC-001 to LOC-044, the catalogue mutation pass covers every record, the runner meta-tests pass, the "revision id goldens" and "validating LOC-030 100 times" determinism tests pass, and the core-independence and portability tests pass.</TraceAssertion>
+    </V-M-LOCUS-SPECS>
+    <V-M-DOCS-CONTENT>
+      <TestFiles>
+        <File>apps/docs/test/content.test.ts</File>
+        <File>apps/docs/test/guides.test.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/content.test.ts apps/docs/test/guides.test.ts</Command>
+      <Command>bun run --cwd apps/docs content</Command>
+      <Scenario>The content build of the valid fixture compiles with zero problems, and routes by id are exact.</Scenario>
+      <Scenario>Each NS-020 failure case is rejected with a problem instead of producing content.</Scenario>
+      <Scenario>Every guide has front matter with its guide, order and section, one H1 title, and no verification claim in its prose.</Scenario>
+      <Scenario>The public API table in the Agent Reference lists exactly the runtime exports of @telos/locus, and the diagnostic codes are exactly the thirteen codes of the contract.</Scenario>
+      <TraceAssertion>The "valid fixture output" tests in content.test.ts, the "NS-020 failure cases" tests, the "guides: front matter and body" tests, and the "the public API table lists exactly the runtime exports of @telos/locus" and "the diagnostic codes are exactly the thirteen codes of the contract" tests pass. The content command writes the content files without error.</TraceAssertion>
+    </V-M-DOCS-CONTENT>
+    <V-M-DOCS-SPEC-REPORT>
+      <TestFiles>
+        <File>apps/docs/test/spec-report.test.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/spec-report.test.ts</Command>
+      <Command>bun run --cwd apps/docs spec-report</Command>
+      <Command>bun run docs:build</Command>
+      <Scenario>The spec report runs all 44 records and writes the report and the build info, with bun build and git provenance.</Scenario>
+      <Scenario>A failing record is kept in the report with status fail and counted as failed.</Scenario>
+      <Scenario>A crashed run leaves no report, so a stale report cannot be shipped.</Scenario>
+      <Scenario>A browser origin in the report is refused, and the message names the field.</Scenario>
+      <Scenario>The docs build fails when the built Verification page does not carry the spec-report result, so an invalid report cannot ship as an empty page (INV-013).</Scenario>
+      <TraceAssertion>The "runs all 44 records and writes both files", "a failing record is written with status fail", "a crashed run leaves the stale report removed" and "exits 0 and prints the summary" tests in spec-report.test.ts pass. The docs:build command exits 0 for a valid report, and check-verification.ts exits 1 for a crafted invalid one.</TraceAssertion>
+    </V-M-DOCS-SPEC-REPORT>
+    <V-M-DOCS-SITE>
+      <TestFiles>
+        <File>apps/docs/test/manifest.test.ts</File>
+        <File>apps/docs/test/site.test.ts</File>
+        <File>apps/docs/test/theme.test.ts</File>
+        <File>apps/docs/test/search.test.ts</File>
+        <File>apps/docs/test/shortcuts.test.ts</File>
+        <File>apps/docs/test/provenance.test.ts</File>
+        <File>apps/docs/test/serve-static.test.ts</File>
+        <File>apps/docs/test/components.test.tsx</File>
+        <File>apps/docs/test/widgets.test.tsx</File>
+        <File>apps/docs/test/verification.test.tsx</File>
+        <File>apps/docs/e2e/navigation.e2e.ts</File>
+        <File>apps/docs/e2e/search.e2e.ts</File>
+        <File>apps/docs/e2e/theme.e2e.ts</File>
+        <File>apps/docs/e2e/machine-files.e2e.ts</File>
+        <File>apps/docs/e2e/a11y.e2e.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/manifest.test.ts apps/docs/test/site.test.ts apps/docs/test/theme.test.ts apps/docs/test/search.test.ts apps/docs/test/shortcuts.test.ts apps/docs/test/provenance.test.ts apps/docs/test/serve-static.test.ts apps/docs/test/components.test.tsx apps/docs/test/widgets.test.tsx apps/docs/test/verification.test.tsx</Command>
+      <Command>bun run docs:build</Command>
+      <Command>bun run test:e2e</Command>
+      <Command>bun run test:e2e apps/docs/e2e/a11y.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/machine-files.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/navigation.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/search.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/theme.e2e.ts</Command>
+      <Scenario>Every app route is prerendered and is not the not-found page, and every document loads with its title and no errors.</Scenario>
+      <Scenario>The search index finds the principle and the term in the real docs index, and each result names its route once.</Scenario>
+      <Scenario>The static server serves llms.txt as text/plain, refuses path traversal with 404, and refuses methods other than GET and HEAD with 405.</Scenario>
+      <Scenario>Before any report exists, the Verification page shows the build as not run with origin none, and no result row is counted as passed.</Scenario>
+      <Scenario>Every site page has no serious or critical accessibility violations in the light and the dark theme.</Scenario>
+      <TraceAssertion>The unit tests named in the command pass, including "baseline finds the principle and the term", "refuses traversal and malformed paths with 404" and "no result row is shown and nothing is counted as passed". The Chromium navigation, search, theme, machine-files and a11y specs pass, and docs:build exits 0.</TraceAssertion>
+    </V-M-DOCS-SITE>
+    <V-M-DOCS-PLAYGROUND>
+      <TestFiles>
+        <File>apps/docs/test/run-state.test.ts</File>
+        <File>apps/docs/test/playground-run.test.ts</File>
+        <File>apps/docs/test/playground-safety.test.ts</File>
+        <File>apps/docs/test/guide-examples.test.ts</File>
+        <File>apps/docs/test/playground-revisions.test.ts</File>
+        <File>apps/docs/test/playground-specs.test.ts</File>
+        <File>apps/docs/test/playground-render.test.tsx</File>
+        <File>apps/docs/test/playground-render-de.test.tsx</File>
+        <File>apps/docs/e2e/playground.e2e.ts</File>
+        <File>apps/docs/e2e/keyboard.e2e.ts</File>
+        <File>apps/docs/e2e/equality.e2e.ts</File>
+        <File>apps/docs/e2e/provenance.e2e.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/run-state.test.ts apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts apps/docs/test/guide-examples.test.ts apps/docs/test/playground-revisions.test.ts apps/docs/test/playground-specs.test.ts apps/docs/test/playground-render.test.tsx apps/docs/test/playground-render-de.test.tsx</Command>
+      <Command>bun run test:e2e</Command>
+      <Command>bun run test:e2e apps/docs/e2e/equality.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/keyboard.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/playground.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/provenance.e2e.ts</Command>
+      <Scenario>Every .ts and .tsx file under the playground passes the source scan: no code evaluation and no raw HTML outside the two known exceptions (C-002).</Scenario>
+      <Scenario>Scenarios A, D and E run the real packages on the decoded input and show Revision ids marked browser, and the Revision ids equal the Bun Revision ids and the golden constants.</Scenario>
+      <Scenario>An edit marks the results historical and keeps their ids, and a run makes them browser results again.</Scenario>
+      <Scenario>Input over 1 MB is refused, and the page stays responsive.</Scenario>
+      <Scenario>All 44 specifications pass in the browser, the golden check matches all eight revision-compare rows, and scenario E's browser statuses equal the build report statuses id by id.</Scenario>
+      <TraceAssertion>The "every file under apps/docs/src/playground passes the playground rules" and "the sources are clean" source-scan tests in playground-safety.test.ts pass. The Chromium equality suite (equality.e2e.ts) passes for scenarios A, D and E, and the playground, keyboard and provenance e2e specs pass.</TraceAssertion>
+    </V-M-DOCS-PLAYGROUND>
   </VD-MAIN>
 </GraceVerificationDocument>
