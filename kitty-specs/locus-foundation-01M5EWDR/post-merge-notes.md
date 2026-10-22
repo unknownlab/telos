@@ -87,3 +87,11 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - Owner decisions open: ADR status for 0002, 0003, 0005 to 0008 and 0012 to 0014 (still `proposed`, built); the extra sentence "Both mean the same thing in specs, code and docs." in the charter (beyond the approved clause); other documents still `proposed` although partly built (principles P02, P03, P04, P08, P10, P14; conceptual-model README; capabilities.md).
 - Hardening for the mission review: `Bun.markdown.html` passes raw HTML in Markdown through; the site injects compiled HTML with `dangerouslySetInnerHTML`. No document contains raw HTML and input is repository content (C-002 holds), but the compiler could reject or escape raw HTML.
 - Open test gaps listed in sections 2, 4 (WP03/WP04), 8, 9: not done.
+
+## 14. Merge record (2026-10-22)
+
+- Mission merged into `feat/locus-foundation` (merge commits c074b1a and 8958b3d, strategy merge, per-WP history kept); 18 WPs done; retrospective captured (`retrospective.yaml`). `bun run verify` on the merged branch: exit 0, 852 unit tests, 110 browser tests, GRACE clean, spec report 44/44.
+- `meta.json` `mission_number` restored to 3 (merge bookkeeping resets it to null).
+- Not done: the `003-` directory prefix used for missions 1 and 2; `docs/guides/agent-reference.md` and its test reference `kitty-specs/locus-foundation-01M5EWDR` and must change together with the rename. Machine records keep old paths.
+- Lane branches and worktrees kept until the mission review and owner approval; remove with `git worktree remove` and branch deletion afterwards. `spec-kitty merge` created "Revert status transition" commits on the mission branch while rolling back a failed first attempt; the final state is correct (all WPs done).
+- Nothing is merged into `main`; that needs the owner's approval.
