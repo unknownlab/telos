@@ -563,7 +563,8 @@
       "last_transition_at": "2026-10-22T08:27:02.725718+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: e3de6ff, 7ad262c, 9cf5b3b, ed1a5df"
+        "Ready for review: e3de6ff, 7ad262c, 9cf5b3b, ed1a5df",
+        "Review passed (reviewer-renata, Sonnet): verify green 22 s (845 unit, 110 e2e), gate blocks on a broken e2e, drift test proven by 4 mutants, 12 GRACE modules ready, 27 verification commands run."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
