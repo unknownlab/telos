@@ -98,10 +98,10 @@
       "criterion_id": "FR-010",
       "description": "Verify FR-010 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "LOC-035 empty+correct head, LOC-036 stale refused (NS-014), LOC-037 empty history non-null head refused (NS-015), LOC-038 no-op on current head; packages/locus/test/history.test.ts; probe: StaleBaselineError carries expected+actual, entries unchanged, appended:false for equal head; playground e2e scenario D history walk-through",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:25.574380+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
