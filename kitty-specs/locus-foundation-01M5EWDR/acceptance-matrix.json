@@ -68,10 +68,10 @@
       "criterion_id": "FR-007",
       "description": "Verify FR-007 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "LOC-021 four kinds ok, LOC-022 unknown kind decode error, LOC-023 target missing, LOC-024 self, LOC-025 duplicate (NS-009), LOC-027 refines cycle (NS-010), LOC-028 depends-on cycle valid (NS-011); probe confirms. NOTE: contract-only cap on relation.refines-cycle (post-merge-notes item 1) is NOT implemented: 9 mutually refining Loci yield 125664 diagnostics in ~0.5 s, no relation.refines-cycle-limit; not part of spec FR-007",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:07.121360+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
