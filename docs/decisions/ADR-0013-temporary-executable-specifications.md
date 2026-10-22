@@ -42,3 +42,11 @@ The Stage 0 package needs executable specifications that also run in the documen
 
 - The test suite is partly declarative; ordinary `bun test` unit tests may still exist for internals.
 - Expected outcomes are structured, and diagnostics are compared by code, scope, subject, path, detail and members, so specifications do not depend on message wording.
+
+## Note (2026-10-22): one package for the MVP
+
+By owner decision, the specifications are not a separate package. They live inside `@telos/locus`, under the sub-path `@telos/locus/specs` (source in `packages/locus/specs`, tests in `packages/locus/test/specs`). The workspace package that held them before this decision, `@telos/locus-specs`, was folded into `@telos/locus`.
+
+Decisions 1 to 3 stand as written: the specifications are data, one runner evaluates them without a test framework, and two adapters run them, `bun test` and the documentation playground.
+
+Decision 4 still holds, but a package boundary no longer enforces it. A test enforces it instead: the core (`packages/locus/src`) must not import the specifications, the runner, an adapter or a test runner (INV-014, `packages/locus/test/specs/core-independence.test.ts`). A second test bundles the core for the browser and checks that the bundle carries no specification (`packages/locus/test/specs/portability.test.ts`).
