@@ -178,10 +178,10 @@
       "criterion_id": "FR-018",
       "description": "Verify FR-018 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/test/components.test.tsx (MaturityBadge data-maturity, 'Maturity: <value>'); scripted check of apps/docs/dist/client: all 64 prerendered document pages in index.json contain data-maturity=<front matter maturity> (implemented 12, proposed 28, vision 24); content.test.ts cases 18-22 reject hand-written verified/passing claims in Status columns/summaries; grep -i verified docs/ finds only policy prose (docs/foundation/README.md vocabulary), no maturity: verified",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:00.011173+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
