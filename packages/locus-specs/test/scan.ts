@@ -86,10 +86,12 @@ const stripText = (source: string, strings: "keep" | "blank"): string => {
 };
 
 // Import, export-from, dynamic import and require forms. Group 1 is the specifier.
+// A specifier may be quoted with ", ' or a template literal (backtick), since
+// import(`node:fs`) and require(`node:fs`) are valid JavaScript.
 const SPECIFIER_PATTERNS: ReadonlyArray<RegExp> = [
-  /\b(?:import|export)\b[^;"'`]*?\bfrom\s*["']([^"'\n]+)["']/g,
-  /\bimport\s*\(?\s*["']([^"'\n]+)["']/g,
-  /\brequire\s*\(\s*["']([^"'\n]+)["']\s*\)/g,
+  /\b(?:import|export)\b[^;"'`]*?\bfrom\s*["'`]([^"'`\n]+)["'`]/g,
+  /\bimport\s*\(?\s*["'`]([^"'`\n]+)["'`]/g,
+  /\brequire\s*\(\s*["'`]([^"'`\n]+)["'`]\s*\)/g,
 ];
 
 // START_CONTRACT: moduleSpecifiers

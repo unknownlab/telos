@@ -37,6 +37,10 @@ describe("forbiddenCoreImports detects forbidden imports", () => {
       `const g = await import("@jest/globals");`,
     ],
     ["a dynamic import with spaces", `const m = await import ( "mocha" );`],
+    [
+      "a dynamic import of a test runner written as a template literal",
+      "const m = await import(`mocha`);",
+    ],
   ];
 
   for (const [label, source] of bad) {
@@ -80,6 +84,14 @@ describe("forbiddenRuntimeUses detects runtime-specific module specifiers", () =
     ["a node:fs import", `import { readFileSync } from "node:fs";`],
     ["a node:path require", `const p = require("node:path");`],
     ["a dynamic node:url import", `const u = await import("node:url");`],
+    [
+      "a dynamic node:fs import written as a template literal",
+      "const fs = await import(`node:fs`);",
+    ],
+    [
+      "a require of node:path written as a template literal",
+      "const p = require(`node:path`);",
+    ],
     ["a bare bun import", `import { file } from "bun";`],
     ["a bun:sqlite import", `import { Database } from "bun:sqlite";`],
     ["a bun:test import", `import "bun:test";`],
