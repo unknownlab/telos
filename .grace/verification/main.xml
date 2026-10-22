@@ -109,6 +109,8 @@
       <Scenario>The runner meta-tests prove that each check kind passes a correct expectation, fails at least two wrong ones, and reports a fixture that does not decode as an error, not as a pass or a fail.</Scenario>
       <Scenario>The Revision id goldens equal the recorded literals, and validating LOC-030 100 times gives byte-identical output.</Scenario>
       <Scenario>No source file in locus or its specs depends on Bun, Node built-ins or the browser, and the core imports nothing but effect (INV-014, NFR-003, C-004).</Scenario>
+      <Scenario>No core source file imports the @telos/locus/specs sub-path, a relative specs, runner, catalogue, goldens, examples or adapter module, bun:test, a test runner or Playwright (INV-014).</Scenario>
+      <Scenario>Bundling @telos/locus for the browser carries no specification, runner or catalogue marker, while bundling the specifications carries every marker, so the check is not vacuous (INV-014, C-004).</Scenario>
       <TraceAssertion>The catalogue integrity tests and the per-record specification tests in specifications.test.ts pass for LOC-001 to LOC-044, the catalogue mutation pass covers every record, the runner meta-tests pass, the "revision id goldens" and "validating LOC-030 100 times" determinism tests pass, and the core-independence and portability tests pass.</TraceAssertion>
     </V-M-LOCUS-SPECS>
     <V-M-DOCS-CONTENT>

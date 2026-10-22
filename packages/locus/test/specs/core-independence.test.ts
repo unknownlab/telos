@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { forbiddenCoreImports, forbiddenDependencies } from "./scan";
 
-// INV-014 (NS-019): the core package never depends on the spec package, a test runner or Playwright.
+// INV-014 (NS-019): the core never imports the specifications (@telos/locus/specs), their runner, an adapter,
+// a test runner or Playwright, and its manifest depends on none of them.
 const LOCUS_DIR = join(import.meta.dir, "..", "..");
 const CORE_SRC = join(LOCUS_DIR, "src");
 
@@ -23,7 +24,7 @@ describe("INV-014 core independence", () => {
     expect(coreFiles.length).toBeGreaterThan(5);
   });
 
-  test("no core source file imports the spec package, bun:test, Playwright or a test runner", () => {
+  test("no core source file imports the specifications, their runner, an adapter, bun:test, Playwright or a test runner", () => {
     const violations = coreFiles.flatMap((file) =>
       forbiddenCoreImports(readFileSync(join(CORE_SRC, file), "utf8")).map(
         (specifier) => `${file}: ${specifier}`,
@@ -32,7 +33,7 @@ describe("INV-014 core independence", () => {
     expect(violations).toEqual([]);
   });
 
-  test("the core manifest does not depend on the spec package, a test runner or Playwright", () => {
+  test("the core manifest does not depend on a test runner or Playwright", () => {
     expect(forbiddenDependencies(readManifest())).toEqual([]);
   });
 

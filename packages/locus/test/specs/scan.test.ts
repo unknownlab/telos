@@ -10,13 +10,27 @@ import {
 describe("forbiddenCoreImports detects forbidden imports", () => {
   const bad: ReadonlyArray<[string, string]> = [
     [
-      "a static import of the spec package",
-      `import { x } from "@telos/locus-specs";`,
+      "a static import of the specs sub-path",
+      `import { x } from "@telos/locus/specs";`,
     ],
     [
-      "a subpath of the spec package",
-      `import type { Y } from "@telos/locus-specs/runner";`,
+      "a type import of a file under the specs sub-path",
+      `import type { Y } from "@telos/locus/specs/runner";`,
     ],
+    [
+      "a relative import of the specs folder",
+      `import { catalogue } from "../specs/index";`,
+    ],
+    [
+      "a relative import of the runner",
+      `import { runSpecification } from "./runner";`,
+    ],
+    [
+      "a dynamic import of a relative catalogue with a template literal",
+      "const c = await import(`../../specs/catalogue`);",
+    ],
+    ["a require of the goldens", `const g = require("../specs/goldens");`],
+    ["a re-export from an adapter", `export * from "./adapters/bun";`],
     ["a side-effect import of bun:test", `import "bun:test";`],
     [
       "an import of bun:test with single quotes",
@@ -76,6 +90,15 @@ describe("forbiddenCoreImports ignores harmless text", () => {
 
   test("a bare string that names a forbidden module is not an import", () => {
     expect(forbiddenCoreImports(`const name = "bun:test";`)).toEqual([]);
+  });
+
+  test("a relative import whose name only contains a specs word is allowed", () => {
+    expect(
+      forbiddenCoreImports(`import { s } from "./specifications";`),
+    ).toEqual([]);
+    expect(forbiddenCoreImports(`export * from "./runners-of-tea";`)).toEqual(
+      [],
+    );
   });
 });
 
@@ -183,14 +206,6 @@ describe("forbiddenDependencies", () => {
         peerDependencies: { "@playwright/test": "1.0.0" },
       }),
     ).toEqual(["@playwright/test"]);
-  });
-
-  test("a dependency on the spec package is reported", () => {
-    expect(
-      forbiddenDependencies({
-        dependencies: { "@telos/locus-specs": "workspace:*" },
-      }),
-    ).toEqual(["@telos/locus-specs"]);
   });
 
   test("several forbidden packages across fields are all reported", () => {

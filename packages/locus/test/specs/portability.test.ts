@@ -31,6 +31,38 @@ describe("NFR-003 portable source", () => {
   });
 });
 
+// Names that only the specifications and their runner export or contain. Their bundle must not carry them.
+const SPEC_MARKERS = [
+  "LOC-001",
+  "LOC-044",
+  "runSpecification",
+  "runSpecifications",
+  "revisionGoldens",
+  "catalogue",
+];
+
+const bundleText = async (entry: string): Promise<string> => {
+  const result = await Bun.build({ entrypoints: [entry], target: "browser" });
+  if (!result.success) {
+    throw new Error(
+      `${entry} did not bundle for the browser:\n${result.logs.join("\n")}`,
+    );
+  }
+  return (await Promise.all(result.outputs.map((o) => o.text()))).join("\n");
+};
+
+describe("INV-014 browser bundle of the core", () => {
+  test("importing @telos/locus for the browser bundles no specification, runner or catalogue", async () => {
+    const text = await bundleText(join(CORE_SRC, "index.ts"));
+    expect(SPEC_MARKERS.filter((marker) => text.includes(marker))).toEqual([]);
+  });
+
+  test("the specifications bundle carries every marker, so the check above is not vacuous", async () => {
+    const text = await bundleText(join(SPECS_SRC, "index.ts"));
+    expect(SPEC_MARKERS.filter((marker) => !text.includes(marker))).toEqual([]);
+  });
+});
+
 describe("C-004 browser bundle", () => {
   for (const [label, entry] of [
     ["@telos/locus", join(CORE_SRC, "index.ts")],
