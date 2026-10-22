@@ -104,7 +104,7 @@
         <File>packages/locus-specs/test/scan.test.ts</File>
         <File>packages/locus-specs/test/specifications.test.ts</File>
       </TestFiles>
-      <Command>bun test packages/locus-specs</Command>
+      <Command>bun test packages/locus-specs/test/canonical-json.test.ts packages/locus-specs/test/catalogue-mutation.test.ts packages/locus-specs/test/core-independence.test.ts packages/locus-specs/test/determinism.test.ts packages/locus-specs/test/examples.test.ts packages/locus-specs/test/manifest.test.ts packages/locus-specs/test/portability.test.ts packages/locus-specs/test/runner.meta.test.ts packages/locus-specs/test/scan.test.ts packages/locus-specs/test/specifications.test.ts</Command>
       <Scenario>The catalogue holds the 44 records LOC-001 to LOC-044, unique and in sequence, and covers INV-001 to INV-012 and NS-001 to NS-017.</Scenario>
       <Scenario>Every catalogue record passes with its correct expectation, and each record fails when its expectation is mutated.</Scenario>
       <Scenario>The runner meta-tests prove that each check kind passes a correct expectation, fails at least two wrong ones, and reports a fixture that does not decode as an error, not as a pass or a fail.</Scenario>
@@ -160,6 +160,11 @@
       <Command>bun test apps/docs/test/manifest.test.ts apps/docs/test/site.test.ts apps/docs/test/theme.test.ts apps/docs/test/search.test.ts apps/docs/test/shortcuts.test.ts apps/docs/test/provenance.test.ts apps/docs/test/serve-static.test.ts apps/docs/test/components.test.tsx apps/docs/test/widgets.test.tsx apps/docs/test/verification.test.tsx</Command>
       <Command>bun run docs:build</Command>
       <Command>bun run test:e2e</Command>
+      <Command>bun run test:e2e apps/docs/e2e/a11y.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/machine-files.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/navigation.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/search.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/theme.e2e.ts</Command>
       <Scenario>Every app route is prerendered and is not the not-found page, and every document loads with its title and no errors.</Scenario>
       <Scenario>The search index finds the principle and the term in the real docs index, and each result names its route once.</Scenario>
       <Scenario>The static server serves llms.txt as text/plain, refuses path traversal with 404, and refuses methods other than GET and HEAD with 405.</Scenario>
@@ -184,6 +189,10 @@
       </TestFiles>
       <Command>bun test apps/docs/test/run-state.test.ts apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts apps/docs/test/guide-examples.test.ts apps/docs/test/playground-revisions.test.ts apps/docs/test/playground-specs.test.ts apps/docs/test/playground-render.test.tsx apps/docs/test/playground-render-de.test.tsx</Command>
       <Command>bun run test:e2e</Command>
+      <Command>bun run test:e2e apps/docs/e2e/equality.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/keyboard.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/playground.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/provenance.e2e.ts</Command>
       <Scenario>Every .ts and .tsx file under the playground passes the source scan: no code evaluation and no raw HTML outside the two known exceptions (C-002).</Scenario>
       <Scenario>Scenarios A, D and E run the real packages on the decoded input and show Revision ids marked browser, and the Revision ids equal the Bun Revision ids and the golden constants.</Scenario>
       <Scenario>An edit marks the results historical and keeps their ids, and a run makes them browser results again.</Scenario>
