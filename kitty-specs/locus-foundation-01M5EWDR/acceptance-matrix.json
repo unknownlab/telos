@@ -237,11 +237,11 @@
     {
       "criterion_id": "FR-024",
       "description": "Verify FR-024 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "inspection",
+      "evidence": "git diff 8b6c871~1 HEAD -- AGENTS.md in lane-r: 4 insertions, 0 deletions, one new '## Telos foundation' section; text identical to the wording approved in plan.md owner approvals item 5 (2026-10-21); prior rules unchanged; section reaches docs/foundation/README.md which links reading order, decisions README and open-questions.md",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:13.619643+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
