@@ -48,10 +48,10 @@
       "criterion_id": "FR-005",
       "description": "Verify FR-005 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "LOC-030 (four violation kinds all reported in order, NS-012), LOC-031 (reordered input identical), LOC-032 (5x byte-identical); packages/locus/test/validate-determinism.test.ts (100x byte-identical + reorder); probe: reversed Loci give identical JSON; each diagnostic has code, subject, message",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:02.656334+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
