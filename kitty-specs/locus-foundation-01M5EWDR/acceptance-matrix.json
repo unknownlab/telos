@@ -218,10 +218,10 @@
       "criterion_id": "FR-022",
       "description": "Verify FR-022 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/test/verification.test.tsx 'Verification with no report (NS-018)': build panel origin none reads Not run, no row shown, nothing counted as passed; with report shows rows+summary+bun-build provenance; apps/docs/test/spec-report.test.ts (44 rows, crashed run removes stale report); apps/docs/scripts/check-verification.ts runs in root docs:build (exit 0); apps/docs/e2e/navigation.e2e.ts 'verification report shows its 44 rows' without JavaScript",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:09.162723+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
