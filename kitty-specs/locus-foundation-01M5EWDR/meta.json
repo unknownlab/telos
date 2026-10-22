@@ -1,5 +1,4 @@
 {
-  "accept_commit": "864c3ebe4060b6ddfe6f39efe8c1b6ecc7cc0257",
   "acceptance_history": [
     {
       "accept_commit": "864c3ebe4060b6ddfe6f39efe8c1b6ecc7cc0257",
@@ -7,12 +6,18 @@
       "accepted_at": "2026-10-22T09:19:00.574396+00:00",
       "accepted_by": "claude",
       "accepted_from_commit": "34e98339593f47cc1be13be7b8eaf0899dac4f7f"
+    },
+    {
+      "acceptance_mode": "local",
+      "accepted_at": "2026-10-22T09:19:05.315507+00:00",
+      "accepted_by": "claude",
+      "accepted_from_commit": "0454ad115155cb356d7be87eedb5a9b3dcedf1b6"
     }
   ],
   "acceptance_mode": "local",
-  "accepted_at": "2026-10-22T09:19:00.574396+00:00",
+  "accepted_at": "2026-10-22T09:19:05.315507+00:00",
   "accepted_by": "claude",
-  "accepted_from_commit": "34e98339593f47cc1be13be7b8eaf0899dac4f7f",
+  "accepted_from_commit": "0454ad115155cb356d7be87eedb5a9b3dcedf1b6",
   "coordination_branch": "kitty/mission-locus-foundation-01M5EWDR",
   "created_at": "2026-10-21T09:24:37.707719+00:00",
   "flattened": false,
