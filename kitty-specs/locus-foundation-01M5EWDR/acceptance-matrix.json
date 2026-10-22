@@ -28,10 +28,10 @@
       "criterion_id": "FR-003",
       "description": "Verify FR-003 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "LOC-010 (full charter ok), LOC-011 whitespace purpose, LOC-012 no responsibilities, LOC-013 blank entries, LOC-014 duplicates (NS-003/NS-004); packages/locus/test/validate.test.ts; probe: charter.purpose-blank, charter.responsibilities-empty, charter.entry-blank x2, charter.entry-duplicate x2",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:01:58.027880+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
