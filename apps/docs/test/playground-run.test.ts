@@ -161,6 +161,70 @@ describe("runFabric decode errors", () => {
   });
 });
 
+describe("a refines Relation to a Locus outside the cycle", () => {
+  test("is not marked as in a refines cycle, while the two cycle ends are", async () => {
+    // shop:a and shop:b refine each other, and form the only cycle. Two
+    // Relations lead out of or into that cycle from Loci outside it:
+    // shop:a refines shop:d (member to outside), and shop:c refines shop:a
+    // (outside into member). Neither outside Relation is in a cycle.
+    const text = JSON.stringify({
+      id: "shop:system",
+      loci: [
+        {
+          id: "shop:a",
+          charter: { purpose: "A.", responsibilities: ["Do A"] },
+          relations: [
+            { kind: "refines", target: "shop:b" },
+            { kind: "refines", target: "shop:d" },
+          ],
+        },
+        {
+          id: "shop:b",
+          charter: { purpose: "B.", responsibilities: ["Do B"] },
+          relations: [{ kind: "refines", target: "shop:a" }],
+        },
+        {
+          id: "shop:c",
+          charter: { purpose: "C.", responsibilities: ["Do C"] },
+          relations: [{ kind: "refines", target: "shop:a" }],
+        },
+        {
+          id: "shop:d",
+          charter: { purpose: "D.", responsibilities: ["Do D"] },
+        },
+      ],
+    });
+    const outcome = validatedOf(await runFabric(text));
+    expect(codesOf(outcome.report)).toEqual(["relation.refines-cycle"]);
+    expect(outcome.relations).toEqual([
+      {
+        from: "shop:a",
+        kind: "refines",
+        target: "shop:b",
+        problems: ["refines-cycle"],
+      },
+      {
+        from: "shop:a",
+        kind: "refines",
+        target: "shop:d",
+        problems: [],
+      },
+      {
+        from: "shop:b",
+        kind: "refines",
+        target: "shop:a",
+        problems: ["refines-cycle"],
+      },
+      {
+        from: "shop:c",
+        kind: "refines",
+        target: "shop:a",
+        problems: [],
+      },
+    ]);
+  });
+});
+
 describe("relationRows", () => {
   test("marks a self refines and a duplicate depends-on, and never marks the self row as a cycle", () => {
     const fabric = defineFabric({

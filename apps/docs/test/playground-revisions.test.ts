@@ -495,6 +495,29 @@ describe("currentHeadOf", () => {
     expect(currentHeadOf(EMPTY_HISTORY, "shop:checkout")).toBeNull();
     expect(currentHeadOf(EMPTY_HISTORY, null)).toBeNull();
   });
+
+  test("with two Loci in the history, the head is that of the Locus asked for, not of the first Locus", async () => {
+    // shop:checkout is appended first, so it is the first Locus in the replay.
+    const { a, b } = await stepsOf();
+    const outcome = await runRevisions(
+      JSON.stringify(examples.history.a),
+      JSON.stringify(otherIdentity()),
+    );
+    const other = revisionOf(outcome.b);
+    const steps = [
+      { side: "a" as const, revision: a, expectedHead: null },
+      { side: "b" as const, revision: other, expectedHead: null },
+      { side: "a" as const, revision: b, expectedHead: a.id },
+    ];
+    const model = historyReducer(EMPTY_HISTORY, {
+      type: "replayed",
+      steps,
+      replay: await replayHistory(steps),
+      provenance: PROVENANCE,
+    });
+    expect(currentHeadOf(model, "shop:other")).toBe(other.id);
+    expect(currentHeadOf(model, "shop:checkout")).toBe(b.id);
+  });
 });
 
 describe("a refused stale append leaves the entries unchanged", () => {
