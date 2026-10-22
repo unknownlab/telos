@@ -8,10 +8,10 @@
       "criterion_id": "FR-001",
       "description": "Verify FR-001 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "lane-r: packages/locus/test/locus.test.ts; scratch probe: defineLocus result frozen deep (definition, charter, responsibilities), keys id/charter/relations; packages/locus-specs LOC-001,LOC-033; bun run verify exit 0 (845 pass)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:01:53.288591+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
