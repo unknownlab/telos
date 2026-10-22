@@ -128,10 +128,10 @@
       "criterion_id": "FR-013",
       "description": "Verify FR-013 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/e2e/navigation.e2e.ts: home lists sections in nav order, each of 12 sections (Introduction, Philosophy, Principles, Terminology, Architecture, First Locus, Examples, Playground, Verification, Roadmap, Decisions, Agent Reference per NAV_SECTIONS in apps/docs/src/lib/content-types.ts) reachable from navigation; every doc of each section loads (110 e2e pass)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:32.499743+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
