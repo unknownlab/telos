@@ -188,9 +188,12 @@ describe("validateFabric: identity and duplicates", () => {
   });
 
   test("an ownership cycle through a duplicated identity is not reported; the duplicate is reported once", () => {
-    // The rule in locus-api.md: a duplicated identity is reported once, on that
-    // identity. The owner edges through shop:b are ambiguous, so no owner.cycle
-    // is reported for them. This pins the current reading of that rule.
+    // locus-api.md is silent on ownership cycles through a duplicated identity.
+    // Line 130 says "A duplicated identity is reported once, on that identity",
+    // and line 134 says "Each cycle is reported exactly once". Neither settles
+    // this case. This test pins the implementation's choice: only
+    // identity.duplicate is reported, and no owner.cycle, because the owner
+    // edges through shop:b are ambiguous.
     const f = fabric([
       locus("shop:a", { owner: "shop:b" }),
       locus("shop:b", { owner: "shop:a" }),
