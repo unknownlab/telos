@@ -1,0 +1,13 @@
+{
+  "wp_id": "WP18",
+  "captured_at": "2026-10-22T08:27:39Z",
+  "base_branch": "feat/locus-foundation",
+  "base_commit": "1dc72a497f8525ee407fac727b1aa5660b6dc643",
+  "test_runner": "custom",
+  "total": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "failures": [],
+  "source_identity": "DeclaredCommandScopeSource/junit_xml"
+}
