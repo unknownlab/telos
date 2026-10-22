@@ -228,10 +228,10 @@
       "criterion_id": "FR-023",
       "description": "Verify FR-023 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/test/guides.test.ts 'guides: annotated blocks' (every sh line of docs/guides/agent-reference.md must be a root/apps/docs script that exists in package.json, a line of AGENTS.md, or git status/worktree list which it runs) and 'public API table lists exactly the runtime exports', 'diagnostic codes'; I ran git status, git worktree list, spec-kitty agent tasks status/next --mission, spec-kitty invocations list, grace status --path . --json: all succeed; verify ran test, typecheck, lint, format:check, grace:lint, docs build, test:e2e (exit 0); bun run --cwd apps/docs content ok. DEFECT (non-blocking): agent-reference.md line 67 describes verify as running only version check, format, lint, typecheck, tests and GRACE lint, omitting docs:build and test:e2e which verify also runs",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:11.429511+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
