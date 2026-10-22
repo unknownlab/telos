@@ -8,7 +8,7 @@ fundamental: true
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A formal declaration of a Locus's purpose, objectives, responsibilities, boundaries and success conditions; it explains why the Locus exists.
 related: [locus, law, facet, ADR-0002]
 ---

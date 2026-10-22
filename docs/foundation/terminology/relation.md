@@ -8,7 +8,7 @@ fundamental: true
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A typed semantic relationship between Loci or their elements, with kind-specific rules that support architectural analysis and change propagation.
 related: [locus, fabric, law, archetype, ADR-0008]
 ---

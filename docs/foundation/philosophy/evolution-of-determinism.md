@@ -134,9 +134,9 @@ The philosophy is a commitment. Mechanisms are engineering choices that may impl
 | Commitment                                | Candidate mechanism                                                                       | Maturity                                                |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | Every artifact has a meaning and an owner | Locus identity, Charter, single owner ([conceptual model](../conceptual-model/README.md)) | `proposed`; first implementation is the Stage 0 mission |
-| Accepted states are preserved             | Immutable, content-addressed Revisions; baseline advances by compare-and-set              | `proposed`; Stage 0 mission                             |
-| Change effects are identifiable           | Semantic diff between Revisions                                                           | `proposed`; Stage 0 mission                             |
-| Behaviour is specified, not assumed       | Executable specifications with stable IDs                                                 | `proposed`; Stage 0 mission (temporary form)            |
+| Accepted states are preserved             | Immutable, content-addressed Revisions; baseline advances by compare-and-set              | `implemented`; Stage 0 mission                          |
+| Change effects are identifiable           | Semantic diff between Revisions                                                           | `implemented`; Stage 0 mission                          |
+| Behaviour is specified, not assumed       | Executable specifications with stable IDs                                                 | `implemented`; Stage 0 mission (temporary form)         |
 | Evidence is distinct from decision        | Witness and Verdict as separate records                                                   | `vision`                                                |
 | Knowledge is scoped and enforceable       | Laws with applicability and enforcement                                                   | `vision`                                                |
 | Authority is explicit and bounded         | Acts and Mandates                                                                         | `vision`                                                |

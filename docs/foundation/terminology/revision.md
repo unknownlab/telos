@@ -8,7 +8,7 @@ fundamental: true
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: An immutable, identifiable version of a managed semantic definition, the basis for baselines, comparison, provenance and history.
 related: [locus, identity, variant, evolution, witness, ADR-0005]
 ---
