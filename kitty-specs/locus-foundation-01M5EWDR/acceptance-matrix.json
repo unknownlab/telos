@@ -108,10 +108,10 @@
       "criterion_id": "FR-011",
       "description": "Verify FR-011 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "LOC-040 purpose change + added Relation change set, LOC-041 LocusMismatchError (NS-016), LOC-039 empty on equal ids; packages/locus/test/diff.test.ts; probe: purpose change gives {part:charter.purpose,kind:changed,from:p,to:q}, equal ids give changes:[]",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:27.896665+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
