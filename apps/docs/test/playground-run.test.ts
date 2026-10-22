@@ -163,8 +163,10 @@ describe("runFabric decode errors", () => {
 
 describe("a refines Relation to a Locus outside the cycle", () => {
   test("is not marked as in a refines cycle, while the two cycle ends are", async () => {
-    // shop:a and shop:b refine each other; shop:a also refines shop:c, which is
-    // in no cycle. Only the first two Relations are in a cycle.
+    // shop:a and shop:b refine each other, and form the only cycle. Two
+    // Relations lead out of or into that cycle from Loci outside it:
+    // shop:a refines shop:d (member to outside), and shop:c refines shop:a
+    // (outside into member). Neither outside Relation is in a cycle.
     const text = JSON.stringify({
       id: "shop:system",
       loci: [
@@ -173,7 +175,7 @@ describe("a refines Relation to a Locus outside the cycle", () => {
           charter: { purpose: "A.", responsibilities: ["Do A"] },
           relations: [
             { kind: "refines", target: "shop:b" },
-            { kind: "refines", target: "shop:c" },
+            { kind: "refines", target: "shop:d" },
           ],
         },
         {
@@ -184,6 +186,11 @@ describe("a refines Relation to a Locus outside the cycle", () => {
         {
           id: "shop:c",
           charter: { purpose: "C.", responsibilities: ["Do C"] },
+          relations: [{ kind: "refines", target: "shop:a" }],
+        },
+        {
+          id: "shop:d",
+          charter: { purpose: "D.", responsibilities: ["Do D"] },
         },
       ],
     });
@@ -199,7 +206,7 @@ describe("a refines Relation to a Locus outside the cycle", () => {
       {
         from: "shop:a",
         kind: "refines",
-        target: "shop:c",
+        target: "shop:d",
         problems: [],
       },
       {
@@ -207,6 +214,12 @@ describe("a refines Relation to a Locus outside the cycle", () => {
         kind: "refines",
         target: "shop:a",
         problems: ["refines-cycle"],
+      },
+      {
+        from: "shop:c",
+        kind: "refines",
+        target: "shop:a",
+        problems: [],
       },
     ]);
   });
