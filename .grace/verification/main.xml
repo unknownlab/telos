@@ -122,8 +122,8 @@
       <Scenario>The content build of the valid fixture compiles with zero problems, and routes by id are exact.</Scenario>
       <Scenario>Each NS-020 failure case is rejected with a problem instead of producing content.</Scenario>
       <Scenario>Every guide has front matter with its guide, order and section, one H1 title, and no verification claim in its prose.</Scenario>
-      <Scenario>The public API table in the Agent Reference lists exactly the runtime exports of @telos/locus, and the diagnostic codes are exactly the thirteen codes of the contract.</Scenario>
-      <TraceAssertion>The "valid fixture output" tests in content.test.ts, the "NS-020 failure cases" tests, the "guides: front matter and body" tests, and the "the public API table lists exactly the runtime exports of @telos/locus" and "the diagnostic codes are exactly the thirteen codes of the contract" tests pass. The content command writes the content files without error.</TraceAssertion>
+      <Scenario>The public API table in the Agent Reference lists exactly the runtime exports of @telos/locus, and the diagnostic codes are exactly the fourteen codes of the contract.</Scenario>
+      <TraceAssertion>The "valid fixture output" tests in content.test.ts, the "NS-020 failure cases" tests, the "guides: front matter and body" tests, and the "the public API table lists exactly the runtime exports of @telos/locus" and "the diagnostic codes are exactly the fourteen codes of the contract" tests pass. The content command writes the content files without error.</TraceAssertion>
     </V-M-DOCS-CONTENT>
     <V-M-DOCS-SPEC-REPORT>
       <TestFiles>

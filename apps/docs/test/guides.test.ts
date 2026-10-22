@@ -12,7 +12,7 @@
 //   GUIDES_DIR - the directory of the four guide sources
 //   GUIDE_SPECS - file, title, order, section and maturity of each guide, in nav order
 //   GuideSpec - one entry of GUIDE_SPECS
-//   DIAGNOSTIC_CODES - the thirteen stable diagnostic codes of contracts/locus-api.md
+//   DIAGNOSTIC_CODES - the fourteen stable diagnostic codes of contracts/locus-api.md
 //   FRONT_MATTER - the front matter pattern the content compiler uses
 //   FENCE - the fenced block pattern the guides are read with
 //   ANNOTATABLE - the json kinds that may carry an example= annotation
@@ -86,9 +86,9 @@ const GUIDE_SPECS = [
 
 type GuideSpec = (typeof GUIDE_SPECS)[number];
 
-// The thirteen stable diagnostic codes of the Diagnostic codes table in
+// The fourteen stable diagnostic codes of the Diagnostic codes table in
 // kitty-specs/locus-foundation-01M5EWDR/contracts/locus-api.md. The
-// DiagnosticCode type of @telos/locus has the same thirteen members.
+// DiagnosticCode type of @telos/locus has the same fourteen members.
 const DIAGNOSTIC_CODES = [
   "identity.malformed",
   "identity.duplicate",
@@ -103,6 +103,7 @@ const DIAGNOSTIC_CODES = [
   "relation.self",
   "relation.duplicate",
   "relation.refines-cycle",
+  "relation.refines-cycle-limit",
 ] as const;
 
 const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
@@ -586,7 +587,7 @@ describe("guides: Agent Reference", () => {
     expect([...names].sort()).toEqual(Object.keys(locus).sort());
   });
 
-  test("the diagnostic codes are exactly the thirteen codes of the contract", () => {
+  test("the diagnostic codes are exactly the fourteen codes of the contract", () => {
     const section = sectionOf(body, "Diagnostic codes");
     const listed = [...section.matchAll(/^- `([^`]+)`$/gm)].map(
       (m) => m[1] ?? "",

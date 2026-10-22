@@ -116,3 +116,6 @@ The package reports each rule violation with one of the stable codes below. The 
 - `relation.self`
 - `relation.duplicate`
 - `relation.refines-cycle`
+- `relation.refines-cycle-limit`
+
+`validateFabric` reports at most 100 `relation.refines-cycle` diagnostics per Fabric. When more than 100 refines cycles exist, it reports the first 100 in a fixed search order and then one `relation.refines-cycle-limit` on the Fabric, with detail `100`. The Fabric is invalid in that case, as it is whenever any diagnostic is reported.
