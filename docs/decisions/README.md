@@ -30,6 +30,7 @@ Decisions about Telos's architecture and foundations, one file each ([ADR-0001](
 | [ADR-0014](ADR-0014-controlled-playground.md)                 | The playground runs the real package on structured inputs only                             | proposed |
 | [ADR-0015](ADR-0015-product-naming.md)                        | Telos by UnknownLab; `@telos/` package scope                                               | accepted |
 | [ADR-0016](ADR-0016-mvp-style-development.md)                 | MVP-style development; TypeScript and Effect fixed, Bun first target, the rest provisional | accepted |
+| [ADR-0017](ADR-0017-north-star-telos-built-with-telos.md)     | Telos is developed with Telos (north star)                                                 | accepted |
 
 ## Statuses
 

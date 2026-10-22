@@ -10,6 +10,8 @@ related: [capabilities, open-questions, P16-self-application]
 
 # Roadmap
 
+**North star ([ADR-0017](../../decisions/ADR-0017-north-star-telos-built-with-telos.md)): Telos is developed with Telos.** It is a direction, not a plan; the owner decides what comes next.
+
 A proposed order of stages. Each stage is one or more Spec Kitty missions, specified and approved on its own. Stages after Stage 0 are direction, not commitment: the evidence gathered in each stage may reorder the next.
 
 ## Stage 0 — Foundation (current)
