@@ -88,10 +88,10 @@
       "criterion_id": "FR-009",
       "description": "Verify FR-009 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/e2e/equality.e2e.ts (4 tests: scenario A/D/E browser Revision ids equal Bun ids and packages/locus-specs goldens), packages/locus-specs/test/determinism.test.ts goldens (revision-compare LOC-008,009,034,039), LOC-008/LOC-039 ignore set order+metadata; probe: equal ids for reordered responsibilities+different metadata, differing id for purpose change; bun run verify e2e 110 pass",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:23.430677+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
