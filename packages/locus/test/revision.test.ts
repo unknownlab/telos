@@ -161,6 +161,48 @@ describe("createRevision identity rules", () => {
   });
 });
 
+describe("charter.purpose is used exactly as given", () => {
+  // locus-api.md: strings are used exactly as given, with no trimming and no
+  // Unicode normalisation, so each of these texts is a different purpose.
+  const withPurpose = (purpose: string): LocusInput => ({
+    ...checkoutInput,
+    charter: { ...checkoutInput.charter, purpose },
+  });
+
+  test("a trailing space changes the Revision id", async () => {
+    const plain = await revisionOf(withPurpose("Turn a basket into an order."));
+    const padded = await revisionOf(
+      withPurpose("Turn a basket into an order. "),
+    );
+    expect(padded.id).not.toBe(plain.id);
+  });
+
+  test("a leading space changes the Revision id", async () => {
+    const plain = await revisionOf(withPurpose("Turn a basket into an order."));
+    const padded = await revisionOf(
+      withPurpose(" Turn a basket into an order."),
+    );
+    expect(padded.id).not.toBe(plain.id);
+  });
+
+  test("a precomposed and a decomposed é in the purpose give different Revision ids", async () => {
+    const precomposed = await revisionOf(withPurpose("Café order."));
+    const decomposed = await revisionOf(withPurpose("Café order."));
+    expect(precomposed.id).not.toBe(decomposed.id);
+    expect(precomposed.definition.charter.purpose).toBe("Café order.");
+    expect(decomposed.definition.charter.purpose).toBe("Café order.");
+  });
+
+  test("the purpose in the Revision definition is the text as given", async () => {
+    const padded = await revisionOf(
+      withPurpose("  Turn a basket into an order.\t"),
+    );
+    expect(padded.definition.charter.purpose).toBe(
+      "  Turn a basket into an order.\t",
+    );
+  });
+});
+
 describe("Revision shape", () => {
   test("the id matches sha256 followed by 64 lowercase hex digits", async () => {
     const revision = await Effect.runPromise(createRevision(checkout));

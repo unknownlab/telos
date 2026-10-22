@@ -3,7 +3,7 @@ id: ADR-0008
 title: Relations are typed with a closed Stage 0 set of kinds
 kind: decision
 status: proposed
-maturity: proposed
+maturity: implemented
 date: 2026-10-21
 summary: Stage 0 Relations have one of four kinds (depends-on, refines, satisfies, verifies); targets must exist, self-relations and duplicates are rejected, and only refines must be acyclic.
 related: [relation, P04-explicit-composition, open-questions]
@@ -23,7 +23,7 @@ related: [relation, P04-explicit-composition, open-questions]
    - `refines`: the source is a more specific form of the target.
    - `satisfies`: the source fulfils an obligation stated by the target.
    - `verifies`: the source checks the target.
-3. Validation rejects a target missing from the Fabric (INV-007), a Relation to the Locus itself, and two Relations with the same kind and target (INV-008).
+3. Validation rejects a target missing from the Fabric (INV-007), a Relation to the Locus itself, and two Relations with the same kind and target (INV-007).
 4. `refines` must be acyclic. Cycles of the other kinds are allowed in Stage 0.
 5. The set is closed: unknown kinds are rejected when decoding.
 

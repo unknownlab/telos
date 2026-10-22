@@ -1,5 +1,6 @@
-import { describe, expect, test } from "bun:test";
+import { describe, expect, spyOn, test } from "bun:test";
 import { Effect } from "effect";
+import * as locus from "@telos/locus";
 import type { FabricJson, LocusJson } from "@telos/locus";
 import type { Specification, SpecResult } from "../src/model";
 import { runSpecification, runSpecifications } from "../src/runner";
@@ -623,5 +624,158 @@ describe("runner meta-tests: other cases", () => {
       runSpecifications([historyAppendAndStale, historyAppendAndStale]),
     );
     expect(report.results.map((r) => r.status)).toEqual(["pass", "pass"]);
+  });
+});
+
+// -- Diagnostic order, identity and repeated runs ------------------------------
+
+// A Locus with a blank purpose and no responsibilities gives two diagnostics,
+// sorted by code: charter.purpose-blank, then charter.responsibilities-empty.
+const twoDiagnosticsFabric: FabricJson = {
+  id: "t:f",
+  loci: [{ id: "t:a", charter: charter("", []) }],
+};
+
+const validateTwoDiagnostics: Specification = {
+  id: "LOC-910",
+  title: "Two diagnostics of one Locus are compared in their reported order",
+  invariants: ["INV-004"],
+  scenarios: [],
+  polarity: "negative",
+  check: {
+    kind: "validate",
+    fabric: twoDiagnosticsFabric,
+    expect: {
+      valid: false,
+      diagnostics: [
+        {
+          code: "charter.purpose-blank",
+          scope: "locus",
+          subject: "t:a",
+          path: "charter.purpose",
+        },
+        {
+          code: "charter.responsibilities-empty",
+          scope: "locus",
+          subject: "t:a",
+          path: "charter.responsibilities",
+        },
+      ],
+    },
+  },
+};
+
+describe("runner meta-tests: two diagnostics", () => {
+  test("the same order passes when the object keys are written in another order", async () => {
+    const reordered = replaceExpect(validateTwoDiagnostics, {
+      diagnostics: [
+        {
+          path: "charter.purpose",
+          subject: "t:a",
+          scope: "locus",
+          code: "charter.purpose-blank",
+        },
+        {
+          path: "charter.responsibilities",
+          subject: "t:a",
+          scope: "locus",
+          code: "charter.responsibilities-empty",
+        },
+      ],
+      valid: false,
+    });
+    const result = await run(reordered);
+    expect(result.status).toBe("pass");
+    expect(result.observed).toEqual({
+      valid: false,
+      diagnostics: [
+        {
+          code: "charter.purpose-blank",
+          scope: "locus",
+          subject: "t:a",
+          path: "charter.purpose",
+        },
+        {
+          code: "charter.responsibilities-empty",
+          scope: "locus",
+          subject: "t:a",
+          path: "charter.responsibilities",
+        },
+      ],
+    });
+  });
+
+  test("the same two diagnostics written in swapped order fail", async () => {
+    const swapped = withExpect<{ diagnostics: unknown[] }>(
+      validateTwoDiagnostics,
+      (e) => {
+        e.diagnostics.reverse();
+      },
+    );
+    const result = await run(swapped);
+    expect(result.status).toBe("fail");
+    expect(result.expected).toEqual(swapped.check.expect);
+  });
+});
+
+// The same Locus with a different identity: not the same Locus and not the same Revision.
+const differentLociPair: Specification = {
+  id: "LOC-911",
+  title:
+    "Two Loci with different identities are different Loci with different Revisions",
+  invariants: ["INV-003"],
+  scenarios: [],
+  polarity: "negative",
+  check: {
+    kind: "revision-compare",
+    a: checkoutA,
+    b: { ...checkoutA, id: "shop:other" },
+    expect: { sameLocus: false, sameId: false },
+  },
+};
+
+describe("runner meta-tests: revision-compare across Loci", () => {
+  test("different identities give sameLocus false and sameId false", async () => {
+    const result = await run(differentLociPair);
+    expect(result.status).toBe("pass");
+    expect(result.observed).toEqual({ sameLocus: false, sameId: false });
+  });
+
+  test("an expectation of sameLocus true fails", async () => {
+    const wrong = withExpect<CompareExpect>(differentLociPair, (e) => {
+      e.sameLocus = true;
+    });
+    expect((await run(wrong)).status).toBe("fail");
+  });
+});
+
+// Two variants checked three times each must call validateFabric 2 × 3 = 6 times.
+const repeatedStable: Specification = {
+  id: "LOC-912",
+  title: "Each run of a validate-stable record validates its variant again",
+  invariants: ["INV-009"],
+  scenarios: [],
+  polarity: "positive",
+  check: {
+    kind: "validate-stable",
+    variants: twoLociInBothOrders,
+    runs: 3,
+    expect: "identical",
+  },
+};
+
+describe("runner meta-tests: repeated runs", () => {
+  test("a validate-stable record with three runs calls validateFabric once per variant and run", async () => {
+    const calls = spyOn(locus, "validateFabric");
+    try {
+      const result = await run(repeatedStable);
+      expect(result.status).toBe("pass");
+      expect(calls.mock.calls.length).toBe(
+        twoLociInBothOrders.length *
+          (repeatedStable.check as { runs: number }).runs,
+      );
+    } finally {
+      calls.mockRestore();
+    }
   });
 });
