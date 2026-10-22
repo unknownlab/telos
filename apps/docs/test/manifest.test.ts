@@ -6,7 +6,6 @@ const approvedDependencies = {
   "@tanstack/react-router": "1.170.44",
   "@tanstack/react-start": "1.169.2",
   "@telos/locus": "workspace:*",
-  "@telos/locus-specs": "workspace:*",
   "class-variance-authority": "0.7.1",
   clsx: "2.1.1",
   effect: "4.0.4",

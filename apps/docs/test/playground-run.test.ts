@@ -23,7 +23,7 @@ import {
   type FabricJson,
   validateFabric,
 } from "@telos/locus";
-import { examples } from "@telos/locus-specs";
+import { examples } from "@telos/locus/specs";
 import { Effect } from "effect";
 import {
   type FabricOutcome,

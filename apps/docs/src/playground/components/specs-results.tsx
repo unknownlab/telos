@@ -14,7 +14,7 @@
 //   GoldenView - the golden Revision ids against the ids the browser computed
 // END_MODULE_MAP
 
-import type { Specification, SpecReport } from "@telos/locus-specs";
+import type { Specification, SpecReport } from "@telos/locus/specs";
 import { ResultPanel } from "@/components/result-panel";
 import {
   Table,

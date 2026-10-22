@@ -7,9 +7,9 @@ import {
   diffRevisions,
   type ValidationReport,
   validateFabric,
-} from "@telos/locus";
-import { examples } from "../src/examples";
-import type { ExpectedDiagnostic } from "../src/model";
+} from "../../src/index";
+import { examples } from "../../specs/examples";
+import type { ExpectedDiagnostic } from "../../specs/model";
 
 // Removes the message from each diagnostic. Specifications state codes, not wording.
 const withoutMessages = (report: ValidationReport) => ({

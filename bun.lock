@@ -15,7 +15,6 @@
         "@tanstack/react-router": "1.170.44",
         "@tanstack/react-start": "1.169.2",
         "@telos/locus": "workspace:*",
-        "@telos/locus-specs": "workspace:*",
         "class-variance-authority": "0.7.1",
         "clsx": "2.1.1",
         "effect": "4.0.4",
@@ -43,14 +42,6 @@
       "name": "@telos/locus",
       "version": "0.1.0",
       "dependencies": {
-        "effect": "4.0.4",
-      },
-    },
-    "packages/locus-specs": {
-      "name": "@telos/locus-specs",
-      "version": "0.1.0",
-      "dependencies": {
-        "@telos/locus": "workspace:*",
         "effect": "4.0.4",
       },
     },
@@ -361,8 +352,6 @@
     "@telos/docs": ["@telos/docs@workspace:apps/docs"],
 
     "@telos/locus": ["@telos/locus@workspace:packages/locus"],
-
-    "@telos/locus-specs": ["@telos/locus-specs@workspace:packages/locus-specs"],
 
     "@types/bun": ["@types/bun@1.4.3", "", { "dependencies": { "bun-types": "1.4.3" } }, "sha512-N67Pqy8JXbAY/j0tNraS3V5mubGvc6rrrNDmDCtZLlFzccbUJPDb0tvgUBC5q4m8ybkP93Jcn1QB+RYQ6PvBhw=="],
 

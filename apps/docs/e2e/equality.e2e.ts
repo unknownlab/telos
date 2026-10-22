@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove that the Revision ids the browser shows are the ids the Bun runtime computes for the same inputs, and that the browser specification run agrees with the build report id by id (NFR-001).
-//   SCOPE: The equality suite. The expected ids are computed in this Bun test process with the real @telos/locus and @telos/locus-specs packages, and compared with the ids and statuses that scenarios A, D and E show in Chromium, plus the golden constants. Out: the Revision algorithm itself, which the package tests cover.
+//   SCOPE: The equality suite. The expected ids are computed in this Bun test process with the real @telos/locus package and its @telos/locus/specs entry, and compared with the ids and statuses that scenarios A, D and E show in Chromium, plus the golden constants. Out: the Revision algorithm itself, which the package tests cover.
 //   DEPENDS: M-DOCS-PLAYGROUND
 //   LINKS: V-M-DOCS-PLAYGROUND
 //   ROLE: TEST
@@ -22,7 +22,7 @@ import {
   decodeLocus,
   type RevisionId,
 } from "@telos/locus";
-import { catalogue, examples, revisionGoldens } from "@telos/locus-specs";
+import { catalogue, examples, revisionGoldens } from "@telos/locus/specs";
 import { Effect, Result } from "effect";
 import { trackPageErrors } from "./helpers";
 

@@ -61,7 +61,8 @@ Bun >=1.4.4-canary.1 required, found 1.4.3. Run: bun upgrade --canary
 - `apps/docs`: the documentation site. It is built from `docs/`, and its content is never edited in the app.
 - `packages/`: library packages, one directory per package.
 - `packages/locus`: `@telos/locus`, the Stage 0 Locus model, validation, revisions, history and decoding. It depends only on `effect`.
-- `packages/locus-specs`: `@telos/locus-specs`, the executable specifications LOC-001 to LOC-044 and their runner.
+  - `packages/locus/src`: the core. It never imports the specifications, a runner, an adapter or a test runner (INV-014, checked by a test).
+  - `packages/locus/specs`: the sub-path `@telos/locus/specs`, the executable specifications LOC-001 to LOC-044 and their runner. Its tests are in `packages/locus/test/specs`.
 - `scripts/`: repository scripts (the version guard and the review gate runner).
 - `tsconfig.base.json`: strict compiler options shared by every package. `tsconfig.json` at the root checks `scripts/` and lists packages under `references`.
 - `bunfig.toml`: linter, formatter and test-discovery settings. Spec Kitty, GRACE and generated files are excluded from the linter and formatter. `bun test` skips Spec Kitty's folders (`kitty-specs/`, `.kittify/`, `.spec-kitty/`), `.worktrees/` and `node_modules/`.

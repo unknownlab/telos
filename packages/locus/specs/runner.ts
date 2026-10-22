@@ -26,7 +26,7 @@ import {
   type Revision,
   type RevisionId,
   validateFabric,
-} from "@telos/locus";
+} from "../src/index";
 import { jsonEqual } from "./canonical-json";
 import type {
   ExpectedDiagnostic,

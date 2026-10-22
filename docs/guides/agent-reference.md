@@ -22,16 +22,16 @@ Then read the [foundation README](../foundation/README.md), which sets the readi
 
 ## Entry points
 
-| Path                                                                           | What it is                                                                                     |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- |
-| [`packages/locus/src/index.ts`](../../packages/locus/src/index.ts)             | The public entry point of `@telos/locus`. The API table below lists its runtime exports.       |
-| [`packages/locus-specs/src/index.ts`](../../packages/locus-specs/src/index.ts) | The entry point of `@telos/locus-specs`, the executable specifications.                        |
-| [`apps/docs/scripts/content.ts`](../../apps/docs/scripts/content.ts)           | The content compiler. It turns `docs/` into the site files and reports every invalid document. |
-| [`apps/docs/package.json`](../../apps/docs/package.json)                       | The scripts and dependencies of the documentation site.                                        |
-| [`package.json`](../../package.json)                                           | The root scripts, including the check commands below.                                          |
-| [`bunfig.toml`](../../bunfig.toml)                                             | The Bun settings of the repository, including the lint and format ignore lists.                |
-| [`docs/tooling.md`](../tooling.md)                                             | The owner's overview of the tools, what they enforce, and how to set them up.                  |
-| [`.grace/`](../../.grace/)                                                     | The GRACE records of the code: the module graph, the contracts and the verification map.       |
+| Path                                                                   | What it is                                                                                               |
+| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| [`packages/locus/src/index.ts`](../../packages/locus/src/index.ts)     | The public entry point of `@telos/locus`. The API table below lists its runtime exports.                 |
+| [`packages/locus/specs/index.ts`](../../packages/locus/specs/index.ts) | The sub-path `@telos/locus/specs`: the executable specifications, in the same package as `@telos/locus`. |
+| [`apps/docs/scripts/content.ts`](../../apps/docs/scripts/content.ts)   | The content compiler. It turns `docs/` into the site files and reports every invalid document.           |
+| [`apps/docs/package.json`](../../apps/docs/package.json)               | The scripts and dependencies of the documentation site.                                                  |
+| [`package.json`](../../package.json)                                   | The root scripts, including the check commands below.                                                    |
+| [`bunfig.toml`](../../bunfig.toml)                                     | The Bun settings of the repository, including the lint and format ignore lists.                          |
+| [`docs/tooling.md`](../tooling.md)                                     | The owner's overview of the tools, what they enforce, and how to set them up.                            |
+| [`.grace/`](../../.grace/)                                             | The GRACE records of the code: the module graph, the contracts and the verification map.                 |
 
 ## State queries
 

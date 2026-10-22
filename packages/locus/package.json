@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./specs": "./specs/index.ts",
     "./package.json": "./package.json"
   },
   "dependencies": {

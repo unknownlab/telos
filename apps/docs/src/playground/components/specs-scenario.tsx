@@ -11,7 +11,7 @@
 //   SpecsScenario - the Run all action, the build report and the results of scenario E
 // END_MODULE_MAP
 
-import { catalogue } from "@telos/locus-specs";
+import { catalogue } from "@telos/locus/specs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import type { SpecReportFile } from "@/lib/build-data";

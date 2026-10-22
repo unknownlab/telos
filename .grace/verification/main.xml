@@ -36,8 +36,8 @@
       <Scenario>An Identity is accepted only as namespace:name with lowercase parts, and only up to 128 characters long.</Scenario>
       <Scenario>defineLocus keeps the order and duplicates of responsibilities and relations, and fills missing optional sets with empty arrays.</Scenario>
       <Scenario>A defined Locus and a defined Fabric are deeply frozen, and defineLocus copies its input, so later changes to the input do not change the result and the input is not frozen by the call.</Scenario>
-      <Scenario>The @telos/locus package depends on effect 4.0.4 and nothing else.</Scenario>
-      <TraceAssertion>The "accepts exactly 128 characters and rejects 129" identity test, the defineLocus and defineFabric freezing and order tests, the RELATION_KINDS tests and "depends on effect 4.0.4 and nothing else" pass.</TraceAssertion>
+      <Scenario>The @telos/locus package depends on effect 4.0.4 and nothing else, and its exports map is exactly the entry point, ./specs and ./package.json, with no trusted install scripts and exact pins.</Scenario>
+      <TraceAssertion>The "accepts exactly 128 characters and rejects 129" identity test, the defineLocus and defineFabric freezing and order tests, the RELATION_KINDS tests "depends on effect 4.0.4 and nothing else", "exposes exactly the entry point, the specs entry point and the manifest" and "no workspace manifest trusts dependency install scripts, and every pin is exact" pass.</TraceAssertion>
     </V-M-LOCUS-MODEL>
     <V-M-LOCUS-VALIDATION>
       <TestFiles>
@@ -93,23 +93,24 @@
     </V-M-LOCUS-DECODE>
     <V-M-LOCUS-SPECS>
       <TestFiles>
-        <File>packages/locus-specs/test/canonical-json.test.ts</File>
-        <File>packages/locus-specs/test/catalogue-mutation.test.ts</File>
-        <File>packages/locus-specs/test/core-independence.test.ts</File>
-        <File>packages/locus-specs/test/determinism.test.ts</File>
-        <File>packages/locus-specs/test/examples.test.ts</File>
-        <File>packages/locus-specs/test/manifest.test.ts</File>
-        <File>packages/locus-specs/test/portability.test.ts</File>
-        <File>packages/locus-specs/test/runner.meta.test.ts</File>
-        <File>packages/locus-specs/test/scan.test.ts</File>
-        <File>packages/locus-specs/test/specifications.test.ts</File>
+        <File>packages/locus/test/specs/canonical-json.test.ts</File>
+        <File>packages/locus/test/specs/catalogue-mutation.test.ts</File>
+        <File>packages/locus/test/specs/core-independence.test.ts</File>
+        <File>packages/locus/test/specs/determinism.test.ts</File>
+        <File>packages/locus/test/specs/examples.test.ts</File>
+        <File>packages/locus/test/specs/portability.test.ts</File>
+        <File>packages/locus/test/specs/runner.meta.test.ts</File>
+        <File>packages/locus/test/specs/scan.test.ts</File>
+        <File>packages/locus/test/specs/specifications.test.ts</File>
       </TestFiles>
-      <Command>bun test packages/locus-specs/test/canonical-json.test.ts packages/locus-specs/test/catalogue-mutation.test.ts packages/locus-specs/test/core-independence.test.ts packages/locus-specs/test/determinism.test.ts packages/locus-specs/test/examples.test.ts packages/locus-specs/test/manifest.test.ts packages/locus-specs/test/portability.test.ts packages/locus-specs/test/runner.meta.test.ts packages/locus-specs/test/scan.test.ts packages/locus-specs/test/specifications.test.ts</Command>
+      <Command>bun test packages/locus/test/specs/canonical-json.test.ts packages/locus/test/specs/catalogue-mutation.test.ts packages/locus/test/specs/core-independence.test.ts packages/locus/test/specs/determinism.test.ts packages/locus/test/specs/examples.test.ts packages/locus/test/specs/portability.test.ts packages/locus/test/specs/runner.meta.test.ts packages/locus/test/specs/scan.test.ts packages/locus/test/specs/specifications.test.ts</Command>
       <Scenario>The catalogue holds the 44 records LOC-001 to LOC-044, unique and in sequence, and covers INV-001 to INV-012 and NS-001 to NS-017.</Scenario>
       <Scenario>Every catalogue record passes with its correct expectation, and each record fails when its expectation is mutated.</Scenario>
       <Scenario>The runner meta-tests prove that each check kind passes a correct expectation, fails at least two wrong ones, and reports a fixture that does not decode as an error, not as a pass or a fail.</Scenario>
       <Scenario>The Revision id goldens equal the recorded literals, and validating LOC-030 100 times gives byte-identical output.</Scenario>
-      <Scenario>No source file in locus or locus-specs depends on Bun, Node built-ins or the browser, and the core imports nothing but effect (INV-014, NFR-003, C-004).</Scenario>
+      <Scenario>No source file in locus or its specs depends on Bun, Node built-ins or the browser, and the core imports nothing but effect (INV-014, NFR-003, C-004).</Scenario>
+      <Scenario>No core source file imports the @telos/locus/specs sub-path, a relative specs, runner, catalogue, goldens, examples or adapter module, bun:test, a test runner or Playwright (INV-014).</Scenario>
+      <Scenario>Bundling @telos/locus for the browser carries no specification, runner or catalogue marker, while bundling the specifications carries every marker, so the check is not vacuous (INV-014, C-004).</Scenario>
       <TraceAssertion>The catalogue integrity tests and the per-record specification tests in specifications.test.ts pass for LOC-001 to LOC-044, the catalogue mutation pass covers every record, the runner meta-tests pass, the "revision id goldens" and "validating LOC-030 100 times" determinism tests pass, and the core-independence and portability tests pass.</TraceAssertion>
     </V-M-LOCUS-SPECS>
     <V-M-DOCS-CONTENT>

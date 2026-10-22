@@ -16,7 +16,9 @@
 //   stripText - removes comments, and optionally string contents, without parsing TypeScript
 //   SPECIFIER_PATTERNS - import, export-from, dynamic import and require forms
 //   moduleSpecifiers - module specifiers in source order
-//   isForbiddenPackage - the spec package, bun:test, Playwright and test runners
+//   isForbiddenPackage - the @telos/locus/specs sub-path, bun:test, Playwright and test runners
+//   isForbiddenRelative - relative imports of the specs, runner, catalogue, goldens, examples or an adapter
+//   SPECS_SEGMENTS - the path segments that name the specifications, their runner or an adapter
 //   isRuntimeSpecifier - bun, bun:* and node:* specifiers
 //   RUNTIME_IDENTIFIERS - process., Buffer and Bun. identifiers
 //   BUNDLE_MODULE_REFERENCE - import, require and dynamic import of node: or bun: in built output
@@ -115,14 +117,14 @@ const moduleSpecifiers = (code: string): string[] => {
 // START_CONTRACT: isForbiddenPackage
 //   PURPOSE: Decide whether a package name is one the core package may not depend on or import.
 //   INPUTS: { name: string - a package name or module specifier }
-//   OUTPUTS: { boolean - true for the spec package, bun:test, playwright, vitest, jest, mocha and their scoped forms }
+//   OUTPUTS: { boolean - true for the @telos/locus/specs sub-path, bun:test, playwright, vitest, jest, mocha and their scoped forms }
 //   SIDE_EFFECTS: none
 //   LINKS: M-LOCUS-SPECS
 // END_CONTRACT: isForbiddenPackage
-/** The spec package, Bun's test module, Playwright, and common test runners. */
+/** The specs sub-path of this package, Bun's test module, Playwright, and common test runners. */
 const isForbiddenPackage = (name: string): boolean =>
-  name === "@telos/locus-specs" ||
-  name.startsWith("@telos/locus-specs/") ||
+  name === "@telos/locus/specs" ||
+  name.startsWith("@telos/locus/specs/") ||
   name === "bun:test" ||
   name === "playwright" ||
   name.startsWith("@playwright/") ||
@@ -130,6 +132,34 @@ const isForbiddenPackage = (name: string): boolean =>
   name === "jest" ||
   name.startsWith("@jest/") ||
   name === "mocha";
+
+// Path segments that name the specifications, their runner or an adapter. A relative import
+// is forbidden when one of its segments is one of these, so "./specifications" is not matched.
+const SPECS_SEGMENTS: ReadonlySet<string> = new Set([
+  "specs",
+  "runner",
+  "catalogue",
+  "goldens",
+  "examples",
+  "adapter",
+  "adapters",
+]);
+
+// START_CONTRACT: isForbiddenRelative
+//   PURPOSE: Decide whether a relative module specifier reaches into the specifications, their runner or an adapter.
+//   INPUTS: { name: string - a module specifier such as "../specs/index" }
+//   OUTPUTS: { boolean - true when the specifier starts with "." and one of its path segments, without its extension, is specs, runner, catalogue, goldens, examples, adapter or adapters }
+//   SIDE_EFFECTS: none
+//   LINKS: M-LOCUS-SPECS
+// END_CONTRACT: isForbiddenRelative
+/** Relative imports of the specifications, their runner, or an adapter, from anywhere in the core. */
+const isForbiddenRelative = (name: string): boolean =>
+  name.startsWith(".") &&
+  name
+    .split("/")
+    .some((segment) =>
+      SPECS_SEGMENTS.has(segment.replace(/\.[cm]?[jt]sx?$/, "")),
+    );
 
 // START_CONTRACT: isRuntimeSpecifier
 //   PURPOSE: Decide whether a module specifier names a runtime that is not portable.
@@ -156,9 +186,11 @@ const RUNTIME_IDENTIFIERS: ReadonlyArray<{ name: string; pattern: RegExp }> = [
 //   SIDE_EFFECTS: none. Comments are ignored.
 //   LINKS: M-LOCUS-SPECS
 // END_CONTRACT: forbiddenCoreImports
-/** Specifiers of imports, re-exports, dynamic imports and requires that the core package must not use. */
+/** Specifiers of imports, re-exports, dynamic imports and requires that the core package must not use: the specs sub-path, relative specs, runner and adapters, and test runners. */
 export const forbiddenCoreImports = (source: string): string[] =>
-  moduleSpecifiers(stripText(source, "keep")).filter(isForbiddenPackage);
+  moduleSpecifiers(stripText(source, "keep")).filter(
+    (name) => isForbiddenPackage(name) || isForbiddenRelative(name),
+  );
 
 // START_CONTRACT: forbiddenRuntimeUses
 //   PURPOSE: Report the runtime-specific specifiers and identifiers that the portable source may not use.

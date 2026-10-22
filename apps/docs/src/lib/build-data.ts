@@ -14,7 +14,7 @@
 //   readBuildInfo - decode build-info.json, or null when it was not produced
 // END_MODULE_MAP
 
-import type { SpecReport, SpecResult } from "@telos/locus-specs";
+import type { SpecReport, SpecResult } from "@telos/locus/specs";
 import type { BunBuildProvenance, PackageVersions } from "./provenance";
 
 export interface SpecReportFile {
@@ -90,12 +90,6 @@ function decodePackages(value: unknown, file: string): PackageVersions {
       "@telos/locus",
       file,
       `${path}.@telos/locus`,
-    ),
-    "@telos/locus-specs": stringAt(
-      packages,
-      "@telos/locus-specs",
-      file,
-      `${path}.@telos/locus-specs`,
     ),
   };
 }

@@ -19,7 +19,7 @@ import {
   revisionGoldens,
   type SpecReport,
   type Specification,
-} from "@telos/locus-specs";
+} from "@telos/locus/specs";
 import {
   compareReports,
   goldenRows,

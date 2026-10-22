@@ -7,9 +7,9 @@ import {
   type FabricJson,
   type LocusJson,
   validateFabric,
-} from "@telos/locus";
-import { catalogue } from "../src/catalogue";
-import { revisionGoldens as exportedGoldens } from "../src/goldens";
+} from "../../src/index";
+import { catalogue } from "../../specs/catalogue";
+import { revisionGoldens as exportedGoldens } from "../../specs/goldens";
 
 // NFR-001 on the Bun side. The golden ids are recorded here, as the contract's
 // Determinism adapter requires. They were computed independently of this code with

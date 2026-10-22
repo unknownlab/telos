@@ -28,7 +28,6 @@ const AT = new Date("2026-10-21T10:18:46.123Z");
 const SITE_COMMIT = "0123456789abcdef0123456789abcdef01234567";
 const PROVENANCE = browserProvenance(AT, SITE_COMMIT, {
   "@telos/locus": "0.1.0",
-  "@telos/locus-specs": "0.1.0",
 });
 
 describe("provenanceFor", () => {

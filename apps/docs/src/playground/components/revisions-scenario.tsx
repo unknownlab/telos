@@ -12,7 +12,7 @@
 // END_MODULE_MAP
 
 import type { Revision } from "@telos/locus";
-import { examples } from "@telos/locus-specs";
+import { examples } from "@telos/locus/specs";
 import { useReducer, useRef, useState } from "react";
 import { ResultPanel } from "@/components/result-panel";
 import { Alert, AlertDescription } from "@/components/ui/alert";
