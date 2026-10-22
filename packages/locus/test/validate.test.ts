@@ -162,6 +162,50 @@ describe("validateFabric: identity and duplicates", () => {
       },
     ]);
   });
+
+  test("two Loci with a duplicated identity and the same Charter problem give each diagnostic once", () => {
+    // Both Loci report charter.purpose-blank with identical content, so the
+    // report keeps one copy of it, next to the single identity.duplicate.
+    const f = fabric([
+      locus("shop:a", { purpose: " " }),
+      locus("shop:a", { purpose: " " }),
+    ]);
+    expect(strip(validateFabric(f))).toEqual([
+      {
+        code: "charter.purpose-blank",
+        scope: "locus",
+        subject: "shop:a",
+        path: "charter.purpose",
+      },
+      {
+        code: "identity.duplicate",
+        scope: "locus",
+        subject: "shop:a",
+        path: "id",
+        detail: "2",
+      },
+    ]);
+  });
+
+  test("an ownership cycle through a duplicated identity is not reported; the duplicate is reported once", () => {
+    // The rule in locus-api.md: a duplicated identity is reported once, on that
+    // identity. The owner edges through shop:b are ambiguous, so no owner.cycle
+    // is reported for them. This pins the current reading of that rule.
+    const f = fabric([
+      locus("shop:a", { owner: "shop:b" }),
+      locus("shop:b", { owner: "shop:a" }),
+      locus("shop:b"),
+    ]);
+    expect(strip(validateFabric(f))).toEqual([
+      {
+        code: "identity.duplicate",
+        scope: "locus",
+        subject: "shop:b",
+        path: "id",
+        detail: "2",
+      },
+    ]);
+  });
 });
 
 describe("validateFabric: Charter", () => {
@@ -197,6 +241,18 @@ describe("validateFabric: Charter", () => {
         scope: "locus",
         subject: "shop:a",
         path: "charter.excluded",
+      },
+    ]);
+  });
+
+  test("two blank responsibilities give one charter.entry-blank and no charter.entry-duplicate", () => {
+    const f = fabric([locus("shop:a", { responsibilities: ["", ""] })]);
+    expect(strip(validateFabric(f))).toEqual([
+      {
+        code: "charter.entry-blank",
+        scope: "locus",
+        subject: "shop:a",
+        path: "charter.responsibilities",
       },
     ]);
   });
@@ -306,6 +362,26 @@ describe("validateFabric: owner", () => {
         subject: "shop:a",
         path: "owner",
         members: ["shop:a", "shop:b", "shop:c"],
+      },
+    ]);
+  });
+
+  test("a cycle entered through a Locus that sorts first is reported once, rotated to its smallest member", () => {
+    // shop:a sorts first and leads into the cycle at shop:e, which is not the
+    // smallest member. The cycle must be rotated to start at shop:c.
+    const f = fabric([
+      locus("shop:a", { owner: "shop:e" }),
+      locus("shop:c", { owner: "shop:d" }),
+      locus("shop:d", { owner: "shop:e" }),
+      locus("shop:e", { owner: "shop:c" }),
+    ]);
+    expect(strip(validateFabric(f))).toEqual([
+      {
+        code: "owner.cycle",
+        scope: "locus",
+        subject: "shop:c",
+        path: "owner",
+        members: ["shop:c", "shop:d", "shop:e"],
       },
     ]);
   });
