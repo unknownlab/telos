@@ -2,8 +2,8 @@
 id: ADR-0004
 title: TypeScript and Effect are the authoring model
 kind: decision
-status: proposed
-maturity: proposed
+status: accepted
+maturity: implemented
 date: 2026-10-21
 summary: Telos is authored in ordinary TypeScript with Effect for everything that can fail, needs services, does I/O or takes time; pure data stays plain.
 related: [technical-direction, P01-everything-is-code, P15-engine-independence]
