@@ -25,10 +25,13 @@ answers:
     fast checks on staged work (no documentation build, no browser tests). Gates are never bypassed (--no-verify,
     --force, --skip-*, *_DISABLE) without an explicit owner decision.
   review_policy: >-
-    Model routing for missions: work packages are sized so that small models
-    (Claude Haiku class, mid to max reasoning effort) can implement each one
-    from its prompt alone; every work package is reviewed by Claude Sonnet;
-    the post-merge mission review runs on Claude Opus at high effort.
+    Model routing for missions (strict): the root session runs on Sonnet and
+    only calls subagents; Claude Opus at high effort creates the mission and
+    does specify, plan and tasks; tasks are written by Opus for Haiku only,
+    sized so that Haiku can implement each one from its prompt alone; Haiku
+    implements every work package; Claude Sonnet reviews every work package;
+    the post-merge mission review runs on Claude Opus at high effort. Roles
+    are never swapped.
     Reviewers check spec fidelity (FR/NFR/C coverage), test-first evidence,
     gate results reported exactly, and GRACE sync. Reject on any unverified
     claim.

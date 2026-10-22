@@ -44,7 +44,14 @@ Resume only the work that matches the owner's current request. Report any other 
 - **Stuck workflow**: use `spk-run-blocked-recovery`. **Broken tooling**: use `spk-admin-setup-doctor`.
 - **GRACE** owns architecture knowledge and its validation: contracts, the module graph, verification, and semantic markup. The skills are `grace-status`, `grace-ask`, `grace-cli`, `grace-reviewer`, `grace-verification`, `grace-refresh`, `grace-fix`, `grace-refactor`, and `grace-explainer`. When `.grace/` exists, every mission keeps `.grace/` and the code markup in sync inside its own work packages. The mission must also pass `grace lint --path . --assertions current`.
 - **Spec Kitty** owns the change lifecycle. Do not use `grace-spec`, `grace-plan`, `grace-execute`, `grace-setup-subagents`, or `.grace/changes/`. The mission is the change record.
-- **Model routing for missions**: when implementing a mission, the main session only coordinates. Implement each work package in its own subagent, using the WP's `agent_profile` and `model` frontmatter, at high effort. Run work packages with no dependency between them in parallel. Review each WP with `reviewer-renata` on Sonnet. After merge, run the mission review with an Opus subagent at high effort. If a WP is rejected twice, ask the owner before retrying it on a stronger model.
+- **Model routing (strict, owner rule, no exceptions without the owner):**
+  - The root session runs on Sonnet and only calls subagents and relays their result. It does not write specs, plans, tasks, code or reviews itself.
+  - Creating a mission and every planning phase (specify, plan, tasks) are done by an Opus subagent at high effort.
+  - Tasks (work packages) are written by Opus for Haiku only. Decompose them so a Haiku model can finish each one from its prompt alone: exact files, APIs, contracts and acceptance tests quoted in the prompt.
+  - Each work package is implemented by a Haiku subagent, using the WP's `agent_profile`, in its own subagent. Run work packages with no dependency between them in parallel.
+  - Each work package is reviewed by a Sonnet subagent (`reviewer-renata`).
+  - After merge, the mission review is done by an Opus subagent at high effort.
+  - Never swap these roles. If a WP is rejected twice, ask the owner before changing the model.
 - If `.grace/` is absent, do not create it yourself. Offer `grace-init` when a mission first defines architecture. If GRACE proposes rules that conflict with this file, this file wins. Tell the owner about the conflict.
 
 ## Owner decisions

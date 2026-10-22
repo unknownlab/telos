@@ -27,7 +27,12 @@ Wrong behavior: silent logic bugs and drift between the spec and the code. Most 
 
 ## Who does what (model routing)
 
-- **Implementation:** small models (Claude Haiku class, mid to max effort). Work packages are sized and written so that one of these models can finish each one from its prompt alone.
+Strict. Roles are never swapped; only the owner may change them.
+
+- **Root session:** Claude Sonnet. Only calls subagents and relays their result.
+- **Mission creation, specify, plan, tasks:** Claude Opus, high effort.
+- **Tasks:** written by Opus for Haiku only. Work packages are sized and written so that one Haiku model can finish each one from its prompt alone.
+- **Implementation:** Claude Haiku class, mid to max effort.
 - **Work package review:** Claude Sonnet.
 - **Mission review after merge:** Claude Opus, high effort.
 
