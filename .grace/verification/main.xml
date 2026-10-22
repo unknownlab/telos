@@ -103,7 +103,7 @@
         <File>packages/locus/test/specs/scan.test.ts</File>
         <File>packages/locus/test/specs/specifications.test.ts</File>
       </TestFiles>
-      <Command>bun test packages/locus/test/specs/canonical-json.test.ts packages/locus/test/specs/catalogue-mutation.test.ts packages/locus/test/specs/core-independence.test.ts packages/locus/test/specs/determinism.test.ts packages/locus/test/specs/examples.test.ts packages/locus/test/specs/manifest.test.ts packages/locus/test/specs/portability.test.ts packages/locus/test/specs/runner.meta.test.ts packages/locus/test/specs/scan.test.ts packages/locus/test/specs/specifications.test.ts</Command>
+      <Command>bun test packages/locus/test/specs/canonical-json.test.ts packages/locus/test/specs/catalogue-mutation.test.ts packages/locus/test/specs/core-independence.test.ts packages/locus/test/specs/determinism.test.ts packages/locus/test/specs/examples.test.ts packages/locus/test/specs/portability.test.ts packages/locus/test/specs/runner.meta.test.ts packages/locus/test/specs/scan.test.ts packages/locus/test/specs/specifications.test.ts</Command>
       <Scenario>The catalogue holds the 44 records LOC-001 to LOC-044, unique and in sequence, and covers INV-001 to INV-012 and NS-001 to NS-017.</Scenario>
       <Scenario>Every catalogue record passes with its correct expectation, and each record fails when its expectation is mutated.</Scenario>
       <Scenario>The runner meta-tests prove that each check kind passes a correct expectation, fails at least two wrong ones, and reports a fixture that does not decode as an error, not as a pass or a fail.</Scenario>
