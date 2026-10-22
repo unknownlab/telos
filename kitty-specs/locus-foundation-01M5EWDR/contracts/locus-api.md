@@ -66,7 +66,7 @@ export interface Revision {
 | `isIdentity` | `(value: string) => boolean` | True exactly for the grammar in data-model.md |
 | `defineLocus` | `(input: LocusInput) => LocusDefinition` | Copies input; defaults missing optional sets to `[]`; keeps entry order and duplicates as given; returns a deeply frozen value. Never throws. |
 | `defineFabric` | `(input: { id: Identity; loci: ReadonlyArray<LocusDefinition> }) => Fabric` | Copies and deeply freezes. Never throws. |
-| `validateFabric` | `(fabric: Fabric) => ValidationReport` | Pure and total. Reports every violation of INV-001 to INV-008 as diagnostics, ordered as in data-model.md. Same input gives a byte-identical `JSON.stringify` of the result. |
+| `validateFabric` | `(fabric: Fabric) => ValidationReport` | Pure and total. Reports every violation of INV-001 to INV-008 as diagnostics, ordered as in data-model.md, except that `relation.refines-cycle` reports are capped at 100 per Fabric and followed by one `relation.refines-cycle-limit` (see the rules below). Same input gives a byte-identical `JSON.stringify` of the result. |
 | `canonicalForm` | `(definition: LocusDefinition) => string` | Canonical JSON (below). Pure. |
 | `createRevision` | `(definition: LocusDefinition) => Effect<Revision, DigestError>` | Id is `sha256:` + lowercase hex of SHA-256 (via `globalThis.crypto.subtle.digest`) over the UTF-8 bytes of `canonicalForm`. `definition` is the canonical definition (sorted, de-duplicated, no metadata), deeply frozen. Works on invalid definitions too. |
 | `diffRevisions` | `(from: Revision, to: Revision) => Effect<ChangeSet, LocusMismatchError>` | Fails when `from.locus !== to.locus`. Otherwise returns the ordered change list from data-model.md, empty exactly when the ids are equal. |
