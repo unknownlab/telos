@@ -73,3 +73,9 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 
 - `scripts/review-gate.ts` `failureMessage` picks the first line matching `/error/i`; in a blocked run it printed a passing test title ("no errors") instead of the failing assertion. Behaviour (exit 1, JUnit failure) is correct; only the message is misleading. Pre-existing heuristic, not changed.
 - `check-verification.ts` in `docs:build`: a full `docs:build` regenerates the spec report first, so the check mainly guards the prerendered page; it catches a bad report when the site is built without regeneration (`build:site`).
+
+## 12. WP17 review follow-ups (non-blocking)
+
+- Review gate `failureMessage`: prefer a line starting with `✘`, `Error:` or `×` for the e2e step, not the first `/error/i` match (e2e output now has passing titles containing "errors").
+- GRACE graph tidy (later `grace-refresh`): `packages/locus/src/index.ts` barrel is registered under M-LOCUS-MODEL but re-exports other modules' files; `decode.ts` imports `./errors` (REVISION) without a declared edge; `spec-report.ts` imports SITE lib files and SITE playground routes import PLAYGROUND, while the declared edges run the other way (declared graph acyclic, real coupling cyclic at module level). Eight file-level `DEPENDS` sibling names in `locus.ts`, `fabric.ts`, `relation.ts` are not registered module ids (GRACE accepts them).
+- Owner awareness: `bun run verify` and the review gate now need Playwright Chromium and take ~20-23 s; the pre-commit hook deliberately has no docs build or browser step; there is no CI, so the review gate is the only enforcement point for the browser suite.

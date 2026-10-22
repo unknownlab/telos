@@ -123,6 +123,7 @@ Stable. Adding a code is allowed; renaming or removing one is a breaking change.
 | `relation.self` | locus | `relations` | `<kind> <target>` | INV-007 |
 | `relation.duplicate` | locus | `relations` | `<kind> <target>` | INV-007 |
 | `relation.refines-cycle` | locus (smallest member) | `relations` | members | INV-008 |
+| `relation.refines-cycle-limit` | fabric | `relations` | the limit, `100`, as decimal string | INV-008 |
 
 Rules:
 
@@ -131,6 +132,7 @@ Rules:
 - A self-owner gives `owner.self` only, not also `owner.cycle`.
 - A self-`refines` gives `relation.self` only, not also a cycle.
 - Each cycle is reported exactly once. Loci that lead into a cycle without being in it are not reported.
+- At most 100 `relation.refines-cycle` diagnostics are reported per Fabric (owner decision, 2026-10-21, because the number of cycles in a dense graph grows factorially: 9 mutually refining Loci have 125,664). When more than 100 cycles exist, the first 100 in a fixed search order (Loci and Relations visited in ascending identity order, so the choice does not depend on input order) are reported, followed by exactly one `relation.refines-cycle-limit` diagnostic on the Fabric. The Fabric is then invalid, as it already was. `owner.cycle` needs no limit: ownership is at most one edge per Locus, so cycles are disjoint and there are at most as many as Loci.
 - Ownership chains of any depth are checked without recursion.
 
 ## Canonical form (version 1)
