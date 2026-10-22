@@ -1,7 +1,7 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Hold the 44 executable specifications LOC-001 to LOC-044 as plain, JSON-serialisable records, transcribed from the Catalogue (version 1) table.
 //   SCOPE: The catalogue records and the builders that keep them short. Out: running them (runner.ts), the model types (model.ts) and the examples and goldens (examples.ts, goldens.ts).
-//   DEPENDS: M-LOCUS-SPECS
+//   DEPENDS: M-LOCUS-VALIDATION, M-LOCUS-DECODE
 //   LINKS: M-LOCUS-SPECS
 //   ROLE: RUNTIME
 //   MAP_MODE: EXPORTS
@@ -149,10 +149,6 @@ const catalogueShopB: LocusJson = {
   relations: [],
 };
 
-/**
- * The executable specifications, LOC-001 to LOC-044, in id order.
- * Each record states its own expectation; a record is never changed to match the runner.
- */
 // START_CONTRACT: catalogue
 //   PURPOSE: Provide the executable specification records that the Bun adapter, the build report and the playground run.
 //   INPUTS: none
@@ -160,6 +156,10 @@ const catalogueShopB: LocusJson = {
 //   SIDE_EFFECTS: none
 //   LINKS: M-LOCUS-SPECS
 // END_CONTRACT: catalogue
+/**
+ * The executable specification records LOC-001 to LOC-044, in id order, as plain data.
+ * Each record states its own expectation; a record is never changed to match the runner.
+ */
 export const catalogue: ReadonlyArray<Specification> = [
   // ---- Identity (INV-001, INV-002) ----
   {

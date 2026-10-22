@@ -1,7 +1,7 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Fail the site build when the built Verification page is not the result page, so that a broken spec report can never ship as an empty client shell (FR-022, INV-013).
 //   SCOPE: verificationProblem, the check of one built page, and the command line that reads dist/client/verification/index.html. It only reads the built page and never writes.
-//   DEPENDS: M-DOCS-SPEC-REPORT
+//   DEPENDS: none
 //   LINKS: M-DOCS-SPEC-REPORT
 //   ROLE: RUNTIME
 //   MAP_MODE: EXPORTS
