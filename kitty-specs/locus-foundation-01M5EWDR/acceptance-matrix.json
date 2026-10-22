@@ -18,10 +18,10 @@
       "criterion_id": "FR-002",
       "description": "Verify FR-002 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "bun test packages/locus-specs (216 pass): LOC-001 (well-formed ok), LOC-002 no namespace, LOC-003 uppercase, LOC-004 space/empty part, LOC-005 fabric identity (NS-001); packages/locus/test/identity.test.ts; scratch probe of 12 malformed + 3 valid identities gives identity.malformed only for the malformed",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:01:55.520543+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
