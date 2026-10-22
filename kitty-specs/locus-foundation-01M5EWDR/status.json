@@ -595,7 +595,8 @@
       "last_transition_at": "2026-10-22T08:55:32.771985+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: 8b6c871..5c9e7dd"
+        "Ready for review: 8b6c871..5c9e7dd",
+        "Review passed (reviewer-renata, Sonnet): verify green, AGENTS.md pure addition byte-identical to approved wording, charter regeneration proven, path_conventions exact, maturity evidence checked."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
