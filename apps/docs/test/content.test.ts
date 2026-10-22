@@ -709,7 +709,11 @@ describe("real docs tree", () => {
         .sort((a, b) => Number(a) - Number(b)),
     ).toEqual(Array.from({ length: 16 }, (_, i) => i + 1));
     expect(ofKind("term").length).toBe(16);
-    expect(ofKind("decision").length).toBe(15);
+    const adrFiles = await Array.fromAsync(
+      new Bun.Glob("docs/decisions/ADR-*.md").scan({ cwd: REPO_ROOT }),
+    );
+    expect(adrFiles.length).toBeGreaterThan(0);
+    expect(ofKind("decision").length).toBe(adrFiles.length);
   });
 
   test("principles and terms sort by number and order, not by id text", async () => {
