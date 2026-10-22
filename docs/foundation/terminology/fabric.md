@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: minimal
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A coherent composition of related Loci, their Relations and shared constraints, representing a software system or a meaningful subsystem.
 related: [locus, relation, law, archetype, lens, ADR-0006]
 ---
@@ -30,7 +30,7 @@ A Fabric is the scope in which a set of Loci is checked as a whole: identities a
 
 ## Stage 0 form
 
-Minimal: a Fabric has an [Identity](identity.md) in the same form as a Locus and a set of member Locus definitions. Validating a Fabric checks every Stage 0 invariant over its members and produces either a validated Fabric value or the complete list of diagnostics. Shared constraints, Fabric Revisions and membership in several Fabrics are deferred.
+Minimal: a Fabric has an [Identity](identity.md) in the same form as a Locus and a set of member Locus definitions. Validating a Fabric checks its members and returns a validation report: whether the Fabric is valid, and its diagnostics. At most 100 refines cycles are reported per Fabric; when there are more, one further diagnostic says so. Shared constraints, Fabric Revisions and membership in several Fabrics are deferred.
 
 ## Relationships
 

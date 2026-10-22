@@ -31,7 +31,7 @@ A Revision fixes "what exactly was this, at that point" so that evidence, decisi
 
 ## Stage 0 form
 
-Proposed ([ADR-0005](../../decisions/ADR-0005-immutable-content-addressed-revisions.md)):
+As set out in [ADR-0005](../../decisions/ADR-0005-immutable-content-addressed-revisions.md):
 
 - A Revision is content-addressed: its id is a cryptographic digest of the canonical form of the semantic definition.
 - The canonical form is deterministic: sets (responsibilities, success conditions, Relations) are ordered canonically, so two definitions that mean the same thing get the same id.

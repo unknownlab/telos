@@ -33,7 +33,7 @@ The Charter is the reference for every judgement about a Locus: whether a change
 
 ## Stage 0 form
 
-Proposed contents:
+Contents in Stage 0:
 
 | Part               | Required | Meaning                                                                 |
 | ------------------ | -------- | ----------------------------------------------------------------------- |

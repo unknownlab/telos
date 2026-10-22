@@ -31,7 +31,7 @@ Relations make composition explicit ([P04](../principles/P04-explicit-compositio
 
 ## Stage 0 kinds
 
-Proposed closed set ([ADR-0008](../../decisions/ADR-0008-typed-relations.md)):
+A closed set of four kinds, as set out in [ADR-0008](../../decisions/ADR-0008-typed-relations.md):
 
 | Kind         | Meaning: source → target                                                                | Extra rule                |
 | ------------ | --------------------------------------------------------------------------------------- | ------------------------- |

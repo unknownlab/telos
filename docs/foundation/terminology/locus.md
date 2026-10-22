@@ -8,7 +8,7 @@ fundamental: true
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: An identifiable, bounded semantic unit with a defined responsibility, specification state, ownership boundaries, relationships and provided capabilities.
 related: [identity, charter, relation, revision, fabric, facet, act, ADR-0002]
 ---
@@ -43,7 +43,7 @@ A Locus is the place where meaning lives. It answers: what is this, why does it 
 
 ## Invariants
 
-Proposed for Stage 0 (see [conceptual model](../conceptual-model/README.md#5-invariants)):
+The Stage 0 invariants of a Locus (see [conceptual model](../conceptual-model/README.md#5-invariants)):
 
 - INV-001: its identity is well formed.
 - INV-002: its identity is unique within its Fabric.

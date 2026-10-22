@@ -131,17 +131,17 @@ Telos takes the observation as a design input. Change is the normal state ([P07]
 
 The philosophy is a commitment. Mechanisms are engineering choices that may implement it, may be replaced, and must not silently redefine it. The table lists candidate mechanisms and their maturity on this branch.
 
-| Commitment                                | Candidate mechanism                                                                       | Maturity                                                |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| Every artifact has a meaning and an owner | Locus identity, Charter, single owner ([conceptual model](../conceptual-model/README.md)) | `proposed`; first implementation is the Stage 0 mission |
-| Accepted states are preserved             | Immutable, content-addressed Revisions; baseline advances by compare-and-set              | `implemented`; Stage 0 mission                          |
-| Change effects are identifiable           | Semantic diff between Revisions                                                           | `implemented`; Stage 0 mission                          |
-| Behaviour is specified, not assumed       | Executable specifications with stable IDs                                                 | `implemented`; Stage 0 mission (temporary form)         |
-| Evidence is distinct from decision        | Witness and Verdict as separate records                                                   | `vision`                                                |
-| Knowledge is scoped and enforceable       | Laws with applicability and enforcement                                                   | `vision`                                                |
-| Authority is explicit and bounded         | Acts and Mandates                                                                         | `vision`                                                |
-| Verification is targeted                  | Relation-based impact analysis and risk-driven check selection                            | `vision`                                                |
-| Change is governed                        | Evolution: Variant → Witnesses → Verdict → Revision                                       | `vision`; today approximated by Spec Kitty missions     |
+| Commitment                                | Candidate mechanism                                                                       | Maturity                                            |
+| ----------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Every artifact has a meaning and an owner | Locus identity, Charter, single owner ([conceptual model](../conceptual-model/README.md)) | `implemented`; Stage 0 mission                      |
+| Accepted states are preserved             | Immutable, content-addressed Revisions; baseline advances by compare-and-set              | `implemented`; Stage 0 mission                      |
+| Change effects are identifiable           | Semantic diff between Revisions                                                           | `implemented`; Stage 0 mission                      |
+| Behaviour is specified, not assumed       | Executable specifications with stable IDs                                                 | `implemented`; Stage 0 mission (temporary form)     |
+| Evidence is distinct from decision        | Witness and Verdict as separate records                                                   | `vision`                                            |
+| Knowledge is scoped and enforceable       | Laws with applicability and enforcement                                                   | `vision`                                            |
+| Authority is explicit and bounded         | Acts and Mandates                                                                         | `vision`                                            |
+| Verification is targeted                  | Relation-based impact analysis and risk-driven check selection                            | `vision`                                            |
+| Change is governed                        | Evolution: Variant → Witnesses → Verdict → Revision                                       | `vision`; today approximated by Spec Kitty missions |
 
 ## 9. Worked examples
 
