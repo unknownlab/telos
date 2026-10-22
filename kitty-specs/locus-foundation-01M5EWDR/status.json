@@ -2,9 +2,9 @@
   "event_count": 156,
   "last_event_id": "01M5HEQER6VFB47TQ153BM0Z3E",
   "materialized_at": "2026-10-22T09:22:58.438890+00:00",
-  "mission_number": "3",
+  "mission_number": "",
   "mission_slug": "locus-foundation-01M5EWDR",
-  "mission_type": "software-dev",
+  "mission_type": "",
   "summary": {
     "approved": 0,
     "blocked": 0,
@@ -20,601 +20,290 @@
     "WP01": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ1PV468DEPJCGSFP4XTC",
       "last_transition_at": "2026-10-22T09:22:45.083239+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: a87596e",
-        "Review passed (reviewer-renata, Sonnet): verify green, pins exact, manifest tests and typecheck mutations fail correctly. tsconfig deviation justified."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP01-workspace-and-dependencies/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP01-workspace-and-dependencies/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 57441,
-      "shell_pid_created_at": "1792586221.208816",
-      "subtasks": {
-        "T001": "done",
-        "T002": "done",
-        "T003": "done",
-        "T004": "done",
-        "T005": "done",
-        "T006": "done"
-      }
+      "shell_pid": 54460,
+      "shell_pid_created_at": "1792585867.865636"
     },
     "WP02": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ2GEG7P35X739768NVQE",
       "last_transition_at": "2026-10-22T09:22:45.902690+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: c289388, 173a2ad",
-        "Review passed (reviewer-renata, Sonnet): verify green 74 tests, contract match, 21 mutations caught."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP02-model/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP02-model/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 62497,
-      "shell_pid_created_at": "1792586578.269494",
-      "subtasks": {
-        "T007": "done",
-        "T008": "done",
-        "T009": "done",
-        "T010": "done",
-        "T011": "done",
-        "T012": "done"
-      }
+      "shell_pid": 59728,
+      "shell_pid_created_at": "1792586378.271302"
     },
     "WP03": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ42WZXA2PJNCV8GH897G",
       "last_transition_at": "2026-10-22T09:22:47.516074+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 36f5635",
-        "Review passed (reviewer-renata, Sonnet): verify green 119 tests, Johnson cycles cross-checked vs brute force. Owner decision pending: unbounded refines-cycle report on dense graphs."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP03-validation/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP03-validation/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 66516,
-      "shell_pid_created_at": "1792587049.09614",
-      "subtasks": {
-        "T013": "done",
-        "T014": "done",
-        "T015": "done",
-        "T016": "done",
-        "T017": "done",
-        "T018": "done"
-      }
+      "shell_pid": 64609,
+      "shell_pid_created_at": "1792586685.11826"
     },
     "WP04": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ4TVERZ3W3YF8HWH0MS2",
       "last_transition_at": "2026-10-22T09:22:48.283593+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: cdf1ce6",
-        "Review passed (reviewer-renata, Sonnet): verify green 166 tests, goldens recomputed, 16 mutations caught."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP04-revisions-and-change-sets/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP04-revisions-and-change-sets/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 70230,
-      "shell_pid_created_at": "1792587587.618497",
-      "subtasks": {
-        "T019": "done",
-        "T020": "done",
-        "T021": "done",
-        "T022": "done",
-        "T023": "done"
-      }
+      "shell_pid": 69361,
+      "shell_pid_created_at": "1792587331.935303"
     },
     "WP05": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ5K0W75K2CF66F74J7QT",
       "last_transition_at": "2026-10-22T09:22:49.057054+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 8618afd",
-        "Review passed (reviewer-renata, Sonnet): verify green 180 tests, atomic Ref.modify, order mutation caught."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP05-history-service/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP05-history-service/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 72742,
-      "shell_pid_created_at": "1792587887.042415",
-      "subtasks": {
-        "T024": "done",
-        "T025": "done",
-        "T026": "done",
-        "T027": "done"
-      }
+      "shell_pid": 71753,
+      "shell_pid_created_at": "1792587712.798729"
     },
     "WP06": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
       "lane": "done",
       "last_event_id": "01M5HEQ6B061D0D0JVY3VZRY0X",
       "last_transition_at": "2026-10-22T09:22:49.824221+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 168e462",
-        "Rework done: 2735b07",
-        "Review passed on cycle 2 (reviewer-renata, Sonnet): verify green 211 tests, sort and never-throw mutants caught."
-      ],
-      "provider": "__resolved_provider_absent__",
-      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP06-decoding/review-cycle-2.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP06-decoding/review-cycle-2.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 76971,
-      "shell_pid_created_at": "1792588677.556816",
-      "subtasks": {
-        "T028": "done",
-        "T029": "done",
-        "T030": "done",
-        "T031": "done",
-        "T032": "done"
-      }
+      "shell_pid": 76262,
+      "shell_pid_created_at": "1792588398.583904"
     },
     "WP07": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ75K0790E649ME3Y4D0F",
       "last_transition_at": "2026-10-22T09:22:50.675285+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 05951bf",
-        "Review passed (reviewer-renata, Sonnet): verify green 314 tests, 15 runner mutants caught, INV-014 and portability checks fail when violated. Narrowed bundle check accepted."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP07-spec-runner/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP07-spec-runner/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 84818,
-      "shell_pid_created_at": "1792596201.637025",
-      "subtasks": {
-        "T033": "done",
-        "T034": "done",
-        "T035": "done",
-        "T036": "done",
-        "T037": "done",
-        "T038": "done"
-      }
+      "shell_pid": 78434,
+      "shell_pid_created_at": "1792588795.762913"
     },
     "WP08": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
       "lane": "done",
       "last_event_id": "01M5HEQ8WS9992W8Q2NRKPXRA7",
       "last_transition_at": "2026-10-22T09:22:52.441199+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: ce215aa, 2966b12, 74f908a",
-        "Rework done: 973f34c",
-        "Review passed on cycle 2 (reviewer-renata, Sonnet): verify green 424 tests, 44 records match contract, goldens recomputed, exported goldens restored."
-      ],
-      "provider": "__resolved_provider_absent__",
-      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP08-catalogue-and-adapter/review-cycle-2.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP08-catalogue-and-adapter/review-cycle-2.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 94931,
-      "shell_pid_created_at": "1792597236.286494",
-      "subtasks": {
-        "T039": "done",
-        "T040": "done",
-        "T041": "done",
-        "T042": "done",
-        "T043": "done",
-        "T044": "done"
-      }
+      "shell_pid": 92424,
+      "shell_pid_created_at": "1792597126.048694"
     },
     "WP09": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ3AZM2H2T2CR9HHQPF4D",
       "last_transition_at": "2026-10-22T09:22:46.751621+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: b3333ea",
-        "Review passed (reviewer-renata, Sonnet): verify green 88 tests, 60 docs compile, 9 mutations caught."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP09-content-pipeline/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP09-content-pipeline/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 66992,
-      "shell_pid_created_at": "1792587078.402512",
-      "subtasks": {
-        "T045": "done",
-        "T046": "done",
-        "T047": "done",
-        "T048": "done",
-        "T049": "done",
-        "T050": "done",
-        "T051": "done"
-      }
+      "shell_pid": 60567,
+      "shell_pid_created_at": "1792586412.013856"
     },
     "WP10": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ80X72JARKSCFCE1EES5",
       "last_transition_at": "2026-10-22T09:22:51.549893+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 3caf2b6",
-        "Review passed (reviewer-renata, Sonnet): verify green 320 tests, examples re-derived from real package, mutations caught."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP10-guides/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP10-guides/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 85276,
-      "shell_pid_created_at": "1792596220.673745",
-      "subtasks": {
-        "T052": "done",
-        "T053": "done",
-        "T054": "done",
-        "T055": "done",
-        "T056": "done"
-      }
+      "shell_pid": 79395,
+      "shell_pid_created_at": "1792588826.321124"
     },
     "WP11": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQ9KV29E6XZ38SKGXHBSB",
       "last_transition_at": "2026-10-22T09:22:53.179320+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 72e84fd, 070665e",
-        "Review passed (reviewer-renata, Sonnet): verify green 356 tests, 66 pages prerendered in 2 s, 64 docs checked 0 bad, 5 mutants caught."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP11-site-shell/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP11-site-shell/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 91607,
-      "shell_pid_created_at": "1792597048.452491",
-      "subtasks": {
-        "T057": "done",
-        "T058": "done",
-        "T059": "done",
-        "T060": "done",
-        "T061": "done",
-        "T062": "done",
-        "T063": "done"
-      }
+      "shell_pid": 87130,
+      "shell_pid_created_at": "1792596360.003381"
     },
     "WP12": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQAAVGP8E6G2F7K3JFAAA",
       "last_transition_at": "2026-10-22T09:22:53.915780+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 3d0046a",
-        "Review passed (reviewer-renata, Sonnet): verify green 415 tests, browser-checked in Chromium, 12 mutants caught."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP12-theme-search-diagrams/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP12-theme-search-diagrams/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 99120,
-      "shell_pid_created_at": "1792597931.387307",
-      "subtasks": {
-        "T064": "done",
-        "T065": "done",
-        "T066": "done",
-        "T067": "done",
-        "T068": "done"
-      }
+      "shell_pid": 94336,
+      "shell_pid_created_at": "1792597208.996535"
     },
     "WP13": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
       "lane": "done",
       "last_event_id": "01M5HEQB24NAW5Z9JGAB564VKC",
       "last_transition_at": "2026-10-22T09:22:54.660056+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: fa0feef, e5d810f",
-        "Rework done: 4d507d8, 7d94fac",
-        "Review passed on cycle 2 (reviewer-renata, Sonnet): verify green 629 tests, tampered reports rejected, label contrast 4.73 light / 7.6 dark. check-verification wiring deferred to WP17 (recorded)."
-      ],
-      "provider": "__resolved_provider_absent__",
-      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP13-spec-report-and-verification/review-cycle-2.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP13-spec-report-and-verification/review-cycle-2.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 2805,
-      "shell_pid_created_at": "1792598456.675133",
-      "subtasks": {
-        "T069": "done",
-        "T070": "done",
-        "T071": "done",
-        "T072": "done",
-        "T073": "done",
-        "T074": "done"
-      }
+      "shell_pid": 722,
+      "shell_pid_created_at": "1792598088.943315"
     },
     "WP14": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQBSVNH5FY3MEA3YNP1CV",
       "last_transition_at": "2026-10-22T09:22:55.419214+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 3ad94ea",
-        "Review passed (reviewer-renata, Sonnet): verify green 686 tests, A-C checked in Chromium, results match Bun, axe 0 violations both themes, safety scan injection fails. Merge-time edit: innerHTML allow-list."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP14-playground-a-c/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP14-playground-a-c/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 6276,
-      "shell_pid_created_at": "1792599298.702809",
-      "subtasks": {
-        "T075": "done",
-        "T076": "done",
-        "T077": "done",
-        "T078": "done",
-        "T079": "done",
-        "T080": "done",
-        "T081": "done"
-      }
+      "shell_pid": 4845,
+      "shell_pid_created_at": "1792598665.348062"
     },
     "WP15": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
       "lane": "done",
       "last_event_id": "01M5HEQCH6QYAQABWXM3YA1GX3",
       "last_transition_at": "2026-10-22T09:22:56.166294+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: fa0d73b",
-        "Rework done: 026a9e3",
-        "Review passed on cycle 2 (reviewer-renata, Sonnet): verify green 757 tests, axe clean 32 snapshots both themes both widths, real data-revision-id values, history rules protected by 39 unit tests."
-      ],
-      "provider": "__resolved_provider_absent__",
-      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP15-playground-d-e/review-cycle-2.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP15-playground-d-e/review-cycle-2.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 12570,
-      "shell_pid_created_at": "1792601498.13024",
-      "subtasks": {
-        "T082": "done",
-        "T083": "done",
-        "T084": "done",
-        "T085": "done"
-      }
+      "shell_pid": 11251,
+      "shell_pid_created_at": "1792601038.8783"
     },
     "WP16": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 2,
       "lane": "done",
       "last_event_id": "01M5HEQD8RMBMAMXXM97WX290M",
       "last_transition_at": "2026-10-22T09:22:56.920539+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 2eceac2, a572961, 7207645, 12bde85",
-        "Rework done: f7ac3bc",
-        "Rework done: 15ca9b0",
-        "Review passed on cycle 3 (reviewer-renata, Sonnet): verify green 838 tests, e2e 110/110 on three runs, accessible-name check proven by 10 mutants. Defect fix 7207645 accepted in lane."
-      ],
-      "provider": "__resolved_provider_absent__",
-      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP16-browser-tests/review-cycle-3.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP16-browser-tests/review-cycle-3.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 33596,
-      "shell_pid_created_at": "1792606065.482844",
-      "subtasks": {
-        "T086": "done",
-        "T087": "done",
-        "T088": "done",
-        "T089": "done",
-        "T090": "done",
-        "T091": "done",
-        "T092": "done"
-      }
+      "shell_pid": 31073,
+      "shell_pid_created_at": "1792605656.938712"
     },
     "WP17": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQE0FKXHFQP9P1VTNFDN6",
       "last_transition_at": "2026-10-22T09:22:57.679578+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: e3de6ff, 7ad262c, 9cf5b3b, ed1a5df",
-        "Review passed (reviewer-renata, Sonnet): verify green 22 s (845 unit, 110 e2e), gate blocks on a broken e2e, drift test proven by 4 mutants, 12 GRACE modules ready, 27 verification commands run."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP17-gates-and-grace/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP17-gates-and-grace/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 49461,
-      "shell_pid_created_at": "1792657276.687253",
-      "subtasks": {
-        "T093": "done",
-        "T094": "done",
-        "T095": "done",
-        "T096": "done",
-        "T097": "done"
-      }
+      "shell_pid": 36270,
+      "shell_pid_created_at": "1792606415.00535"
     },
     "WP18": {
       "actor": "merge",
       "agent": "claude",
-      "agent_profile": "__resolved_profile_absent__",
-      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "done",
       "last_event_id": "01M5HEQER6VFB47TQ153BM0Z3E",
       "last_transition_at": "2026-10-22T09:22:58.438890+00:00",
-      "model": "__resolved_model_absent__",
-      "notes": [
-        "Ready for review: 8b6c871..5c9e7dd",
-        "Review passed (reviewer-renata, Sonnet): verify green, AGENTS.md pure addition byte-identical to approved wording, charter regeneration proven, path_conventions exact, maturity evidence checked."
-      ],
-      "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP18-governance-sync/review-cycle-1.md",
         "reference": "review-cycle://locus-foundation-01M5EWDR/WP18-governance-sync/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "approved"
       },
-      "role": "reviewer",
-      "shell_pid": 55536,
-      "shell_pid_created_at": "1792658264.792056",
-      "subtasks": {
-        "T098": "done",
-        "T099": "done",
-        "T100": "done",
-        "T101": "done",
-        "T102": "done"
-      }
+      "shell_pid": 52877,
+      "shell_pid_created_at": "1792657641.439185"
     }
   }
 }
