@@ -133,7 +133,7 @@ The philosophy is a commitment. Mechanisms are engineering choices that may impl
 
 | Commitment                                | Candidate mechanism                                                                       | Maturity                                            |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| Every artifact has a meaning and an owner | Locus identity, Charter, single owner ([conceptual model](../conceptual-model/README.md)) | `implemented`; Stage 0 mission                      |
+| Every artifact has a meaning and an owner | Locus identity, Charter, single owner ([conceptual model](../conceptual-model/README.md)) | `implemented`; Stage 0 mission (Locus level only)   |
 | Accepted states are preserved             | Immutable, content-addressed Revisions; baseline advances by compare-and-set              | `implemented`; Stage 0 mission                      |
 | Change effects are identifiable           | Semantic diff between Revisions                                                           | `implemented`; Stage 0 mission                      |
 | Behaviour is specified, not assumed       | Executable specifications with stable IDs                                                 | `implemented`; Stage 0 mission (temporary form)     |

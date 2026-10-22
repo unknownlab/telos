@@ -23,7 +23,7 @@ An identifiable, bounded semantic unit with a defined responsibility, specificat
 
 ## Responsibility
 
-A Locus is the place where meaning lives. It answers: what is this, why does it exist, who owns it, what does it rely on and what does it offer. Every managed artifact belongs to exactly one Locus ([P02](../principles/P02-everything-has-meaning.md), [P03](../principles/P03-semantic-ownership.md)).
+A Locus is the place where meaning lives. It answers: what is this, why does it exist, who owns it, what does it rely on and what does it offer. Every managed artifact belongs to exactly one Locus (binding artifacts to Loci is deferred; [P02](../principles/P02-everything-has-meaning.md), [P03](../principles/P03-semantic-ownership.md)).
 
 ## Boundaries
 

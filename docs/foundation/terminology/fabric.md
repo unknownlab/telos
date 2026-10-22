@@ -21,7 +21,7 @@ A coherent composition of related Loci, their Relations and shared constraints, 
 
 ## Responsibility
 
-A Fabric is the scope in which a set of Loci is checked as a whole: identities are unique, Relations resolve, shared constraints hold. Later it is the scope in which an [Archetype](archetype.md) applies and from which [Lenses](lens.md) are computed.
+A Fabric is the scope in which a set of Loci is checked as a whole: identities are unique, Relations resolve, shared constraints hold (shared constraints are deferred in Stage 0). Later it is the scope in which an [Archetype](archetype.md) applies and from which [Lenses](lens.md) are computed.
 
 ## Boundaries
 

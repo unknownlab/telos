@@ -45,7 +45,7 @@ Every [Locus](locus.md) has one. [Fabrics](fabric.md) use the same form. [Revisi
 
 ## Lifecycle
 
-Assigned when a Locus is introduced. Never reused for a different Locus, even after retirement. Renaming is modelled as a new Locus that refines or replaces the old one, not as an in-place change (deferred; [OQ-003](../open-questions.md#oq-003)).
+Assigned when a Locus is introduced. By design, never reused for a different Locus, even after retirement (retirement is deferred). Renaming is modelled as a new Locus that refines or replaces the old one, not as an in-place change (deferred; [OQ-003](../open-questions.md#oq-003)).
 
 ## Examples
 
