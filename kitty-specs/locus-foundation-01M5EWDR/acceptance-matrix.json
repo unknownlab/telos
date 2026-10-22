@@ -78,10 +78,10 @@
       "criterion_id": "FR-008",
       "description": "Verify FR-008 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "LOC-022 unknown Relation kind -> decode error at loci path (NS-008), LOC-042 not JSON -> one issue at root path, LOC-043 wrong shape -> issue per path (NS-017); packages/locus/test/decode.test.ts; probe: relations[0].kind path, JSON parse error path '', shape errors at id and loci",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:21.248700+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
