@@ -39,7 +39,7 @@ import {
   type SpecReport,
   type SpecResult,
   catalogue,
-} from "@telos/locus-specs";
+} from "@telos/locus/specs";
 import {
   type SpecReportFile,
   readBuildInfo,

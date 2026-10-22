@@ -11,7 +11,7 @@
 //   VerificationView - the page: the build-time report or Not run, the CI row and how to run the records yourself
 // END_MODULE_MAP
 
-import type { Specification } from "@telos/locus-specs";
+import type { Specification } from "@telos/locus/specs";
 import { ResultPanel } from "@/components/result-panel";
 import { SpecReportTable } from "@/components/spec-report-table";
 import type { SpecReportFile } from "@/lib/build-data";
@@ -40,7 +40,7 @@ export function VerificationView({
       <h1 className="text-3xl font-bold tracking-tight">Verification</h1>
       <p className="text-muted-foreground">
         The executable specifications LOC-001 to LOC-044 are data records in{" "}
-        <code>@telos/locus-specs</code>. <code>bun test</code> runs them on
+        <code>@telos/locus/specs</code>. <code>bun test</code> runs them on
         every repository check. The site build runs them once more with Bun and
         records the report below, with the commit and time of that run.
       </p>
@@ -89,7 +89,8 @@ export function VerificationView({
           Run them yourself
         </h2>
         <p>
-          <code>bun test packages/locus-specs</code> runs every record locally.{" "}
+          <code>bun test packages/locus/test/specs</code> runs every record
+          locally.{" "}
           <a href="/playground/e" className="underline underline-offset-4">
             Playground scenario E
           </a>{" "}

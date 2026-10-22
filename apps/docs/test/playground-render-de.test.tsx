@@ -20,7 +20,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { catalogue, examples, revisionGoldens } from "@telos/locus-specs";
+import { catalogue, examples, revisionGoldens } from "@telos/locus/specs";
 import { browserProvenance } from "@/lib/provenance";
 import type { SpecReportFile } from "@/lib/build-data";
 import { ScenarioShell } from "@/playground/components/scenario-shell";
@@ -45,7 +45,6 @@ const INSTANT = new Date("2026-10-21T10:18:46.123Z");
 const SITE_COMMIT = "0123456789abcdef0123456789abcdef01234567";
 const PACKAGES = {
   "@telos/locus": "0.1.0",
-  "@telos/locus-specs": "0.1.0",
 };
 const BROWSER = browserProvenance(INSTANT, SITE_COMMIT, PACKAGES);
 

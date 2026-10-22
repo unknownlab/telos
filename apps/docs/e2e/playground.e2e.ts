@@ -20,7 +20,7 @@
 // END_MODULE_MAP
 
 import { expect, type Page, test } from "@playwright/test";
-import { examples } from "@telos/locus-specs";
+import { examples } from "@telos/locus/specs";
 import { caretToEnd, trackPageErrors } from "./helpers";
 
 const CHECKOUT_REVISION_A =

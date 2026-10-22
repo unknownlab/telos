@@ -12,7 +12,7 @@
 //   SITE_COMMIT - the commit the site was built from, "unknown" when the build did not record it
 // END_MODULE_MAP
 
-import { catalogue } from "@telos/locus-specs";
+import { catalogue } from "@telos/locus/specs";
 import { readBuildInfo, readSpecReportFile } from "./build-data";
 import { buildInfoJson, specReportJson } from "./generated";
 import { siteCommitOf } from "./provenance";

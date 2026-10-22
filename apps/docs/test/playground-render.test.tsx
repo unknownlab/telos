@@ -43,7 +43,6 @@ const CHECKOUT_ID =
   "sha256:666edf2862a0c96b032bfe46e7c0862f017b30e55d35f0b991636f3a3f6cc6c6";
 const BROWSER = browserProvenance(INSTANT, SITE_COMMIT, {
   "@telos/locus": "0.1.0",
-  "@telos/locus-specs": "0.1.0",
 });
 const HISTORICAL = toHistorical(BROWSER);
 

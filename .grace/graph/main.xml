@@ -44,14 +44,14 @@
       <M-LOCUS-MODEL />
     </M-LOCUS-DECODE>
     <M-LOCUS-SPECS>
-      <Summary>The executable specification catalogue, its runner, the playground examples and Revision goldens.</Summary>
-      <Path>packages/locus-specs/src/model.ts</Path>
-      <Path>packages/locus-specs/src/canonical-json.ts</Path>
-      <Path>packages/locus-specs/src/runner.ts</Path>
-      <Path>packages/locus-specs/src/catalogue.ts</Path>
-      <Path>packages/locus-specs/src/examples.ts</Path>
-      <Path>packages/locus-specs/src/goldens.ts</Path>
-      <Path>packages/locus-specs/src/index.ts</Path>
+      <Summary>The executable specification catalogue, its runner, the playground examples and Revision goldens, served from the @telos/locus/specs entry point.</Summary>
+      <Path>packages/locus/specs/model.ts</Path>
+      <Path>packages/locus/specs/canonical-json.ts</Path>
+      <Path>packages/locus/specs/runner.ts</Path>
+      <Path>packages/locus/specs/catalogue.ts</Path>
+      <Path>packages/locus/specs/examples.ts</Path>
+      <Path>packages/locus/specs/goldens.ts</Path>
+      <Path>packages/locus/specs/index.ts</Path>
       <M-LOCUS-MODEL />
       <M-LOCUS-VALIDATION />
       <M-LOCUS-REVISION />

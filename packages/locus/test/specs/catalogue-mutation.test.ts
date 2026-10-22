@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
-import { catalogue } from "../src/catalogue";
-import type { ExpectedDiagnostic, Specification } from "../src/model";
-import { runSpecification } from "../src/runner";
+import { catalogue } from "../../specs/catalogue";
+import type { ExpectedDiagnostic, Specification } from "../../specs/model";
+import { runSpecification } from "../../specs/runner";
 
 // Mutation pass: every catalogue record must be able to fail. For each record,
 // one copy has its expectation altered; the runner must report "fail" for it.

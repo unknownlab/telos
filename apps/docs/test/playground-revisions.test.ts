@@ -23,7 +23,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { createRevision, decodeLocus, type Revision } from "@telos/locus";
-import { examples } from "@telos/locus-specs";
+import { examples } from "@telos/locus/specs";
 import { Effect } from "effect";
 import { decodeLocusText, MAX_INPUT_LENGTH } from "@/playground/locus-text";
 import { browserProvenance, toHistorical } from "@/lib/provenance";
@@ -298,7 +298,7 @@ describe("isRevisionId", () => {
 
 const INSTANT = new Date("2026-10-21T10:18:46.123Z");
 const SITE_COMMIT = "0123456789abcdef0123456789abcdef01234567";
-const PACKAGES = { "@telos/locus": "0.1.0", "@telos/locus-specs": "0.1.0" };
+const PACKAGES = { "@telos/locus": "0.1.0" };
 const PROVENANCE = browserProvenance(INSTANT, SITE_COMMIT, PACKAGES);
 
 async function stepsOf() {

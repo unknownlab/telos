@@ -1,9 +1,9 @@
 import { describe, expect, spyOn, test } from "bun:test";
 import { Effect } from "effect";
-import * as locus from "@telos/locus";
-import type { FabricJson, LocusJson } from "@telos/locus";
-import type { Specification, SpecResult } from "../src/model";
-import { runSpecification, runSpecifications } from "../src/runner";
+import * as locus from "../../src/index";
+import type { FabricJson, LocusJson } from "../../src/index";
+import type { Specification, SpecResult } from "../../specs/model";
+import { runSpecification, runSpecifications } from "../../specs/runner";
 
 // Meta-tests: each inline record has a hand-derived, correct expectation. Wrong
 // expectations, made by editing a structuredClone of the record, must report "fail".

@@ -4,8 +4,6 @@
   "references": [
     { "path": "packages/locus" },
     { "path": "packages/locus/test" },
-    { "path": "packages/locus-specs" },
-    { "path": "packages/locus-specs/test" },
     { "path": "apps/docs" }
   ]
 }

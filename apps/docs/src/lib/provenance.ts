@@ -8,14 +8,14 @@
 // END_MODULE_CONTRACT
 //
 // START_MODULE_MAP
-//   PackageVersions - the versions of the two workspace packages that produced a result
+//   PackageVersions - the version of @telos/locus, which produced a result
 //   BrowserProvenance - a result run in the browser, with the instant and the site commit
 //   BunBuildProvenance - a result run by Bun at build time, with the runtime and the commit
 //   CiProvenance - the CI origin, which Stage 0 never produces
 //   HistoricalProvenance - a browser result whose input was edited afterwards
 //   Provenance - the union of the four origins
 //   ProvenanceOrigin - an origin, or "none" for a result slot with nothing in it
-//   PACKAGE_VERSIONS - the versions of @telos/locus and @telos/locus-specs
+//   PACKAGE_VERSIONS - the version of @telos/locus
 //   CI_PROVENANCE - the CI provenance value
 //   browserProvenance - the provenance of a browser run
 //   toHistorical - the same run, marked stale
@@ -26,11 +26,9 @@
 // END_MODULE_MAP
 
 import locusPackage from "@telos/locus/package.json";
-import specsPackage from "@telos/locus-specs/package.json";
 
 export interface PackageVersions {
   readonly "@telos/locus": string;
-  readonly "@telos/locus-specs": string;
 }
 
 export interface BrowserProvenance {
@@ -67,15 +65,14 @@ export type Provenance =
 export type ProvenanceOrigin = Provenance["origin"] | "none";
 
 // START_CONTRACT: PACKAGE_VERSIONS
-//   PURPOSE: Record which versions of the two packages produced a result, read from their package.json files at build time.
+//   PURPOSE: Record which version of the package produced a result, read from its package.json file at build time.
 //   INPUTS: none (build-time constant)
-//   OUTPUTS: { PackageVersions - the version of @telos/locus and of @telos/locus-specs }
+//   OUTPUTS: { PackageVersions - the version of @telos/locus, which includes the specifications at @telos/locus/specs }
 //   SIDE_EFFECTS: none
 //   LINKS: M-DOCS-SITE
 // END_CONTRACT: PACKAGE_VERSIONS
 export const PACKAGE_VERSIONS: PackageVersions = {
   "@telos/locus": locusPackage.version,
-  "@telos/locus-specs": specsPackage.version,
 };
 
 // START_CONTRACT: CI_PROVENANCE
@@ -165,7 +162,7 @@ export function siteCommitOf(
 }
 
 function packagesText(packages: PackageVersions): string {
-  return `@telos/locus ${packages["@telos/locus"]} · @telos/locus-specs ${packages["@telos/locus-specs"]}`;
+  return `@telos/locus ${packages["@telos/locus"]}`;
 }
 
 // START_CONTRACT: provenanceText

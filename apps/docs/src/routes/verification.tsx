@@ -12,7 +12,7 @@
 // END_MODULE_MAP
 
 import { createFileRoute } from "@tanstack/react-router";
-import { catalogue } from "@telos/locus-specs";
+import { catalogue } from "@telos/locus/specs";
 import { VerificationView } from "@/components/verification-view";
 import { specReportFile } from "@/lib/build";
 import { pageTitle } from "@/lib/site";

@@ -22,7 +22,7 @@
 
 import { describe, expect, test } from "bun:test";
 import { renderToStaticMarkup } from "react-dom/server";
-import { type SpecResult, catalogue } from "@telos/locus-specs";
+import { type SpecResult, catalogue } from "@telos/locus/specs";
 import { ProvenanceLabel } from "@/components/provenance-label";
 import { ResultPanel } from "@/components/result-panel";
 import { VerificationView } from "@/components/verification-view";

@@ -11,7 +11,7 @@
 //   examples - playground starting inputs: valid, invalid, relations and history
 // END_MODULE_MAP
 
-import type { FabricJson, LocusJson } from "@telos/locus";
+import type { FabricJson, LocusJson } from "../src/index";
 
 // START_CONTRACT: examples
 //   PURPOSE: Hold the starting inputs of the playground scenarios so that the playground and the tests use the same data.

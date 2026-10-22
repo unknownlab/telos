@@ -11,7 +11,7 @@
 //   catalogue - the 44 executable specification records in id order
 // END_MODULE_MAP
 
-import type { DiagnosticCode, FabricJson, LocusJson } from "@telos/locus";
+import type { DiagnosticCode, FabricJson, LocusJson } from "../src/index";
 import type { ExpectedDiagnostic, Specification } from "./model";
 
 // START_CONTRACT: locus

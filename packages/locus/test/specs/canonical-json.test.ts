@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { canonicalJson, jsonEqual } from "../src/canonical-json";
+import { canonicalJson, jsonEqual } from "../../specs/canonical-json";
 
 describe("canonicalJson", () => {
   test("key order does not matter", () => {

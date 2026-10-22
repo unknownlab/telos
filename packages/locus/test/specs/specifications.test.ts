@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
-import { catalogue } from "../src/catalogue";
-import { runSpecification } from "../src/runner";
+import { catalogue } from "../../specs/catalogue";
+import { runSpecification } from "../../specs/runner";
 
 // One test per catalogue record. A record passes only when its observed value
 // equals the expectation written in the record.

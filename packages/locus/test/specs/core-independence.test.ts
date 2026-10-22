@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { forbiddenCoreImports, forbiddenDependencies } from "./scan";
 
 // INV-014 (NS-019): the core package never depends on the spec package, a test runner or Playwright.
-const LOCUS_DIR = join(import.meta.dir, "..", "..", "locus");
+const LOCUS_DIR = join(import.meta.dir, "..", "..");
 const CORE_SRC = join(LOCUS_DIR, "src");
 
 const coreFiles = [

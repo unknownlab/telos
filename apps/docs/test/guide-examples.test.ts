@@ -1,5 +1,5 @@
 // START_MODULE_CONTRACT
-//   PURPOSE: Prove that every example= block in the guides is the same data as the examples of @telos/locus-specs, so that a reader's example is the input that the playground runs (FR-019).
+//   PURPOSE: Prove that every example= block in the guides is the same data as the examples of @telos/locus/specs, so that a reader's example is the input that the playground runs (FR-019).
 //   SCOPE: The fenced blocks of docs/guides/*.md that carry an example= annotation, their JSON, and the five example names.
 //   DEPENDS: M-DOCS-PLAYGROUND
 //   LINKS: V-M-DOCS-PLAYGROUND
@@ -20,7 +20,7 @@
 import { describe, expect, test } from "bun:test";
 import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { examples } from "@telos/locus-specs";
+import { examples } from "@telos/locus/specs";
 
 const REPO_ROOT = resolve(import.meta.dir, "../../..");
 const GUIDES = resolve(REPO_ROOT, "docs/guides");

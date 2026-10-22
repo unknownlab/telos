@@ -11,7 +11,7 @@
 //   SpecReportTable - the summary line and the table of specification results
 // END_MODULE_MAP
 
-import type { Specification, SpecReport, SpecResult } from "@telos/locus-specs";
+import type { Specification, SpecReport, SpecResult } from "@telos/locus/specs";
 import {
   Table,
   TableBody,

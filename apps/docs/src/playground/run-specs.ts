@@ -23,7 +23,7 @@ import {
   type SpecReport,
   type SpecResult,
   type Specification,
-} from "@telos/locus-specs";
+} from "@telos/locus/specs";
 import { createRevision, decodeLocus } from "@telos/locus";
 import { Effect, Result } from "effect";
 

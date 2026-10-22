@@ -33,7 +33,7 @@ import {
 const REPO_ROOT = resolve(import.meta.dir, "../../..");
 const INSTANT = "2026-10-21T10:18:46.123Z";
 const HEX40 = "0123456789abcdef0123456789abcdef01234567";
-const PACKAGES = { "@telos/locus": "0.1.0", "@telos/locus-specs": "0.1.0" };
+const PACKAGES = { "@telos/locus": "0.1.0" };
 
 async function readPackageVersion(relative: string): Promise<string> {
   const json = (await Bun.file(resolve(REPO_ROOT, relative)).json()) as {
@@ -43,12 +43,9 @@ async function readPackageVersion(relative: string): Promise<string> {
 }
 
 describe("PACKAGE_VERSIONS", () => {
-  test("equals the version fields of the two workspace packages", async () => {
+  test("equals the version field of @telos/locus, which holds the specifications", async () => {
     expect(PACKAGE_VERSIONS).toEqual({
       "@telos/locus": await readPackageVersion("packages/locus/package.json"),
-      "@telos/locus-specs": await readPackageVersion(
-        "packages/locus-specs/package.json",
-      ),
     });
   });
 });
@@ -117,19 +114,19 @@ describe("provenanceText", () => {
 
   test("browser: the run time, the packages and the site commit", () => {
     expect(provenanceText(browser)).toBe(
-      "Run in this browser at 2026-10-21 10:18:46 UTC · @telos/locus 0.1.0 · @telos/locus-specs 0.1.0 · site commit 0123456",
+      "Run in this browser at 2026-10-21 10:18:46 UTC · @telos/locus 0.1.0 · site commit 0123456",
     );
   });
 
   test("bun-build, clean: the runtime, the build time and the commit", () => {
     expect(provenanceText(buildOf(false))).toBe(
-      "Run by Bun 1.4.4 at build time, 2026-10-21 10:18:46 UTC · commit 0123456 · @telos/locus 0.1.0 · @telos/locus-specs 0.1.0",
+      "Run by Bun 1.4.4 at build time, 2026-10-21 10:18:46 UTC · commit 0123456 · @telos/locus 0.1.0",
     );
   });
 
   test("bun-build, dirty: the commit is followed by the uncommitted changes note", () => {
     expect(provenanceText(buildOf(true))).toBe(
-      "Run by Bun 1.4.4 at build time, 2026-10-21 10:18:46 UTC · commit 0123456 (uncommitted changes) · @telos/locus 0.1.0 · @telos/locus-specs 0.1.0",
+      "Run by Bun 1.4.4 at build time, 2026-10-21 10:18:46 UTC · commit 0123456 (uncommitted changes) · @telos/locus 0.1.0",
     );
   });
 
@@ -139,7 +136,7 @@ describe("provenanceText", () => {
 
   test("historical: the stale run, with the note that the input has changed", () => {
     expect(provenanceText(toHistorical(browser))).toBe(
-      "Historical: run in this browser at 2026-10-21 10:18:46 UTC · @telos/locus 0.1.0 · @telos/locus-specs 0.1.0 · site commit 0123456. The input has changed since this run.",
+      "Historical: run in this browser at 2026-10-21 10:18:46 UTC · @telos/locus 0.1.0 · site commit 0123456. The input has changed since this run.",
     );
   });
 

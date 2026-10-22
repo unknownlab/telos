@@ -23,7 +23,7 @@ import type {
   DiagnosticCode,
   FabricJson,
   LocusJson,
-} from "@telos/locus";
+} from "../src/index";
 
 // START_CONTRACT: InvariantId
 //   PURPOSE: Name an invariant of the Locus specification, such as INV-001.

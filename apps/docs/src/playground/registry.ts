@@ -16,7 +16,7 @@
 // END_MODULE_MAP
 
 import { type ComponentType, createElement } from "react";
-import { examples } from "@telos/locus-specs";
+import { examples } from "@telos/locus/specs";
 import type { SpecReportFile } from "@/lib/build-data";
 import { FabricScenario } from "@/playground/components/fabric-scenario";
 import { RevisionsScenario } from "@/playground/components/revisions-scenario";

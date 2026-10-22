@@ -3,25 +3,25 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { forbiddenBundleReferences, forbiddenRuntimeUses } from "./scan";
 
-// NFR-003 and C-004: the core and the spec sources run in the browser playground,
+// NFR-003 and C-004: the core and the specs run in the browser playground,
 // so they may not use bun, bun:*, node:*, process or Buffer, and they must bundle for the browser.
-const LOCUS_DIR = join(import.meta.dir, "..", "..", "locus");
-const SPECS_DIR = join(import.meta.dir, "..");
+const CORE_SRC = join(import.meta.dir, "..", "..", "src");
+const SPECS_SRC = join(import.meta.dir, "..", "..", "specs");
 
 const sourceFiles = (dir: string): string[] =>
-  [...new Bun.Glob("**/*.ts").scanSync({ cwd: join(dir, "src") })]
+  [...new Bun.Glob("**/*.ts").scanSync({ cwd: dir })]
     .sort()
-    .map((file) => join(dir, "src", file));
+    .map((file) => join(dir, file));
 
-const PORTABLE_SOURCES = [...sourceFiles(LOCUS_DIR), ...sourceFiles(SPECS_DIR)];
+const PORTABLE_SOURCES = [...sourceFiles(CORE_SRC), ...sourceFiles(SPECS_SRC)];
 
 describe("NFR-003 portable source", () => {
   test("the scanned trees contain source files", () => {
-    expect(sourceFiles(LOCUS_DIR).length).toBeGreaterThan(5);
-    expect(sourceFiles(SPECS_DIR).length).toBeGreaterThan(0);
+    expect(sourceFiles(CORE_SRC).length).toBeGreaterThan(5);
+    expect(sourceFiles(SPECS_SRC).length).toBeGreaterThan(0);
   });
 
-  test("no source file in locus or locus-specs uses bun, node:*, process or Buffer", () => {
+  test("no source file in locus or its specs uses bun, node:*, process or Buffer", () => {
     const violations = PORTABLE_SOURCES.flatMap((path) =>
       forbiddenRuntimeUses(readFileSync(path, "utf8")).map(
         (use) => `${path}: ${use}`,
@@ -32,13 +32,13 @@ describe("NFR-003 portable source", () => {
 });
 
 describe("C-004 browser bundle", () => {
-  for (const [label, dir] of [
-    ["@telos/locus", LOCUS_DIR],
-    ["@telos/locus-specs", SPECS_DIR],
+  for (const [label, entry] of [
+    ["@telos/locus", join(CORE_SRC, "index.ts")],
+    ["@telos/locus/specs", join(SPECS_SRC, "index.ts")],
   ] as const) {
     test(`${label} bundles for the browser without node: or bun: references`, async () => {
       const result = await Bun.build({
-        entrypoints: [join(dir, "src", "index.ts")],
+        entrypoints: [entry],
         target: "browser",
       });
       if (!result.success) {

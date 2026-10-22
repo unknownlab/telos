@@ -24,7 +24,7 @@ import {
   type SpecReport,
   catalogue,
   runSpecifications,
-} from "@telos/locus-specs";
+} from "@telos/locus/specs";
 import type { SpecReportFile } from "../src/lib/build-data";
 import {
   PACKAGE_VERSIONS,
