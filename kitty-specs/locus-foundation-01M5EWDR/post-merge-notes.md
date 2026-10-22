@@ -68,3 +68,8 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - Follow-up (cosmetic): `<title>` of unknown URLs is the site title, not "Page not found".
 - Follow-up: `serve-static.ts` does not redirect `/x` to `/x/` (directory index served at both); `/not-found` returns 200; `statSync` follows symlinks in `dist` (moot for a static build).
 - Mission review limit: browser tests run Chromium only.
+
+## 11. WP17 notes
+
+- `scripts/review-gate.ts` `failureMessage` picks the first line matching `/error/i`; in a blocked run it printed a passing test title ("no errors") instead of the failing assertion. Behaviour (exit 1, JUnit failure) is correct; only the message is misleading. Pre-existing heuristic, not changed.
+- `check-verification.ts` in `docs:build`: a full `docs:build` regenerates the spec report first, so the check mainly guards the prerendered page; it catches a bad report when the site is built without regeneration (`build:site`).
