@@ -3,7 +3,7 @@ id: ADR-0006
 title: Locus and Fabric are distinct concepts
 kind: decision
 status: proposed
-maturity: proposed
+maturity: implemented
 date: 2026-10-21
 summary: A Fabric is a named composition of Loci and the scope in which identity uniqueness, reference resolution and structural rules are checked; it is not itself a Locus in Stage 0.
 related: [fabric, locus, P04-explicit-composition, open-questions]

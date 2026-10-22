@@ -3,7 +3,7 @@ id: ADR-0014
 title: The playground runs the real package on structured inputs only
 kind: decision
 status: proposed
-maturity: proposed
+maturity: implemented
 date: 2026-10-21
 summary: The documentation playground imports the real Locus package, decodes user input with Effect Schema from structured forms or JSON, never evaluates code, and labels every result with where and when it was produced.
 related:

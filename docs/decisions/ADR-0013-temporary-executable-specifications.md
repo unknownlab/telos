@@ -3,7 +3,7 @@ id: ADR-0013
 title: Stage 0 specifications are data run by Bun and the browser through adapters
 kind: decision
 status: proposed
-maturity: proposed
+maturity: implemented
 date: 2026-10-21
 summary: Executable specifications for the Locus package are plain data with stable ids linked to invariants, run by one small runner with a bun test adapter and a browser adapter; the core package does not depend on them.
 related:

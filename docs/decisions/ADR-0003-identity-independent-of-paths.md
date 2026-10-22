@@ -3,7 +3,7 @@ id: ADR-0003
 title: Semantic identity is independent of file paths and owners
 kind: decision
 status: proposed
-maturity: proposed
+maturity: implemented
 date: 2026-10-21
 summary: A Locus identity is a declared namespace-qualified name, not derived from where its definition is stored or which Locus owns it, and source location is excluded from Revision digests.
 related: [identity, locus, revision, P02-everything-has-meaning, open-questions]

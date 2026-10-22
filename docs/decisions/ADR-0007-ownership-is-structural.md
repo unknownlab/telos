@@ -3,7 +3,7 @@ id: ADR-0007
 title: Ownership is a single structural property, not a Relation
 kind: decision
 status: proposed
-maturity: proposed
+maturity: implemented
 date: 2026-10-21
 summary: Each Locus has at most one owner, declared as a property; the owner must exist in the Fabric, cannot be the Locus itself and ownership cannot form a cycle.
 related: [locus, relation, P03-semantic-ownership, open-questions]
