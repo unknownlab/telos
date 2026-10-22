@@ -58,12 +58,15 @@ Bun >=1.4.4-canary.1 required, found 1.4.3. Run: bun upgrade --canary
 ### Layout
 
 - `apps/`: applications, one directory per app.
+- `apps/docs`: the documentation site. It is built from `docs/`, and its content is never edited in the app.
 - `packages/`: library packages, one directory per package.
+- `packages/locus`: `@telos/locus`, the Stage 0 Locus model, validation, revisions, history and decoding. It depends only on `effect`.
+- `packages/locus-specs`: `@telos/locus-specs`, the executable specifications LOC-001 to LOC-044 and their runner.
 - `scripts/`: repository scripts (the version guard and the review gate runner).
 - `tsconfig.base.json`: strict compiler options shared by every package. `tsconfig.json` at the root checks `scripts/` and lists packages under `references`.
 - `bunfig.toml`: linter, formatter and test-discovery settings. Spec Kitty, GRACE and generated files are excluded from the linter and formatter. `bun test` skips Spec Kitty's folders (`kitty-specs/`, `.kittify/`, `.spec-kitty/`), `.worktrees/` and `node_modules/`.
 
-Both areas are empty for now. A new package gets its own `package.json`, a reference `{ "path": "<area>/<name>" }` in the root `tsconfig.json`, and this `tsconfig.json`:
+A new package gets its own `package.json`, a reference `{ "path": "<area>/<name>" }` in the root `tsconfig.json`, and this `tsconfig.json`:
 
 ```json
 {
@@ -83,16 +86,19 @@ Both areas are empty for now. A new package gets its own `package.json`, a refer
 
 Run them from the repository root.
 
-| Command                                   | What it does                                                                                                                                      |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bun install`                             | Installs dependencies. Run it once per clone and once in every Spec Kitty worktree.                                                               |
-| `bun run verify`                          | The whole check suite: version, format check, lint, typecheck, tests, `grace lint`. Stops at the first failure.                                   |
-| `bun run typecheck`                       | `bun check -b`: the root and every referenced package.                                                                                            |
-| `bun run lint` / `bun run lint:fix`       | Lint, or lint and apply safe fixes. Warnings do not fail.                                                                                         |
-| `bun run format` / `bun run format:check` | Format files, or only report unformatted files.                                                                                                   |
-| `bun run test`                            | `bun test`. Passes when no test files exist. Test discovery skips `kitty-specs/`, `.kittify/`, `.spec-kitty/`, `.worktrees/` and `node_modules/`. |
-| `bun run grace:lint`                      | `grace lint --path . --assertions current`.                                                                                                       |
-| `bun run check:bun`                       | The version guard alone.                                                                                                                          |
+| Command                                   | What it does                                                                                                                                         |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bun install`                             | Installs dependencies. Run it once per clone and once in every Spec Kitty worktree.                                                                  |
+| `bun run verify`                          | The whole check suite, in order: version, format check, lint, typecheck, tests, docs build, browser tests, `grace lint`. Stops at the first failure. |
+| `bun run typecheck`                       | `bun check -b`: the root and every referenced package.                                                                                               |
+| `bun run lint` / `bun run lint:fix`       | Lint, or lint and apply safe fixes. Warnings do not fail.                                                                                            |
+| `bun run format` / `bun run format:check` | Format files, or only report unformatted files.                                                                                                      |
+| `bun run test`                            | `bun test`. Passes when no test files exist. Test discovery skips `kitty-specs/`, `.kittify/`, `.spec-kitty/`, `.worktrees/` and `node_modules/`.    |
+| `bun run grace:lint`                      | `grace lint --path . --assertions current`.                                                                                                          |
+| `bun run docs:build`                      | Builds the documentation site in `apps/docs` and prerenders every page, then checks the built Verification page.                                     |
+| `bun run docs:preview`                    | Serves the built site on the loopback address. Run `bun run docs:build` first.                                                                       |
+| `bun run test:e2e`                        | Playwright browser tests (Chromium) against the built site. Needs the one-time browser setup.                                                        |
+| `bun run check:bun`                       | The version guard alone.                                                                                                                             |
 
 ### Pre-commit hook
 
@@ -104,7 +110,7 @@ Run them from the repository root.
 4. type-checks and tests the whole repository,
 5. runs `grace lint`.
 
-Any failure stops the commit with a `pre-commit:` message. On the empty skeleton the hook takes under two seconds.
+Any failure stops the commit with a `pre-commit:` message. The docs build and the browser tests (`docs:build`, `test:e2e`) are not in the hook. They run in `verify` and in the review gate.
 
 Commits that stage only files under `kitty-specs/` or `.kittify/` (Spec Kitty's bookkeeping commits) pass at once: the hook exits silently, without running the checks and without installed dependencies. `bun test` never runs test files in those folders (see [Commands](#commands)), so this exception cannot hide a failing test. Any other staged path brings back the full run above, including the `dependencies not installed` message when `node_modules/` is absent. A commit that moves a file out of any other directory runs the full checks too, because the old path counts as a staged path.
 
@@ -112,7 +118,7 @@ Formatting restages whole files. If you staged only part of a file, the hook blo
 
 ### Review gate
 
-Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review. It runs every check, writes one JUnit report with a test case per check (`verify.lint`, `verify.typecheck`, and so on) plus every `bun test` result, and Spec Kitty blocks the review on any failure that is not already failing on the base branch.
+Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review. It runs every check, writes one JUnit report with a test case per check (`verify.lint`, `verify.typecheck`, and so on) plus every `bun test` result, and Spec Kitty blocks the review on any failure that is not already failing on the base branch. The docs build and the browser tests appear as `verify.docs:build` and `verify.test:e2e`. A unit test compares the gate's step list with the root `verify` script, so the two cannot drift apart.
 
 If `node_modules/` is missing, as in the base-branch checkout that Spec Kitty uses to tell new failures from old ones, the gate first runs `bun install --frozen-lockfile` once. A failed install appears as a failing `verify.install` case, and the other checks still run. When dependencies are already installed, the gate adds no install case.
 
@@ -132,6 +138,7 @@ cp -R /tmp/grace-marketplace/skills/grace/grace-* .claude/skills/
 cp -R /tmp/grace-marketplace/skills/grace/grace-* .agents/skills/
 bun upgrade --canary && bun add -g @osovv/grace-cli    # Bun >= 1.4.4-canary.1; also installs the grace CLI
 bun install    # project dependencies; repeat in every Spec Kitty worktree
+bunx playwright install chromium    # browser for test:e2e; downloads into ~/Library/Caches/ms-playwright
 ```
 
 Codex may ask once to trust the project directory.
@@ -140,7 +147,7 @@ Codex may ask once to trust the project directory.
 
 Spec Kitty 3.2.7 resets `mission_number` to `null` in the mission's `meta.json` when it merges (an upstream bug). After every merge, check `kitty-specs/<number>-<slug>/meta.json`. If `mission_number` is `null`, set it back to the number in the directory name and commit the fix.
 
-Accept runs strictly. `project.path_conventions` in `.kittify/config.yaml` points Spec Kitty's workspace and tests checks at `scripts/`, so `--lenient` is not needed.
+Accept runs strictly. `project.path_conventions` in `.kittify/config.yaml` points Spec Kitty's workspace and tests checks at `packages/`, so `--lenient` is not needed.
 
 ## Global footprint
 
@@ -150,6 +157,7 @@ Skills live only in the project (`.claude/skills/`, `.agents/skills/`). Spec Kit
 - **Global commands**: 15 `spec-kitty.*` files in `~/.claude/commands/`, plus the matching folders of 11 other agents (`~/.gemini`, `~/.cursor`, `~/.github/prompts`, and so on). Every `spec-kitty` run except `next` puts them back, including the Claude Code session hooks, so deleting them has no lasting effect. Claude Code's `/spec-kitty.*` commands come from these files. Codex is not affected: `~/.codex` stays clean.
 - **Runtime state** in `~/.kittify/` and a sync database under `~/.spec-kitty/projects/<project uuid>/`.
 - **GRACE CLI** installed globally with Bun (`~/.bun/bin/grace`). It is a Bun global, not a Claude or Codex file.
+- **Chromium** for `test:e2e`, downloaded by `bunx playwright install chromium` into `~/Library/Caches/ms-playwright`. Remove that folder to undo it.
 
 ## Upgrading
 

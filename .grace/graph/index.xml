@@ -5,6 +5,16 @@
       <Owns>
         <M-BUN-VERSION-GUARD />
         <M-REVIEW-GATE />
+        <M-LOCUS-MODEL />
+        <M-LOCUS-VALIDATION />
+        <M-LOCUS-REVISION />
+        <M-LOCUS-HISTORY />
+        <M-LOCUS-DECODE />
+        <M-LOCUS-SPECS />
+        <M-DOCS-CONTENT />
+        <M-DOCS-SPEC-REPORT />
+        <M-DOCS-SITE />
+        <M-DOCS-PLAYGROUND />
       </Owns>
     </GD-MAIN>
   </GraphDocuments>

@@ -4,8 +4,8 @@ project:
   node_id: 589acd92f78d
   build_id: 4fff4dac-81e1-5ca8-8a1b-29ee8c006eaa
   path_conventions:
-    workspace: scripts/
-    tests: scripts/
+    workspace: packages/
+    tests: packages/
 mission_type_activations:
 - software-dev
 - documentation
