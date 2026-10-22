@@ -1,6 +1,6 @@
 terms:
   - surface: telos
-    definition: The "everything as code" full-stack framework for next-generation software developed in this repository. Write it as "Telos" in prose.
+    definition: "Telos by UnknownLab: a framework in which software systems are described, verified and evolved as code, see docs/foundation."
     confidence: 1.0
     status: active
   - surface: workspace
