@@ -87,7 +87,7 @@ const GUIDE_SPECS = [
 type GuideSpec = (typeof GUIDE_SPECS)[number];
 
 // The fourteen stable diagnostic codes of the Diagnostic codes table in
-// kitty-specs/locus-foundation-01M5EWDR/contracts/locus-api.md. The
+// kitty-specs/003-locus-foundation-01M5EWDR/contracts/locus-api.md. The
 // DiagnosticCode type of @telos/locus has the same fourteen members.
 const DIAGNOSTIC_CODES = [
   "identity.malformed",
@@ -594,7 +594,7 @@ describe("guides: Agent Reference", () => {
     );
     expect([...listed].sort()).toEqual([...DIAGNOSTIC_CODES].sort());
     expect(section).toContain(
-      "(../../kitty-specs/locus-foundation-01M5EWDR/contracts/locus-api.md)",
+      "(../../kitty-specs/003-locus-foundation-01M5EWDR/contracts/locus-api.md)",
     );
   });
 });

@@ -101,7 +101,7 @@ Type-only exports, such as `Fabric`, `LocusDefinition`, `Revision` and `ChangeSe
 
 ## Diagnostic codes
 
-The package reports each rule violation with one of the stable codes below. The [API contract](../../kitty-specs/locus-foundation-01M5EWDR/contracts/locus-api.md) gives each code's scope, path, detail and invariant.
+The package reports each rule violation with one of the stable codes below. The [API contract](../../kitty-specs/003-locus-foundation-01M5EWDR/contracts/locus-api.md) gives each code's scope, path, detail and invariant.
 
 - `identity.malformed`
 - `identity.duplicate`
