@@ -1,0 +1,269 @@
+{
+  "mission_slug": "locus-foundation-01M5EWDR",
+  "mission_number": "",
+  "mission_type": "software-dev",
+  "overall_verdict": "pass",
+  "criteria": [
+    {
+      "criterion_id": "FR-001",
+      "description": "Verify FR-001 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "lane-r: packages/locus/test/locus.test.ts; scratch probe: defineLocus result frozen deep (definition, charter, responsibilities), keys id/charter/relations; packages/locus-specs LOC-001,LOC-033; bun run verify exit 0 (845 pass)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:01:53.288591+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-002",
+      "description": "Verify FR-002 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "bun test packages/locus-specs (216 pass): LOC-001 (well-formed ok), LOC-002 no namespace, LOC-003 uppercase, LOC-004 space/empty part, LOC-005 fabric identity (NS-001); packages/locus/test/identity.test.ts; scratch probe of 12 malformed + 3 valid identities gives identity.malformed only for the malformed",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:01:55.520543+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-003",
+      "description": "Verify FR-003 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "LOC-010 (full charter ok), LOC-011 whitespace purpose, LOC-012 no responsibilities, LOC-013 blank entries, LOC-014 duplicates (NS-003/NS-004); packages/locus/test/validate.test.ts; probe: charter.purpose-blank, charter.responsibilities-empty, charter.entry-blank x2, charter.entry-duplicate x2",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:01:58.027880+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-004",
+      "description": "Verify FR-004 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "packages/locus/test/fabric.test.ts; defineFabric/validateFabric(fabric) take id+loci (probe: frozen Fabric, malformed fabric id reported at fabric scope); LOC-005, LOC-044 (empty Fabric valid)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:00.355019+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-005",
+      "description": "Verify FR-005 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "LOC-030 (four violation kinds all reported in order, NS-012), LOC-031 (reordered input identical), LOC-032 (5x byte-identical); packages/locus/test/validate-determinism.test.ts (100x byte-identical + reorder); probe: reversed Loci give identical JSON; each diagnostic has code, subject, message",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:02.656334+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-006",
+      "description": "Verify FR-006 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "LOC-015 tree ok, LOC-016 owner.missing (NS-005), LOC-017 owner.self only (NS-006), LOC-018 2-cycle, LOC-019 3-cycle once (NS-007), LOC-020 depth 200; probe confirms owner.missing/owner.self/owner.cycle codes",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:04.882494+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-007",
+      "description": "Verify FR-007 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "LOC-021 four kinds ok, LOC-022 unknown kind decode error, LOC-023 target missing, LOC-024 self, LOC-025 duplicate (NS-009), LOC-027 refines cycle (NS-010), LOC-028 depends-on cycle valid (NS-011); probe confirms. NOTE: contract-only cap on relation.refines-cycle (post-merge-notes item 1) is NOT implemented: 9 mutually refining Loci yield 125664 diagnostics in ~0.5 s, no relation.refines-cycle-limit; not part of spec FR-007",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:07.121360+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-008",
+      "description": "Verify FR-008 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "LOC-022 unknown Relation kind -> decode error at loci path (NS-008), LOC-042 not JSON -> one issue at root path, LOC-043 wrong shape -> issue per path (NS-017); packages/locus/test/decode.test.ts; probe: relations[0].kind path, JSON parse error path '', shape errors at id and loci",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:21.248700+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-009",
+      "description": "Verify FR-009 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/e2e/equality.e2e.ts (4 tests: scenario A/D/E browser Revision ids equal Bun ids and packages/locus-specs goldens), packages/locus-specs/test/determinism.test.ts goldens (revision-compare LOC-008,009,034,039), LOC-008/LOC-039 ignore set order+metadata; probe: equal ids for reordered responsibilities+different metadata, differing id for purpose change; bun run verify e2e 110 pass",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:23.430677+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-010",
+      "description": "Verify FR-010 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "LOC-035 empty+correct head, LOC-036 stale refused (NS-014), LOC-037 empty history non-null head refused (NS-015), LOC-038 no-op on current head; packages/locus/test/history.test.ts; probe: StaleBaselineError carries expected+actual, entries unchanged, appended:false for equal head; playground e2e scenario D history walk-through",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:25.574380+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-011",
+      "description": "Verify FR-011 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "LOC-040 purpose change + added Relation change set, LOC-041 LocusMismatchError (NS-016), LOC-039 empty on equal ids; packages/locus/test/diff.test.ts; probe: purpose change gives {part:charter.purpose,kind:changed,from:p,to:q}, equal ids give changes:[]",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:27.896665+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-012",
+      "description": "Verify FR-012 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "packages/locus-specs: catalogue LOC-001..LOC-044 data records run by bun test (specifications.test.ts, one test per record, 216 pass); apps/docs/e2e/playground.e2e.ts scenario E 'Run all gives 44 passing browser rows, same as build'; apps/docs/test/spec-report.test.ts (44 rows via same catalogue); packages/locus-specs/test/core-independence.test.ts + scan.test.ts (NS-019, INV-014 fails when violated)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:30.200964+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-013",
+      "description": "Verify FR-013 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/e2e/navigation.e2e.ts: home lists sections in nav order, each of 12 sections (Introduction, Philosophy, Principles, Terminology, Architecture, First Locus, Examples, Playground, Verification, Roadmap, Decisions, Agent Reference per NAV_SECTIONS in apps/docs/src/lib/content-types.ts) reachable from navigation; every doc of each section loads (110 e2e pass)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:32.499743+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-014",
+      "description": "Verify FR-014 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/test/content.test.ts 'NS-020 failure cases' (23 cases incl. missing front matter, unknown kind, duplicate id, unresolved related id case 11, broken links) each assert file path + problem message; 'content CLI' test: exit 1 naming file for unresolved related; 'real docs tree' compiles with zero problems; bun run --cwd apps/docs content prints 'content: 64 documents'; principles index prerendered with 16 principle links+summaries (scripted check)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:34.798962+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-015",
+      "description": "Verify FR-015 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/e2e/theme.e2e.ts (7 tests: dark system setting applies with empty storage, stored dark persists after reload and with scripts blocked, Light under dark system persists after reload, light system setting, blocked storage); apps/docs/test/theme.test.ts",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:37.184776+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-016",
+      "description": "Verify FR-016 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/e2e/search.e2e.ts 'a search for baseline finds the Revision term and P08' (a[data-search-result=/terminology/revision], /principles/P08-preserve-the-baseline); apps/docs/test/search.test.ts; content.test.ts 'searching for baseline finds P08 and revision'",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:39.481851+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-017",
+      "description": "Verify FR-017 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/e2e/machine-files.e2e.ts (llms.txt lists every document once; index.json version 1 sorted by id with id,title,kind,status,maturity,summary,related,url, matches content file doc by doc, every URL 200); dist/client/index.json has 64 documents (decision 15, principle 16, term 16, guide 4, research 2, ...)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:41.873813+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-018",
+      "description": "Verify FR-018 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/test/components.test.tsx (MaturityBadge data-maturity, 'Maturity: <value>'); scripted check of apps/docs/dist/client: all 64 prerendered document pages in index.json contain data-maturity=<front matter maturity> (implemented 12, proposed 28, vision 24); content.test.ts cases 18-22 reject hand-written verified/passing claims in Status columns/summaries; grep -i verified docs/ finds only policy prose (docs/foundation/README.md vocabulary), no maturity: verified",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:00.011173+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-019",
+      "description": "Verify FR-019 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/e2e/playground.e2e.ts: scenario A (Validate valid + Revision ids, marked browser), B (diagnostics in order, no Valid label; malformed JSON decode error; >1 MB refused), C (relation table flags refines cycle + missing target), D (Compute ids+change set, history walk-through appended/stale/appended/no-op, Reset), E (44 rows, build report before run, Run all 44 passing, 8 goldens); apps/docs/e2e/keyboard.e2e.ts",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:02.332127+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-020",
+      "description": "Verify FR-020 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/test/playground-safety.test.ts (site rules: no eval/new Function/Function()/string setTimeout/import(user text); playground rules also no innerHTML/script/iframe/srcdoc/import of literal; both scans clean); my grep of apps/docs/src+packages/*/src: no eval/new Function; only raw HTML sinks are document-page.tsx dangerouslySetInnerHTML (build-time compiled repo markdown) and mermaid-renderer.tsx innerHTML (strict SVG of repo diagrams), none in src/playground; apps/docs/e2e/equality.e2e.ts and playground.e2e.ts E show browser results equal Bun/build results (44 statuses identical, ids equal)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:04.567270+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-021",
+      "description": "Verify FR-021 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/e2e/provenance.e2e.ts (scenarios A-E: every panel after a run has an origin and a visible label; verification page: every panel has origin+label and nothing outside a panel; browser label has where/when/packages/site commit; CI row says not available; before any run origin none; edited result labelled historical); apps/docs/test/provenance.test.ts, verification.test.tsx 'every result element names its provenance'",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:06.837805+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-022",
+      "description": "Verify FR-022 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/test/verification.test.tsx 'Verification with no report (NS-018)': build panel origin none reads Not run, no row shown, nothing counted as passed; with report shows rows+summary+bun-build provenance; apps/docs/test/spec-report.test.ts (44 rows, crashed run removes stale report); apps/docs/scripts/check-verification.ts runs in root docs:build (exit 0); apps/docs/e2e/navigation.e2e.ts 'verification report shows its 44 rows' without JavaScript",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:09.162723+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-023",
+      "description": "Verify FR-023 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "apps/docs/test/guides.test.ts 'guides: annotated blocks' (every sh line of docs/guides/agent-reference.md must be a root/apps/docs script that exists in package.json, a line of AGENTS.md, or git status/worktree list which it runs) and 'public API table lists exactly the runtime exports', 'diagnostic codes'; I ran git status, git worktree list, spec-kitty agent tasks status/next --mission, spec-kitty invocations list, grace status --path . --json: all succeed; verify ran test, typecheck, lint, format:check, grace:lint, docs build, test:e2e (exit 0); bun run --cwd apps/docs content ok. DEFECT (non-blocking): agent-reference.md line 67 describes verify as running only version check, format, lint, typecheck, tests and GRACE lint, omitting docs:build and test:e2e which verify also runs",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:11.429511+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-024",
+      "description": "Verify FR-024 is satisfied",
+      "proof_type": "inspection",
+      "evidence": "git diff 8b6c871~1 HEAD -- AGENTS.md in lane-r: 4 insertions, 0 deletions, one new '## Telos foundation' section; text identical to the wording approved in plan.md owner approvals item 5 (2026-10-21); prior rules unchanged; section reaches docs/foundation/README.md which links reading order, decisions README and open-questions.md",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:13.619643+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-025",
+      "description": "Verify FR-025 is satisfied",
+      "proof_type": "automated_test",
+      "evidence": "grace lint --path . --assertions current in lane-r: Files checked 167, Governed files 112, Errors 0, Warnings 0 (run as part of bun run verify and rerun alone); grace status --path . --json: graphModules 12, verificationEntries 12, integrity errors 0, readyModules 12; packages/locus/test/public-surface.test.ts",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:15.873117+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    },
+    {
+      "criterion_id": "FR-026",
+      "description": "Verify FR-026 is satisfied",
+      "proof_type": "inspection",
+      "evidence": "lane-r c1f9dd7: terminology/{charter,relation,revision,identity,locus,fabric}.md and evolution-of-determinism.md rows are maturity implemented where exported code (@telos/locus index.ts) and passing records exist (catalogue LOC-001..044, 44/44 in the build report, packages/locus/test/identity.test.ts); deferred parts labelled (reviewer-renata approve, 1471807 + c1f9dd7); ADRs and wider-scope documents left proposed (owner decision pending); content compile 0 problems; bun run verify exit 0 (852 unit, 110 e2e)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:18:58.480238+00:00",
+      "notes": "TODO: replace with a real acceptance criterion"
+    }
+  ],
+  "negative_invariants": []
+}
