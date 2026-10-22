@@ -208,10 +208,10 @@
       "criterion_id": "FR-021",
       "description": "Verify FR-021 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/e2e/provenance.e2e.ts (scenarios A-E: every panel after a run has an origin and a visible label; verification page: every panel has origin+label and nothing outside a panel; browser label has where/when/packages/site commit; CI row says not available; before any run origin none; edited result labelled historical); apps/docs/test/provenance.test.ts, verification.test.tsx 'every result element names its provenance'",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:06.837805+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
