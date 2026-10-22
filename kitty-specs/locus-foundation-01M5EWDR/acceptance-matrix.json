@@ -188,10 +188,10 @@
       "criterion_id": "FR-019",
       "description": "Verify FR-019 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/e2e/playground.e2e.ts: scenario A (Validate valid + Revision ids, marked browser), B (diagnostics in order, no Valid label; malformed JSON decode error; >1 MB refused), C (relation table flags refines cycle + missing target), D (Compute ids+change set, history walk-through appended/stale/appended/no-op, Reset), E (44 rows, build report before run, Run all 44 passing, 8 goldens); apps/docs/e2e/keyboard.e2e.ts",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:02.332127+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
