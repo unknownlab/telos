@@ -20,8 +20,9 @@ answers:
     always-passing tests. Prefer black-box tests at package boundaries.
   quality_gates: >-
     Blocking gates before review, accept and merge: format check, lint,
-    typecheck, tests and grace lint (bun run verify). The pre-commit hook runs
-    the same checks on staged work. Gates are never bypassed (--no-verify,
+    typecheck, tests, the documentation build with its Verification check, the
+    browser tests and grace lint (bun run verify). The pre-commit hook runs the
+    fast checks on staged work (no documentation build, no browser tests). Gates are never bypassed (--no-verify,
     --force, --skip-*, *_DISABLE) without an explicit owner decision.
   review_policy: >-
     Model routing for missions: work packages are sized so that small models
@@ -41,8 +42,9 @@ answers:
     deploys are owner decisions.
   documentation_policy: >-
     docs/tooling.md is the owner-facing tooling overview and must match shipped
-    behavior in the same mission that changes it. Canonical terms live in the
-    Spec Kitty glossary and are used consistently in specs, code and docs.
+    behavior in the same mission that changes it. Product terms are defined in
+    docs/foundation/terminology/; process terms live in the Spec Kitty glossary.
+    Both are used consistently in specs, code and docs.
     Architecture knowledge lives in .grace/, kept in sync inside each mission.
   risk_boundaries: >-
     The most costly failure is wrong behavior: silent logic bugs and drift

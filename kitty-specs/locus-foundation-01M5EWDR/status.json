@@ -1,0 +1,309 @@
+{
+  "event_count": 156,
+  "last_event_id": "01M5HEQER6VFB47TQ153BM0Z3E",
+  "materialized_at": "2026-10-22T09:22:58.438890+00:00",
+  "mission_number": "",
+  "mission_slug": "locus-foundation-01M5EWDR",
+  "mission_type": "",
+  "summary": {
+    "approved": 0,
+    "blocked": 0,
+    "canceled": 0,
+    "claimed": 0,
+    "done": 18,
+    "for_review": 0,
+    "in_progress": 0,
+    "in_review": 0,
+    "planned": 0
+  },
+  "work_packages": {
+    "WP01": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ1PV468DEPJCGSFP4XTC",
+      "last_transition_at": "2026-10-22T09:22:45.083239+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP01-workspace-and-dependencies/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP01-workspace-and-dependencies/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 54460,
+      "shell_pid_created_at": "1792585867.865636"
+    },
+    "WP02": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ2GEG7P35X739768NVQE",
+      "last_transition_at": "2026-10-22T09:22:45.902690+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP02-model/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP02-model/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 59728,
+      "shell_pid_created_at": "1792586378.271302"
+    },
+    "WP03": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ42WZXA2PJNCV8GH897G",
+      "last_transition_at": "2026-10-22T09:22:47.516074+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP03-validation/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP03-validation/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 64609,
+      "shell_pid_created_at": "1792586685.11826"
+    },
+    "WP04": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ4TVERZ3W3YF8HWH0MS2",
+      "last_transition_at": "2026-10-22T09:22:48.283593+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP04-revisions-and-change-sets/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP04-revisions-and-change-sets/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 69361,
+      "shell_pid_created_at": "1792587331.935303"
+    },
+    "WP05": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ5K0W75K2CF66F74J7QT",
+      "last_transition_at": "2026-10-22T09:22:49.057054+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP05-history-service/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP05-history-service/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 71753,
+      "shell_pid_created_at": "1792587712.798729"
+    },
+    "WP06": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 1,
+      "lane": "done",
+      "last_event_id": "01M5HEQ6B061D0D0JVY3VZRY0X",
+      "last_transition_at": "2026-10-22T09:22:49.824221+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP06-decoding/review-cycle-2.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP06-decoding/review-cycle-2.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 76262,
+      "shell_pid_created_at": "1792588398.583904"
+    },
+    "WP07": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ75K0790E649ME3Y4D0F",
+      "last_transition_at": "2026-10-22T09:22:50.675285+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP07-spec-runner/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP07-spec-runner/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 78434,
+      "shell_pid_created_at": "1792588795.762913"
+    },
+    "WP08": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 1,
+      "lane": "done",
+      "last_event_id": "01M5HEQ8WS9992W8Q2NRKPXRA7",
+      "last_transition_at": "2026-10-22T09:22:52.441199+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP08-catalogue-and-adapter/review-cycle-2.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP08-catalogue-and-adapter/review-cycle-2.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 92424,
+      "shell_pid_created_at": "1792597126.048694"
+    },
+    "WP09": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ3AZM2H2T2CR9HHQPF4D",
+      "last_transition_at": "2026-10-22T09:22:46.751621+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP09-content-pipeline/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP09-content-pipeline/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 60567,
+      "shell_pid_created_at": "1792586412.013856"
+    },
+    "WP10": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ80X72JARKSCFCE1EES5",
+      "last_transition_at": "2026-10-22T09:22:51.549893+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP10-guides/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP10-guides/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 79395,
+      "shell_pid_created_at": "1792588826.321124"
+    },
+    "WP11": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQ9KV29E6XZ38SKGXHBSB",
+      "last_transition_at": "2026-10-22T09:22:53.179320+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP11-site-shell/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP11-site-shell/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 87130,
+      "shell_pid_created_at": "1792596360.003381"
+    },
+    "WP12": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQAAVGP8E6G2F7K3JFAAA",
+      "last_transition_at": "2026-10-22T09:22:53.915780+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP12-theme-search-diagrams/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP12-theme-search-diagrams/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 94336,
+      "shell_pid_created_at": "1792597208.996535"
+    },
+    "WP13": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 1,
+      "lane": "done",
+      "last_event_id": "01M5HEQB24NAW5Z9JGAB564VKC",
+      "last_transition_at": "2026-10-22T09:22:54.660056+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP13-spec-report-and-verification/review-cycle-2.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP13-spec-report-and-verification/review-cycle-2.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 722,
+      "shell_pid_created_at": "1792598088.943315"
+    },
+    "WP14": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQBSVNH5FY3MEA3YNP1CV",
+      "last_transition_at": "2026-10-22T09:22:55.419214+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP14-playground-a-c/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP14-playground-a-c/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 4845,
+      "shell_pid_created_at": "1792598665.348062"
+    },
+    "WP15": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 1,
+      "lane": "done",
+      "last_event_id": "01M5HEQCH6QYAQABWXM3YA1GX3",
+      "last_transition_at": "2026-10-22T09:22:56.166294+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP15-playground-d-e/review-cycle-2.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP15-playground-d-e/review-cycle-2.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 11251,
+      "shell_pid_created_at": "1792601038.8783"
+    },
+    "WP16": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 2,
+      "lane": "done",
+      "last_event_id": "01M5HEQD8RMBMAMXXM97WX290M",
+      "last_transition_at": "2026-10-22T09:22:56.920539+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP16-browser-tests/review-cycle-3.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP16-browser-tests/review-cycle-3.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 31073,
+      "shell_pid_created_at": "1792605656.938712"
+    },
+    "WP17": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQE0FKXHFQP9P1VTNFDN6",
+      "last_transition_at": "2026-10-22T09:22:57.679578+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP17-gates-and-grace/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP17-gates-and-grace/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 36270,
+      "shell_pid_created_at": "1792606415.00535"
+    },
+    "WP18": {
+      "actor": "merge",
+      "agent": "claude",
+      "force_count": 0,
+      "lane": "done",
+      "last_event_id": "01M5HEQER6VFB47TQ153BM0Z3E",
+      "last_transition_at": "2026-10-22T09:22:58.438890+00:00",
+      "review_result": {
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/locus-foundation-01M5EWDR/tasks/WP18-governance-sync/review-cycle-1.md",
+        "reference": "review-cycle://locus-foundation-01M5EWDR/WP18-governance-sync/review-cycle-1.md",
+        "reviewer": "claude",
+        "verdict": "approved"
+      },
+      "shell_pid": 52877,
+      "shell_pid_created_at": "1792657641.439185"
+    }
+  }
+}

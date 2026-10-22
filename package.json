@@ -20,7 +20,10 @@
     "format:check": "bun fmt --no-script --check",
     "test": "bun run check:bun && bun test --pass-with-no-tests",
     "grace:lint": "grace lint --path . --assertions current",
-    "verify": "bun run check:bun && bun run format:check && bun run lint && bun run typecheck && bun run test && bun run grace:lint"
+    "docs:build": "bun run --cwd apps/docs build && bun apps/docs/scripts/check-verification.ts",
+    "docs:preview": "bun run --cwd apps/docs preview",
+    "test:e2e": "bun run --cwd apps/docs test:e2e",
+    "verify": "bun run check:bun && bun run format:check && bun run lint && bun run typecheck && bun run test && bun run docs:build && bun run test:e2e && bun run grace:lint"
   },
   "devDependencies": {
     "@types/bun": "1.4.3"
