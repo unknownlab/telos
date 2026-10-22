@@ -23,7 +23,7 @@ related: [relation, P04-explicit-composition, open-questions]
    - `refines`: the source is a more specific form of the target.
    - `satisfies`: the source fulfils an obligation stated by the target.
    - `verifies`: the source checks the target.
-3. Validation rejects a target missing from the Fabric (INV-007), a Relation to the Locus itself, and two Relations with the same kind and target (INV-008).
+3. Validation rejects a target missing from the Fabric (INV-007), a Relation to the Locus itself, and two Relations with the same kind and target (INV-007).
 4. `refines` must be acyclic. Cycles of the other kinds are allowed in Stage 0.
 5. The set is closed: unknown kinds are rejected when decoding.
 
