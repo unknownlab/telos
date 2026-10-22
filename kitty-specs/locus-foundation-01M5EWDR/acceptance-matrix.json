@@ -2,7 +2,7 @@
   "mission_slug": "locus-foundation-01M5EWDR",
   "mission_number": "",
   "mission_type": "software-dev",
-  "overall_verdict": "fail",
+  "overall_verdict": "pass",
   "criteria": [
     {
       "criterion_id": "FR-001",
@@ -258,10 +258,10 @@
       "criterion_id": "FR-026",
       "description": "Verify FR-026 is satisfied",
       "proof_type": "inspection",
-      "evidence": "Inspected maturity: in lane-r docs/. charter, relation, revision terms are implemented (ok). identity.md, locus.md, fabric.md (stage0 in-scope/minimal) are still maturity: proposed although the elements are built and exercised: isIdentity + LOC-001..005 (identity grammar, NS-001), defineLocus + LOC-010..014/LOC-033, defineFabric/validateFabric + LOC-044/LOC-030; WP18 T101 table expected all three to be implemented. Held back pending owner decision on accepting unit tests as evidence for identity grammar edge cases. Also still proposed although built: ADR-0002..0008, ADR-0012..0014 (status and maturity), conceptual-model/README.md and technical-direction.md, whose scope is wider than Stage 0 (judged acceptable). Spec 'every document describing an implemented Stage 0 element is marked implemented' is not met for identity, locus, fabric. No unimplemented document was found marked implemented.",
-      "pass_fail": "fail",
+      "evidence": "lane-r c1f9dd7: terminology/{charter,relation,revision,identity,locus,fabric}.md and evolution-of-determinism.md rows are maturity implemented where exported code (@telos/locus index.ts) and passing records exist (catalogue LOC-001..044, 44/44 in the build report, packages/locus/test/identity.test.ts); deferred parts labelled (reviewer-renata approve, 1471807 + c1f9dd7); ADRs and wider-scope documents left proposed (owner decision pending); content compile 0 problems; bun run verify exit 0 (852 unit, 110 e2e)",
+      "pass_fail": "pass",
       "verified_by": "claude",
-      "verified_at": "2026-10-22T09:03:25.919810+00:00",
+      "verified_at": "2026-10-22T09:18:58.480238+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     }
   ],
