@@ -168,10 +168,10 @@
       "criterion_id": "FR-017",
       "description": "Verify FR-017 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/e2e/machine-files.e2e.ts (llms.txt lists every document once; index.json version 1 sorted by id with id,title,kind,status,maturity,summary,related,url, matches content file doc by doc, every URL 200); dist/client/index.json has 64 documents (decision 15, principle 16, term 16, guide 4, research 2, ...)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:41.873813+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
