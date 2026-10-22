@@ -20,8 +20,9 @@ answers:
     always-passing tests. Prefer black-box tests at package boundaries.
   quality_gates: >-
     Blocking gates before review, accept and merge: format check, lint,
-    typecheck, tests and grace lint (bun run verify). The pre-commit hook runs
-    the same checks on staged work. Gates are never bypassed (--no-verify,
+    typecheck, tests, the documentation build with its Verification check, the
+    browser tests and grace lint (bun run verify). The pre-commit hook runs the
+    fast checks on staged work (no documentation build, no browser tests). Gates are never bypassed (--no-verify,
     --force, --skip-*, *_DISABLE) without an explicit owner decision.
   review_policy: >-
     Model routing for missions: work packages are sized so that small models
