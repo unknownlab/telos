@@ -118,10 +118,10 @@
       "criterion_id": "FR-012",
       "description": "Verify FR-012 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "packages/locus-specs: catalogue LOC-001..LOC-044 data records run by bun test (specifications.test.ts, one test per record, 216 pass); apps/docs/e2e/playground.e2e.ts scenario E 'Run all gives 44 passing browser rows, same as build'; apps/docs/test/spec-report.test.ts (44 rows via same catalogue); packages/locus-specs/test/core-independence.test.ts + scan.test.ts (NS-019, INV-014 fails when violated)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:30.200964+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
