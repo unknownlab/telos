@@ -95,3 +95,11 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - Not done: the `003-` directory prefix used for missions 1 and 2; `docs/guides/agent-reference.md` and its test reference `kitty-specs/locus-foundation-01M5EWDR` and must change together with the rename. Machine records keep old paths.
 - Lane branches and worktrees kept until the mission review and owner approval; remove with `git worktree remove` and branch deletion afterwards. `spec-kitty merge` created "Revert status transition" commits on the mission branch while rolling back a failed first attempt; the final state is correct (all WPs done).
 - Nothing is merged into `main`; that needs the owner's approval.
+
+## 15. Fold of the specifications into @telos/locus (2026-10-22)
+
+- Owner decision: one package for the MVP. The workspace package `@telos/locus-specs` was folded into `@telos/locus`. Its sources moved to `packages/locus/specs` and are served as the sub-path `@telos/locus/specs`. Its tests moved to `packages/locus/test/specs`. Its manifest tests were merged into `packages/locus/test/manifest.test.ts`, which now pins the exports map to the entry point, `./specs` and `./package.json`.
+- The docs app imports `@telos/locus/specs` and no longer depends on the removed package. The provenance label on the site names only `@telos/locus`.
+- INV-014 is still enforced by a test. The core scan now also forbids relative imports of the specs, the runner, the catalogue, the goldens, the examples and adapters. A browser bundle test checks that the core carries no specification marker, and a positive control checks that the markers are present in the specifications bundle.
+- Unit tests moved from 870 to 868 (three manifest tests removed, one exact-pin test added), then to 875 (five scanner cases and two bundle tests added). The e2e count is 110 and the specification count is 44, as before.
+- Historical records keep the old paths. The location note at the top of `contracts/specifications.md` explains how to read them.

@@ -1,3 +1,5 @@
+> Location note (2026-10-22): `@telos/locus-specs` was folded into `@telos/locus` as `@telos/locus/specs`; read paths below `packages/locus-specs/...` as `packages/locus/specs/...` and tests as `packages/locus/test/specs/...`.
+
 # Contract: executable specifications (`@telos/locus-specs`)
 
 Package: `packages/locus-specs`, name `@telos/locus-specs`, `"private": true`. Its dependencies are `@telos/locus` (workspace) and `effect`. It is a temporary engineering tool (ADR-0011, ADR-0013): it may be replaced, and `@telos/locus` never imports it (INV-014).
