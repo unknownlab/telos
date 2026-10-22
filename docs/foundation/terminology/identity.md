@@ -8,7 +8,7 @@ fundamental: true
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The stable, location-independent name by which a Locus is known across files, revisions and tools.
 related: [locus, revision, fabric, ADR-0003]
 ---
@@ -31,7 +31,7 @@ Identity makes references possible and stable. A Relation, an owner reference, a
 
 ## Stage 0 form
 
-Proposed form: `<namespace>:<name>`, where each part is lowercase kebab case: starts with a letter, then letters, digits and single hyphens, with no hyphen at the end. Examples: `shop:payment-authorization`, `telos:locus-foundation`. The namespace scopes uniqueness and, later, governance of who may introduce names ([OQ-019](../open-questions.md#oq-019)). The exact grammar and length limits are part of the Stage 0 mission's contracts.
+Form: `<namespace>:<name>`, where each part is lowercase kebab case: starts with a letter, then letters, digits and single hyphens, with no hyphen at the end. The whole Identity is at most 128 characters. Examples: `shop:payment-authorization`, `telos:locus-foundation`. The namespace scopes uniqueness and, later, governance of who may introduce names ([OQ-019](../open-questions.md#oq-019)). The exact grammar and length limit are the Stage 0 contract of `@telos/locus`.
 
 ## Relationships
 
@@ -45,7 +45,7 @@ Every [Locus](locus.md) has one. [Fabrics](fabric.md) use the same form. [Revisi
 
 ## Lifecycle
 
-Assigned when a Locus is introduced. Never reused for a different Locus, even after retirement. Renaming is modelled as a new Locus that refines or replaces the old one, not as an in-place change (deferred; [OQ-003](../open-questions.md#oq-003)).
+Assigned when a Locus is introduced. By design, never reused for a different Locus, even after retirement (retirement is deferred). Renaming is modelled as a new Locus that refines or replaces the old one, not as an in-place change (deferred; [OQ-003](../open-questions.md#oq-003)).
 
 ## Examples
 

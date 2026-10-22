@@ -21,7 +21,7 @@ import type { Identity } from "./identity";
 // START_CONTRACT: DiagnosticCode
 //   PURPOSE: Name each rule violation that validation can report.
 //   INPUTS: none
-//   OUTPUTS: { DiagnosticCode - one of the thirteen stable codes of locus-api.md }
+//   OUTPUTS: { DiagnosticCode - one of the fourteen stable codes of locus-api.md }
 //   SIDE_EFFECTS: none
 //   LINKS: M-LOCUS-VALIDATION
 // END_CONTRACT: DiagnosticCode
@@ -39,7 +39,8 @@ export type DiagnosticCode =
   | "relation.target-missing"
   | "relation.self"
   | "relation.duplicate"
-  | "relation.refines-cycle";
+  | "relation.refines-cycle"
+  | "relation.refines-cycle-limit";
 
 // START_CONTRACT: Diagnostic
 //   PURPOSE: Describe one rule violation with its code, the identity concerned and the part concerned.

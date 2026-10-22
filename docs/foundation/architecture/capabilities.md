@@ -61,7 +61,7 @@ flowchart BT
 - **Relation to Locus**: defines it.
 - **Expected interfaces**: definition constructors; Fabric validation with diagnostics; Revision creation, history and diff; later graph queries and impact analysis.
 - **Likely engines**: none external; a graph store later if in-memory analysis stops scaling.
-- **Maturity**: `proposed`. The Stage 0 mission implements the first slice.
+- **Maturity**: `proposed`. The Stage 0 mission implemented the first slice, `@telos/locus`.
 - **Research questions**: OQ-001 to OQ-013.
 - **Contribution to Evolution of Determinism**: makes "what is this and what does it touch" a deterministic question.
 

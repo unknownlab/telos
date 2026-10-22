@@ -2,7 +2,7 @@
 //   PURPOSE: Prove that the four guides in docs/guides make only the claims the real @telos/locus package, the repository and the content compiler support.
 //   SCOPE: Front matter and body shape of each guide; every annotated json block decoded, validated, revised or appended with the real package; every sh command line against package.json and AGENTS.md; the Agent Reference API table and diagnostic code list; the content compile of the whole docs tree.
 //   DEPENDS: M-DOCS-CONTENT, M-LOCUS-MODEL, M-LOCUS-VALIDATION, M-LOCUS-REVISION, M-LOCUS-HISTORY, M-LOCUS-DECODE
-//   LINKS: V-M-DOCS-GUIDES
+//   LINKS: V-M-DOCS-CONTENT
 //   ROLE: TEST
 //   MAP_MODE: LOCALS
 // END_MODULE_CONTRACT
@@ -12,7 +12,7 @@
 //   GUIDES_DIR - the directory of the four guide sources
 //   GUIDE_SPECS - file, title, order, section and maturity of each guide, in nav order
 //   GuideSpec - one entry of GUIDE_SPECS
-//   DIAGNOSTIC_CODES - the thirteen stable diagnostic codes of contracts/locus-api.md
+//   DIAGNOSTIC_CODES - the fourteen stable diagnostic codes of contracts/locus-api.md
 //   FRONT_MATTER - the front matter pattern the content compiler uses
 //   FENCE - the fenced block pattern the guides are read with
 //   ANNOTATABLE - the json kinds that may carry an example= annotation
@@ -86,9 +86,9 @@ const GUIDE_SPECS = [
 
 type GuideSpec = (typeof GUIDE_SPECS)[number];
 
-// The thirteen stable diagnostic codes of the Diagnostic codes table in
+// The fourteen stable diagnostic codes of the Diagnostic codes table in
 // kitty-specs/locus-foundation-01M5EWDR/contracts/locus-api.md. The
-// DiagnosticCode type of @telos/locus has the same thirteen members.
+// DiagnosticCode type of @telos/locus has the same fourteen members.
 const DIAGNOSTIC_CODES = [
   "identity.malformed",
   "identity.duplicate",
@@ -103,6 +103,7 @@ const DIAGNOSTIC_CODES = [
   "relation.self",
   "relation.duplicate",
   "relation.refines-cycle",
+  "relation.refines-cycle-limit",
 ] as const;
 
 const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
@@ -167,7 +168,7 @@ interface Guide {
 //   INPUTS: { spec: GuideSpec - the expected file, title, order, section and maturity }
 //   OUTPUTS: { Guide - front matter (empty when the file or its front matter is missing), body and fences }
 //   SIDE_EFFECTS: reads one file under docs/guides
-//   LINKS: V-M-DOCS-GUIDES
+//   LINKS: V-M-DOCS-CONTENT
 // END_CONTRACT: loadGuide
 function loadGuide(spec: GuideSpec): Guide {
   const path = join(GUIDES_DIR, `${spec.file}.md`);
@@ -310,7 +311,7 @@ const DOCS_SCRIPTS = docsPackage.scripts as Record<string, string>;
 //   INPUTS: { line: string - one non-empty line of an sh block }
 //   OUTPUTS: { string | undefined - undefined for a known command, otherwise the reason }
 //   SIDE_EFFECTS: runs "git status" and "git worktree list" at the repository root
-//   LINKS: V-M-DOCS-GUIDES
+//   LINKS: V-M-DOCS-CONTENT
 // END_CONTRACT: commandProblem
 function commandProblem(line: string): string | undefined {
   const docsPrefix = "bun run --cwd apps/docs ";
@@ -346,7 +347,7 @@ function commandProblem(line: string): string | undefined {
 //   INPUTS: { guide: Guide - the guide holding the block; fence: Fence - the block }
 //   OUTPUTS: { Promise<void> - resolves when the claim holds; throws or fails an expectation otherwise }
 //   SIDE_EFFECTS: none beyond the commands checkFence runs for sh blocks
-//   LINKS: V-M-DOCS-GUIDES
+//   LINKS: V-M-DOCS-CONTENT
 // END_CONTRACT: checkFence
 async function checkFence(guide: Guide, fence: Fence): Promise<void> {
   const next = guide.fences[fence.index + 1];
@@ -586,7 +587,7 @@ describe("guides: Agent Reference", () => {
     expect([...names].sort()).toEqual(Object.keys(locus).sort());
   });
 
-  test("the diagnostic codes are exactly the thirteen codes of the contract", () => {
+  test("the diagnostic codes are exactly the fourteen codes of the contract", () => {
     const section = sectionOf(body, "Diagnostic codes");
     const listed = [...section.matchAll(/^- `([^`]+)`$/gm)].map(
       (m) => m[1] ?? "",

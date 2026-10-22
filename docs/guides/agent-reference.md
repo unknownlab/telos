@@ -64,7 +64,7 @@ bun run --cwd apps/docs build
 bun run --cwd apps/docs test:e2e
 ```
 
-- `bun run verify` runs the Bun version check, the format check, the lint, the typecheck, the tests and the GRACE lint, in that order.
+- `bun run verify` runs the Bun version check, the format check, the lint, the typecheck, the tests, the docs build with its check of the built Verification page, the browser tests and the GRACE lint, in that order. It stops at the first failure. The browser tests need Chromium, installed once as described in [the tooling guide](../tooling.md).
 - `bun run test` runs the test suite.
 - `bun run typecheck` type checks the workspace.
 - `bun run lint` lints the workspace.
@@ -116,3 +116,6 @@ The package reports each rule violation with one of the stable codes below. The 
 - `relation.self`
 - `relation.duplicate`
 - `relation.refines-cycle`
+- `relation.refines-cycle-limit`
+
+`validateFabric` reports at most 100 `relation.refines-cycle` diagnostics per Fabric. When more than 100 refines cycles exist, it reports the first 100 in a fixed search order and then one `relation.refines-cycle-limit` on the Fabric, with detail `100`. The Fabric is invalid in that case, as it is whenever any diagnostic is reported.

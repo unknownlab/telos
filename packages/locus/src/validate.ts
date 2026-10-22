@@ -1,5 +1,5 @@
 // START_MODULE_CONTRACT
-//   PURPOSE: Check a Fabric against INV-001 to INV-008 and report every violation as a Diagnostic, in an order that depends only on content.
+//   PURPOSE: Check a Fabric against INV-001 to INV-008 and report every violation as a Diagnostic, in an order that depends only on content; refines cycles are capped at 100 per Fabric, followed by one limit diagnostic.
 //   SCOPE: validateFabric and its private check phases. Out: decoding, revisions, history, and the diagnostic types and constructors (diagnostic.ts).
 //   DEPENDS: M-LOCUS-MODEL
 //   LINKS: M-LOCUS-VALIDATION
@@ -8,7 +8,7 @@
 // END_MODULE_CONTRACT
 //
 // START_MODULE_MAP
-//   validateFabric - pure, total check of a Fabric; never throws and returns a frozen ValidationReport
+//   validateFabric - pure, total check of a Fabric; never throws, caps refines cycles at 100 with one limit diagnostic, and returns a frozen ValidationReport
 // END_MODULE_MAP
 
 import {
@@ -22,6 +22,8 @@ import { deepFreeze } from "./freeze";
 import { type Identity, isIdentity } from "./identity";
 
 const BLANK = /^\s*$/u;
+// Most refines cycles reported per Fabric (owner decision, 2026-10-21; locus-api.md).
+const MAX_REFINES_CYCLES = 100;
 const SET_FIELDS = [
   "responsibilities",
   "excluded",
@@ -29,13 +31,13 @@ const SET_FIELDS = [
 ] as const;
 
 // START_CONTRACT: validateFabric
-//   PURPOSE: Report every rule violation of a Fabric as a diagnostic, so one pass shows all problems.
+//   PURPOSE: Report every rule violation of a Fabric as a diagnostic, so one pass shows all problems; at most 100 refines cycles are reported, then one limit diagnostic when more exist.
 //   INPUTS: { fabric: Fabric - the Fabric to check, with its Loci in any order }
-//   OUTPUTS: { ValidationReport - valid is true exactly when diagnostics is empty; diagnostics sorted by subject, code, path, detail, members and free of exact repeats }
+//   OUTPUTS: { ValidationReport - valid is true exactly when diagnostics is empty; diagnostics sorted by subject, code, path, detail, members and free of exact repeats; at most 100 relation.refines-cycle, and relation.refines-cycle-limit on the Fabric exactly when a 101st cycle exists }
 //   SIDE_EFFECTS: none. Pure and total: never throws and never returns an Effect. Cycle checks use no recursion, so chains of any depth are safe.
 //   LINKS: M-LOCUS-VALIDATION
 // END_CONTRACT: validateFabric
-/** Validates a Fabric. Reports every violation of INV-001 to INV-008; the same content gives byte-identical output. */
+/** Validates a Fabric. Reports every violation of INV-001 to INV-008, except that at most 100 refines cycles are reported, followed by one `relation.refines-cycle-limit` when more exist; the same content gives byte-identical output. */
 export function validateFabric(fabric: Fabric): ValidationReport {
   const diagnostics: Diagnostic[] = [];
   const loci = fabric.loci;
@@ -270,7 +272,11 @@ export function validateFabric(fabric: Fabric): ValidationReport {
 
   // START_BLOCK_REFINES_CYCLES
   // Every elementary cycle of the refines graph is reported once, on its
-  // smallest member. Johnson's algorithm, written without recursion.
+  // smallest member, up to MAX_REFINES_CYCLES. Johnson's algorithm, written
+  // without recursion. Starts and successors are in ascending identity order,
+  // so the first cycles found do not depend on input order. The search stops
+  // at the first cycle beyond the limit, so the limit is detected without
+  // enumerating the rest.
   const nodes = uniqueIds;
   const index = new Map<Identity, number>();
   nodes.forEach((id, i) => index.set(id, i));
@@ -294,10 +300,16 @@ export function validateFabric(fabric: Fabric): ValidationReport {
     );
     list.splice(0, list.length, ...distinct);
   }
-  for (let s = 0; s < nodes.length; s += 1) {
+  const search = { reported: 0, exceeded: false };
+  for (let s = 0; s < nodes.length && !search.exceeded; s += 1) {
     const component = cyclicComponent(s, successors, predecessors);
     if (component.size < 2) continue;
     findElementaryCycles(s, successors, component, (cycle) => {
+      if (search.reported === MAX_REFINES_CYCLES) {
+        search.exceeded = true;
+        return false;
+      }
+      search.reported += 1;
       const members = cycle.map((i) => nodes[i]!);
       diagnostics.push(
         makeDiagnostic({
@@ -309,7 +321,20 @@ export function validateFabric(fabric: Fabric): ValidationReport {
           message: `Refines cycle: ${members.join(" -> ")} -> ${members[0]}.`,
         }),
       );
+      return true;
     });
+  }
+  if (search.exceeded) {
+    diagnostics.push(
+      makeDiagnostic({
+        code: "relation.refines-cycle-limit",
+        scope: "fabric",
+        subject: fabric.id,
+        path: "relations",
+        detail: String(MAX_REFINES_CYCLES),
+        message: `More than ${MAX_REFINES_CYCLES} refines cycles exist; only the first ${MAX_REFINES_CYCLES} are reported.`,
+      }),
+    );
   }
   // END_BLOCK_REFINES_CYCLES
 
@@ -374,11 +399,12 @@ function reachWithin(
 
 // Johnson's elementary-cycle search from `s` inside `component`, iterative.
 // Calls `onCycle` once per cycle, with node indices in cycle order starting at `s`.
+// The search ends at once when `onCycle` returns false.
 function findElementaryCycles(
   s: number,
   successors: ReadonlyArray<ReadonlyArray<number>>,
   component: ReadonlySet<number>,
-  onCycle: (cycle: number[]) => void,
+  onCycle: (cycle: number[]) => boolean,
 ): void {
   const blocked = new Set<number>();
   const blockedBy = new Map<number, Set<number>>();
@@ -395,8 +421,9 @@ function findElementaryCycles(
       frame.next += 1;
       if (!component.has(target)) continue;
       if (target === s) {
-        onCycle([...path]);
+        const keepGoing = onCycle([...path]);
         frame.found = true;
+        if (!keepGoing) return;
       } else if (!blocked.has(target)) {
         blocked.add(target);
         path.push(target);

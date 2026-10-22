@@ -41,8 +41,9 @@ answers:
     deploys are owner decisions.
   documentation_policy: >-
     docs/tooling.md is the owner-facing tooling overview and must match shipped
-    behavior in the same mission that changes it. Canonical terms live in the
-    Spec Kitty glossary and are used consistently in specs, code and docs.
+    behavior in the same mission that changes it. Product terms are defined in
+    docs/foundation/terminology/; process terms live in the Spec Kitty glossary.
+    Both are used consistently in specs, code and docs.
     Architecture knowledge lives in .grace/, kept in sync inside each mission.
   risk_boundaries: >-
     The most costly failure is wrong behavior: silent logic bugs and drift

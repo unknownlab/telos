@@ -1,7 +1,7 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Record the golden Revision ids of every revision-compare fixture, computed outside this code, so that the Bun and browser determinism checks compare against fixed values.
 //   SCOPE: The revisionGoldens value only. Out: computing Revision ids (the @telos/locus createRevision) and the fixtures themselves (catalogue.ts).
-//   DEPENDS: M-LOCUS-SPECS
+//   DEPENDS: none
 //   LINKS: M-LOCUS-SPECS
 //   ROLE: RUNTIME
 //   MAP_MODE: EXPORTS

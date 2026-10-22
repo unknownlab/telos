@@ -1,7 +1,7 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Provide the starting inputs of the playground scenarios as plain JSON, copied from the contract's wire-format example.
 //   SCOPE: The examples value only. Out: running the examples (the playground runs them through the public API) and the catalogue records (catalogue.ts).
-//   DEPENDS: M-LOCUS-SPECS
+//   DEPENDS: M-LOCUS-DECODE
 //   LINKS: M-LOCUS-SPECS
 //   ROLE: RUNTIME
 //   MAP_MODE: EXPORTS

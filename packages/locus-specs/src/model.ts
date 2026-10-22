@@ -1,7 +1,7 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Define the executable specification record, its seven check kinds and the report shapes the runner returns.
 //   SCOPE: Types only. Out: running a specification (runner.ts) and comparing values (canonical-json.ts).
-//   DEPENDS: M-LOCUS-SPECS
+//   DEPENDS: M-LOCUS-REVISION, M-LOCUS-VALIDATION, M-LOCUS-DECODE
 //   LINKS: M-LOCUS-SPECS
 //   ROLE: RUNTIME
 //   MAP_MODE: EXPORTS

@@ -8,7 +8,7 @@ fundamental: true
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A typed semantic relationship between Loci or their elements, with kind-specific rules that support architectural analysis and change propagation.
 related: [locus, fabric, law, archetype, ADR-0008]
 ---
@@ -31,7 +31,7 @@ Relations make composition explicit ([P04](../principles/P04-explicit-compositio
 
 ## Stage 0 kinds
 
-Proposed closed set ([ADR-0008](../../decisions/ADR-0008-typed-relations.md)):
+A closed set of four kinds, as set out in [ADR-0008](../../decisions/ADR-0008-typed-relations.md):
 
 | Kind         | Meaning: source → target                                                                | Extra rule                |
 | ------------ | --------------------------------------------------------------------------------------- | ------------------------- |

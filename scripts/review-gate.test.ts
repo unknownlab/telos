@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove the review gate report marks every failing step as a JUnit failure and keeps bun test's suites.
-//   SCOPE: Unit tests of sanitizeText, escapeXml, buildReport, failureMessage, needsInstall and cleanEnv, including the escape-code cases and the no-mutation case for cleanEnv.
+//   SCOPE: Unit tests of sanitizeText, escapeXml, buildReport, failureMessage, needsInstall, cleanEnv, CHECK_STEPS and verifyStepNames, including the escape-code cases, the no-mutation case for cleanEnv, and the no-drift test that compares CHECK_STEPS with the root verify script.
 //   DEPENDS: M-REVIEW-GATE
 //   LINKS: V-M-REVIEW-GATE
 //   ROLE: TEST
@@ -15,13 +15,16 @@ import { describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import pkg from "../package.json";
 import {
   buildReport,
+  CHECK_STEPS,
   cleanEnv,
   escapeXml,
   failureMessage,
   needsInstall,
   sanitizeText,
+  verifyStepNames,
 } from "./review-gate";
 
 const BUN_JUNIT = `<?xml version="1.0" encoding="UTF-8"?>
@@ -199,5 +202,70 @@ describe("cleanEnv", () => {
     const before = { ...input };
     cleanEnv(input);
     expect(input).toEqual(before);
+  });
+});
+
+describe("CHECK_STEPS and the root verify script", () => {
+  test("verifyStepNames of the verify script equals the gate's step names, in order (no drift)", () => {
+    expect(verifyStepNames(pkg.scripts.verify)).toEqual(
+      CHECK_STEPS.map((step) => step.name),
+    );
+  });
+
+  test("every step name is unique", () => {
+    const names = CHECK_STEPS.map((step) => step.name);
+    expect(new Set(names).size).toBe(names.length);
+  });
+
+  test("each step runs the root script of the same name, and the test step runs bun test", () => {
+    for (const step of CHECK_STEPS) {
+      if (step.name === "test") {
+        expect(step.command).toEqual(["bun", "test", "--pass-with-no-tests"]);
+      } else {
+        expect(step.command).toEqual(["bun", "run", step.name]);
+      }
+      expect(Object.keys(pkg.scripts)).toContain(step.name);
+    }
+  });
+
+  test("docs:build runs after test, test:e2e runs after docs:build, and grace:lint runs last", () => {
+    const names = CHECK_STEPS.map((step) => step.name);
+    const at = (name: string) => names.indexOf(name);
+    expect(at("docs:build")).toBeGreaterThan(at("test"));
+    expect(at("test:e2e")).toBeGreaterThan(at("docs:build"));
+    expect(at("grace:lint")).toBeGreaterThan(at("test:e2e"));
+    expect(names.at(-1)).toBe("grace:lint");
+  });
+
+  test("a failing docs:build is a failing verify.docs:build case, and a passing test:e2e stays passing", () => {
+    const report = buildReport(
+      [
+        {
+          name: "docs:build",
+          ok: false,
+          message: "verification/index.html is missing",
+        },
+        { name: "test:e2e", ok: true, message: "" },
+      ],
+      null,
+    );
+    expect(report).toContain(
+      '<testcase classname="verify" name="docs:build">\n      <failure message="verification/index.html is missing" />\n    </testcase>',
+    );
+    expect(report).toContain('<testcase classname="verify" name="test:e2e" />');
+    expect(report).toContain('tests="2" failures="1"');
+  });
+});
+
+describe("verifyStepNames", () => {
+  test("reads the step names of a chain of bun run commands", () => {
+    expect(verifyStepNames("bun run a && bun run b")).toEqual(["a", "b"]);
+  });
+
+  test("throws on a part that is not bun run <name>, so a new form cannot slip through unparsed", () => {
+    expect(() => verifyStepNames("bun run a; rm -rf x")).toThrow();
+    expect(() => verifyStepNames("bun run a && bun test")).toThrow();
+    expect(() => verifyStepNames("bun run a && bun run b |& tee x")).toThrow();
+    expect(() => verifyStepNames("")).toThrow();
   });
 });
