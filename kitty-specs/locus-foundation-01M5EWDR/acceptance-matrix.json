@@ -138,10 +138,10 @@
       "criterion_id": "FR-014",
       "description": "Verify FR-014 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/test/content.test.ts 'NS-020 failure cases' (23 cases incl. missing front matter, unknown kind, duplicate id, unresolved related id case 11, broken links) each assert file path + problem message; 'content CLI' test: exit 1 naming file for unresolved related; 'real docs tree' compiles with zero problems; bun run --cwd apps/docs content prints 'content: 64 documents'; principles index prerendered with 16 principle links+summaries (scripted check)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:34.798962+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
