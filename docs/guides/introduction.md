@@ -5,7 +5,7 @@ kind: guide
 order: 1
 section: introduction
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: What Telos by UnknownLab is, what Stage 0 delivers, and how to read this site.
 related:
   [foundation, evolution-of-determinism, principles, terminology, first-locus]
@@ -26,7 +26,7 @@ The [foundation documents](../foundation/README.md) are the source for what Telo
 Stage 0 is the first stage of the model. It delivers three things:
 
 - The [`@telos/locus`](../../packages/locus/src/index.ts) package. It defines Loci, Charters, Relations and Fabrics. It validates a Fabric and reports every rule violation as a diagnostic. It creates Revisions, compares them as change sets, and keeps a per-Locus history.
-- The executable specifications. These are records that check the invariants of the model, INV-001 to INV-014.
+- The executable specifications. Its 44 records check the invariants INV-001 to INV-012. INV-013, that displayed verification results come from an actual run and name their origin, is checked by the site tests. INV-014, that the core does not depend on its specifications, is checked by the core-independence test.
 - This site, with a playground that runs the package in your browser.
 
 Stage 0 leaves out, on purpose: agent orchestration, sandboxing, risk modelling, deployment, graph databases, compilers, native compilation, persistent Revision storage, Facets, Acts, Mandates, and the Witness and Verdict types. Revisions and histories live in memory only, so they end when the process ends. There is no continuous integration and no deployment. Everything runs locally.
