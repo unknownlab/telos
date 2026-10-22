@@ -5,7 +5,7 @@ kind: decision
 status: proposed
 maturity: implemented
 date: 2026-10-21
-summary: The documentation playground imports the real Locus package, decodes user input with Effect Schema from structured forms or JSON, never evaluates code, and labels every result with where and when it was produced.
+summary: The documentation playground imports the real Locus package, decodes the JSON text that readers type with the package's Effect Schema, never evaluates code, and labels every result with where and when it was produced.
 related:
   [
     ADR-0010,
@@ -24,7 +24,7 @@ An interactive playground teaches the model best when readers can define their o
 ## Decision
 
 1. The playground imports the same `@telos/locus` build that the tests exercise; it contains no reimplementation of validation, hashing or diffing.
-2. Input is structured: form fields, or JSON text decoded with the package's Effect Schema. No `eval`, `new Function`, dynamic `import()` of user content or HTML injection of user strings.
+2. Input is structured JSON text, decoded with the package's Effect Schema. Scenario D also takes one text field, the expected head, which is empty or a Revision id. No `eval`, `new Function`, dynamic `import()` of user content or HTML injection of user strings.
 3. Every result shows its provenance: "run in this browser" with time and package version; "run by Bun at build time" with the git revision; "CI" (shown as unavailable in Stage 0); or "historical".
 4. Scenarios: define a valid Locus; submit an invalid definition and see every diagnostic; add Relations and see reference and cycle errors; create Revisions, append them to a history and see diffs and stale-baseline rejection; run the specifications.
 

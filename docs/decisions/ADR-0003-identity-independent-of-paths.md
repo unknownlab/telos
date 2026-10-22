@@ -17,7 +17,7 @@ Most tools identify units by path: module specifiers, package names, file names.
 
 ## Decision
 
-1. A Locus [Identity](../foundation/terminology/identity.md) is declared explicitly as `<namespace>:<name>`, both parts lowercase kebab case.
+1. A Locus [Identity](../foundation/terminology/identity.md) is declared explicitly as `<namespace>:<name>`. Each part starts with a lowercase letter and continues with lowercase letters, digits and single hyphens, with no trailing hyphen. The whole identity is at most 128 characters.
 2. It is not derived from the file, directory or package containing the definition.
 3. It is not derived from the owner. Nesting is expressed by the `owner` property ([ADR-0007](ADR-0007-ownership-is-structural.md)); re-parenting does not rename.
 4. A definition may carry its source location as metadata. Metadata is excluded from validation of identity and from the Revision digest ([INV-003](../foundation/conceptual-model/README.md#5-invariants)).

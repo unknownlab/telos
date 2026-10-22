@@ -26,7 +26,7 @@ The [foundation documents](../foundation/README.md) are the source for what Telo
 Stage 0 is the first stage of the model. It delivers three things:
 
 - The [`@telos/locus`](../../packages/locus/src/index.ts) package. It defines Loci, Charters, Relations and Fabrics. It validates a Fabric and reports every rule violation as a diagnostic. It creates Revisions, compares them as change sets, and keeps a per-Locus history.
-- The executable specifications. Its 44 records check the invariants INV-001 to INV-012. INV-013, that displayed verification results come from an actual run and name their origin, is checked by the site tests. INV-014, that the core does not depend on its specifications, is checked by the core-independence test.
+- The executable specifications. The catalogue holds 44 records. They check the invariants INV-001 to INV-012. INV-013, that displayed verification results come from an actual run and name their origin, is checked by the site tests. INV-014, that the core does not depend on its specifications, is checked by the core-independence test.
 - This site, with a playground that runs the package in your browser.
 
 Stage 0 leaves out, on purpose: agent orchestration, sandboxing, risk modelling, deployment, graph databases, compilers, native compilation, persistent Revision storage, Facets, Acts, Mandates, and the Witness and Verdict types. Revisions and histories live in memory only, so they end when the process ends. There is no continuous integration and no deployment. Everything runs locally.
@@ -42,7 +42,7 @@ The site has one section per item below, in navigation order.
 - **[Principles](../foundation/principles/README.md)** lists the sixteen foundational principles, P01 to P16.
 - **[Terminology](../foundation/terminology/README.md)** defines the vocabulary. Each term has its boundaries and its Stage 0 form.
 - **[Architecture](../foundation/conceptual-model/README.md)** shows how the concepts relate, lists the invariants, and records what is still open.
-- **[First Locus](first-locus.md)** is a five-step tutorial. You define, validate, break, relate and revise a Locus.
+- **[First Locus](first-locus.md)** is a five-step tutorial. You define a Fabric, see validation fail, relate Loci, revise a Locus and run the specifications.
 - **[Examples](examples.md)** shows valid and invalid inputs, with what the package reports for each.
 - **[Playground](/playground)** runs the package on input that you can edit. Its five scenarios, A to E, each cover one part of the model.
 - **[Verification](/verification)** shows the report of the specification run at build time.

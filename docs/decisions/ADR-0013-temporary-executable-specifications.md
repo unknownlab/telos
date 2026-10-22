@@ -24,7 +24,7 @@ The Stage 0 package needs executable specifications that also run in the documen
 
 ## Decision
 
-1. Each specification is a data record: a stable id (`LOC-001`, …), a title, the invariant ids it checks (`INV-…`), a polarity (positive or negative), an input built from public package API, and an expected outcome (valid; or the diagnostic codes expected).
+1. Each specification is a data record: a stable id (`LOC-001`, …), a title, the invariant ids it checks (`INV-…`), a polarity (positive or negative), an input built from public package API, and an expected outcome stated as structured data, never as message text. For a validation this is the validity flag and the ordered diagnostics, each given by code, scope, subject, path and any detail or members. For the other checks it is the structured result the check observes, such as the decode issue paths, the comparison flags, the append outcomes and entries, or the change list.
 2. One small runner evaluates a specification against the package and returns a structured result. It has no dependency on any test framework.
 3. Two adapters run the same specifications:
    - a `bun test` file that registers one test per specification, so they run in the repository's normal checks and the review gate;
@@ -41,4 +41,4 @@ The Stage 0 package needs executable specifications that also run in the documen
 ## Consequences
 
 - The test suite is partly declarative; ordinary `bun test` unit tests may still exist for internals.
-- Expected outcomes are stated as diagnostic codes, so specifications do not depend on message wording.
+- Expected outcomes are structured, and diagnostics are compared by code, scope, subject, path, detail and members, so specifications do not depend on message wording.

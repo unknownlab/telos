@@ -17,7 +17,7 @@ Several Stage 0 rules cannot be checked on one Locus alone: identities must be u
 
 ## Decision
 
-A [Fabric](../foundation/terminology/fabric.md) is a separate concept: an identified set of Loci that is validated as a whole. In Stage 0 a Fabric has an Identity and members and nothing else: no Charter, no owner, no history. Validation always runs on a Fabric, and a single Locus is validated as a Fabric of one plus whatever it references.
+A [Fabric](../foundation/terminology/fabric.md) is a separate concept: an identified set of Loci that is validated as a whole. In Stage 0 a Fabric has an Identity and members and nothing else: no Charter, no owner, no history. Validation always runs on a Fabric, and a single Locus is validated by wrapping it in a Fabric; the references it makes must then resolve inside that Fabric.
 
 ## Alternatives
 
