@@ -128,6 +128,7 @@ Stable. Adding a code is allowed; renaming or removing one is a breaking change.
 Rules:
 
 - A duplicated identity is reported once, on that identity. For reference checks, an identity exists if at least one Locus has it.
+- An ownership cycle that passes through a duplicated identity is not reported as `owner.cycle`: its edges are ambiguous, so only `identity.duplicate` is reported for it.
 - A malformed identity is reported on the raw string. A malformed `owner` or `target` that exists nowhere is reported as missing, not as malformed.
 - A self-owner gives `owner.self` only, not also `owner.cycle`.
 - A self-`refines` gives `relation.self` only, not also a cycle.
