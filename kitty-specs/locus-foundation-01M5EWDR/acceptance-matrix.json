@@ -198,10 +198,10 @@
       "criterion_id": "FR-020",
       "description": "Verify FR-020 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/test/playground-safety.test.ts (site rules: no eval/new Function/Function()/string setTimeout/import(user text); playground rules also no innerHTML/script/iframe/srcdoc/import of literal; both scans clean); my grep of apps/docs/src+packages/*/src: no eval/new Function; only raw HTML sinks are document-page.tsx dangerouslySetInnerHTML (build-time compiled repo markdown) and mermaid-renderer.tsx innerHTML (strict SVG of repo diagrams), none in src/playground; apps/docs/e2e/equality.e2e.ts and playground.e2e.ts E show browser results equal Bun/build results (44 statuses identical, ids equal)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:04.567270+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
