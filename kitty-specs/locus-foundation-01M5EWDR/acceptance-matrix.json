@@ -248,10 +248,10 @@
       "criterion_id": "FR-025",
       "description": "Verify FR-025 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "grace lint --path . --assertions current in lane-r: Files checked 167, Governed files 112, Errors 0, Warnings 0 (run as part of bun run verify and rerun alone); grace status --path . --json: graphModules 12, verificationEntries 12, integrity errors 0, readyModules 12; packages/locus/test/public-surface.test.ts",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:03:15.873117+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
