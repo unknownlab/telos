@@ -2,7 +2,7 @@
 
 Follow-ups decided during implementation. Each is done as a reviewed direct commit after the lanes merge, not as a new mission.
 
-## 1. Cap `relation.refines-cycle` reports (owner decision, 2026-10-21)
+## 1. DONE before merge: cap `relation.refines-cycle` reports (owner decision, 2026-10-21)
 
 - Contract already amended (`contracts/locus-api.md`, `research.md` R-03): at most 100 `relation.refines-cycle`, then one `relation.refines-cycle-limit` on the Fabric (detail `100`).
 - Code to change: `packages/locus/src/validate.ts` (WP03, approved without the cap) and the diagnostic code union in `diagnostic.ts`.
@@ -79,3 +79,11 @@ Follow-ups decided during implementation. Each is done as a reviewed direct comm
 - Review gate `failureMessage`: prefer a line starting with `✘`, `Error:` or `×` for the e2e step, not the first `/error/i` match (e2e output now has passing titles containing "errors").
 - GRACE graph tidy (later `grace-refresh`): `packages/locus/src/index.ts` barrel is registered under M-LOCUS-MODEL but re-exports other modules' files; `decode.ts` imports `./errors` (REVISION) without a declared edge; `spec-report.ts` imports SITE lib files and SITE playground routes import PLAYGROUND, while the declared edges run the other way (declared graph acyclic, real coupling cyclic at module level). Eight file-level `DEPENDS` sibling names in `locus.ts`, `fabric.ts`, `relation.ts` are not registered module ids (GRACE accepts them).
 - Owner awareness: `bun run verify` and the review gate now need Playwright Chromium and take ~20-23 s; the pre-commit hook deliberately has no docs build or browser step; there is no CI, so the review gate is the only enforcement point for the browser suite.
+
+## 13. Pre-merge fixes and remaining items (2026-10-22)
+
+- Done on the final lane before merge, reviewed by reviewer-renata: refines-cycle cap (fa4a2b7, 14 diagnostic codes), verify description in the agent reference (4eb7f64), identity/Locus/Fabric `implemented` plus FR-026 wording (1471807), deferred-label rewording (c1f9dd7).
+- Playground follow-up: `problemsOf` in `apps/docs/src/playground/run-fabric.ts` marks a refines Relation as "In a refines cycle" only when a reported cycle contains both ends; above 100 cycles a Relation that lies only in an unreported cycle shows no problem. The report panel is correct and shows the limit diagnostic. Flag rows when a limit diagnostic exists.
+- Owner decisions open: ADR status for 0002, 0003, 0005 to 0008 and 0012 to 0014 (still `proposed`, built); the extra sentence "Both mean the same thing in specs, code and docs." in the charter (beyond the approved clause); other documents still `proposed` although partly built (principles P02, P03, P04, P08, P10, P14; conceptual-model README; capabilities.md).
+- Hardening for the mission review: `Bun.markdown.html` passes raw HTML in Markdown through; the site injects compiled HTML with `dangerouslySetInnerHTML`. No document contains raw HTML and input is repository content (C-002 holds), but the compiler could reject or escape raw HTML.
+- Open test gaps listed in sections 2, 4 (WP03/WP04), 8, 9: not done.
