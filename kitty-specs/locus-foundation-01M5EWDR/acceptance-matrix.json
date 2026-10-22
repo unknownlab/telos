@@ -158,10 +158,10 @@
       "criterion_id": "FR-016",
       "description": "Verify FR-016 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "apps/docs/e2e/search.e2e.ts 'a search for baseline finds the Revision term and P08' (a[data-search-result=/terminology/revision], /principles/P08-preserve-the-baseline); apps/docs/test/search.test.ts; content.test.ts 'searching for baseline finds P08 and revision'",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-22T09:02:39.481851+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
