@@ -26,6 +26,8 @@ authoritative_surface: packages/kernel/src/decode.ts
 create_intent:
 - packages/kernel/src/decode.ts
 - packages/kernel/test/decode.test.ts
+- .grace/graph/kernel-decode.xml
+- .grace/verification/kernel-decode.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

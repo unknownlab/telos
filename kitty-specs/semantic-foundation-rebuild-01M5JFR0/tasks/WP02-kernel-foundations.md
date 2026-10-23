@@ -38,6 +38,8 @@ create_intent:
 - packages/kernel/test/digest.test.ts
 - packages/kernel/test/diagnostic.test.ts
 - packages/kernel/test/cycles.test.ts
+- .grace/graph/kernel-base.xml
+- .grace/verification/kernel-base.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

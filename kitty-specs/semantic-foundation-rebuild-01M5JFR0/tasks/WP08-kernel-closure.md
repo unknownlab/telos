@@ -26,6 +26,8 @@ authoritative_surface: packages/kernel/src/closure.ts
 create_intent:
 - packages/kernel/src/closure.ts
 - packages/kernel/test/closure.test.ts
+- .grace/graph/kernel-closure.xml
+- .grace/verification/kernel-closure.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

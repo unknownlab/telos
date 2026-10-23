@@ -31,6 +31,8 @@ create_intent:
 - telos.ts
 - scripts/telos.ts
 - scripts/telos.test.ts
+- .grace/graph/tooling.xml
+- .grace/verification/tooling.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

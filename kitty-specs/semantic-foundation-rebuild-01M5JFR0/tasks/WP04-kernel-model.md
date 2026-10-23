@@ -28,9 +28,12 @@ history:
 agent_profile: implementer-ivan
 authoritative_surface: packages/kernel/src/model.ts
 create_intent:
+- packages/kernel/src/model.ts
 - packages/kernel/test/model.test.ts
 - packages/kernel/test/model-relations.test.ts
 - packages/kernel/test/model-determinism.test.ts
+- .grace/graph/kernel-model.xml
+- .grace/verification/kernel-model.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

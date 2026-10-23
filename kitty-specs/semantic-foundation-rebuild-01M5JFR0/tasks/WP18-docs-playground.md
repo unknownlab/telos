@@ -29,6 +29,8 @@ agent_profile: frontend-freddy
 authoritative_surface: apps/docs/src/playground/
 create_intent:
 - apps/docs/test/playground.test.ts
+- .grace/graph/docs.xml
+- .grace/verification/docs.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

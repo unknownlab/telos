@@ -29,9 +29,12 @@ authoritative_surface: packages/kernel/src/
 create_intent:
 - packages/kernel/src/introspection.ts
 - packages/kernel/src/impact.ts
+- packages/kernel/src/index.ts
 - packages/kernel/test/introspection.test.ts
 - packages/kernel/test/impact.test.ts
 - packages/kernel/test/api.test.ts
+- .grace/graph/kernel-api.xml
+- .grace/verification/kernel-api.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

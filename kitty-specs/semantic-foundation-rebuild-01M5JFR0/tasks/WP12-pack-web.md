@@ -25,9 +25,12 @@ create_intent:
 - packages/web/src/semantics.ts
 - packages/web/src/form.ts
 - packages/web/src/archetype.ts
+- packages/web/src/index.ts
 - packages/web/test/fixture.ts
 - packages/web/test/form.test.ts
 - packages/web/test/archetype.test.ts
+- .grace/graph/pack-web.xml
+- .grace/verification/pack-web.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

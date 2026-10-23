@@ -32,6 +32,8 @@ create_intent:
 - apps/docs/src/components/calculator-view.tsx
 - apps/docs/test/guide-snippets.ts
 - apps/docs/test/guide-snippets.test.ts
+- .grace/graph/legacy.xml
+- .grace/verification/legacy.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

@@ -30,11 +30,14 @@ create_intent:
 - packages/cli/src/run.ts
 - packages/cli/src/bun.ts
 - packages/cli/src/archetype.ts
+- packages/cli/src/index.ts
 - packages/cli/test/fixture.ts
 - packages/cli/test/derive.test.ts
 - packages/cli/test/run.test.ts
 - packages/cli/test/archetype.test.ts
 - packages/cli/test/bun.test.ts
+- .grace/graph/pack-cli.xml
+- .grace/verification/pack-cli.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

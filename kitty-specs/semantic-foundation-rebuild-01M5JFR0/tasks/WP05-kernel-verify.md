@@ -27,6 +27,8 @@ authoritative_surface: packages/kernel/src/verify.ts
 create_intent:
 - packages/kernel/src/verify.ts
 - packages/kernel/test/verify.test.ts
+- .grace/graph/kernel-verify.xml
+- .grace/verification/kernel-verify.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

@@ -33,6 +33,8 @@ create_intent:
 - packages/kernel/test/describe.test.ts
 - packages/kernel/test/invoke.test.ts
 - packages/kernel/test/fields.test.ts
+- .grace/graph/kernel-describe.xml
+- .grace/verification/kernel-describe.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

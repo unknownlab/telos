@@ -34,6 +34,7 @@ authoritative_surface: apps/calculator/
 create_intent:
 - apps/calculator/src/interfaces.ts
 - apps/calculator/src/app.ts
+- apps/calculator/src/index.ts
 - apps/calculator/bin/cli.ts
 - apps/calculator/bin/mcp.ts
 - apps/calculator/bin/agent-demo.ts
@@ -45,6 +46,8 @@ create_intent:
 - apps/calculator/test/cli-binary.test.ts
 - apps/calculator/test/mcp.test.ts
 - apps/calculator/test/agent-demo.test.ts
+- .grace/graph/calculator-interfaces.xml
+- .grace/verification/calculator-interfaces.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

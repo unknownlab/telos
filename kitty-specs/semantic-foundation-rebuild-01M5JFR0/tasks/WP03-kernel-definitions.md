@@ -45,6 +45,8 @@ create_intent:
 - packages/kernel/test/locus.test.ts
 - packages/kernel/test/extensions.test.ts
 - packages/kernel/test/types.test.ts
+- .grace/graph/kernel-definitions.xml
+- .grace/verification/kernel-definitions.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

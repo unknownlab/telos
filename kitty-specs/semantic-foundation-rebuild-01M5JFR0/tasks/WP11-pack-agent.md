@@ -33,6 +33,7 @@ create_intent:
 - packages/agent/src/mcp.ts
 - packages/agent/src/client.ts
 - packages/agent/src/archetype.ts
+- packages/agent/src/index.ts
 - packages/agent/test/fixture.ts
 - packages/agent/test/fixture-server.ts
 - packages/agent/test/tools.test.ts
@@ -40,6 +41,8 @@ create_intent:
 - packages/agent/test/mcp.test.ts
 - packages/agent/test/archetype.test.ts
 - packages/agent/test/grant.test.ts
+- .grace/graph/pack-agent.xml
+- .grace/verification/pack-agent.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:

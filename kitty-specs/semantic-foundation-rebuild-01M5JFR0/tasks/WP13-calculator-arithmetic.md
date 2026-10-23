@@ -30,6 +30,8 @@ create_intent:
 - apps/calculator/test/arithmetic.test.ts
 - apps/calculator/test/archetypes.test.ts
 - apps/calculator/test/ergonomics.test.ts
+- .grace/graph/calculator-core.xml
+- .grace/verification/calculator-core.xml
 execution_mode: code_change
 model: claude-haiku-5-5
 owned_files:
