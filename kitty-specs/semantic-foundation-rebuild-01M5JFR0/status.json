@@ -1,0 +1,28 @@
+{
+  "event_count": 1,
+  "last_event_id": "01M5N9RPB4WQP9WDC17GJHPNW1",
+  "materialized_at": "2026-10-23T21:13:13.828666+00:00",
+  "mission_number": "",
+  "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
+  "mission_type": "",
+  "summary": {
+    "approved": 0,
+    "blocked": 0,
+    "canceled": 0,
+    "claimed": 0,
+    "done": 0,
+    "for_review": 0,
+    "in_progress": 0,
+    "in_review": 0,
+    "planned": 1
+  },
+  "work_packages": {
+    "WP01": {
+      "actor": "finalize-tasks",
+      "force_count": 0,
+      "lane": "planned",
+      "last_event_id": "01M5N9RPB4WQP9WDC17GJHPNW1",
+      "last_transition_at": "2026-10-23T21:13:13.828666+00:00"
+    }
+  }
+}
