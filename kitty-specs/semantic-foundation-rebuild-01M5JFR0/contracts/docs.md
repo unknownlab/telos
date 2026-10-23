@@ -91,7 +91,7 @@ The new ADRs use `kind: decision` and `date: 2026-10-22`. The `status` is given 
 | `src/lib/content-types.ts` | WP18 removes `"/playground/a"`…`"/playground/e"` from `APP_ROUTES`. WP19 adds `"inspector"` to `NavSectionId`, inserts it into `NAV_SECTIONS` after `examples`, and adds `"/inspector"` to `APP_ROUTES`. WP20 then adds `"calculator"` after `playground` and adds `"/calculator"`. The final order is introduction, philosophy, principles, terminology, architecture, first-locus, examples, inspector, playground, calculator, verification, roadmap, decisions, agent-reference. |
 | `src/lib/prerender.ts` | WP18 removes `"/playground/a"`…`"/playground/e"` from `APP_PAGES`. WP19 adds `"/inspector"` to `APP_PAGES` and a new export `inspectorPages(report: { readonly model: { readonly loci: ReadonlyArray<{ readonly id: string }> } }): string[]` that returns `"/inspector/" + locusSlug(id)` for every Locus, in report order. WP20 adds `"/calculator"`. The module comment names the WPs that edit the list. |
 | `vite.config.ts` (WP19) | Next to `readContent()`, add `readSemanticReport()`, which reads `./src/generated/semantic-report.json` the same way and throws `"apps/docs/src/generated/semantic-report.json is missing or unreadable; run \`bun run semantic-report\` first"`. `pages` becomes `prerenderPaths(readContent(), [...APP_PAGES, ...inspectorPages(readSemanticReport())])`. |
-| `scripts/content.ts` `llmsText` | Inspector: "The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json." Verification: "The Archetype verification and Semantic Closure report from the build-time run, with its provenance." |
+| `scripts/content.ts` `llmsText` | One fixed bullet per app page, like the existing playground and verification branches. WP18, Playground: "Type a Locus definition as JSON; the real @telos/kernel decodes, builds and verifies it in your browser." WP19, Inspector: "The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json." WP19, Verification: "The Archetype verification and Semantic Closure report from the build-time run, with its provenance." WP20, Calculator: "The calculator web interface: forms derived from the capability contracts of calculator:arithmetic." Each WP updates the same text in `test/content.test.ts`, `e2e/machine-files.e2e.ts` (`APP_PAGE_LINES`) and the page's own intro. |
 
 ### Locus slugs (`src/lib/locus-slug.ts`, WP19)
 
@@ -157,7 +157,7 @@ WP18 replaces the old scenario playground before WP19 removes the spec report, b
 
 - `src/playground/run.ts`: `runDefinition(text: string): Effect<PlaygroundResult>`. It calls `decodeLocusText`, then `buildModel`, `verify(model, { runner: "browser", methods: ["static"] })` and `describeModel`. The result is `{ decodeIssues } | { diagnostics, report, description }`.
 - UI: an example picker, a JSON editor (the existing `json-editor` component), a Run button, and result panels for decode issues, diagnostics, verification findings and the model description. The result root has `data-result="playground"`.
-- Delete the old scenario files: `run-fabric.ts`, `run-revisions.ts`, `run-specs.ts`, `locus-text.ts`, the scenario components, and `routes/playground/$scenario.tsx`. `run-state.ts` and `use-run.ts` are kept if still used.
+- Delete the old scenario files: `run-fabric.ts`, `run-revisions.ts`, `run-specs.ts`, `locus-text.ts`, `run-state.ts`, `use-run.ts`, the scenario components, `routes/playground/$scenario.tsx`, and their tests (`test/playground-*.test.ts(x)` except `playground-safety.test.ts`, and `test/run-state.test.ts`). The new playground keeps its run state inside its own component.
 
 ### Calculator page (WP20, `/calculator`)
 
@@ -176,7 +176,7 @@ WP18 replaces the old scenario playground before WP19 removes the spec report, b
 
 **Checked examples** (`apps/docs/test/guide-examples.test.ts`, rewritten). These are fenced blocks whose info string is:
 
-- `ts source=<repo path>#<REGION>`: the block body must equal the text between `// START_BLOCK_<REGION>` and `// END_BLOCK_<REGION>` in that file, with common leading indentation removed and outer blank lines trimmed. WP20 adds those markers to `apps/calculator/src/arithmetic.ts` (`ARITHMETIC_LOCUS`) and `app.ts` (`CALCULATOR_APP`).
+- `ts source=<repo path>#<REGION>`: the block body must equal the text between `// START_BLOCK_<REGION>` and `// END_BLOCK_<REGION>` in that file, with common leading indentation removed and outer blank lines trimmed. The markers already exist: WP13 adds `ARITHMETIC_LOCUS` to `apps/calculator/src/arithmetic.ts`, and WP14 adds `CALCULATOR_APP` to `apps/calculator/src/app.ts`. WP20 only quotes them.
 - `json playground=<name>`: the body must equal `PLAYGROUND_EXAMPLES` entry `<name>`'s `json`.
 
 ### Removal (WP20)
@@ -192,4 +192,5 @@ WP18 replaces the old scenario playground before WP19 removes the spec report, b
   - Edit the JSON to a syntax error and assert that the decode issue appears.
   - This proves the kernel runs in Chromium (NFR-001).
 - `calculator.e2e.ts` (new): `add` 2 and 3 shows `"result":5`, `divide` 1 and 0 shows `DivisionByZero`, and `a = x` shows `InvalidInput`.
-- `keyboard.e2e.ts`, `equality.e2e.ts`, `search.e2e.ts` and `a11y.e2e.ts`: replace the old playground selectors (`#fabric-input`, "Fabric JSON") with the new editor's.
+- `keyboard.e2e.ts`, `search.e2e.ts`, `navigation.e2e.ts`, `provenance.e2e.ts` and `a11y.e2e.ts`: replace the old scenario pages and selectors (`/playground/a`…`/playground/e`, `#fabric-input`, "Fabric JSON") with the single `/playground` page and the new editor's.
+- `equality.e2e.ts` is deleted by WP18: it only compares old Revision ids between Bun and the browser, and Revisions are removed (spec D1).
