@@ -1,4 +1,4 @@
-# Contract: documentation (WP16, WP17, WP18, WP19)
+# Contract: documentation (WP16, WP17, WP18, WP19, WP20)
 
 Repository rule (C-006): site content is generated from `docs/`. Prose is never edited inside `apps/docs`. The app owns only pages that render data (inspector, verification, playground, calculator) and the pipeline.
 
@@ -35,7 +35,7 @@ Delete `docs/foundation/principles/P01-*.md` … `P16-*.md`, then write these 16
 
 - **Delete**: `fabric.md`, `facet.md`, `lens.md`, `law.md`, `act.md`, `charter.md`, `mandate.md`, `variant.md`, `witness.md`, `verdict.md`, `evolution.md`, `revision.md`.
 - **Rewrite**: `locus.md` (order 1), `identity.md`, `relation.md`, `archetype.md`.
-- **Add** (`order` in this sequence after locus): `semantic-extension.md`, `composition.md`, `locus-kind.md`, `containment.md`, `relation-type.md`, `capability.md`, `contract.md`, `rule.md`, `diagnostic.md`, `finding.md`, `knowledge-status.md`, `semantic-model.md`, `semantic-closure.md`, `pack.md`, `interface-locus.md`, `impact.md`, `grant.md`, `purpose.md`.
+- **Add** (`order` in this sequence after locus): `semantic-extension.md`, `composition.md`, `locus-kind.md`, `containment.md`, `relation-type.md`, `capability.md`, `contract.md`, `rule.md`, `diagnostic.md`, `finding.md`, `knowledge-status.md`, `semantic-model.md`, `semantic-closure.md`, `pack.md`, `interface-locus.md`, `impact.md`, `grant.md`, `purpose.md`, `semantic-first-programming.md`, `agent-native-development.md`, `executable-introspection.md`. The last three cover the directive §12 topics that are not single model terms; `pack.md`, `semantic-closure.md` and the calculator guide cover the rest.
 - Each term uses the spec's Domain Language definition and the "Avoid" column. `fundamental: true` only for `locus`.
 - `docs/foundation/terminology/README.md` lists them.
 
@@ -52,7 +52,7 @@ Delete `docs/foundation/principles/P01-*.md` … `P16-*.md`, then write these 16
 | `docs/foundation/philosophy/evolution-of-determinism.md` | Update its terms to the new model. Keep its argument. |
 | `docs/foundation/future-semantic-evolution.md` (new, `kind: direction`, `maturity: vision`) | Mandate, Variant, Witness, Verdict, Evolution and Revision as future concepts. For each: what it would mean as an extension of the current model, and why it is not built now. |
 
-**Link integrity** (WP16 owns it across all of `docs/`): every `related` id and every Markdown link in `docs/**` that points to a deleted document is changed to the replacement (fabric → semantic-model, facet → semantic-extension, lens/law → archetype, act → capability, charter → purpose, the vision terms → future-semantic-evolution, old principle ids → the new principle with the closest meaning). This includes ADRs and guides, where only the `related` lists and link targets change. Their prose is WP17's and WP19's.
+**Link integrity** (WP16 owns it across all of `docs/`): every `related` id and every Markdown link in `docs/**` that points to a deleted document is changed to the replacement (fabric → semantic-model, facet → semantic-extension, lens/law → archetype, act → capability, charter → purpose, the vision terms → future-semantic-evolution, old principle ids → the new principle with the closest meaning). This includes ADRs and guides, where only the `related` lists and link targets change. Their prose is WP17's (ADRs) and WP20's (guides).
 
 WP16 also updates the docs tests that name removed document ids (`apps/docs/test/content.test.ts`, `site.test.ts`, `search.test.ts`, and any e2e test that names a removed id). It also updates `.grace/context/principles.xml` and `.grace/context/requirements.xml` to the new principles.
 
@@ -78,7 +78,7 @@ The new ADRs use `kind: decision` and `date: 2026-10-22`. The `status` is given 
 - `docs/decisions/README.md` lists every ADR with its status.
 - ADR-0017 stays accepted and unchanged. ADR-0018 states that the calculator is now decided by the owner directive.
 
-## Site pipeline (WP18)
+## Site pipeline (WP19)
 
 | Change | Detail |
 | --- | --- |
@@ -88,11 +88,12 @@ The new ADRs use `kind: decision` and `date: 2026-10-22`. The `status` is given 
 | `src/lib/generated.ts` | Inline `../generated/semantic-report.json` (`semanticReportJson`) instead of `spec-report.json`. |
 | `src/lib/build-data.ts` | Replace the SpecReport types and `readSpecReportFile` with `readSemanticReport(value: unknown): SemanticReport \| null`. It checks `version === 1` and the presence and type of `provenance`, `model.loci`, `verification.findings`, `verifications`, `closure.findings` and `ok`. It throws `"semantic-report.json: <field> is invalid"`. The `SemanticReport` type is imported as a type from `scripts/telos.ts`'s contract, copied as a local interface (the docs app does not import root scripts). |
 | `scripts/check-verification.ts` | `RESULT_MARKER = 'data-result="semantic-report"'`. Messages say "semantic report". |
-| `src/lib/content-types.ts` | WP18 adds `"inspector"` to `NavSectionId`, inserts it into `NAV_SECTIONS` after `examples`, and adds `"/inspector"` to `APP_ROUTES`. WP19 then adds `"calculator"` after `playground`, adds `"/calculator"`, and removes `"/playground/a"`…`"/playground/e"`. The final order is introduction, philosophy, principles, terminology, architecture, first-locus, examples, inspector, playground, calculator, verification, roadmap, decisions, agent-reference. |
-| `src/lib/prerender.ts` | `APP_PAGES` gains `/inspector` and one `/inspector/<slug>` per Locus in the report. |
+| `src/lib/content-types.ts` | WP18 removes `"/playground/a"`…`"/playground/e"` from `APP_ROUTES`. WP19 adds `"inspector"` to `NavSectionId`, inserts it into `NAV_SECTIONS` after `examples`, and adds `"/inspector"` to `APP_ROUTES`. WP20 then adds `"calculator"` after `playground` and adds `"/calculator"`. The final order is introduction, philosophy, principles, terminology, architecture, first-locus, examples, inspector, playground, calculator, verification, roadmap, decisions, agent-reference. |
+| `src/lib/prerender.ts` | WP18 removes `"/playground/a"`…`"/playground/e"` from `APP_PAGES`. WP19 adds `"/inspector"` to `APP_PAGES` and a new export `inspectorPages(report: { readonly model: { readonly loci: ReadonlyArray<{ readonly id: string }> } }): string[]` that returns `"/inspector/" + locusSlug(id)` for every Locus, in report order. WP20 adds `"/calculator"`. The module comment names the WPs that edit the list. |
+| `vite.config.ts` (WP19) | Next to `readContent()`, add `readSemanticReport()`, which reads `./src/generated/semantic-report.json` the same way and throws `"apps/docs/src/generated/semantic-report.json is missing or unreadable; run \`bun run semantic-report\` first"`. `pages` becomes `prerenderPaths(readContent(), [...APP_PAGES, ...inspectorPages(readSemanticReport())])`. |
 | `scripts/content.ts` `llmsText` | Inspector: "The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json." Verification: "The Archetype verification and Semantic Closure report from the build-time run, with its provenance." |
 
-### Locus slugs
+### Locus slugs (`src/lib/locus-slug.ts`, WP19)
 
 ```ts
 export const locusSlug = (id: string): string => id.replace(":", "--")   // "telos:kernel" -> "telos--kernel"
@@ -101,7 +102,7 @@ export const locusIdOf = (slug: string): string => slug.replace("--", ":")
 
 These are safe because Locus ids never contain `--` (identity grammar).
 
-### Pages (WP18)
+### Pages (WP19)
 
 - `/inspector`: the Locus tree (containment, indented), each Locus linking to its page. Each row shows the extension ids, the capability count and the verification counts. The page shows the model digest and the provenance (runner, generated time, commit).
 - `/inspector/<slug>` shows, in this order:
@@ -120,7 +121,7 @@ These are safe because Locus ids never contain `--` (identity grammar).
   - new: `src/components/locus-view.tsx`, `src/components/knowledge-badge.tsx`, `src/components/semantic-report-view.tsx`
   - delete: `spec-report-table.tsx`, and `verification-view.tsx` or rewrite it as the new view
 
-### Tests (WP18)
+### Tests (WP19)
 
 - `test/semantic-report.test.ts`: `readSemanticReport` accepts a valid fixture and rejects each missing field.
 - `test/inspector.test.tsx`: renders a `LocusView` from a fixture description. It asserts the capability schema and the knowledge badges.
@@ -131,9 +132,11 @@ These are safe because Locus ids never contain `--` (identity grammar).
   - `a11y.e2e.ts` covers `/inspector`.
 - Delete `scripts/spec-report.ts`, `test/spec-report.test.ts`, and the spec-report parts of `test/provenance.test.ts` and `e2e/provenance.e2e.ts`.
 
-## Playground, calculator page, guides, removal (WP19)
+## Playground (WP18); calculator page, guides, removal (WP20)
 
-### Playground (`/playground`, single page; `/playground/$scenario` is removed)
+WP18 replaces the old scenario playground before WP19 removes the spec report, because the old scenario E reads the spec report through `src/lib/build.ts`. The new playground imports neither `src/lib/build.ts`, `src/lib/build-data.ts` nor `src/lib/provenance.ts`: the provenance it shows is the verification report's own `provenance`.
+
+### Playground (WP18; `/playground`, single page; `/playground/$scenario` is removed)
 
 - `src/playground/registry.ts` (rewritten) exports `PLAYGROUND_REGISTRY: ExtensionRegistry`:
   - `[Purpose, Source, External, DemoLabelA, DemoLabelB, DemoFlow]` (the docs app depends only on `@telos/kernel`, `@telos/web` and `@telos/calculator`)
@@ -156,13 +159,13 @@ These are safe because Locus ids never contain `--` (identity grammar).
 - UI: an example picker, a JSON editor (the existing `json-editor` component), a Run button, and result panels for decode issues, diagnostics, verification findings and the model description. The result root has `data-result="playground"`.
 - Delete the old scenario files: `run-fabric.ts`, `run-revisions.ts`, `run-specs.ts`, `locus-text.ts`, the scenario components, and `routes/playground/$scenario.tsx`. `run-state.ts` and `use-run.ts` are kept if still used.
 
-### Calculator page (`/calculator`)
+### Calculator page (WP20, `/calculator`)
 
 - `src/routes/calculator.tsx` renders `formModel(calculatorModel, "calculator:web")`.
 - There is one form per capability. Labeled inputs use `inputMode`. The Submit button shows the `InvocationOutcome` JSON in a result panel with `data-result="calculator"`.
 - The page states that the forms are derived from the capability contracts.
 
-### Guides (`docs/guides/`, `section` values unchanged)
+### Guides (WP20; `docs/guides/`, `section` values unchanged)
 
 | File | Content |
 | --- | --- |
@@ -173,16 +176,16 @@ These are safe because Locus ids never contain `--` (identity grammar).
 
 **Checked examples** (`apps/docs/test/guide-examples.test.ts`, rewritten). These are fenced blocks whose info string is:
 
-- `ts source=<repo path>#<REGION>`: the block body must equal the text between `// START_BLOCK_<REGION>` and `// END_BLOCK_<REGION>` in that file, with common leading indentation removed and outer blank lines trimmed. WP19 adds those markers to `apps/calculator/src/arithmetic.ts` (`ARITHMETIC_LOCUS`) and `app.ts` (`CALCULATOR_APP`).
+- `ts source=<repo path>#<REGION>`: the block body must equal the text between `// START_BLOCK_<REGION>` and `// END_BLOCK_<REGION>` in that file, with common leading indentation removed and outer blank lines trimmed. WP20 adds those markers to `apps/calculator/src/arithmetic.ts` (`ARITHMETIC_LOCUS`) and `app.ts` (`CALCULATOR_APP`).
 - `json playground=<name>`: the body must equal `PLAYGROUND_EXAMPLES` entry `<name>`'s `json`.
 
-### Removal
+### Removal (WP20)
 
 - Delete `packages/locus/` entirely.
 - Move `packages/locus/test/manifest.test.ts`, the workspace manifest check (exact pins, no trusted scripts), to `scripts/manifest.test.ts`. Its paths are adapted, and its claims stay the same.
 - Remove the `packages/locus` references from the root `tsconfig.json`, `apps/docs/package.json` (`@telos/locus`), `telos.ts` (`telos:legacy-locus`) and its `.grace` legacy area documents. Run `bun install` to update `bun.lock` (workspace entries only).
 
-### e2e (WP19)
+### e2e (WP18 playground and selectors, WP20 calculator)
 
 - `playground.e2e.ts` (rewritten):
   - For each example, run it and assert the expected diagnostic code text or "No diagnostics".

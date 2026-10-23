@@ -25,7 +25,7 @@ export const repositoryModel = buildModel(repository)
 | `telos:web-pack` | `packages/web/src/**/*.ts`, `packages/web/test/**/*.ts` | `effect` | kernel | — |
 | `telos:calculator` | `apps/calculator/src/**/*.ts`, `apps/calculator/bin/**/*.ts`, `apps/calculator/test/**/*.ts` | `effect` | kernel, cli-pack, agent-pack, web-pack | `calculatorApp` |
 | `telos:tooling` | `scripts/**/*.ts` | — | kernel | — |
-| `telos:docs-site` | `apps/docs/*.ts`, `apps/docs/src/**/*.ts`, `apps/docs/src/**/*.tsx`, `apps/docs/scripts/**/*.ts`, `apps/docs/test/**/*.ts`, `apps/docs/test/**/*.tsx`, `apps/docs/e2e/**/*.ts` | the third-party packages the docs files import today (see below) | legacy-locus | — |
+| `telos:docs-site` | `apps/docs/*.ts`, `apps/docs/src/**/*.ts`, `apps/docs/src/**/*.tsx`, `apps/docs/scripts/**/*.ts`, `apps/docs/test/**/*.ts`, `apps/docs/test/**/*.tsx`, `apps/docs/e2e/**/*.ts` | the third-party packages the docs files import today (see below) | kernel, web-pack, calculator, legacy-locus | — |
 | `telos:legacy-locus` | `packages/locus/src/**/*.ts`, `packages/locus/test/**/*.ts`, `packages/locus/specs/**/*.ts` | `effect` | — | — |
 
 Notes:
@@ -33,8 +33,8 @@ Notes:
 - Each Locus has a `purpose` sentence and a `description`. The texts are written by the implementer and state what the package does.
 - **Docs externals**: run the closure check once, take every `closure.unknown-external` reported for `telos:docs-site`, check that each package is listed in `apps/docs/package.json` (`dependencies` or `devDependencies`), and add them to `packages`, sorted. A package that is imported but not in the manifest is a real finding: stop and report it rather than listing it.
 - **Later changes**:
-  - WP18 and WP19 change `telos:docs-site` relations to kernel, web-pack and calculator.
-  - WP19 removes `telos:legacy-locus` and its relation.
+  - `telos:docs-site` declares its relations to kernel, web-pack and calculator from the start, because WP18–WP20 add those imports to the docs app. A declared relation without an import is allowed; the closure check only rejects imports without a relation.
+  - WP20 removes `telos:legacy-locus` and the relation to it.
   - Every WP that adds a cross-Locus import adds the matching relation in the same commit.
 
 ## Closure scope (constant `CLOSURE_SCOPE` in `scripts/telos.ts`)

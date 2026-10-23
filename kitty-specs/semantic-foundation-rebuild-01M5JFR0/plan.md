@@ -25,7 +25,7 @@ All design choices that the directive leaves open are the defaults D1–D8 in th
 **Project Type**: Bun workspace monorepo (`packages/*`, `apps/*`)
 **Performance Goals**: NFR-003. Repository model build plus static rules under 2 s, and closure under 10 s.
 **Constraints**: C-001..C-009. Every work package leaves `bun run verify` green. There are no compatibility aliases for removed names.
-**Scale/Scope**: about 20 kernel and pack modules, 1 app, about 25 new or rewritten docs, and 20 work packages.
+**Scale/Scope**: about 20 kernel and pack modules, 1 app, about 25 new or rewritten docs, and 21 work packages.
 
 ## Charter Check
 
@@ -37,7 +37,7 @@ All design choices that the directive leaves open are the defaults D1–D8 in th
 | 024 locality of change | Pass | Each WP owns a disjoint file set, with its own GRACE graph and verification documents. |
 | 030 test and typecheck gate, 034 test-first, 041 tests as scaffold | Pass | Each WP writes its tests first, and `bun run verify` runs at the end of each WP. |
 | 036 black-box integration testing | Pass | The calculator, MCP and CLI tests run real binaries and protocols (WP14). |
-| 037 living documentation sync | Pass | Docs are derived from code (inspector, report, tool schemas). Prose docs are rewritten in WP16, WP17 and WP19. |
+| 037 living documentation sync | Pass | Docs are derived from code (inspector, report, tool schemas). Prose docs are rewritten in WP16, WP17 and WP20. |
 | 043 close defect classes by construction | Pass | Tool schemas and forms are derived, never written by hand, and the closure gate prevents unowned code. |
 | 051 supply-chain install safety | Pass | No dependency is added or upgraded. WP01 runs `bun install` only to link workspaces, and `bun.lock` changes contain workspace entries only. |
 | Model routing (AGENTS.md) | Pass | WPs are written for Haiku implementers, reviewed by Sonnet, with an Opus mission review after merge. |
@@ -121,7 +121,7 @@ packages/
 ├── cli/                          # @telos/cli Pack (new): src/{semantics,archetype,derive,run,environment,bun,index}.ts
 ├── agent/                        # @telos/agent Pack (new): src/{semantics,archetype,tools,introspection-tools,mcp,client,index}.ts
 ├── web/                          # @telos/web Pack (new): src/{semantics,archetype,form,index}.ts
-└── locus/                        # REMOVED in WP19
+└── locus/                        # REMOVED in WP20
 apps/
 ├── calculator/                   # @telos/calculator (new)
 │   ├── src/{arithmetic,errors,interfaces,archetypes,app,index}.ts
@@ -140,7 +140,7 @@ Every WP must leave `bun run verify` green, because the review gate runs the who
 
 - **WP01 creates every new workspace** (package manifests, tsconfig project references, export maps, workspace links in `bun.lock`) and splits `.grace/` into one graph document and one verification document per WP area. Later WPs then never edit the shared files `tsconfig.json`, `bun.lock` or the `.grace` index documents, except for their own `<Owns>` block. Parallel lanes therefore do not conflict.
 - **Kernel modules are imported by relative path inside the kernel until WP09** writes the public `index.ts`. Parallel kernel WPs (WP05–WP08) never edit the same file.
-- **The old package is removed last (WP19)**, after the docs site stops importing it. Until then the old tests keep passing unchanged.
+- **The old package is removed last (WP20)**, after the docs site stops importing it. Until then the old tests keep passing unchanged.
 
 ```mermaid
 flowchart LR
@@ -151,11 +151,14 @@ flowchart LR
   WP10 & WP11 & WP12 & WP13 --> WP14
   WP14 & WP08 --> WP15
   WP16 --> WP17
-  WP15 & WP16 --> WP18 --> WP19
-  WP19 & WP17 --> WP20
+  WP09 & WP16 --> WP18
+  WP15 & WP18 --> WP19 --> WP20
+  WP20 & WP17 --> WP21
 ```
 
 WP16 (foundation docs) depends on nothing and runs alongside the code from the start. WP17 (decisions) follows WP16, because WP16 deletes the old terms and principles and fixes every link to them, including the links in ADRs; WP17 then rewrites the ADR content without touching the same lines in parallel.
+
+The docs site work is split in three sequential WPs. WP18 replaces the old scenario playground with the kernel playground first, because the old scenario E reads the spec report through `apps/docs/src/lib/build.ts`. WP19 can then replace the spec report with the semantic report, the inspector and the new verification page. WP20 adds the calculator page, rewrites the guides and removes `packages/locus`. WP21 is the final coherence sweep. This order was fixed during task generation (the earlier draft had 20 WPs).
 
 ## Implementation Concern Map
 
@@ -193,7 +196,7 @@ WP16 (foundation docs) depends on nothing and runs alongside the code from the s
 | Haiku misreads complex type-level composition | The exact generic signatures were prototyped and type-checked (research R2). They are quoted verbatim in contracts/kernel.md and in the WP03 prompt. |
 | MCP library behavior | The low-level `McpServer.addTool` with a raw JSON Schema was prototyped. Plain objects must be used for `content` (research R6). |
 | Lane merge conflicts on shared files | WP01 pre-creates every shared file. Each WP owns its own GRACE documents. |
-| Docs e2e churn | Docs WPs are sequential (WP18 → WP19) and include their e2e updates. |
+| Docs e2e churn | Docs site WPs are sequential (WP18 → WP19 → WP20) and include their e2e updates. |
 | `bun run verify` time grows | The closure and model checks are bounded by NFR-003. |
 
 ## Complexity Tracking

@@ -289,3 +289,9 @@ Exports `WEB_FORM_TYPE, WebForm, WebSemantics, WebInterface, formModel, WebFormM
 ## Tests (each Pack's `test/` directory)
 
 Each Pack builds a tiny fixture model in `test/fixture.ts`: an `example:math` Locus with a `double` capability (input `{ n: Schema.Finite }`, output `{ value: Schema.Finite }`, error `Negative` when `n < 0`) and one interface Locus exposing it. Every Archetype rule has one passing and one failing test (NFR-005). The CLI tests use `runCli` in memory. The agent tests use `callTool`, `introspectionTools`, and one subprocess test that spawns `bun test/fixture-server.ts` (calls `serveMcp`) through `McpStdioClient`, then asserts `tools/list` names, annotations and a `tools/call` round trip. The web tests use `formModel`.
+
+**Discovery never grants invocation (US4.4, spec D6).** The agent fixture's `example:math` Locus also declares a capability `secret` (input `{}`, output `{ ok: Schema.Boolean }`, effect `read`) that no `agent.tool` relation exposes. `test/grant.test.ts` asserts three things:
+
+- `telos_capabilities {"id":"example:math"}` lists `secret` (it is discoverable);
+- `invoke(model, "example:math#secret", {}, { via: "example:agent" })` returns `{ ok: false, error: { tag: "NotGranted", message: "example:agent is not granted to invoke example:math#secret.", issues: [] } }`;
+- `deriveTools` has no tool named `secret`, and over MCP `tools/call` for `secret` is rejected by the server with `MCP error -32602: Tool 'secret' not found` (the client sees no tool to call).

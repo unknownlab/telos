@@ -39,7 +39,7 @@ The exact TypeScript shapes are in [contracts/kernel.md](contracts/kernel.md). T
    - Facts computed from the model (incoming relations, `exposedBy`, impact) are `derived`.
    - Rule results are `verified` only when passed in a real run, `failed` when failed or errored, and `not-run` otherwise.
    - `unknown` marks facts the analysis cannot determine (closure dynamic imports).
-   - `observed` is reserved for runtime observations, and nothing produces it yet.
+   - `observed` is reserved for runtime observations, and `invalidated` for facts that a later change or run contradicts. Nothing produces either yet.
 10. **Determinism**: diagnostics, descriptions, relation lists, findings, impact and closure reports are sorted by their documented keys. Digests are taken over canonical JSON.
 
 ## Diagnostic codes

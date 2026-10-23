@@ -400,7 +400,8 @@ A rule never stops other rules.
 ## describe.ts (WP06)
 
 ```ts
-export type Knowledge = "declared" | "derived" | "verified" | "failed" | "not-run" | "observed" | "unknown"
+export type Knowledge = "declared" | "derived" | "verified" | "failed" | "not-run" | "observed" | "invalidated" | "unknown"
+// "observed" and "invalidated" are reserved: no function in this mission returns them (directive §5)
 export interface JsonSchemaDocument { readonly dialect: string; readonly schema: unknown; readonly definitions: Readonly<Record<string, unknown>> }
 export interface RelationDescription {
   readonly type: string

@@ -50,7 +50,7 @@ bun run calculator:mcp                      # MCP server on stdio (for an agent 
 bun run calculator:agent-demo               # deterministic agent: discover, call, impact; last line {"ok":true}
 ```
 
-Web: `bun run --cwd apps/docs dev`, then open `/calculator` (WP19).
+Web: `bun run --cwd apps/docs dev`, then open `/calculator` (WP20).
 
 ## Repository model (WP15)
 
@@ -63,7 +63,7 @@ bun run telos impact calculator:arithmetic#add
 bun run telos check        # also runs inside `bun run verify` and the review gate
 ```
 
-## Documentation (WP18, WP19)
+## Documentation (WP18, WP19, WP20)
 
 `bun run docs:build && bun run docs:preview` serves these pages:
 

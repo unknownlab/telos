@@ -43,7 +43,7 @@ Discovery was minimized on the owner's explicit instruction (directive §10: "in
 | Rule | One check of an Archetype, with a method (static or execution) | test case |
 | Diagnostic | A structural problem in a model (identity, ownership, composition, relation), with a stable code | error (for rule findings) |
 | Finding | The outcome of one Rule on one Locus: passed, failed or error | diagnostic |
-| Knowledge status | Whether a fact is declared, derived, verified, failed, not run or unknown | confidence |
+| Knowledge status | Whether a fact is declared, derived, verified, failed, not run, observed, invalidated or unknown | confidence |
 | Semantic model | All Loci reachable from a root Locus, with the checked structure | Fabric, graph |
 | Semantic Closure | The property that every managed code file belongs to a discoverable Locus owner | coverage (alone) |
 | Pack | An ordinary TypeScript package that distributes extensions, Archetypes and adapters | plugin, module |
@@ -277,7 +277,7 @@ Each substantial existing component was audited against the directive (§9). The
 | FR-009 | Archetypes | As a developer, I want Archetypes with static and execution rules that apply to Loci whose composition includes given extensions, so that verification is specialized. | High | Open |
 | FR-010 | Verification report | As a developer, I want a verification run to report every applicable rule per Locus as passed, failed or error, with method and provenance, so that verified knowledge is distinguishable from declared knowledge. | High | Open |
 | FR-011 | Introspection API | As an agent, I want `resolve(id)` with `inspect()`, `relations()`, `capabilities()` and `verifications()` returning structured JSON-compatible descriptions, so that I never need to read implementation files for this information. | High | Open |
-| FR-012 | Knowledge status | As an agent, I want each described fact marked declared, derived, verified, failed, not run or unknown, so that unverified claims never look like guarantees. | High | Open |
+| FR-012 | Knowledge status | As an agent, I want each described fact marked declared, derived, verified, failed, not run or unknown (with observed and invalidated reserved for later sources), so that unverified claims never look like guarantees. | High | Open |
 | FR-013 | Governed invocation | As an interface, I want to invoke a capability only through a relation whose type grants invocation, with raw input decoded against the contract and a total outcome (output or typed error), so that discovery never grants authority. | High | Open |
 | FR-014 | Change impact | As a developer, I want to compare two models and compute the affected Loci, relations and rules for a changed Locus or capability from the model itself. | High | Open |
 | FR-015 | Semantic Closure check | As a developer, I want a file-level check that reports unowned files, ambiguous ownership, claims that match no file, undeclared cross-Locus imports and unknown external packages, with its limits documented. | High | Open |
@@ -362,7 +362,7 @@ Each substantial existing component was audited against the directive (§9). The
 - "File and module granularity" is the declared scope of Semantic Closure. Function-level ownership is out of scope and documented as a limit.
 - Model Context Protocol over stdio is the agent tool transport. The installed Effect AI modules provide it.
 - The calculator web interface is a page of the documentation site (allowed by directive §11).
-- "Observed" knowledge (runtime observation) is a status value of the model. No observation source is built in this mission, and this is documented as future work.
+- "Observed" knowledge (runtime observation) and "invalidated" knowledge (a fact that a later change or run contradicts, directive §5) are status values of the model. Nothing produces them in this mission, and this is documented as future work.
 
 ## Open owner decisions
 
