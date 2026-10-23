@@ -125,7 +125,7 @@ export interface ToolAnnotations { readonly readOnlyHint: boolean; readonly dest
 export interface ToolDefinition {
   readonly name: string                       // capability name, or telos_* for introspection tools
   readonly description: string
-  readonly inputSchema: unknown               // capability.input.schema (JSON Schema object), with definitions inlined under "$defs" when non-empty
+  readonly inputSchema: unknown               // derived with toolInputSchema(capability.input), see below
   readonly annotations: ToolAnnotations       // readOnlyHint = idempotentHint = (effect !== "write"); destructiveHint = false; openWorldHint = false
   readonly _meta: { readonly "telos/capability": string | null; readonly "telos/effect": EffectClass }  // ref string, or null for introspection tools
 }
@@ -140,7 +140,16 @@ export const callTool: (model: SemanticModel, agentLocusId: string, name: string
 // unknown name -> isError with { tag: "CapabilityNotFound", message: "Agent <id> has no tool <name>.", issues: [] }
 // otherwise invoke(model, ref, args, { via: agentLocusId }) and map the outcome; args are passed unchanged (no coercion; JSON values)
 export function toToolResult(outcome: InvocationOutcome): ToolResult
+export function toolInputSchema(input: JsonSchemaDocument): Readonly<Record<string, unknown>>
 ```
+
+`toolInputSchema` turns the kernel's `JsonSchemaDocument` into an MCP tool input schema. MCP requires `inputSchema.type === "object"` (`McpSchema.ToolJson`). The rules, in order:
+
+1. `top = input.schema`. If `top` is exactly `{ "$ref": "#/$defs/<Name>" }` and `input.definitions[<Name>]` exists, `top = input.definitions[<Name>]` (an identifier-annotated struct or a `Schema.Class`).
+2. If `top` deep-equals `{ "not": { "type": "null" } }` (what `Schema.toJsonSchemaDocument(Schema.Struct({}))` returns), `top = { "type": "object", "properties": {} }`.
+3. If `input.definitions` has at least one key, the result is `{ ...top, "$defs": input.definitions }`; otherwise it is `{ ...top }`.
+
+Any other top-level schema (for example a non-struct input) is returned as it is; `agent.input-object` then fails for it, and `registerTools` skips tools whose `inputSchema.type !== "object"`. Prototyped outputs (effect 4.0.4): `Schema.Struct({ a: Schema.Finite, b: Schema.Finite })` gives `{"type":"object","properties":{"a":{"type":"number"},"b":{"type":"number"}},"required":["a","b"],"additionalProperties":true}` with empty definitions.
 
 ### introspection-tools.ts
 
@@ -162,7 +171,8 @@ export function introspectionTools(telos: TelosApi): ReadonlyArray<Introspection
 | `telos_verifications` | `{ id: string }` | `{ verifications: VerificationDescription[] }` (latest report of the service, else not-run) |
 | `telos_impact` | `{ target: string }` | the `ImpactReport` |
 
-- Input is decoded with `Schema.Struct({ id: Schema.String })` or `{ target: Schema.String }`. Failure → `{ tag: "InvalidInput", message: "Invalid input for <tool>.", issues }`.
+- Each tool's `inputSchema` is `toolInputSchema(toJsonSchema(<its input schema>))`, where the input schema is `Schema.Struct({})` for `telos_list_loci`, `Schema.Struct({ id: Schema.String })` for the four id tools and `Schema.Struct({ target: Schema.String })` for `telos_impact`. So `telos_list_loci` has exactly `{ "type": "object", "properties": {} }`.
+- Input is decoded with the same schema. Failure → `{ tag: "InvalidInput", message: "Invalid input for <tool>.", issues }`.
 - `LocusNotFound` and `CapabilityNotFound` failures → `{ tag, message, issues: [] }`.
 - All annotations are `readOnlyHint: true, idempotentHint: true, destructiveHint: false, openWorldHint: false`, with `_meta["telos/capability"] = null` and `_meta["telos/effect"] = "read"`.
 
@@ -177,7 +187,7 @@ export const BunStdio: Layer.Layer<Stdio.Stdio>
 //   stderr: () => Sink.forEach((c: string | Uint8Array) => Effect.sync(() => { process.stderr.write(c) })),
 //   stdin: Stream.fromReadableStream({ evaluate: () => Bun.stdin.stream() as ReadableStream<Uint8Array>, onError: (e) => e as any }) })
 export const registerTools: (telos: TelosApi, agentLocusId: string) => Layer.Layer<never, never, McpServer.McpServer>
-// Layer.effectDiscard: for every deriveTools(...) entry and every introspectionTools(...) entry:
+// Layer.effectDiscard: for every deriveTools(...) entry whose definition.inputSchema.type === "object", and every introspectionTools(...) entry:
 //   server.addTool({ tool: new McpSchema.Tool({ name, description, inputSchema, annotations: <plain object>, _meta }), annotations: Context.empty(),
 //     handle: (payload) => <call>.pipe(Effect.map((r) => new McpSchema.CallToolResult({ content: [{ type: "text", text: r.text }] as any, structuredContent: r.structured, isError: r.isError }))) })
 // content MUST be plain objects (McpSchema.TextContent instances cause an InternalError)
@@ -220,12 +230,12 @@ export const AgentInterface: Archetype   // id "telos.agent.interface", appliesT
 | --- | --- | --- |
 | `agent.tools-exist` | static | at least one valid `agent.tool` relation |
 | `agent.tool-names` | static | every exposed capability name matches `TOOL_NAME_PATTERN`, is not in `INTROSPECTION_TOOL_NAMES`, and is unique |
-| `agent.input-object` | static | every exposed capability's input JSON Schema has `type: "object"` (after `$ref` resolution) |
+| `agent.input-object` | static | every derived tool's `definition.inputSchema.type === "object"` (after `toolInputSchema`) |
 | `agent.invalid-input-error` | execution | for every tool with a required field, `callTool(model, id, name, {})` gives `isError: true` and `structured.error.tag === "InvalidInput"` |
 
 ### index.ts
 
-Exports `AGENT_TOOL_TYPE, AgentTool, AgentSemantics, AgentInterface, TOOL_NAME_PATTERN, deriveTools, callTool, toToolResult, introspectionTools, INTROSPECTION_TOOL_NAMES, ToolDefinition, ToolAnnotations, ToolResult, DerivedTool, IntrospectionTool`.
+Exports `AGENT_TOOL_TYPE, AgentTool, AgentSemantics, AgentInterface, TOOL_NAME_PATTERN, deriveTools, callTool, toToolResult, toolInputSchema, introspectionTools, INTROSPECTION_TOOL_NAMES, ToolDefinition, ToolAnnotations, ToolResult, DerivedTool, IntrospectionTool`.
 
 ---
 

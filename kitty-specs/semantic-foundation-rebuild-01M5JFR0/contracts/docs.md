@@ -182,7 +182,7 @@ WP18 replaces the old scenario playground before WP19 removes the spec report, b
 ### Removal (WP20)
 
 - Delete `packages/locus/` entirely.
-- Move `packages/locus/test/manifest.test.ts`, the workspace manifest check (exact pins, no trusted scripts), to `scripts/manifest.test.ts`. Its paths are adapted, and its claims stay the same.
+- The workspace manifest check (exact pins, no trusted scripts) already lives in `scripts/manifest.test.ts`: WP01 creates it for the new packages. Deleting `packages/locus/` also deletes `packages/locus/test/manifest.test.ts`; WP20 removes the `@telos/locus` entry from `scripts/manifest.test.ts`'s package list if it has one.
 - Remove the `packages/locus` references from the root `tsconfig.json`, `apps/docs/package.json` (`@telos/locus`), `telos.ts` (`telos:legacy-locus`) and its `.grace` legacy area documents. Run `bun install` to update `bun.lock` (workspace entries only).
 
 ### e2e (WP18 playground and selectors, WP20 calculator)

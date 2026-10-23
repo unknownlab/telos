@@ -139,14 +139,15 @@ docs/                             # foundation, principles, terminology, decisio
 Every WP must leave `bun run verify` green, because the review gate runs the whole suite. Three rules follow from that:
 
 - **WP01 creates every new workspace** (package manifests, tsconfig project references, export maps, workspace links in `bun.lock`) and splits `.grace/` into one graph document and one verification document per WP area. Later WPs then never edit the shared files `tsconfig.json`, `bun.lock` or the `.grace` index documents, except for their own `<Owns>` block. Parallel lanes therefore do not conflict.
-- **Kernel modules are imported by relative path inside the kernel until WP09** writes the public `index.ts`. Parallel kernel WPs (WP05–WP08) never edit the same file.
+- **Kernel modules are imported by relative path inside the kernel until WP09** writes the public `index.ts`. Parallel kernel WPs (WP05, WP07, WP08) never edit the same file. WP06 follows WP05, because `describe.ts` uses `applicableArchetypes` and the verification types from `verify.ts`.
 - **The old package is removed last (WP20)**, after the docs site stops importing it. Until then the old tests keep passing unchanged.
 
 ```mermaid
 flowchart LR
   WP01 --> WP02 --> WP03 --> WP04
-  WP04 --> WP05 & WP06 & WP07 & WP08
-  WP05 & WP06 & WP07 --> WP09
+  WP04 --> WP05 & WP07 & WP08
+  WP05 --> WP06
+  WP06 & WP07 --> WP09
   WP09 --> WP10 & WP11 & WP12 & WP13
   WP10 & WP11 & WP12 & WP13 --> WP14
   WP14 & WP08 --> WP15
