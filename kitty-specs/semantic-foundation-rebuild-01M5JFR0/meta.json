@@ -1,0 +1,16 @@
+{
+  "coordination_branch": "kitty/mission-semantic-foundation-rebuild-01M5JFR0",
+  "created_at": "2026-10-22T18:59:59.729556+00:00",
+  "flattened": false,
+  "friendly_name": "Semantic Foundation Rebuild",
+  "mission_id": "01M5JFR0GHYQFRQCZSGQ29Y2VX",
+  "mission_number": null,
+  "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
+  "mission_type": "software-dev",
+  "pr_bound": true,
+  "purpose_context": "The first Telos code models a fixed Locus with a mandatory Charter, a closed set of relation kinds, a separate Fabric entity and a fixed specification runner. The owner's new direction makes Telos a semantic-first programming system for agent-native software engineering: software exposes its own meaning, structure, relationships, operations and verification through executable interfaces. This mission replaces the old model with a small kernel built on a minimal Locus, composable semantic extensions, typed relationships, Archetype-based checks, ownership coverage and an introspection API, then proves it with a calculator whose CLI, web page and agent tools share one arithmetic implementation, and updates the documentation site with a real semantic inspector.",
+  "purpose_tldr": "Rebuild Telos around Locus as the only semantic entity, with composable extensions, Archetype verification and agent-native introspection, proven by one calculator exposed through CLI, Web and agent tools.",
+  "slug": "semantic-foundation-rebuild-01M5JFR0",
+  "target_branch": "feat/semantic-foundation-rebuild",
+  "topology": "coord"
+}
