@@ -92,6 +92,9 @@
       "last_event_id": "01M5PJRAEP34CYD05Q8MHZAM1W",
       "last_transition_at": "2026-10-24T09:09:33.271034+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Ready for review: definition API, tests and GRACE markup; verify green"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 60290,
