@@ -196,6 +196,262 @@ Telos by UnknownLab is a semantic-first, agent-native TypeScript framework. Soft
 
 Every link must resolve. Check with `test -e` for each target.
 
+### Further sweep items (added 2026-10-24)
+
+The planner found these items while it checked WP20 on a scratch copy, and applied and checked each one there:
+
+- `typecheck` passed.
+- The agent, web and CLI Pack tests passed.
+- The calculator tests passed (70).
+- The new component test passed (2).
+- `grace lint` reported 0 errors.
+
+Do every item exactly as written. Items S1 to S8 belong to T127, and item S9 belongs to T128. Every file named here is a sanctioned edit. Where an item says "replace", the old text and the new text are given in `text` blocks. Copy them character for character.
+
+**S1 – The playground llms line names the kernel package.** The source of truth is `PLAYGROUND_INTRO` in `apps/docs/src/playground/registry.ts`: "Type a Locus definition as JSON; the real @telos/kernel decodes, builds and verifies it in your browser." Three files still say `the real /kernel decodes`. In each file, replace `the real /kernel decodes` with `the real @telos/kernel decodes`, and change nothing else:
+
+- `apps/docs/scripts/content.ts` (the Playground block of `llmsText`)
+- `apps/docs/test/content.test.ts` (the Playground line of `EXPECTED_LLMS`)
+- `apps/docs/e2e/machine-files.e2e.ts` (the Playground line of `APP_PAGE_LINES`)
+
+Afterwards, `git grep -n "real /kernel" -- apps docs` prints nothing.
+
+**S2 – ADR-0023 lists the real knowledge statuses.** The values are the type `Knowledge` in `packages/kernel/src/describe.ts`. The closure check in `packages/kernel/src/closure.ts` produces `unknown` (`closure.unparsable`). In `docs/decisions/ADR-0023-archetypes-and-knowledge-status.md` (decision point 4), replace
+
+```text
+The statuses are `declared`, `derived`, `verified`, `failed` and `not run`.
+```
+
+with
+
+```text
+The statuses are `declared`, `derived`, `verified`, `failed`, `not-run` and `unknown`; Semantic Closure gives `unknown` for a file it cannot parse.
+```
+
+Leave the rest of the ADR unchanged.
+
+**S3 – `packages/kernel/src/status.ts` does not exist.** The statuses are the type `Knowledge` in `packages/kernel/src/describe.ts`. Make exactly these replacements.
+
+1. `docs/foundation/terminology/knowledge-status.md`: replace
+
+   ```text
+   The statuses are defined in `packages/kernel/src/status.ts`.
+   ```
+
+   with
+
+   ```text
+   The statuses are the values of the type `Knowledge` in `packages/kernel/src/describe.ts`.
+   ```
+
+2. `docs/foundation/principles/P13-no-unverified-guarantees.md`: replace
+
+   ```text
+   - The status vocabulary is defined in `packages/kernel/src/status.ts` and every finding carries one.
+   ```
+
+   with
+
+   ```text
+   - The status vocabulary is the type `Knowledge` in `packages/kernel/src/describe.ts`, and every finding carries one.
+   ```
+
+3. `docs/foundation/architecture/capabilities.md`, in the "In this mission" bullet that names `verify`, replace
+
+   ```text
+   knowledge statuses from `packages/kernel/src/status.ts`.
+   ```
+
+   with
+
+   ```text
+   knowledge statuses of the type `Knowledge` in `packages/kernel/src/describe.ts`.
+   ```
+
+   Then delete the last sentence of the same bullet. The executable specifications were removed with `packages/locus`. The sentence to delete, with the space before it:
+
+   ```text
+    Temporary executable specifications run with `bun test` ([ADR-0013](../../decisions/ADR-0013-temporary-executable-specifications.md)).
+   ```
+
+Afterwards, `git grep -n "kernel/src/status.ts" -- . ':!kitty-specs' ':!docs/research'` prints nothing.
+
+**S4 – P14 names the check that exists.** First confirm the claim: `bun run telos inspect telos:kernel` prints `"packages":["effect"]`. If it prints more, write the real list in the new bullet and report it. Then, in `docs/foundation/principles/P14-no-ai-in-the-kernel.md`, section "In practice", replace
+
+```text
+- No file in `packages/kernel/src` imports a model provider SDK. A check in the repository gate rejects such an import.
+```
+
+with
+
+```text
+- No file in `packages/kernel/src` imports a model provider SDK. The Semantic Closure check of `bun run telos check` (the last step of `bun run verify`) rejects every package import in `packages/kernel` that `telos:kernel` does not declare in `telos.ts`, and `telos:kernel` declares only `effect`.
+```
+
+**S5 – One extension id per Pack.** Each Pack exports its extension id as a constant:
+
+- `AGENT_EXTENSION_ID` in `packages/agent/src/tools.ts`
+- `WEB_EXTENSION_ID` in `packages/web/src/form.ts`
+- `CLI_EXTENSION_ID` in `packages/cli/src/derive.ts`
+
+The CLI Pack already uses its constant. The agent and web Packs repeat the string. Make exactly these edits. Behavior does not change, because each constant equals the string it replaces.
+
+- `packages/agent/src/semantics.ts`:
+  - `import { AGENT_TOOL_TYPE } from "./tools";` becomes `import { AGENT_EXTENSION_ID, AGENT_TOOL_TYPE } from "./tools";`
+  - `export const AgentSemantics = Extension.make("telos.agent", {` becomes `export const AgentSemantics = Extension.make(AGENT_EXTENSION_ID, {`
+- `packages/web/src/semantics.ts`:
+  - `import { WEB_FORM_TYPE } from "./form";` becomes `import { WEB_EXTENSION_ID, WEB_FORM_TYPE } from "./form";`
+  - `export const WebSemantics = Extension.make("telos.web", {` becomes `export const WebSemantics = Extension.make(WEB_EXTENSION_ID, {`
+- `packages/web/src/archetype.ts`:
+  - `import { exposedRelations, firstExposed, formModel } from "./form";` becomes
+
+    ```ts
+    import {
+      WEB_EXTENSION_ID,
+      exposedRelations,
+      firstExposed,
+      formModel,
+    } from "./form";
+    ```
+
+  - `appliesTo: ["telos.web"],` becomes `appliesTo: [WEB_EXTENSION_ID],`
+
+Do not change the tests. They compare with the literal strings on purpose.
+
+Then:
+
+- `bun run typecheck` passes.
+- `bun test packages/agent/test packages/web/test packages/cli/test` reports 0 fail.
+- `git grep -n -E 'make\("telos\.(agent|web|cli)"|appliesTo: \["telos\.' -- packages/agent/src packages/web/src packages/cli/src` prints nothing.
+
+**S6 – The keyboard test reaches every playground control.** The playground now has a `<select>`, the example picker. In `apps/docs/e2e/keyboard.e2e.ts`, replace the module map line
+
+```text
+//   PLAYGROUND_CONTROLS - the selector of every button, textarea and input inside a playground
+```
+
+with
+
+```text
+//   PLAYGROUND_CONTROLS - the selector of every button, textarea, input and select inside a playground
+```
+
+and replace the selector string
+
+```text
+'[data-slot="playground"] button, [data-slot="playground"] textarea, [data-slot="playground"] input'
+```
+
+with
+
+```text
+'[data-slot="playground"] button, [data-slot="playground"] textarea, [data-slot="playground"] input, [data-slot="playground"] select'
+```
+
+**S7 – A component test for the stale-result label.** So far only the browser test checks that a playground result becomes historical when the text changes. Create `apps/docs/test/playground-results.test.tsx` with exactly this content:
+
+```tsx
+// START_MODULE_CONTRACT
+//   PURPOSE: Prove that a playground result names its origin and is labelled historical as soon as the editor text differs from the text that was run (FR-021).
+//   SCOPE: The static markup of PlaygroundResults for one real run of the minimal example, with the same and with a changed editor text. Bun only; no browser.
+//   DEPENDS: M-DOCS-PLAYGROUND
+//   LINKS: V-M-DOCS-PLAYGROUND
+//   ROLE: TEST
+//   MAP_MODE: LOCALS
+// END_MODULE_CONTRACT
+//
+// START_MODULE_MAP
+//   MINIMAL - the JSON text of the minimal playground example
+//   RUN - one real run of MINIMAL
+// END_MODULE_MAP
+
+import { describe, expect, test } from "bun:test";
+import { Effect } from "effect";
+import { renderToStaticMarkup } from "react-dom/server";
+import { PlaygroundResults } from "@/playground/components/playground-results";
+import { PLAYGROUND_EXAMPLES } from "@/playground/examples";
+import { runDefinition } from "@/playground/run";
+
+const MINIMAL =
+  PLAYGROUND_EXAMPLES.find((example) => example.name === "minimal")?.json ?? "";
+const RUN = {
+  text: MINIMAL,
+  result: await Effect.runPromise(runDefinition(MINIMAL)),
+  ranAt: "2026-01-01T00:00:00.000Z",
+};
+
+describe("playground results: the stale-result label", () => {
+  test("a result for the current text is from the browser and not historical", () => {
+    const html = renderToStaticMarkup(
+      <PlaygroundResults run={RUN} currentText={MINIMAL} />,
+    );
+    expect(html).toContain('data-provenance="browser"');
+    expect(html).toContain("Run in this browser at ");
+    expect(html).not.toContain("Historical:");
+  });
+
+  test("a result for a changed text is labelled historical", () => {
+    const html = renderToStaticMarkup(
+      <PlaygroundResults run={RUN} currentText={`${MINIMAL} `} />,
+    );
+    expect(html).toContain('data-provenance="historical"');
+    expect(html).toContain("Historical: run in this browser at ");
+    expect(html).toContain("The input has changed since this run.");
+  });
+});
+```
+
+Then edit the entry `<V-M-DOCS-PLAYGROUND>` in `.grace/verification/docs.xml`:
+
+- Add `        <File>apps/docs/test/playground-results.test.tsx</File>` directly after `        <File>apps/docs/test/playground-safety.test.ts</File>`.
+- Change `<Command>bun test apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts</Command>` to `<Command>bun test apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts apps/docs/test/playground-results.test.tsx</Command>`.
+
+Run `bun test apps/docs/test/playground-results.test.tsx` (expected: 2 pass) and `bun run grace:lint` (expected: 0 errors). The test is a new file outside `owned_files`, so commit it yourself (see "Commit before move-task" below).
+
+**S8 – Lint hygiene.** At planning time `bun run lint` reported 33 warnings. Two of them are `no-unused-vars` warnings on unused imports in the calculator tests. Delete only these two lines; each warning points at its line:
+
+- `apps/calculator/test/app.test.ts`: the line `  divide,` in the import from `../src/arithmetic` (line 34 at planning time).
+- `apps/calculator/test/impact.test.ts`: the line `  add,` in the import from `../src/arithmetic` (line 34 at planning time).
+
+The names still appear elsewhere in those files as strings, for example the command name "divide". That is expected; the lint warning is about the import only. Afterwards:
+
+- `bun run typecheck` passes.
+- `bun test apps/calculator/test` reports 0 fail.
+- `bun run lint` reports 31 warnings.
+
+Leave the `no-explicit-any` and `{}` type warnings in the kernel and agent sources and tests. They are type-level choices, not dead code. Report the warning count before and after.
+
+These outputs are known and are not failures:
+
+- the CLI help text that the `packages/cli` tests print
+- the Vite config loader warning and the chunk size warning of `docs:build`
+
+After `bun run verify`, `git status --short` must show only the changes you made on purpose.
+
+**S9 – Checks only.** WP19 already fixed these. If a check finds a hit, fix it with the smallest edit and report it.
+
+- `git grep -n -i -E "revision-id|data-revision" -- apps/docs` prints nothing: no `data-revision-id` selector and no `revision-id` result kind.
+- In `apps/docs/src/components/result-panel.tsx`, `ResultKind` has no `"revision-id"` member.
+- In `apps/docs/e2e/provenance.e2e.ts`, `ORIGINS` is exactly `"browser"`, `"bun-build"`, `"historical"` and `"none"`, with no `"ci"`. These are the origins the site produces:
+  - `bun-build` comes from `apps/docs/src/lib/provenance.ts`.
+  - `browser` and `historical` come from the playground results.
+  - `none` marks an empty slot.
+
+**Notes.**
+
+- The line about the closure codes in `tasks.md` was corrected during planning. Never edit `kitty-specs/**`.
+- WP20 did not touch `docs/tooling.md`. The `docs/tooling.md` section above covers its `bun run telos` and `telos:check` rows.
+
+**Commit before move-task.** The `move-task` auto-commit refuses files outside `owned_files`. Before you run `move-task`, commit every sanctioned edit yourself, staging explicit paths. A suggested split:
+
+- `docs(foundation): align knowledge statuses, P14 and ADR-0023 with the kernel` (S2, S3, S4)
+- `refactor(packs): use the exported extension id constants` (S5)
+- `test(docs): check the stale playground label and the select control` (S6, S7)
+- `fix(docs): name @telos/kernel in the playground llms line` (S1)
+- `chore(calculator): remove unused test imports` (S8)
+
+Name every sanctioned file in the commit body.
+
 ## Rules for this work package
 
 Read these rules before you write anything. They are part of the acceptance criteria.
@@ -237,6 +493,16 @@ Read these rules before you write anything. They are part of the acceptance crit
 - `docs/foundation/terminology/*.md` (WP16): the `maturity` line only, raised to `implemented` per the table in this prompt; the Maturity column of the terminology README.
 - `docs/decisions/ADR-0015-product-naming.md` (WP17): the two sentences quoted in this prompt, nothing else.
 - `docs/foundation/README.md`, `docs/foundation/architecture/capabilities.md`, `docs/foundation/roadmap/README.md` (WP16): sentences that call an existing module planned or not yet built.
+- The files of "Further sweep items" S1 to S9, and only the edits written there:
+  - `apps/docs/scripts/content.ts`, `apps/docs/test/content.test.ts`, `apps/docs/e2e/machine-files.e2e.ts` (WP16, WP19): S1
+  - `docs/decisions/ADR-0023-archetypes-and-knowledge-status.md` (WP17): S2
+  - `docs/foundation/terminology/knowledge-status.md`, `docs/foundation/principles/P13-no-unverified-guarantees.md`, `docs/foundation/architecture/capabilities.md` (WP16): S3
+  - `docs/foundation/principles/P14-no-ai-in-the-kernel.md` (WP16): S4
+  - `packages/agent/src/semantics.ts`, `packages/web/src/semantics.ts`, `packages/web/src/archetype.ts` (WP11, WP12): S5
+  - `apps/docs/e2e/keyboard.e2e.ts` (WP18): S6
+  - the new `apps/docs/test/playground-results.test.tsx` and `.grace/verification/docs.xml` (WP18): S7
+  - `apps/calculator/test/app.test.ts`, `apps/calculator/test/impact.test.ts` (WP14): S8
+  - any file that an S9 check finds
 
 ## Branch Strategy
 
@@ -278,6 +544,7 @@ Classify every group 2 hit as (a), (b), (c) or "fix". `bun.lock` must have no gr
    - Group 1 prints nothing.
    - The "removed files" loop prints nothing.
    - Every remaining group 2 hit is (a), (b) or (c).
+6. Do the further sweep items S1 to S8 (section "Further sweep items" above), each with its own after-check.
 
 ### T128 – Cross-check documentation, GRACE and the model
 
@@ -303,6 +570,7 @@ Each shell call starts a new fish session, so define `allowed` again exactly as 
 4. **Implemented versus future.**
    - In `docs/foundation/README.md`, `docs/foundation/architecture/capabilities.md` and `docs/foundation/roadmap/README.md`, find every sentence that says a module is planned, not yet built or "on a later branch" when it exists now. Change it to the present tense.
    - Future concepts in `future-semantic-evolution.md` stay future.
+5. **Checks only.** Run the S9 checks of "Further sweep items".
 
 ### T129 – Final gate and SC-006 evidence
 
@@ -322,6 +590,7 @@ Put the group 1 output (expected: empty) and the list of remaining group 2 hits 
 - [ ] Every document uses the existing front matter shape of its kind, and every link and `related` id resolves.
 - [ ] `bun run format`, then `bun run verify` passes in the worktree (report each step exactly).
 - [ ] `bun run grace:lint` passes.
+- [ ] Further sweep items S1 to S9 are done, and every sanctioned edit is committed before `move-task`.
 - [ ] Only owned files and the sanctioned edits changed (`git diff --stat` against the base shows nothing else).
 - [ ] Commits follow Conventional Commits with a scope (for example `docs(foundation): ...`), with no AI names and no author, co-author or session lines.
 - [ ] Mark each subtask done with `spec-kitty agent tasks mark-status <Txxx> --status done --mission semantic-foundation-rebuild-01M5JFR0`, then move the WP to review with `spec-kitty agent tasks move-task WP21 --to for_review --mission semantic-foundation-rebuild-01M5JFR0 --note "<one line>"`.
@@ -338,4 +607,5 @@ Put the group 1 output (expected: empty) and the list of remaining group 2 hits 
 - Term maturity matches the table, and every raised term has its code file.
 - `docs/tooling.md` lists every workspace package and the real `verify` order.
 - `README.md` links resolve.
+- S1 to S9 of "Further sweep items" are done exactly as written, each after-check prints what it should, and the lint warning count fell from 33 to 31.
 - `bun run verify`, `grace:lint` and `telos check` pass.
