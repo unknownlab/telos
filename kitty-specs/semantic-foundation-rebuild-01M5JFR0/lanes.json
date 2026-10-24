@@ -243,6 +243,7 @@
       "predicted_surfaces": [
         "api",
         "app-shell",
+        "artifact-rendering",
         "legacy-cleanup",
         "tracker-integration",
         "workspace"
@@ -523,6 +524,7 @@
       "predicted_surfaces": [
         "api",
         "app-shell",
+        "artifact-rendering",
         "legacy-cleanup",
         "tracker-integration",
         "workspace"
@@ -646,8 +648,8 @@
       "parallel_group": 12
     }
   ],
-  "computed_at": "2026-10-23T21:13:26.182745+00:00",
+  "computed_at": "2026-10-24T08:31:21.856899+00:00",
   "computed_from": "dependency_graph+ownership",
   "planning_artifact_wps": [],
-  "planning_commit_sha": "5e7adb01f039d57a8311473e489938efed88a3e7"
+  "planning_commit_sha": "0b1c5b2f278b57c0b18805155382bbe96b6d3db0"
 }
