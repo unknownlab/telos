@@ -8,6 +8,7 @@ summary: Entry point to the doctrine of Telos as semantic-first, agent-native pr
 related:
   [
     evolution-of-determinism,
+    ADR-0018,
     principles,
     terminology,
     conceptual-model,
@@ -33,7 +34,7 @@ This directory is the authoritative source for what Telos means. The documentati
 5. [Capability map](architecture/capabilities.md) and [technical direction](architecture/technical-direction.md).
 6. [Roadmap](roadmap/README.md) and [future semantic evolution](future-semantic-evolution.md).
 7. [Open questions](open-questions.md).
-8. Architecture decisions and research: the decision record for this rebuild is ADR-0018 (written next). See [decisions](../decisions/README.md) and [research](../research/README.md).
+8. Architecture decisions and research: the decision record for this rebuild is [ADR-0018](../decisions/ADR-0018-semantic-foundation-rebuild.md). See [decisions](../decisions/README.md) and [research](../research/README.md).
 
 ## The model in one page
 
