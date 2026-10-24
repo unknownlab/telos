@@ -1,0 +1,28 @@
+<GraceVerificationDocument graceVersion="4.0">
+  <VD-KERNEL-API>
+    <V-M-KERNEL-INTROSPECTION>
+      <TestFiles>
+        <File>packages/kernel/test/introspection.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/introspection.test.ts</Command>
+      <Scenario>The Telos service lists the model ids and resolves a known Locus to a view whose inspect, relations, capabilities and verifications match the description; an unknown Locus fails with LocusNotFound; impact fails with LocusNotFound or CapabilityNotFound for unknown ids; verifications are not-run before a verify and reflect the stored report after it; a granted capability invokes through the service; the layer provides the same service.</Scenario>
+      <TraceAssertion>introspection.test.ts names the Telos service tests: make and loci, resolve for known and unknown ids, view verifications before and after verify, describe and diagnostics, the three impact failures and the success case, invoke, and the layer.</TraceAssertion>
+    </V-M-KERNEL-INTROSPECTION>
+    <V-M-KERNEL-IMPACT>
+      <TestFiles>
+        <File>packages/kernel/test/impact.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/impact.test.ts</Command>
+      <Scenario>Impact lists the Loci granting a capability at distance one and their dependants at distance two with shortest paths sorted by distance then locus; a capability without grants affects nothing; a Locus target includes its capability relations; checks cover the target, the affected Loci and their containers once each; a new granting Locus appears after the model is rebuilt; diffModels reports contract, capability and Locus changes exactly and sorts them by locus, capability and kind.</Scenario>
+      <TraceAssertion>impact.test.ts names the impact tests for paths and sort order, the empty and Locus target cases, the checks test and the rebuild test, and the diffModels tests for identical, contract-changed, locus-added, locus-removed, capability-added and capability-removed, locus-changed and sorting.</TraceAssertion>
+    </V-M-KERNEL-IMPACT>
+    <V-M-KERNEL-API>
+      <TestFiles>
+        <File>packages/kernel/test/api.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/api.test.ts</Command>
+      <Scenario>The value exports of the main entry are exactly the contract names; every contract type name is exported for typecheck; the main entry with everything it imports never reaches closure.ts, Bun, node, React, effect platform modules or Packs.</Scenario>
+      <TraceAssertion>api.test.ts names the export list test and the import-graph test, and the ContractTypeNames alias checked by bun run typecheck.</TraceAssertion>
+    </V-M-KERNEL-API>
+  </VD-KERNEL-API>
+</GraceVerificationDocument>
