@@ -88,7 +88,9 @@
     </GD-PACK-AGENT>
     <GD-PACK-WEB>
       <Path>graph/pack-web.xml</Path>
-      <Owns />
+      <Owns>
+        <M-PACK-WEB />
+      </Owns>
     </GD-PACK-WEB>
     <GD-CALCULATOR-CORE>
       <Path>graph/calculator-core.xml</Path>
