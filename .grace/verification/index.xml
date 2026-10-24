@@ -49,15 +49,22 @@
     </VD-KERNEL-MODEL>
     <VD-KERNEL-VERIFY>
       <Path>verification/kernel-verify.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-VERIFY />
+      </Owns>
     </VD-KERNEL-VERIFY>
     <VD-KERNEL-DESCRIBE>
       <Path>verification/kernel-describe.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-DESCRIBE />
+        <V-M-KERNEL-INVOKE />
+      </Owns>
     </VD-KERNEL-DESCRIBE>
     <VD-KERNEL-DECODE>
       <Path>verification/kernel-decode.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-DECODE />
+      </Owns>
     </VD-KERNEL-DECODE>
     <VD-KERNEL-CLOSURE>
       <Path>verification/kernel-closure.xml</Path>
@@ -67,7 +74,11 @@
     </VD-KERNEL-CLOSURE>
     <VD-KERNEL-API>
       <Path>verification/kernel-api.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-INTROSPECTION />
+        <V-M-KERNEL-IMPACT />
+        <V-M-KERNEL-API />
+      </Owns>
     </VD-KERNEL-API>
     <VD-PACK-CLI>
       <Path>verification/pack-cli.xml</Path>
