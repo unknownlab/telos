@@ -14,6 +14,9 @@ requirement_refs:
 planning_base_branch: feat/semantic-foundation-rebuild
 merge_target_branch: feat/semantic-foundation-rebuild
 branch_strategy: Planning artifacts for this mission were generated on feat/semantic-foundation-rebuild. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/semantic-foundation-rebuild unless the human explicitly redirects the landing branch.
+base_branch: kitty/mission-semantic-foundation-rebuild-01M5JFR0
+base_commit: 7d3db0a79b2072ef30f824977097584274acc2a1
+created_at: '2026-10-24T09:03:51.075087+00:00'
 subtasks:
 - T012
 - T013
