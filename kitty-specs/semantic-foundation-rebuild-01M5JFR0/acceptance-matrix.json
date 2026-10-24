@@ -218,10 +218,10 @@
       "criterion_id": "FR-022",
       "description": "Verify FR-022 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "bun run verify exit 0 on lane-u (contains all 22 WPs): 846 unit tests, 102 e2e pass. bun run telos check (diagnostics [], verification 20 passed 0 failed, closure errors 0)",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-24T21:22:04.153609+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
