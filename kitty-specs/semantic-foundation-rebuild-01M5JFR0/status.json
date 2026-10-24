@@ -291,7 +291,8 @@
       "last_transition_at": "2026-10-24T13:44:07.606939+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: Telos service, impact, diffModels and public API with tests and GRACE markup"
+        "Ready for review: Telos service, impact, diffModels and public API with tests and GRACE markup",
+        "Review passed: verify green, exports match contract, impact derived from model"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
