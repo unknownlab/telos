@@ -1,0 +1,11 @@
+<GraceGraphDocument graceVersion="4.0">
+  <GD-KERNEL-MODEL>
+    <M-KERNEL-MODEL>
+      <Summary>Builds a checked semantic model from a root Locus and reports structural diagnostics.</Summary>
+      <Path>packages/kernel/src/model.ts</Path>
+      <M-KERNEL-DEFINITIONS />
+      <M-KERNEL-DIAGNOSTIC />
+      <M-KERNEL-IDENTITY />
+    </M-KERNEL-MODEL>
+  </GD-KERNEL-MODEL>
+</GraceGraphDocument>
