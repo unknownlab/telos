@@ -4,7 +4,7 @@ artifact_type: spec-kitty.analysis-report
 command: /spec-kitty.analyze
 mission_slug: semantic-foundation-rebuild-01M5JFR0
 mission_id: 01M5JFR0GHYQFRQCZSGQ29Y2VX
-generated_at: '2026-10-24T14:36:22.182968+00:00'
+generated_at: '2026-10-24T14:37:50.858823+00:00'
 analyzer_agent: claude
 input_artifacts:
   spec.md:
@@ -19,13 +19,13 @@ input_artifacts:
   charter:
     path: .kittify/charter/charter.yaml
     sha256: a0270792df9cee6767c37cb41fa9471bd003681bcdf3d6f8b2eb756c6bd33bd3
-verdict: unknown
+verdict: ready
 issue_counts:
-  critical:
-  high:
-  medium:
-  info:
-  low:
+  medium: 0
+  critical: 0
+  high: 0
+  low: 0
+  info: 2
 findings: []
 ---
 
