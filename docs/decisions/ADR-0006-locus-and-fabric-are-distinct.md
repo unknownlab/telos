@@ -6,7 +6,7 @@ status: proposed
 maturity: implemented
 date: 2026-10-21
 summary: A Fabric is a named composition of Loci and the scope in which identity uniqueness, reference resolution and structural rules are checked; it is not itself a Locus in Stage 0.
-related: [fabric, locus, P04-explicit-composition, open-questions]
+related: [semantic-model, locus, P02-composable-extensions, open-questions]
 ---
 
 # ADR-0006 — Locus and Fabric are distinct concepts
@@ -17,7 +17,7 @@ Several Stage 0 rules cannot be checked on one Locus alone: identities must be u
 
 ## Decision
 
-A [Fabric](../foundation/terminology/fabric.md) is a separate concept: an identified set of Loci that is validated as a whole. In Stage 0 a Fabric has an Identity and members and nothing else: no Charter, no owner, no history. Validation always runs on a Fabric, and a single Locus is validated by wrapping it in a Fabric; the references it makes must then resolve inside that Fabric.
+A [Fabric](../foundation/terminology/semantic-model.md) is a separate concept: an identified set of Loci that is validated as a whole. In Stage 0 a Fabric has an Identity and members and nothing else: no Charter, no owner, no history. Validation always runs on a Fabric, and a single Locus is validated by wrapping it in a Fabric; the references it makes must then resolve inside that Fabric.
 
 ## Alternatives
 

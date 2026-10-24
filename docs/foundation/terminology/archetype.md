@@ -2,59 +2,41 @@
 id: archetype
 title: Archetype
 kind: term
-order: 8
-classification: governance-model
+order: 25
+classification: verification-model
 fundamental: false
-engine: true
-stage0: deferred
+engine: false
+stage0: in-scope
 status: provisional
-maturity: vision
-summary: A reusable programmable architecture specification that defines allowed structures, responsibilities, relationships, constraints and composition rules.
-related: [law, fabric, relation, locus]
+maturity: proposed
+summary: A named set of verification rules that applies to every Locus whose composition includes the extensions the Archetype names.
+related:
+  [
+    rule,
+    finding,
+    semantic-extension,
+    composition,
+    P06-archetypes-specialize-verification,
+    P07-no-universal-correctness,
+  ]
 ---
 
 # Archetype
 
 ## Definition
 
-A reusable, programmable architecture specification defining allowed structures, responsibilities, relationships, constraints and composition rules.
+A named set of verification [rules](rule.md) that applies to every Locus whose [composition](composition.md) includes given [semantic extensions](semantic-extension.md).
 
-## Responsibility
+## Avoid
 
-An Archetype turns an architectural style into something the framework can check and help build. Applied to a [Fabric](fabric.md), it says which kinds of Loci may exist, which [Relations](relation.md) between them are allowed and which [Laws](law.md) hold.
+"law", "lens" and "validator". A law sounds normative and fixed; a lens is a view, not a check; a validator checks syntax. An Archetype groups rules that test a kind of Locus.
 
-## Boundaries
+## In the model
 
-- An Archetype is **not** a code template or scaffold generator. It may come with generators, but its essence is the rules.
-- An Archetype is **not** a Law. It is a coherent bundle of Laws, structural roles and composition rules.
-- An Archetype does **not** change the core model. It constrains it.
+`Archetype.make` in `packages/kernel/src/archetype.ts` builds an Archetype from named rules and the extensions it applies to. `verify` in `packages/kernel/src/verify.ts` runs the applicable rules and records one [finding](finding.md) per rule and Locus.
 
-## Relationships
+## Related
 
-Applied to [Fabrics](fabric.md). Composed of [Laws](law.md) and roles for [Loci](locus.md). May restrict or extend [Relation](relation.md) kinds ([OQ-013](../open-questions.md#oq-013)).
-
-## Invariants (proposed)
-
-- Applying an Archetype to a Fabric yields a deterministic list of violations.
-- Archetypes are versioned; a Fabric records which version it follows.
-
-## Lifecycle
-
-Defined, versioned, applied to Fabrics, revised through governed change, possibly deprecated.
-
-## Examples
-
-Functional DDD (aggregates, domain services, no infrastructure in the domain layer), Hexagonal Architecture (ports and adapters, dependencies point inward), Event-Driven Architecture, Actor Systems, Modular Monolith (modules communicate only through public interfaces).
-
-## Non-examples
-
-A Yeoman template, a folder convention, a lint rule on its own.
-
-## Open questions
-
-- How are Archetypes composed, for example Hexagonal inside a Modular Monolith?
-- Does dependency acyclicity belong in Archetypes rather than the core ([OQ-005](../open-questions.md#oq-005))?
-
-## Classification
-
-Governance model. Not fundamental. Needs a dedicated engine (architecture checker). Definition provisional. Stage 0: deferred.
+- [Rule](rule.md): one check of an Archetype.
+- [Finding](finding.md): the outcome of one rule on one Locus.
+- [Principle P06](../principles/P06-archetypes-specialize-verification.md) and [P07](../principles/P07-no-universal-correctness.md).
