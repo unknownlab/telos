@@ -90,6 +90,7 @@ The prototypes below ran on 2026-10-22 against the installed effect 4.0.4 and Bu
   - Type-only dependencies are not seen.
   - Computed `import(...)` is found by a separate text scan, `/\bimport\s*\(\s*(?!["'`])/` or a template literal with an interpolation (`/\bimport\s*\(\s*`[^`]*\$\{/`), and reported as `closure.dynamic-import` (warning, `knowledge: "unknown"`). A template literal without `${` is returned by `scanImports` and resolved like a string literal.
   - Generated files and `node_modules` are excluded by the scope globs.
+- Follow-up (2026-10-24, WP15): the first resolver treated any non-code extension as an asset, so the dotted module name `./routeTree.gen` (and `@/routeTree.gen`) was reported as unresolved although `routeTree.gen.ts` exists. Bun and Vite try the exact file first and then the code suffixes. contracts/kernel.md now does the same: an existing file with a non-code extension is an asset, otherwise `<path>.ts`, `<path>.tsx` and the index files are tried. A read-only run of the corrected resolver over the repository left no closure error except the docs externals that WP15 declares, and also none over the WP18 lane.
 
 ## R12 Supply chain
 

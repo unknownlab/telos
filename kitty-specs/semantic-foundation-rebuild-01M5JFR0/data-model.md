@@ -91,6 +91,6 @@ There are eight codes (`closure.unparsable` was added by WP22).
 | `closure.empty-claim` | warning | a `Source` glob matches no file in scope |
 | `closure.undeclared-dependency` | error | a file of Locus A imports a file owned by Locus B, where B is not A, an ancestor or descendant of A, or a target of a relation from A or its ancestors |
 | `closure.unknown-external` | error | a bare package import that no `External` declaration on the owner or its ancestors lists |
-| `closure.unresolved-import` | error | a relative import whose target file does not exist |
+| `closure.unresolved-import` | error | a relative, alias or workspace import that resolves to no file (an existing asset, or a dotted module name such as `./routeTree.gen` that resolves to `routeTree.gen.ts`, is not unresolved), or to a file no Locus owns |
 | `closure.dynamic-import` | warning | a computed `import(...)` (a non-literal argument, or a template literal with `${...}`), so the dependency is unknown; the finding has `knowledge: "unknown"` |
 | `closure.unparsable` | error | an owned file could not be read or parsed (`scanImports` threw), so its imports were not checked; `detail` is `"parse"` and the check continues with the next file |
