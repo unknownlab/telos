@@ -1,0 +1,13 @@
+{
+  "wp_id": "WP21",
+  "captured_at": "2026-10-24T21:02:25Z",
+  "base_branch": "feat/semantic-foundation-rebuild",
+  "base_commit": "51277650a3177823c778562fa8f9af4c4773f7af",
+  "test_runner": "custom",
+  "total": 0,
+  "passed": 0,
+  "failed": 0,
+  "skipped": 0,
+  "failures": [],
+  "source_identity": "DeclaredCommandScopeSource/junit_xml"
+}
