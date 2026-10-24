@@ -99,7 +99,9 @@
     </VD-PACK-WEB>
     <VD-CALCULATOR-CORE>
       <Path>verification/calculator-core.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-CALC-ARITHMETIC />
+      </Owns>
     </VD-CALCULATOR-CORE>
     <VD-CALCULATOR-INTERFACES>
       <Path>verification/calculator-interfaces.xml</Path>
