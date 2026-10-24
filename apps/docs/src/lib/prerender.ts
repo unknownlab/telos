@@ -23,6 +23,7 @@ export const APP_PAGES: ReadonlyArray<string> = [
   "/not-found",
   "/verification",
   "/playground",
+  "/calculator",
 ];
 
 // START_CONTRACT: inspectorPages

@@ -13,7 +13,7 @@
 //   MATURITIES - the closed set of maturity values in index.json
 //   REQUIRED_STRING_FIELDS - the string fields every index.json document has
 //   headingsOf - the level-two headings of an llms.txt body, in order
-//   APP_PAGE_LINES - the three llms.txt bullets that name app pages rather than documents
+//   APP_PAGE_LINES - the four llms.txt bullets that name app pages rather than documents
 //   readContentFile - reads the compiled content file the build wrote, the source the served files must match
 //   compareIds - orders two documents by id, by code unit, the way index.json sorts them
 //   expectedIndexDocuments - the index.json entries that the content file implies, sorted by id
@@ -78,10 +78,11 @@ function headingsOf(text: string): string[] {
     .map((line) => line.slice(3));
 }
 
-// The two llms.txt bullets that name app pages. content.ts writes them, not a document.
+// The four llms.txt bullets that name app pages. content.ts writes them, not a document.
 const APP_PAGE_LINES: ReadonlyArray<string> = [
   "- [Inspector](/inspector): The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json.",
   "- [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.",
+  "- [Calculator](/calculator): The calculator web interface: forms derived from the capability contracts of calculator:arithmetic.",
   "- [Verification](/verification): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.",
 ];
 

@@ -117,6 +117,7 @@ const PAGES: ReadonlyArray<AuditedPage> = [
   { name: "verification", path: "/verification" },
   { name: "inspector", path: "/inspector" },
   { name: "inspector Locus page", path: "/inspector/calculator--arithmetic" },
+  { name: "calculator", path: "/calculator" },
 ];
 
 test.describe("accessibility", () => {

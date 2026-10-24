@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgentReferenceRouteImport } from './routes/agent-reference'
+import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as ExamplesRouteImport } from './routes/examples'
 import { Route as FirstLocusRouteImport } from './routes/first-locus'
 import { Route as NotFoundRouteImport } from './routes/not-found'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
 const AgentReferenceRoute = AgentReferenceRouteImport.update({
   id: '/agent-reference',
   path: '/agent-reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExamplesRoute = ExamplesRouteImport.update({
@@ -128,6 +134,7 @@ const TerminologyIdRoute = TerminologyIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agent-reference': typeof AgentReferenceRoute
+  '/calculator': typeof CalculatorRoute
   '/examples': typeof ExamplesRoute
   '/first-locus': typeof FirstLocusRoute
   '/not-found': typeof NotFoundRoute
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agent-reference': typeof AgentReferenceRoute
+  '/calculator': typeof CalculatorRoute
   '/examples': typeof ExamplesRoute
   '/first-locus': typeof FirstLocusRoute
   '/not-found': typeof NotFoundRoute
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/agent-reference': typeof AgentReferenceRoute
+  '/calculator': typeof CalculatorRoute
   '/examples': typeof ExamplesRoute
   '/first-locus': typeof FirstLocusRoute
   '/not-found': typeof NotFoundRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/agent-reference'
+    | '/calculator'
     | '/examples'
     | '/first-locus'
     | '/not-found'
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/agent-reference'
+    | '/calculator'
     | '/examples'
     | '/first-locus'
     | '/not-found'
@@ -236,6 +247,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/agent-reference'
+    | '/calculator'
     | '/examples'
     | '/first-locus'
     | '/not-found'
@@ -258,6 +270,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgentReferenceRoute: typeof AgentReferenceRoute
+  CalculatorRoute: typeof CalculatorRoute
   ExamplesRoute: typeof ExamplesRoute
   FirstLocusRoute: typeof FirstLocusRoute
   NotFoundRoute: typeof NotFoundRoute
@@ -291,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/agent-reference'
       fullPath: '/agent-reference'
       preLoaderRoute: typeof AgentReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/examples': {
@@ -418,6 +438,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgentReferenceRoute: AgentReferenceRoute,
+  CalculatorRoute: CalculatorRoute,
   ExamplesRoute: ExamplesRoute,
   FirstLocusRoute: FirstLocusRoute,
   NotFoundRoute: NotFoundRoute,

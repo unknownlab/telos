@@ -47,6 +47,7 @@ const SECTION_CASES: ReadonlyArray<readonly [string, NavSectionId | null]> = [
   ["/principles/P01-one-fundamental-entity", "principles"],
   ["/architecture/foundation", "architecture"],
   ["/playground", "playground"],
+  ["/calculator", "calculator"],
   ["/inspector/telos--kernel", "inspector"],
   ["/not-found", null],
   ["/philosophyx", null],

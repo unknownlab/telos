@@ -115,6 +115,10 @@ const EXPECTED_LLMS = `# Telos by UnknownLab
 
 - [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.
 
+## Calculator
+
+- [Calculator](/calculator): The calculator web interface: forms derived from the capability contracts of calculator:arithmetic.
+
 ## Verification
 
 - [Verification](/verification): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.
