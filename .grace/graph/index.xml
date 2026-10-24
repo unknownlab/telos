@@ -105,7 +105,9 @@
     </GD-CALCULATOR-CORE>
     <GD-CALCULATOR-INTERFACES>
       <Path>graph/calculator-interfaces.xml</Path>
-      <Owns />
+      <Owns>
+        <M-CALC-INTERFACES />
+      </Owns>
     </GD-CALCULATOR-INTERFACES>
   </GraphDocuments>
 </GraceGraphIndex>

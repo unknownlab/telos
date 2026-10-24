@@ -5,7 +5,6 @@
       <Path>apps/calculator/src/errors.ts</Path>
       <Path>apps/calculator/src/arithmetic.ts</Path>
       <Path>apps/calculator/src/archetypes.ts</Path>
-      <Path>apps/calculator/src/index.ts</Path>
       <M-KERNEL-API />
     </M-CALC-ARITHMETIC>
   </GD-CALCULATOR-CORE>

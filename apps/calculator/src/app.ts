@@ -1,0 +1,337 @@
+// START_MODULE_CONTRACT
+//   PURPOSE: Define the calculator application Locus, the CalculatorInterfaces archetype that checks its interfaces, and the calculator model built from it.
+//   SCOPE: The app extension, the CalculatorInterfaces archetype with its three rules, the app Locus builder and the calculator model. It never implements an operation and never builds a presentation.
+//   DEPENDS: M-CALC-ARITHMETIC, M-CALC-INTERFACES, M-PACK-CLI, M-PACK-WEB, M-PACK-AGENT, M-KERNEL-API
+//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
+//   ROLE: RUNTIME
+//   MAP_MODE: EXPORTS
+// END_MODULE_CONTRACT
+//
+// START_MODULE_MAP
+//   CalculatorApp - the calculator.app extension that marks the application Locus
+//   CalculatorInterfaces - the archetype that checks completeness, single implementation and parity of the interfaces
+//   app - the calculator:app Locus that groups the arithmetic Locus and its three interfaces
+//   calculatorModel - the built semantic model of app
+//   makeApp - builds an application Locus of the same kind and id over the given contained Loci
+// END_MODULE_MAP
+
+import { Effect } from "effect";
+import { AgentSemantics, callTool } from "@telos/agent";
+import { CliSemantics, runCli } from "@telos/cli";
+import {
+  Archetype,
+  CapabilityRef,
+  Extension,
+  Locus,
+  Purpose,
+  Rule,
+  buildModel,
+  capabilityKey,
+  describeCapability,
+  invoke,
+  jsonEqual,
+  violation,
+  type InvocationError,
+  type InvocationOutcome,
+  type LocusDefinition,
+  type SemanticModel,
+} from "@telos/kernel";
+import { WebSemantics, formModel } from "@telos/web";
+import { Arithmetic, arithmetic } from "./arithmetic";
+import { calculatorAgent, calculatorCli, calculatorWeb } from "./interfaces";
+
+const APP_EXTENSION_ID = "calculator.app";
+const APP_PURPOSE =
+  "Proves that one arithmetic implementation serves a command line, a web page and agent tools.";
+const INTERFACE_EXTENSIONS = [
+  CliSemantics.id,
+  WebSemantics.id,
+  AgentSemantics.id,
+];
+const NO_ARITHMETIC = "The app contains no arithmetic Locus.";
+
+type Normalized =
+  | { readonly ok: true; readonly output: unknown }
+  | {
+      readonly ok: false;
+      readonly tag: string;
+      readonly message: string;
+      readonly paths: ReadonlyArray<string>;
+    };
+
+interface ParityInput {
+  readonly name: string;
+  readonly text: Readonly<Record<string, string>>;
+}
+
+const PARITY_INPUTS: ReadonlyArray<ParityInput> = [
+  { name: "add", text: { a: "2", b: "3" } },
+  { name: "divide", text: { a: "1", b: "0" } },
+  { name: "add", text: { a: "x", b: "1" } },
+  { name: "multiply", text: { a: "1e308", b: "10" } },
+];
+
+const byCodeUnit = (a: string, b: string): number =>
+  a < b ? -1 : a > b ? 1 : 0;
+
+const byId = (a: LocusDefinition, b: LocusDefinition): number =>
+  byCodeUnit(a.id, b.id);
+
+const hasExtension = (definition: LocusDefinition, id: string): boolean =>
+  definition.kind.extensions.some((extension) => extension.id === id);
+
+const namesOf = (definition: LocusDefinition): ReadonlyArray<string> =>
+  Object.keys(definition.capabilities).sort(byCodeUnit);
+
+const arithmeticOf = (
+  contains: ReadonlyArray<LocusDefinition>,
+): LocusDefinition | undefined =>
+  contains.find((definition) => hasExtension(definition, Arithmetic.id));
+
+const interfaceOf = (
+  contains: ReadonlyArray<LocusDefinition>,
+  extensionId: string,
+): LocusDefinition | undefined =>
+  contains.find((definition) => hasExtension(definition, extensionId));
+
+const normalize = (outcome: InvocationOutcome): Normalized =>
+  outcome.ok
+    ? { ok: true, output: outcome.output }
+    : {
+        ok: false,
+        tag: outcome.error.tag,
+        message: outcome.error.message,
+        paths: outcome.error.issues
+          .map((issue) => issue.path.join("."))
+          .sort(byCodeUnit),
+      };
+
+const jsonInput = (
+  text: Readonly<Record<string, string>>,
+): Record<string, unknown> =>
+  Object.fromEntries(
+    Object.entries(text).map(([key, value]) => [
+      key,
+      Number.isFinite(Number(value)) ? Number(value) : value,
+    ]),
+  );
+
+const argvOf = (input: ParityInput): ReadonlyArray<string> => [
+  input.name,
+  ...Object.entries(input.text).flatMap(([key, value]) => ["--" + key, value]),
+];
+
+const cliOutcome = (
+  model: SemanticModel,
+  cliId: string,
+  input: ParityInput,
+): Effect.Effect<Normalized> =>
+  Effect.gen(function* () {
+    const result = yield* runCli(model, cliId, argvOf(input));
+    if (result.exitCode === 0) {
+      return { ok: true, output: JSON.parse(result.stdout) as unknown };
+    }
+    const error = JSON.parse(result.stderr) as InvocationError;
+    return normalize({ ok: false, error });
+  });
+
+const webOutcome = (
+  model: SemanticModel,
+  webId: string,
+  input: ParityInput,
+): Effect.Effect<Normalized | null> =>
+  Effect.gen(function* () {
+    const webModel = yield* formModel(model, webId).pipe(
+      Effect.catchTag("LocusNotFound", () => Effect.succeed(null)),
+    );
+    if (webModel === null) return null;
+    const form = webModel.forms.find(
+      (candidate) => candidate.name === input.name,
+    );
+    if (form === undefined) return null;
+    return normalize(yield* form.submit(input.text));
+  });
+
+// START_CONTRACT: CalculatorInterfaces
+//   PURPOSE: Check that the calculator interfaces expose every arithmetic capability, that only the arithmetic Locus implements capabilities, and that the interfaces agree with the kernel on the parity inputs.
+//   INPUTS: none
+//   OUTPUTS: { Archetype - calculator.interfaces with three rules applied to calculator.app }
+//   SIDE_EFFECTS: none
+//   LINKS: M-CALC-INTERFACES
+// END_CONTRACT: CalculatorInterfaces
+export const CalculatorInterfaces = Archetype.make({
+  id: "calculator.interfaces",
+  description:
+    "Checks that the calculator's interfaces are complete, share one implementation and agree with each other.",
+  appliesTo: [APP_EXTENSION_ID],
+  rules: [
+    Rule.make({
+      id: "interfaces.complete",
+      description: "Every interface exposes every arithmetic capability.",
+      method: "static",
+      check: (ctx) =>
+        Effect.gen(function* () {
+          const arithmeticLocus = arithmeticOf(ctx.locus.contains);
+          if (arithmeticLocus === undefined) {
+            return yield* violation(NO_ARITHMETIC);
+          }
+          const interfaces = ctx.locus.contains
+            .filter((definition) =>
+              INTERFACE_EXTENSIONS.some((id) => hasExtension(definition, id)),
+            )
+            .sort(byId);
+          for (const definition of interfaces) {
+            for (const name of namesOf(arithmeticLocus)) {
+              const description = yield* describeCapability(
+                ctx.model,
+                arithmeticLocus.id,
+                name,
+              );
+              const exposed = description.exposedBy.some(
+                (entry) => entry.locus === definition.id,
+              );
+              if (!exposed) {
+                yield* violation(
+                  `Interface ${definition.id} does not expose ${capabilityKey(arithmeticLocus.id, name)}.`,
+                );
+              }
+            }
+          }
+        }),
+    }),
+    Rule.make({
+      id: "interfaces.single-implementation",
+      description: "Only the arithmetic Locus implements capabilities.",
+      method: "static",
+      check: (ctx) => {
+        const arithmeticLocus = arithmeticOf(ctx.locus.contains);
+        if (arithmeticLocus === undefined) return violation(NO_ARITHMETIC);
+        const offender = [...ctx.model.loci.values()]
+          .map((entry) => entry.definition)
+          .sort(byId)
+          .find(
+            (definition) =>
+              definition.id !== arithmeticLocus.id &&
+              namesOf(definition).length > 0,
+          );
+        return offender === undefined
+          ? Effect.void
+          : violation(
+              `Locus ${offender.id} declares a capability, but only ${arithmeticLocus.id} may implement capabilities.`,
+            );
+      },
+    }),
+    Rule.make({
+      id: "interfaces.parity",
+      description:
+        "Every interface gives the same outcome as the kernel for the parity inputs.",
+      method: "execution",
+      check: (ctx) =>
+        Effect.gen(function* () {
+          const arithmeticLocus = arithmeticOf(ctx.locus.contains);
+          if (arithmeticLocus === undefined) {
+            return yield* violation(NO_ARITHMETIC);
+          }
+          const cli = interfaceOf(ctx.locus.contains, CliSemantics.id);
+          const web = interfaceOf(ctx.locus.contains, WebSemantics.id);
+          const agent = interfaceOf(ctx.locus.contains, AgentSemantics.id);
+          if (cli === undefined || web === undefined || agent === undefined) {
+            return yield* violation(
+              "The app contains no command, web or agent interface.",
+            );
+          }
+          for (const input of PARITY_INPUTS) {
+            const json = jsonInput(input.text);
+            const kernel = normalize(
+              yield* invoke(
+                ctx.model,
+                CapabilityRef.make(arithmeticLocus.id, input.name),
+                json,
+                { via: arithmeticLocus.id },
+              ),
+            );
+            const fromCli = yield* cliOutcome(ctx.model, cli.id, input);
+            const fromWeb = yield* webOutcome(ctx.model, web.id, input);
+            const tool = yield* callTool(ctx.model, agent.id, input.name, json);
+            const fromAgent = normalize(tool.structured as InvocationOutcome);
+            const byInterface: ReadonlyArray<
+              readonly [string, Normalized | null]
+            > = [
+              [cli.id, fromCli],
+              [web.id, fromWeb],
+              [agent.id, fromAgent],
+            ];
+            const differing = byInterface
+              .filter(([, outcome]) => !jsonEqual(outcome, kernel))
+              .map(([id]) => id)
+              .sort(byCodeUnit);
+            if (differing.length > 0) {
+              yield* violation(
+                `Interfaces disagree on ${input.name} ${JSON.stringify(input.text)}: ${differing.join(", ")}.`,
+              );
+            }
+          }
+        }),
+    }),
+  ],
+});
+
+// START_CONTRACT: CalculatorApp
+//   PURPOSE: The extension that marks the calculator application Locus and carries CalculatorInterfaces.
+//   INPUTS: none
+//   OUTPUTS: { Extension<"calculator.app", {}> - the calculator.app extension }
+//   SIDE_EFFECTS: none
+//   LINKS: M-CALC-INTERFACES
+// END_CONTRACT: CalculatorApp
+
+// START_CONTRACT: makeApp
+//   PURPOSE: Build an application Locus of the calculator kind over the given contained Loci.
+//   INPUTS: { contains: ReadonlyArray<LocusDefinition> - the Loci the application contains }
+//   OUTPUTS: { LocusDefinition - calculator:app of kind Purpose + CalculatorApp }
+//   SIDE_EFFECTS: none
+//   LINKS: M-CALC-INTERFACES
+// END_CONTRACT: makeApp
+
+// START_CONTRACT: app
+//   PURPOSE: The calculator application with the arithmetic Locus and its three interfaces.
+//   INPUTS: none
+//   OUTPUTS: { LocusDefinition - calculator:app containing arithmetic, calculatorCli, calculatorWeb and calculatorAgent }
+//   SIDE_EFFECTS: none
+//   LINKS: M-CALC-INTERFACES
+// END_CONTRACT: app
+
+// START_CONTRACT: calculatorModel
+//   PURPOSE: The built semantic model of the calculator application.
+//   INPUTS: none
+//   OUTPUTS: { SemanticModel - buildModel(app) }
+//   SIDE_EFFECTS: none
+//   LINKS: M-CALC-INTERFACES
+// END_CONTRACT: calculatorModel
+
+// START_BLOCK_CALCULATOR_APP
+export const CalculatorApp = Extension.make(APP_EXTENSION_ID, {
+  description:
+    "Marks the calculator application that groups the arithmetic Locus and its interfaces.",
+  archetypes: [CalculatorInterfaces],
+});
+
+export function makeApp(
+  contains: ReadonlyArray<LocusDefinition>,
+): LocusDefinition {
+  return Locus.extend(Purpose, CalculatorApp).make({
+    id: "calculator:app",
+    description: "The calculator application.",
+    properties: { purpose: APP_PURPOSE },
+    contains,
+  });
+}
+
+export const app = makeApp([
+  arithmetic,
+  calculatorCli,
+  calculatorWeb,
+  calculatorAgent,
+]);
+
+export const calculatorModel = buildModel(app);
+// END_BLOCK_CALCULATOR_APP

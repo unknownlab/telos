@@ -105,7 +105,9 @@
     </VD-CALCULATOR-CORE>
     <VD-CALCULATOR-INTERFACES>
       <Path>verification/calculator-interfaces.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-CALC-INTERFACES />
+      </Owns>
     </VD-CALCULATOR-INTERFACES>
   </VerificationDocuments>
 </GraceVerificationIndex>
