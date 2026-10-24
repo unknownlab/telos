@@ -327,22 +327,23 @@
         "Ready for review"
       ],
       "provider": "__resolved_provider_absent__",
+      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/semantic-foundation-rebuild-01M5JFR0/tasks/WP10-pack-cli/review-cycle-1.md",
         "reference": "review-cycle://semantic-foundation-rebuild-01M5JFR0/WP10-pack-cli/review-cycle-1.md",
         "reviewer": "claude",
         "verdict": "changes_requested"
       },
-      "role": "reviewer",
-      "shell_pid": 75662,
-      "shell_pid_created_at": "1792850243.912292",
+      "role": "implementer",
+      "shell_pid": null,
+      "shell_pid_created_at": null,
       "subtasks": {
-        "T054": "done",
-        "T055": "done",
-        "T056": "done",
-        "T057": "done",
-        "T058": "done",
-        "T059": "done"
+        "T054": "planned",
+        "T055": "planned",
+        "T056": "planned",
+        "T057": "planned",
+        "T058": "planned",
+        "T059": "planned"
       }
     },
     "WP11": {
