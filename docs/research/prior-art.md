@@ -49,7 +49,7 @@ Evans's bounded contexts give a linguistic criterion for a boundary: one model a
 
 In the object-capability model (Mark Miller's work, the E language, later capability-safe JavaScript efforts), authority is conveyed only by holding a reference; there is no ambient authority. Principle of least authority follows from passing narrow references.
 
-**Reuse.** [P05](../foundation/principles/P05-capabilities-instead-of-arbitrary-tools.md) and [P06](../foundation/principles/P06-authority-is-explicit.md) are this model applied to agents. Acts are the narrow references, Mandates the grant. Enforcement needs a capability-safe substrate, which is [OQ-016](../foundation/open-questions.md#oq-016).
+**Reuse.** [P05](../foundation/principles/P15-no-arbitrary-agent-privileges.md) and [P06](../foundation/principles/P15-no-arbitrary-agent-privileges.md) are this model applied to agents. Acts are the narrow references, Mandates the grant. Enforcement needs a capability-safe substrate, which is [OQ-016](../foundation/open-questions.md#oq-016).
 
 ## Effect systems
 
@@ -79,7 +79,7 @@ Goal Structuring Notation and the OMG Structured Assurance Case Metamodel struct
 
 IBM's autonomic computing reference loop: Monitor, Analyse, Plan, Execute over shared Knowledge.
 
-**Adapt.** The [Evolution of Determinism](../foundation/philosophy/evolution-of-determinism.md) cycle resembles MAPE-K applied to the development of a system rather than its runtime behaviour, with Verification and Acceptance as explicit steps and humans holding strategic authority ([P13](../foundation/principles/P13-human-as-strategic-authority.md)).
+**Adapt.** The [Evolution of Determinism](../foundation/philosophy/evolution-of-determinism.md) cycle resembles MAPE-K applied to the development of a system rather than its runtime behaviour, with Verification and Acceptance as explicit steps and humans holding strategic authority ([P13](../foundation/principles/P15-no-arbitrary-agent-privileges.md)).
 
 ## Statecharts
 
@@ -91,7 +91,7 @@ Harel's statecharts add hierarchy, concurrency and history to state machines; SC
 
 "Build Systems à la Carte" (Mokhov, Mitchell, Peyton Jones) classifies build systems by scheduler and rebuilder. Salsa and similar frameworks recompute only queries whose inputs changed. Bazel uses content hashes to skip work.
 
-**Adapt.** Contextual verification ([P11](../foundation/principles/P11-verification-is-contextual.md)) is incremental computation over Relations: when a Revision changes, re-run checks of what is affected. Telos must decide what "affected" means semantically, not only by file dependency.
+**Adapt.** Contextual verification ([P11](../foundation/principles/P07-no-universal-correctness.md)) is incremental computation over Relations: when a Revision changes, re-run checks of what is affected. Telos must decide what "affected" means semantically, not only by file dependency.
 
 ## Supply-chain provenance: SLSA and in-toto
 

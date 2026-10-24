@@ -4,34 +4,40 @@ title: Capability map
 kind: capability-map
 status: provisional
 maturity: vision
-summary: The long-term subsystems of Telos, each with its purpose, relation to Locus, expected interfaces, likely engines, dependencies, maturity and research questions.
+summary: The subsystems of Telos, what exists after the semantic foundation rebuild with its module paths, and what is future direction only.
 related:
-  [technical-direction, roadmap, conceptual-model, evolution-of-determinism]
+  [
+    technical-direction,
+    roadmap,
+    conceptual-model,
+    evolution-of-determinism,
+    future-semantic-evolution,
+  ]
 ---
 
 # Capability map
 
-Telos is meant to grow into the subsystems below. This map is a direction, not a plan of record. Nothing here is implemented except where the maturity column says so, and no subsystem gets placeholder code before its own mission.
+Telos is meant to grow into the subsystems below. This map separates what exists after the semantic foundation rebuild, named by module path, from what is direction only. A capability marked "Not built in this mission" has no code and no placeholder; its entry in the [roadmap](../roadmap/README.md) is direction, not a plan of record ([principle P16](../principles/P16-no-speculative-implementation.md)).
 
-Maturity uses the [foundation vocabulary](../README.md#maturity-vocabulary): `vision` (direction only), `proposed` (designed), `implemented`.
+Maturity uses the [foundation vocabulary](../README.md#maturity-vocabulary): `vision` (direction only), `proposed` (designed, not yet implemented), `implemented` (code exists on this branch).
 
 ## Overview
 
 | ID     | Capability                 | Maturity | Depends on |
 | ------ | -------------------------- | -------- | ---------- |
 | CAP-01 | Semantic Foundation        | proposed | —          |
-| CAP-02 | Architecture               | vision   | 01         |
+| CAP-02 | Architecture               | proposed | 01         |
 | CAP-03 | Requirements               | vision   | 01         |
 | CAP-04 | Risk                       | vision   | 01, 03     |
-| CAP-05 | Verification and Assurance | vision   | 01, 03     |
-| CAP-06 | Agents                     | vision   | 01, 05, 07 |
+| CAP-05 | Verification and Assurance | proposed | 01, 03     |
+| CAP-06 | Agents                     | proposed | 01, 05, 07 |
 | CAP-07 | Evolution                  | vision   | 01, 05     |
 | CAP-08 | Processes                  | vision   | 01         |
-| CAP-09 | Applications               | vision   | 01, 08     |
+| CAP-09 | Applications               | proposed | 01, 08     |
 | CAP-10 | Infrastructure             | vision   | 01         |
 | CAP-11 | Knowledge                  | vision   | 01, 05, 07 |
 | CAP-12 | Observability              | vision   | 01, 09, 10 |
-| CAP-13 | Developer Experience       | vision   | 01         |
+| CAP-13 | Developer Experience       | proposed | 01         |
 | CAP-14 | Software Factory           | vision   | all        |
 
 ```mermaid
@@ -57,140 +63,140 @@ flowchart BT
 
 ## CAP-01 Semantic Foundation
 
-- **Purpose**: Locus identity, ownership, Relations, composition, metadata, semantic analysis, Revisions and change detection.
+- **Purpose**: Loci, identity, containment, relations, capabilities, contracts, semantic extensions, composition, Archetype rules, diagnostics, the semantic model and Semantic Closure.
 - **Relation to Locus**: defines it.
-- **Expected interfaces**: definition constructors; Fabric validation with diagnostics; Revision creation, history and diff; later graph queries and impact analysis.
-- **Likely engines**: none external; a graph store later if in-memory analysis stops scaling.
-- **Maturity**: `proposed`. The Stage 0 mission implemented the first slice, `@telos/locus`.
+- **In this mission**: built. `Locus.make` in `packages/kernel/src/locus.ts`; identity in `packages/kernel/src/identity.ts`; containment in `packages/kernel/src/containment.ts`; relations in `packages/kernel/src/relation.ts`; capabilities and contracts in `packages/kernel/src/capability.ts` and `packages/kernel/src/contract.ts`; extensions and composition in `packages/kernel/src/extension.ts` and `packages/kernel/src/composition.ts`; `buildModel` in `packages/kernel/src/model.ts`; Semantic Closure in `packages/kernel/src/closure.ts`.
+- **Not built in this mission**: revisions, history and diff. See [future semantic evolution](../future-semantic-evolution.md).
+- **Maturity**: `proposed` until the rebuild merges; then `implemented`.
 - **Research questions**: OQ-001 to OQ-013.
 - **Contribution to Evolution of Determinism**: makes "what is this and what does it touch" a deterministic question.
 
 ## CAP-02 Architecture
 
-- **Purpose**: Archetypes, architectural Laws, dependency validation, composition rules, architecture evolution.
-- **Relation to Locus**: constrains Fabrics of Loci and their Relations.
-- **Expected interfaces**: Archetype definitions; `check(fabric, archetype) → violations`; migration support between Archetype versions.
-- **Likely engines**: in-process graph checks; import-graph extractors for drift detection.
-- **Maturity**: `vision`.
-- **Research questions**: OQ-005, OQ-013, OQ-017; composing Archetypes.
+- **Purpose**: Archetypes, structural diagnostics, composition rules and checks of how Loci depend on one another.
+- **Relation to Locus**: constrains the Loci of a semantic model and their relations.
+- **In this mission**: partly built. Archetypes and rules in `packages/kernel/src/archetype.ts` and `packages/kernel/src/verify.ts`; structural diagnostics in `packages/kernel/src/diagnostic.ts`. The calculator declares its own Archetype.
+- **Not built in this mission**: migration between Archetype versions; import-graph extractors for drift detection. See the [roadmap](../roadmap/README.md).
+- **Maturity**: `proposed`.
+- **Research questions**: OQ-005, OQ-013, OQ-017.
 - **Contribution**: turns architectural intent into executable constraints.
 
 ## CAP-03 Requirements
 
-- **Purpose**: functional and non-functional requirements as code, behavioural contracts, traceability, applicability, integration with external requirement catalogues.
-- **Relation to Locus**: a requirements Facet on Loci, or requirements Loci related by `satisfies`.
-- **Expected interfaces**: requirement definitions with ids, status and acceptance criteria; trace queries; import adapters.
-- **Likely engines**: catalogue connectors; specification runners.
+- **Purpose**: functional and non-functional requirements as declared definitions, with traceability to verification.
+- **Relation to Locus**: a requirements extension on Loci, not yet defined.
+- **In this mission**: not built. The `telos.purpose` extension in `packages/kernel/src/extensions/purpose.ts` holds purpose, responsibilities and excluded scope as narrative properties only.
+- **Not built in this mission**: a requirements model. See the [roadmap](../roadmap/README.md).
 - **Maturity**: `vision`.
-- **Research questions**: OQ-008; mapping to standards such as SysML v2 requirement elements.
-- **Contribution**: makes "what must hold" explicit and checkable.
+- **Research questions**: OQ-008.
+- **Contribution**: makes "what must hold" explicit and checkable, once built.
 
 ## CAP-04 Risk
 
-- **Purpose**: risk scenarios, uncertainty, risk models, change impact evaluation, adaptive verification selection.
-- **Relation to Locus**: a risk Facet on Loci; risk propagates along Relations.
-- **Expected interfaces**: risk scenario definitions; `assess(change) → risk profile`; verification policy inputs.
-- **Likely engines**: rule-based scoring first; quantitative models only with evidence they help.
+- **Purpose**: risk scenarios, uncertainty, risk models and change impact evaluation.
+- **Relation to Locus**: a risk extension on Loci; risk would propagate along relations.
+- **In this mission**: not built. [Impact](../terminology/impact.md) is computed from the model in `packages/kernel/src/impact.ts`, which is an input to risk, not a risk model.
+- **Not built in this mission**: risk scoring and risk models. See the [roadmap](../roadmap/README.md).
 - **Maturity**: `vision`.
 - **Research questions**: which risk signals predict defects; how to combine qualitative and quantitative risk honestly.
-- **Contribution**: lets verification depth follow risk ([P11](../principles/P11-verification-is-contextual.md)).
+- **Contribution**: lets verification depth follow risk ([P07](../principles/P07-no-universal-correctness.md)).
 
 ## CAP-05 Verification and Assurance
 
-- **Purpose**: tests, formal analysis, evidence, acceptance policies, audits, verification provenance.
-- **Relation to Locus**: a verification Facet; verification Loci related by `verifies`; Witnesses about Revisions.
-- **Expected interfaces**: verification procedure definitions; adapters to runners; Witness records; acceptance policies; assurance-case views.
-- **Likely engines**: `bun test` and other test runners; property-based testing; model checkers; browser automation.
-- **Maturity**: `vision`. Stage 0 builds temporary executable specifications designed to be absorbed later ([ADR-0013](../../decisions/ADR-0013-temporary-executable-specifications.md)).
-- **Research questions**: OQ-015; assurance cases (GSN, SACM) as Telos structures.
-- **Contribution**: the Verification step of the cycle.
+- **Purpose**: Archetype rules, findings, knowledge statuses and evidence about the system.
+- **Relation to Locus**: Archetypes apply to Loci; findings are recorded per Locus and rule.
+- **In this mission**: built in part. `verify` in `packages/kernel/src/verify.ts` runs rules and records findings with knowledge statuses from `packages/kernel/src/status.ts`. The documentation site shows verification results in `apps/docs`. Temporary executable specifications run with `bun test` ([ADR-0013](../../decisions/ADR-0013-temporary-executable-specifications.md)).
+- **Not built in this mission**: evidence records with provenance, acceptance policies and assurance-case views. See [future semantic evolution](../future-semantic-evolution.md).
+- **Maturity**: `proposed`.
+- **Research questions**: OQ-015; assurance cases as Telos structures.
+- **Contribution**: the verification step of the cycle, with its result stated as a finding and not as a guarantee ([P13](../principles/P13-no-unverified-guarantees.md)).
 
 ## CAP-06 Agents
 
-- **Purpose**: agent definitions, capabilities, permissions, scoped context, memory, delegation, lifecycle.
-- **Relation to Locus**: an agent is a Locus with an agent Facet; it acts through Acts under Mandates and sees through Lenses.
-- **Expected interfaces**: agent definitions; Lens computation; Mandate issue and check; run records.
-- **Likely engines**: model providers behind an interface; sandboxed runtimes.
-- **Maturity**: `vision`.
-- **Research questions**: OQ-016; how much bounded capability costs exploration ([assumption A5](../philosophy/evolution-of-determinism.md#4-assumptions)).
-- **Contribution**: the Exploration and Hypothesis steps, under governance.
+- **Purpose**: agent access to the model through typed tools, and grants that limit what an agent may invoke.
+- **Relation to Locus**: agent tools are interface Loci over the kernel's capabilities.
+- **In this mission**: built in part. Typed introspection tools in `packages/agent/src/tools.ts`; invocation with grants in `packages/kernel/src/invoke.ts`, which returns `NotGranted` when no grant exists.
+- **Not built in this mission**: model providers, memory, delegation and run records. The kernel calls no model provider ([P14](../principles/P14-no-ai-in-the-kernel.md)).
+- **Maturity**: `proposed`.
+- **Research questions**: OQ-016.
+- **Contribution**: lets agents read the model and act within declared grants ([P05](../principles/P05-agents-use-semantic-apis.md), [P15](../principles/P15-no-arbitrary-agent-privileges.md)).
 
 ## CAP-07 Evolution
 
-- **Purpose**: baseline-to-Variant transitions, task orchestration, investigations, implementation loops, governance, acceptance.
-- **Relation to Locus**: Evolutions change Loci through Variants and Revisions.
-- **Expected interfaces**: open, step and conclude an Evolution; Variant workspaces; Verdict recording.
-- **Likely engines**: durable workflow engine; version control as byte storage.
-- **Maturity**: `vision`. Spec Kitty fills this role for Telos development today.
-- **Research questions**: OQ-009, OQ-018; minimum overhead for small changes.
-- **Contribution**: the cycle itself.
+- **Purpose**: governed change of a semantic model over time, with revisions, history and review.
+- **Relation to Locus**: changes to Loci would be recorded as revisions.
+- **In this mission**: not built. Spec Kitty fills the change-lifecycle role for Telos development today ([ADR-0011](../../decisions/ADR-0011-temporary-engineering-tools.md)).
+- **Not built in this mission**: revisions and evolution records. See [future semantic evolution](../future-semantic-evolution.md).
+- **Maturity**: `vision`.
+- **Research questions**: OQ-009, OQ-018.
+- **Contribution**: the cycle itself, once built.
 
 ## CAP-08 Processes
 
-- **Purpose**: state machines, business processes, durable workflows, dependencies, distributed orchestration.
-- **Relation to Locus**: a process Facet on Loci whose Charter is a process.
-- **Expected interfaces**: state machine definitions; durable execution; process instance records.
-- **Likely engines**: Effect for in-process orchestration; external durable workflow engines.
+- **Purpose**: state machines, business processes, durable workflows and their checks.
+- **Relation to Locus**: a process extension on Loci, not yet defined.
+- **In this mission**: not built.
+- **Not built in this mission**: state machine definitions and durable execution. See the [roadmap](../roadmap/README.md).
 - **Maturity**: `vision`.
-- **Research questions**: statecharts as Telos values; mapping to durable execution engines.
-- **Contribution**: makes process behaviour checkable (reachability, invariants).
+- **Research questions**: how statecharts can be Telos values; mapping to durable execution engines.
+- **Contribution**: would make process behaviour checkable.
 
 ## CAP-09 Applications
 
-- **Purpose**: frontend, backend, APIs, domain logic, data access, integrations.
-- **Relation to Locus**: application parts are Loci with behaviour Facets and Acts.
-- **Expected interfaces**: Act implementations as Effect programs; API generation from Act contracts; UI bindings.
-- **Likely engines**: Effect platform; web frameworks such as TanStack Start; databases.
-- **Maturity**: `vision`.
+- **Purpose**: applications made of Loci, with their capabilities and interfaces.
+- **Relation to Locus**: application parts are Loci with capabilities.
+- **In this mission**: the calculator in `packages/calculator` is the proof application. It is declared as Loci with capabilities, an Archetype and interface Loci for the command line and the Web.
+- **Not built in this mission**: applications beyond the calculator, and generated API layers.
+- **Maturity**: `proposed`.
 - **Research questions**: how much of an application's structure can be derived from its Loci.
 - **Contribution**: keeps running code tied to its meaning.
 
 ## CAP-10 Infrastructure
 
-- **Purpose**: resources, deployment definitions, reconciliation, environments, providers.
-- **Relation to Locus**: resources are Loci with infrastructure Facets.
-- **Expected interfaces**: resource definitions; plan and apply through providers; drift reports.
-- **Likely engines**: existing infrastructure-as-code engines (for example Pulumi) behind an interface, not replaced.
+- **Purpose**: resources, deployment definitions, reconciliation and environments.
+- **Relation to Locus**: resources would be Loci with infrastructure extensions.
+- **In this mission**: not built.
+- **Not built in this mission**: all of it. Existing infrastructure-as-code engines would be used behind an interface, not replaced. See the [roadmap](../roadmap/README.md).
 - **Maturity**: `vision`.
-- **Research questions**: reversibility of infrastructure effects ([P08](../principles/P08-preserve-the-baseline.md)).
-- **Contribution**: puts infrastructure under the same evidence and authority rules as code.
+- **Research questions**: reversibility of infrastructure effects ([P13](../principles/P13-no-unverified-guarantees.md)).
+- **Contribution**: would put infrastructure under the same evidence rules as code.
 
 ## CAP-11 Knowledge
 
-- **Purpose**: persistent verified knowledge, architectural facts, external sources, assumptions, knowledge evolution.
-- **Relation to Locus**: knowledge is scoped to Loci, Fabrics or Archetypes and backed by Witnesses.
-- **Expected interfaces**: fact records with scope, provenance and validity; invalidation on change; retrieval for Lenses.
-- **Likely engines**: the semantic graph; retrieval engines for unstructured sources.
+- **Purpose**: persistent knowledge about a system, with its source, scope and validity.
+- **Relation to Locus**: knowledge would be scoped to Loci and Archetypes.
+- **In this mission**: not built.
+- **Not built in this mission**: knowledge records and their retrieval. See the [roadmap](../roadmap/README.md).
 - **Maturity**: `vision`.
 - **Research questions**: OQ-017; how knowledge expires.
-- **Contribution**: the Reusable Knowledge step.
+- **Contribution**: would hold what the model cannot yet compute.
 
 ## CAP-12 Observability
 
-- **Purpose**: traces, metrics, logs, operational evidence, health, feedback into risk and evolution.
-- **Relation to Locus**: signals are attributed to Loci and Acts; operational evidence becomes Witnesses.
-- **Expected interfaces**: attribution of telemetry to Loci; health views; feedback into risk models.
-- **Likely engines**: OpenTelemetry and Effect's tracing; external backends.
+- **Purpose**: traces, metrics, logs and operational evidence attributed to Loci.
+- **Relation to Locus**: signals would be attributed to Loci and capabilities.
+- **In this mission**: not built. The documentation site records origin, runtime, revision and time for each displayed result.
+- **Not built in this mission**: telemetry attribution and health views. See the [roadmap](../roadmap/README.md).
 - **Maturity**: `vision`.
 - **Research questions**: OQ-006; which operational evidence is valid acceptance evidence.
-- **Contribution**: closes the loop from production back to the model.
+- **Contribution**: would close the loop from operation back to the model.
 
 ## CAP-13 Developer Experience
 
-- **Purpose**: CLI, language tooling, visual representations, debugging, documentation, interactive examples, IDE integration.
+- **Purpose**: the command line, the documentation site, the playground and the inspector that present the model.
 - **Relation to Locus**: every tool reads and presents the model.
-- **Expected interfaces**: CLI commands; documentation generation; playground; editor integrations.
-- **Likely engines**: TypeScript language service; the documentation site.
-- **Maturity**: `vision`. The Stage 0 documentation site and playground are the first piece.
+- **In this mission**: built in part. The command line in `packages/cli/src/index.ts` with `bun run telos inspect` and `bun run telos check`; the documentation site and playground in `apps/docs`, which render data produced from the model.
+- **Not built in this mission**: editor integrations and visual representations of the model beyond the site.
+- **Maturity**: `proposed`.
 - **Research questions**: OQ-014, OQ-020.
 - **Contribution**: makes the model visible and usable.
 
 ## CAP-14 Software Factory
 
-- **Purpose**: an application of Telos that autonomously coordinates software engineering under established constraints.
-- **Relation to Locus**: the factory is itself a Fabric of Loci (agents, processes, verification), governed like any other.
-- **Expected interfaces**: objectives in, governed Evolutions out.
-- **Likely engines**: everything above.
+- **Purpose**: an application of Telos that coordinates software engineering under established constraints.
+- **Relation to Locus**: a factory would be a model of Loci (agents, processes, verification), governed like any other.
+- **In this mission**: not built, and out of scope for this mission (constraint C-008 of the mission spec).
+- **Not built in this mission**: all of it. See the [open questions](../open-questions.md) entry OQ-024.
 - **Maturity**: `vision`.
-- **Research questions**: OQ-018; the limits of autonomy ([P13](../principles/P13-human-as-strategic-authority.md)).
-- **Contribution**: runs the whole cycle continuously.
+- **Research questions**: OQ-018; the limits of autonomy ([P15](../principles/P15-no-arbitrary-agent-privileges.md)).
+- **Contribution**: would run the whole cycle continuously, once the foundations exist.

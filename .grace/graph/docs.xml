@@ -1,0 +1,45 @@
+<GraceGraphDocument graceVersion="4.0">
+  <GD-DOCS>
+    <M-DOCS-CONTENT>
+      <Summary>Compiles docs/ into the site's content, search index, llms.txt and index.json, failing on any content problem.</Summary>
+      <Path>apps/docs/scripts/content.ts</Path>
+      <Path>apps/docs/src/lib/content-types.ts</Path>
+      <Path>apps/docs/src/lib/search-options.ts</Path>
+    </M-DOCS-CONTENT>
+    <M-DOCS-SEMANTIC-REPORT>
+      <Summary>Runs bun run telos report at build time, writes the semantic report and the build info, serves the report as /semantic-report.json, and checks that the built Verification page carries it.</Summary>
+      <Path>apps/docs/scripts/semantic-report.ts</Path>
+      <Path>apps/docs/scripts/check-verification.ts</Path>
+      <M-TELOS-COMMAND />
+    </M-DOCS-SEMANTIC-REPORT>
+    <M-DOCS-INSPECTOR>
+      <Summary>The inspector pages: the Locus tree and one page per Locus of the build-time semantic report.</Summary>
+      <Path>apps/docs/src/lib/locus-slug.ts</Path>
+      <Path>apps/docs/src/components/inspector-tree.tsx</Path>
+      <Path>apps/docs/src/components/locus-view.tsx</Path>
+      <Path>apps/docs/src/components/knowledge-badge.tsx</Path>
+      <Path>apps/docs/src/routes/inspector/</Path>
+      <M-KERNEL-API />
+      <M-DOCS-SITE />
+    </M-DOCS-INSPECTOR>
+    <M-DOCS-SITE>
+      <Summary>The prerendered TanStack Start site: layout, navigation, document pages, theme, search, diagrams, verification page on the semantic report and the static server.</Summary>
+      <Path>apps/docs/vite.config.ts</Path>
+      <Path>apps/docs/src/routes/</Path>
+      <Path>apps/docs/src/components/</Path>
+      <Path>apps/docs/src/lib/</Path>
+      <Path>apps/docs/src/router.tsx</Path>
+      <Path>apps/docs/src/routeTree.gen.ts</Path>
+      <Path>apps/docs/src/styles.css</Path>
+      <Path>apps/docs/scripts/serve-static.ts</Path>
+      <M-DOCS-CONTENT />
+      <M-DOCS-SEMANTIC-REPORT />
+    </M-DOCS-SITE>
+    <M-DOCS-PLAYGROUND>
+      <Summary>One page that decodes, builds, verifies and describes a JSON Locus definition with the real kernel in the browser.</Summary>
+      <Path>apps/docs/src/playground/</Path>
+      <M-KERNEL-API />
+      <M-DOCS-SITE />
+    </M-DOCS-PLAYGROUND>
+  </GD-DOCS>
+</GraceGraphDocument>

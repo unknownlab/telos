@@ -107,13 +107,17 @@ const EXPECTED_LLMS = `# Telos by UnknownLab
 - [Foundation](/architecture/foundation): Entry point of the fixture foundation.
 - [Prior art](/architecture/prior-art): What exists already.
 
+## Inspector
+
+- [Inspector](/inspector): The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json.
+
 ## Playground
 
-- [Playground](/playground): Scenarios A to E run the real @telos/locus package in your browser.
+- [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.
 
 ## Verification
 
-- [Verification](/verification): The specification report from the build-time Bun run, with its provenance.
+- [Verification](/verification): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.
 
 ## Decisions
 
@@ -416,7 +420,7 @@ const CASES: readonly Case[] = [
   {
     name: "case 16: a site link to an unknown route",
     changes: () => ({
-      [PRIOR]: fixture(PRIOR).replace("/playground/a", "/playground/z"),
+      [PRIOR]: fixture(PRIOR).replace("](/playground)", "](/playground/z)"),
     }),
     problems: [`${PRIOR}: unknown site route "/playground/z"`],
   },
@@ -634,7 +638,7 @@ describe("valid fixture output", () => {
     expect(prior).toContain(
       'href="/architecture/foundation#maturity-vocabulary"',
     );
-    expect(prior).toContain('href="/playground/a"');
+    expect(prior).toContain('href="/playground"');
     expect(prior).toContain('href="https://example.org/x?a=1&amp;b=2"');
   });
 
@@ -708,7 +712,7 @@ describe("real docs tree", () => {
         .map((d) => d.number)
         .sort((a, b) => Number(a) - Number(b)),
     ).toEqual(Array.from({ length: 16 }, (_, i) => i + 1));
-    expect(ofKind("term").length).toBe(16);
+    expect(ofKind("term").length).toBe(25);
     const adrFiles = await Array.fromAsync(
       new Bun.Glob("docs/decisions/ADR-*.md").scan({ cwd: REPO_ROOT }),
     );
@@ -729,7 +733,7 @@ describe("real docs tree", () => {
       .filter((d) => d.kind === "term")
       .sort(compareInSection)
       .map((d) => d.order);
-    expect(orders).toEqual(Array.from({ length: 16 }, (_, i) => i + 1));
+    expect(orders).toEqual(Array.from({ length: 25 }, (_, i) => i + 1));
   });
 
   test("the technical direction links to tooling on GitHub", async () => {
@@ -743,18 +747,22 @@ describe("real docs tree", () => {
     );
   });
 
-  test("searching for baseline finds P08 and revision", async () => {
+  test("searching for archetype finds P06 and the archetype term", async () => {
     const result = await compileContent({ root: REPO_ROOT, git: GIT });
     if (!result.ok) throw new Error("real docs must compile");
     const loaded = MiniSearch.loadJSON<SearchSection>(
       result.output.search,
       SEARCH_OPTIONS,
     );
-    const ids = loaded.search("baseline").map((r) => r.id);
+    const ids = loaded.search("archetype").map((r) => r.id);
     expect(
-      ids.some((id) => id.startsWith("/principles/P08-preserve-the-baseline")),
+      ids.some((id) =>
+        id.startsWith("/principles/P06-archetypes-specialize-verification"),
+      ),
     ).toBe(true);
-    expect(ids.some((id) => id.startsWith("/terminology/revision"))).toBe(true);
+    expect(ids.some((id) => id.startsWith("/terminology/archetype"))).toBe(
+      true,
+    );
   });
 });
 

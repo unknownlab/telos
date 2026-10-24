@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
-//   PURPOSE: Give readers the twelve sections of the site in their order, mark the current section and page, and list the pages of the current section (FR-013).
-//   SCOPE: SiteNav, one navigation landmark with a list of the twelve sections and, under the active section, its child pages.
+//   PURPOSE: Give readers the sections of the site (NAV_SECTIONS) in their order, mark the current section and page, and list the pages of the current section (FR-013).
+//   SCOPE: SiteNav, one navigation landmark with a list of the sections of NAV_SECTIONS and, under the active section, its child pages.
 //   DEPENDS: none
 //   LINKS: M-DOCS-SITE
 //   ROLE: RUNTIME
@@ -43,7 +43,7 @@ function pagesUnder(
 // START_CONTRACT: SiteNav
 //   PURPOSE: Render the navigation once, with every section link carrying data-nav-section and the current page marked with aria-current.
 //   INPUTS: { content: ContentFile - the compiled documents, currentPath: string - the path being shown }
-//   OUTPUTS: { JSX.Element - a nav labelled "Sections" holding the twelve section links in NAV_SECTIONS order; the active section has data-active and, under it, its child pages }
+//   OUTPUTS: { JSX.Element - a nav labelled "Sections" holding the section links in NAV_SECTIONS order; the active section has data-active and, under it, its child pages }
 //   SIDE_EFFECTS: none
 //   LINKS: M-DOCS-SITE
 // END_CONTRACT: SiteNav

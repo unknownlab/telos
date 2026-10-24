@@ -1,0 +1,23 @@
+<GraceVerificationDocument graceVersion="4.0">
+  <VD-PACK-AGENT>
+    <V-M-PACK-AGENT>
+      <TestFiles>
+        <File>packages/agent/test/tools.test.ts</File>
+        <File>packages/agent/test/introspection-tools.test.ts</File>
+        <File>packages/agent/test/archetype.test.ts</File>
+        <File>packages/agent/test/grant.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/agent/test</Command>
+      <Scenario>Derived tools carry the contract, schema and annotations of the exposed capability; calls go through the kernel grant with JSON arguments and typed errors; toolInputSchema applies its three rules; the six introspection tools decode input, describe, and report LocusNotFound, CapabilityNotFound and InvalidInput as results; every AgentInterface rule has a passing and a failing model; discovery never grants invocation.</Scenario>
+      <TraceAssertion>tools.test.ts names the deriveTools, callTool and toolInputSchema tests; introspection-tools.test.ts names the six tool tests and the failure mapping; archetype.test.ts names one passing and one failing test per agent rule; grant.test.ts names the three discovery assertions.</TraceAssertion>
+    </V-M-PACK-AGENT>
+    <V-M-PACK-AGENT-MCP>
+      <TestFiles>
+        <File>packages/agent/test/mcp.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/agent/test</Command>
+      <Scenario>The subprocess fixture server reports the server name and protocol version, lists the derived and introspection tools with their annotations, answers tools/call round trips with tool results, lists every tool even when tools/list is the first request after initialize and is already waiting on stdin when the server starts, and a server that never answers makes spawn fail with the initialize timeout.</Scenario>
+      <TraceAssertion>mcp.test.ts names the initialize, tools/list, startup-order tools/list, tools/call success and InvalidInput tests, the telos_inspect call and the timeout test.</TraceAssertion>
+    </V-M-PACK-AGENT-MCP>
+  </VD-PACK-AGENT>
+</GraceVerificationDocument>

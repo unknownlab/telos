@@ -1,0 +1,15 @@
+<GraceGraphDocument graceVersion="4.0">
+  <GD-PACK-CLI>
+    <M-PACK-CLI>
+      <Summary>Exposes Locus capabilities as command-line subcommands through kernel invoke, with derived flags, an in-memory effect/cli run and a Bun process entry.</Summary>
+      <Path>packages/cli/src/semantics.ts</Path>
+      <Path>packages/cli/src/derive.ts</Path>
+      <Path>packages/cli/src/environment.ts</Path>
+      <Path>packages/cli/src/run.ts</Path>
+      <Path>packages/cli/src/bun.ts</Path>
+      <Path>packages/cli/src/archetype.ts</Path>
+      <Path>packages/cli/src/index.ts</Path>
+      <M-KERNEL-API />
+    </M-PACK-CLI>
+  </GD-PACK-CLI>
+</GraceGraphDocument>

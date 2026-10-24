@@ -22,7 +22,7 @@ import {
 import { sectionForPath } from "../src/lib/site";
 import { type IndexDocument, readIndex, trackPageErrors } from "./helpers";
 
-const SECTION_COUNT = 12;
+const SECTION_COUNT = NAV_SECTIONS.length;
 
 // START_CONTRACT: documentsBySection
 //   PURPOSE: Group the documents of the build by the navigation section of their route, so each section is one test.
@@ -155,8 +155,8 @@ test.describe("without JavaScript", () => {
     const byId = new Map(readIndex().map((doc) => [doc.id, doc]));
     const kinds = [
       "introduction",
-      "P01-everything-is-code",
-      "revision",
+      "P01-one-fundamental-entity",
+      "semantic-extension",
       "ADR-0005",
     ];
     for (const id of kinds) {
@@ -182,20 +182,22 @@ test.describe("without JavaScript", () => {
     ).toBeVisible();
   });
 
-  test("the verification report shows its 44 specification rows", async ({
+  test("the verification report shows at least one finding row", async ({
     page,
   }) => {
     await page.goto("/verification");
-    await expect(page.locator("[data-spec-id]")).toHaveCount(44);
+    expect(
+      await page.locator("[data-finding-outcome]").count(),
+    ).toBeGreaterThan(0);
   });
 
-  test("a playground scenario shows its example input and the notice", async ({
+  test("the playground shows its example input and the notice without JavaScript", async ({
     page,
   }) => {
-    await page.goto("/playground/b");
+    await page.goto("/playground");
     await expect(page.locator('[data-slot="no-js"]')).toBeVisible();
     await expect(page.locator('[data-slot="example-input"]')).toContainText(
-      '"shop:checkout"',
+      '"demo:hello"',
     );
     await expect(page.locator("main")).toContainText(
       "The playground needs JavaScript",

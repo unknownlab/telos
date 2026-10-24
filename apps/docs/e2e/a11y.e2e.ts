@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove that the pages that carry the site's content, its playground and its verification report have no serious or critical WCAG 2.0 and 2.1 A and AA violations in the light and the dark theme (NFR-004).
-//   SCOPE: The accessibility suite over the static build: the home page, the first principle, term and decision of the index, the playground index, scenarios A to E after a run, and the verification page, each scanned with axe-core in both themes. Out: rule configuration; no rule is disabled.
+//   SCOPE: The accessibility suite over the static build: the home page, the first principle, term and decision of the index, the playground after a valid run and after a run with diagnostics, the verification page and the inspector pages, each scanned with axe-core in both themes. Out: rule configuration; no rule is disabled.
 //   DEPENDS: M-DOCS-SITE
 //   LINKS: V-M-DOCS-SITE
 //   ROLE: TEST
@@ -16,7 +16,7 @@
 //   firstDocumentOf - the path of the first document of a kind in the build index
 //   describeViolation - one line per blocking violation, with its rule, help and first three targets
 //   settleAnimations - waits until no CSS transition or animation of the page is still running
-//   runScenario - opens one scenario and runs it, so that its result panels are part of the scan
+//   runExample - opens the playground and runs one example, so that its result panels are part of the scan
 // END_MODULE_MAP
 
 import AxeBuilder from "@axe-core/playwright";
@@ -81,19 +81,20 @@ async function settleAnimations(page: Page): Promise<void> {
   );
 }
 
-// START_CONTRACT: runScenario
-//   PURPOSE: Open one scenario and run it, so that its result panels are on the page when the scan runs.
-//   INPUTS: { page: Page - the page to use, id: string - the scenario letter }
-//   OUTPUTS: { Promise<void> - resolves when the playground is hydrated and the scenario has run }
-//   SIDE_EFFECTS: navigates the page and presses the run button
+// START_CONTRACT: runExample
+//   PURPOSE: Open the playground, pick one example and run it, so that its result panels are on the page when the scan runs.
+//   INPUTS: { page: Page - the page to use, name: string - the example name, such as "composed" }
+//   OUTPUTS: { Promise<void> - resolves when the playground is hydrated and the example has run }
+//   SIDE_EFFECTS: navigates the page, selects the example and presses the run button
 //   LINKS: V-M-DOCS-SITE
-// END_CONTRACT: runScenario
-async function runScenario(page: Page, id: string): Promise<void> {
-  await page.goto(`/playground/${id}`);
+// END_CONTRACT: runExample
+async function runExample(page: Page, name: string): Promise<void> {
+  await page.goto("/playground");
   await expect(page.locator('[data-slot="playground"]')).toHaveAttribute(
     "data-ready",
     "true",
   );
+  await page.selectOption("#playground-example", name);
   await page.locator('[data-action="run"]').click();
   await expect(page.locator("[data-result]").first()).toBeVisible();
 }
@@ -103,33 +104,19 @@ const PAGES: ReadonlyArray<AuditedPage> = [
   { name: "principle", path: firstDocumentOf("principle") },
   { name: "term", path: firstDocumentOf("term") },
   { name: "decision", path: firstDocumentOf("decision") },
-  { name: "playground index", path: "/playground" },
   {
-    name: "playground scenario A",
-    path: "/playground/a",
-    prepare: (page) => runScenario(page, "a"),
+    name: "playground after a valid run",
+    path: "/playground",
+    prepare: (page) => runExample(page, "composed"),
   },
   {
-    name: "playground scenario B",
-    path: "/playground/b",
-    prepare: (page) => runScenario(page, "b"),
-  },
-  {
-    name: "playground scenario C",
-    path: "/playground/c",
-    prepare: (page) => runScenario(page, "c"),
-  },
-  {
-    name: "playground scenario D",
-    path: "/playground/d",
-    prepare: (page) => runScenario(page, "d"),
-  },
-  {
-    name: "playground scenario E",
-    path: "/playground/e",
-    prepare: (page) => runScenario(page, "e"),
+    name: "playground with diagnostics",
+    path: "/playground",
+    prepare: (page) => runExample(page, "cycle"),
   },
   { name: "verification", path: "/verification" },
+  { name: "inspector", path: "/inspector" },
+  { name: "inspector Locus page", path: "/inspector/calculator--arithmetic" },
 ];
 
 test.describe("accessibility", () => {

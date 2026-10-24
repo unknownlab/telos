@@ -9,23 +9,34 @@
 //
 // START_MODULE_MAP
 //   APP_PAGES - app routes prerendered besides the content documents
+//   inspectorPages - one inspector page per Locus of the semantic report, in report order
 //   prerenderPaths - content routes and app pages, sorted, with a duplicate check
 // END_MODULE_MAP
 
 import type { ContentFile } from "./content-types";
+import { locusSlug } from "./locus-slug";
 
-/** App routes prerendered besides the content documents. WP13–WP15 append their routes here. */
+/** App routes prerendered besides the content documents. WP18, WP19 and WP20 edit this list. */
 export const APP_PAGES: ReadonlyArray<string> = [
   "/architecture",
+  "/inspector",
   "/not-found",
   "/verification",
   "/playground",
-  "/playground/a",
-  "/playground/b",
-  "/playground/c",
-  "/playground/d",
-  "/playground/e",
 ];
+
+// START_CONTRACT: inspectorPages
+//   PURPOSE: Give the inspector page of every Locus of the semantic report, so that each Locus is prerendered.
+//   INPUTS: { report: { model: { loci: Locus ids } } - the decoded semantic report }
+//   OUTPUTS: { string[] - "/inspector/<slug>" for each Locus, in report order }
+//   SIDE_EFFECTS: none
+//   LINKS: M-DOCS-INSPECTOR
+// END_CONTRACT: inspectorPages
+export function inspectorPages(report: {
+  readonly model: { readonly loci: ReadonlyArray<{ readonly id: string }> };
+}): string[] {
+  return report.model.loci.map((locus) => `/inspector/${locusSlug(locus.id)}`);
+}
 
 // START_CONTRACT: prerenderPaths
 //   PURPOSE: Give the complete, sorted list of routes to prerender, and refuse a route that would be written twice.

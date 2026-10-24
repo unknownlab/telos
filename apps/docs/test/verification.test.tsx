@@ -1,41 +1,36 @@
 // START_MODULE_CONTRACT
-//   PURPOSE: Prove that the Verification page shows the build-time report or "Not run", keeps failing rows visible, and labels every result with its provenance (FR-021, FR-022, NS-018, INV-013).
-//   SCOPE: VerificationView with no report and with a one-pass, one-fail report, an unknown id row, the coverage rule over the rendered markup, the historical ResultPanel and the ProvenanceLabel text.
-//   DEPENDS: M-DOCS-SITE
-//   LINKS: V-M-DOCS-SITE
+//   PURPOSE: Prove that the Verification page shows the build-time semantic report or "Not run", keeps every finding and closure finding visible with its knowledge, and labels every result with its provenance (FR-021, FR-022, INV-013).
+//   SCOPE: SemanticReportView with no report and with a report built by the real kernel, the ResultPanel and ProvenanceLabel texts for null and bun-build provenance.
+//   DEPENDS: M-DOCS-SITE, M-DOCS-SEMANTIC-REPORT
+//   LINKS: V-M-DOCS-SEMANTIC-REPORT
 //   ROLE: TEST
 //   MAP_MODE: LOCALS
 // END_MODULE_CONTRACT
 //
 // START_MODULE_MAP
-//   HEX40 - a 40-character lower-case hex commit used by the built report
-//   PACKAGES - the package versions used by the built report
 //   ENTITIES - the character references that React writes into text
-//   builtFile - a bun-build spec report file holding the given results
-//   passing - a passing result for a catalogue record
-//   failing - a failing result for a catalogue record
-//   openingTags - every opening tag in a markup string
 //   textOf - the visible text of a markup string, tags removed and entities decoded
 //   labelTexts - the text of every provenance label, in document order
-//   assertCoverage - the INV-013 coverage rule over one markup string
+//   openingTags - every opening tag in a markup string
+//   renderIn - render an element inside a memory router, so that Link has its context
 // END_MODULE_MAP
 
-import { describe, expect, test } from "bun:test";
-import { renderToStaticMarkup } from "react-dom/server";
-import { type SpecResult, catalogue } from "@telos/locus/specs";
+import { beforeAll, describe, expect, test } from "bun:test";
+import {
+  createMemoryHistory,
+  createRootRoute,
+  createRouter,
+  RouterProvider,
+} from "@tanstack/react-router";
+import type { ReactElement } from "react";
+import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import { ProvenanceLabel } from "@/components/provenance-label";
 import { ResultPanel } from "@/components/result-panel";
-import { VerificationView } from "@/components/verification-view";
-import type { SpecReportFile } from "@/lib/build-data";
-import {
-  type BunBuildProvenance,
-  PACKAGE_VERSIONS,
-  provenanceText,
-  toHistorical,
-} from "@/lib/provenance";
+import { SemanticReportView } from "@/components/semantic-report-view";
+import type { SemanticReport } from "@/lib/build-data";
+import { buildProvenanceOf, provenanceText } from "@/lib/provenance";
+import { semanticReportFixture } from "../test/semantic-report-fixture";
 
-const HEX40 = "0123456789abcdef0123456789abcdef01234567";
-const PACKAGES = PACKAGE_VERSIONS;
 const ENTITIES: Readonly<Record<string, string>> = {
   "&quot;": '"',
   "&amp;": "&",
@@ -44,48 +39,15 @@ const ENTITIES: Readonly<Record<string, string>> = {
   "&gt;": ">",
 };
 
-function passing(id: string): SpecResult {
-  return {
-    id: id as SpecResult["id"],
-    status: "pass",
-    expected: { valid: true, diagnostics: [] },
-    observed: { valid: true, diagnostics: [] },
-    durationMs: 1,
-  };
-}
-
-function failing(id: string): SpecResult {
-  return {
-    id: id as SpecResult["id"],
-    status: "fail",
-    expected: { valid: false, diagnostics: [] },
-    observed: { valid: true, diagnostics: [] },
-    durationMs: 2,
-  };
-}
-
-function builtFile(results: ReadonlyArray<SpecResult>): SpecReportFile {
-  const passed = results.filter((r) => r.status === "pass").length;
-  const failed = results.filter((r) => r.status === "fail").length;
-  const errored = results.filter((r) => r.status === "error").length;
-  return {
-    report: {
-      results,
-      summary: { total: results.length, passed, failed, errored },
-    },
-    provenance: {
-      origin: "bun-build",
-      at: "2026-10-21T10:18:46.123Z",
-      runtime: "Bun 1.4.4",
-      packages: PACKAGES,
-      commit: HEX40,
-      dirty: false,
-    } satisfies BunBuildProvenance,
-  };
-}
-
-function openingTags(markup: string): string[] {
-  return [...markup.matchAll(/<[a-zA-Z][^>]*>/g)].map((match) => match[0]);
+// Link needs a router, so every element is rendered inside a memory router.
+async function renderIn(element: ReactElement): Promise<string> {
+  const rootRoute = createRootRoute({ component: () => element });
+  const router = createRouter({
+    routeTree: rootRoute,
+    history: createMemoryHistory({ initialEntries: ["/"] }),
+  });
+  await router.load();
+  return renderToString(<RouterProvider router={router} />);
 }
 
 function textOf(markup: string): string {
@@ -97,168 +59,115 @@ function textOf(markup: string): string {
     );
 }
 
+function openingTags(markup: string): string[] {
+  return [...markup.matchAll(/<[a-zA-Z][^>]*>/g)].map((match) => match[0]);
+}
+
 function labelTexts(markup: string): string[] {
   return [
     ...markup.matchAll(/<p data-slot="provenance-label"[^>]*>([\s\S]*?)<\/p>/g),
   ].map((match) => textOf(match[1] ?? ""));
 }
 
-function assertCoverage(markup: string): void {
-  const withResult = openingTags(markup).filter((tag) =>
-    tag.includes("data-result="),
-  );
-  for (const tag of withResult) {
-    expect(tag).toContain("data-provenance=");
-  }
-  const labels = markup.split('data-slot="provenance-label"').length - 1;
-  expect(labels).toBeGreaterThanOrEqual(withResult.length);
-}
-
-describe("Verification with no report (NS-018)", () => {
-  const markup = renderToStaticMarkup(
-    <VerificationView file={null} specs={catalogue} />,
-  );
-
-  test("the build panel is a result with origin none and reads Not run", () => {
-    const tag = openingTags(markup).find(
-      (candidate) =>
-        candidate.includes('data-result="spec-report"') &&
-        candidate.includes('data-provenance="none"'),
+describe("SemanticReportView with no report", () => {
+  let markup = "";
+  beforeAll(async () => {
+    markup = await renderIn(
+      <SemanticReportView report={null} provenance={null} />,
     );
-    expect(tag).toBeDefined();
-    expect(labelTexts(markup)[0]).toBe("Not run");
-    expect(textOf(markup)).toContain("Not run.");
   });
 
-  test("no result row is shown and nothing is counted as passed", () => {
-    expect(markup).not.toContain("data-spec-id");
-    expect(textOf(markup)).not.toMatch(/\bpassed\b/);
-  });
-
-  test("the CI panel reads CI: not available with origin ci", () => {
-    const ciTags = openingTags(markup).filter((tag) =>
-      tag.includes('data-provenance="ci"'),
-    );
-    expect(ciTags).toHaveLength(1);
-    expect(labelTexts(markup)[1]).toBe("CI: not available");
-  });
-
-  test("every result element names its provenance", () => {
-    assertCoverage(markup);
+  test("says Not run and renders no result panel", () => {
+    expect(markup).toContain('data-slot="no-report"');
+    expect(markup).not.toContain("data-result=");
   });
 });
 
-describe("Verification with a one-pass, one-fail report", () => {
-  const file = builtFile([
-    passing(catalogue[0]?.id ?? "LOC-001"),
-    failing(catalogue[1]?.id ?? "LOC-002"),
-  ]);
-  const markup = renderToStaticMarkup(
-    <VerificationView file={file} specs={catalogue} />,
-  );
-
-  test("each result is a row with its id and status", () => {
-    expect(markup).toContain(`data-spec-id="${catalogue[0]?.id}"`);
-    expect(markup).toContain(
-      `data-spec-id="${catalogue[1]?.id}" data-spec-status="fail"`,
-    );
-    expect(markup).toContain('data-spec-status="pass"');
-  });
-
-  test("the summary counts the rows", () => {
-    expect(textOf(markup)).toContain(
-      "2 specifications: 1 passed, 1 failed, 0 errored.",
+describe("SemanticReportView with the fixture report", () => {
+  let report: SemanticReport;
+  let markup = "";
+  beforeAll(async () => {
+    report = await semanticReportFixture();
+    const provenance = buildProvenanceOf(report, { dirty: false });
+    markup = await renderIn(
+      <SemanticReportView report={report} provenance={provenance} />,
     );
   });
 
-  test("the build panel carries bun-build provenance and its label is the provenance text", () => {
+  test("the panel is a semantic-report result with bun-build provenance and the label text", () => {
     const tag = openingTags(markup).find((candidate) =>
-      candidate.includes('data-result="spec-report"'),
+      candidate.includes('data-result="semantic-report"'),
     );
     expect(tag).toContain('data-provenance="bun-build"');
-    expect(labelTexts(markup)[0]).toBe(provenanceText(file.provenance));
-  });
-
-  test("the failing row shows its expected and observed values", () => {
-    const text = textOf(markup);
-    expect(text).toContain(
-      JSON.stringify(failing("LOC-002").expected, null, 2),
-    );
-    expect(text).toContain(
-      JSON.stringify({ valid: true, diagnostics: [] }, null, 2),
+    expect(labelTexts(markup)[0]).toBe(
+      provenanceText(buildProvenanceOf(report, { dirty: false })),
     );
   });
 
-  test("every result element names its provenance", () => {
-    assertCoverage(markup);
+  test("the ok flag is reported as false", () => {
+    expect(markup).toContain('data-ok="false"');
+  });
+
+  test("one row per verification finding", () => {
+    const rows = markup.match(/data-finding-outcome="/g) ?? [];
+    expect(rows.length).toBe(report.verification.findings.length);
+    expect(rows.length).toBeGreaterThan(0);
+  });
+
+  test("the closure finding row carries its code and a derived knowledge badge", () => {
+    expect(markup).toContain('data-closure-code="closure.unowned"');
+    const row = markup.slice(
+      markup.indexOf('data-closure-code="closure.unowned"'),
+    );
+    expect(row.slice(0, row.indexOf("</tr>"))).toContain(
+      'data-knowledge="derived"',
+    );
+  });
+
+  test("the closure limits are listed", () => {
+    expect(markup.match(/data-closure-limit/g)?.length).toBe(
+      report.closure.limits.length,
+    );
+  });
+
+  test("the page points to the playground", () => {
+    expect(markup).toContain('href="/playground"');
   });
 });
 
-describe("a result for an id that is not in the catalogue", () => {
-  test("the row is kept and says so", () => {
-    const markup = renderToStaticMarkup(
-      <VerificationView
-        file={builtFile([passing("LOC-999")])}
-        specs={catalogue}
+describe("SemanticReportView with a clean report", () => {
+  test("ok true and no closure findings say so", async () => {
+    const base = await semanticReportFixture();
+    const report: SemanticReport = {
+      ...base,
+      ok: true,
+      closure: { ...base.closure, findings: [] },
+    };
+    const markup = await renderIn(
+      <SemanticReportView
+        report={report}
+        provenance={buildProvenanceOf(report, null)}
       />,
     );
-    expect(markup).toContain('data-spec-id="LOC-999"');
-    expect(textOf(markup)).toContain("(not in this catalogue)");
+    expect(markup).toContain('data-ok="true"');
+    expect(textOf(markup)).toContain("No closure findings.");
+    expect(markup).toContain('data-slot="no-closure-findings"');
   });
 });
 
 describe("ResultPanel and ProvenanceLabel", () => {
-  test("a historical result is marked stale and labelled as historical", () => {
-    const historical = toHistorical({
-      origin: "browser",
-      at: "2026-10-21T10:18:46.123Z",
-      packages: PACKAGES,
-      siteCommit: HEX40,
-    });
+  test("a null provenance is origin none with the text Not run", () => {
     const markup = renderToStaticMarkup(
-      <ResultPanel kind="spec-result" provenance={historical} title="Stale run">
-        <p>Body</p>
+      <ResultPanel kind="semantic-report" provenance={null} title="x">
+        <p>body</p>
       </ResultPanel>,
     );
-    expect(markup).toContain('data-stale="true"');
-    expect(markup).toContain('data-provenance="historical"');
-    expect(labelTexts(markup)[0]?.startsWith("Historical:")).toBe(true);
+    expect(markup).toContain('data-provenance="none"');
+    expect(labelTexts(markup)[0]).toBe("Not run");
   });
 
-  test("a historical result is marked by its dashed border and its label, and its text is not dimmed", () => {
-    const historical = toHistorical({
-      origin: "browser",
-      at: "2026-10-21T10:18:46.123Z",
-      packages: PACKAGES,
-      siteCommit: HEX40,
-    });
-    const markup = renderToStaticMarkup(
-      <ResultPanel kind="spec-result" provenance={historical} title="Stale run">
-        <p>Body</p>
-      </ResultPanel>,
-    );
-    const panel = openingTags(markup).find((tag) =>
-      tag.includes('data-result="spec-result"'),
-    );
-    expect(panel).toContain("border-dashed");
-    expect(markup).not.toMatch(/opacity-/);
-    expect(markup).toContain('data-slot="provenance-label"');
-  });
-
-  test("a fresh result is not marked stale", () => {
-    const markup = renderToStaticMarkup(
-      <ResultPanel kind="spec-result" provenance={null} title="No run">
-        <p>Body</p>
-      </ResultPanel>,
-    );
-    expect(markup).not.toContain("data-stale");
-  });
-
-  test("the label renders the provenance text next to an icon hidden from assistive technology", () => {
+  test("the origin icon is hidden from assistive technology", () => {
     const markup = renderToStaticMarkup(<ProvenanceLabel provenance={null} />);
-    expect(markup).toContain('data-slot="provenance-label"');
-    expect(markup).toContain('data-origin="none"');
     expect(markup).toContain('aria-hidden="true"');
-    expect(textOf(markup)).toBe("Not run");
   });
 });

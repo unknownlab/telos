@@ -13,7 +13,7 @@
 //   MATURITIES - the closed set of maturity values in index.json
 //   REQUIRED_STRING_FIELDS - the string fields every index.json document has
 //   headingsOf - the level-two headings of an llms.txt body, in order
-//   APP_PAGE_LINES - the two llms.txt bullets that name app pages rather than documents
+//   APP_PAGE_LINES - the three llms.txt bullets that name app pages rather than documents
 //   readContentFile - reads the compiled content file the build wrote, the source the served files must match
 //   compareIds - orders two documents by id, by code unit, the way index.json sorts them
 //   expectedIndexDocuments - the index.json entries that the content file implies, sorted by id
@@ -80,8 +80,9 @@ function headingsOf(text: string): string[] {
 
 // The two llms.txt bullets that name app pages. content.ts writes them, not a document.
 const APP_PAGE_LINES: ReadonlyArray<string> = [
-  "- [Playground](/playground): Scenarios A to E run the real @telos/locus package in your browser.",
-  "- [Verification](/verification): The specification report from the build-time Bun run, with its provenance.",
+  "- [Inspector](/inspector): The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json.",
+  "- [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.",
+  "- [Verification](/verification): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.",
 ];
 
 // START_CONTRACT: readContentFile
@@ -197,6 +198,19 @@ test.describe("llms.txt", () => {
 });
 
 test.describe("index.json", () => {
+  test("semantic-report.json is served with version 1 and the repository root", async ({
+    request,
+  }) => {
+    const response = await request.get("/semantic-report.json");
+    expect(response.status()).toBe(200);
+    const report = (await response.json()) as {
+      version: unknown;
+      model: { root: unknown };
+    };
+    expect(report.version).toBe(1);
+    expect(report.model.root).toBe("telos:repository");
+  });
+
   test("is JSON at version 1 with the build commit and the dirty flag", async ({
     request,
   }) => {

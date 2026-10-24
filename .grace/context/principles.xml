@@ -3,4 +3,20 @@
   <Principle>Blocking gates: format, lint, typecheck, tests and grace lint block commits and reviews.</Principle>
   <Principle>Keep semantic anchors stable and grep-friendly.</Principle>
   <Principle>Model only what exists: no module without code, no code module without a verification entry.</Principle>
+  <Principle>P01 One Fundamental Entity: Locus: A system is described by one fundamental entity, the Locus, and every other semantic concept is defined as an extension, a relation, a capability or a derived view of Loci.</Principle>
+  <Principle>P02 Extensions Are Composable: Meaning is added to Loci through semantic extensions that combine explicitly into a Locus kind, and an incompatible combination is reported rather than silently merged.</Principle>
+  <Principle>P03 No Code Outside Semantics: Every managed code file belongs to a discoverable Locus owner, and a file without an owner is a reported finding, not a silent gap.</Principle>
+  <Principle>P04 Executable Code Is the Source of Semantic Truth: The description of what a system is comes from the code and its typed definitions, and prose documentation is derived from or linked to them, never the reverse.</Principle>
+  <Principle>P05 Agents Access Knowledge Through Semantic APIs: Agents read and change a system through typed introspection and capability APIs over the semantic model, not by searching raw files or running untyped commands.</Principle>
+  <Principle>P06 Archetypes Provide Specialized Verification: Verification rules are grouped into Archetypes that apply to the Loci whose composition includes given extensions, so each kind of Locus is checked against the rules that fit it.</Principle>
+  <Principle>P07 No Universal Correctness Algorithm: Telos does not offer one correctness test for every system; correctness is defined per Archetype, and the kernel does not claim that a model is correct in general.</Principle>
+  <Principle>P08 No Mandatory Application Architecture: Telos describes and checks architecture that a project chooses; it does not require a particular layering, folder structure or application pattern.</Principle>
+  <Principle>P09 No Duplication of Existing Frameworks: Telos does not reimplement general-purpose frameworks such as a type system, a test runner, a schema library or a build tool; it uses them and adds only the semantic layer they lack.</Principle>
+  <Principle>P10 No Unnecessary Abstraction Layers: Telos adds an abstraction only when a concrete need requires it, and each layer must have a caller that needs it, so the code stays direct and readable.</Principle>
+  <Principle>P11 No Compatibility for Obsolete Mistakes: Telos does not keep compatibility layers for an earlier model that was a mistake; it replaces the mistake and records the change.</Principle>
+  <Principle>P12 No Manually Synchronized Duplicate Models: A fact about the system is recorded once, and a second description is either generated from the first or checked against it by a tool that reports drift.</Principle>
+  <Principle>P13 No Unverified Claims as Guarantees: A statement about the system is presented as a guarantee only when a rule produced it by a real check, and every other statement carries its knowledge status.</Principle>
+  <Principle>P14 No AI Dependency in the Semantic Kernel: The semantic kernel is deterministic and imports no model provider; AI agents use the kernel through its APIs and never become a part of it.</Principle>
+  <Principle>P15 No Arbitrary Agent Privileges: An agent can invoke a capability only when a relation in the model grants that invocation, and it has no ambient access to tools or data beyond those grants.</Principle>
+  <Principle>P16 No Speculative Implementation: Telos implements a concept only when a current use needs it, and future concepts are described as direction, not built as code.</Principle>
 </GracePrinciples>
