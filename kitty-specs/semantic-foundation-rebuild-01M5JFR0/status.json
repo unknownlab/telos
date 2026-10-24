@@ -616,10 +616,15 @@
     "WP19": {
       "actor": "claude",
       "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
       "lane": "in_progress",
       "last_event_id": "01M5QNKA11VD12DG0T7TXDJXXF",
       "last_transition_at": "2026-10-24T19:18:29.152928+00:00",
+      "model": "__resolved_model_absent__",
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer",
       "shell_pid": 14343,
       "shell_pid_created_at": "1792869490.737946"
     },
