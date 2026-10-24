@@ -1,7 +1,7 @@
 {
-  "event_count": 109,
-  "last_event_id": "01M5Q3MANP7FG3BCMBERREHG1N",
-  "materialized_at": "2026-10-24T14:04:28.214403+00:00",
+  "event_count": 112,
+  "last_event_id": "01M5Q468MD5142BRJXFJ2P8B1T",
+  "materialized_at": "2026-10-24T14:14:15.880724+00:00",
   "mission_number": "",
   "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
   "mission_type": "software-dev",
@@ -11,10 +11,10 @@
     "canceled": 0,
     "claimed": 0,
     "done": 0,
-    "for_review": 0,
+    "for_review": 1,
     "in_progress": 1,
     "in_review": 0,
-    "planned": 5
+    "planned": 4
   },
   "work_packages": {
     "WP01": {
@@ -446,11 +446,19 @@
       }
     },
     "WP14": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5N9RXVHXYZXN2P1HQZWM3G6",
-      "last_transition_at": "2026-10-23T21:13:21.521102+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5Q468MD5142BRJXFJ2P8B1T",
+      "last_transition_at": "2026-10-24T14:14:15.880724+00:00",
+      "model": "__resolved_model_absent__",
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer",
+      "shell_pid": 65172,
+      "shell_pid_created_at": "1792851251.811986"
     },
     "WP15": {
       "actor": "finalize-tasks",
@@ -530,14 +538,27 @@
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "in_progress",
-      "last_event_id": "01M5Q3FXQN8TZC7VF3W399B34Z",
-      "last_transition_at": "2026-10-24T14:02:03.893251+00:00",
+      "lane": "for_review",
+      "last_event_id": "01M5Q3W43S8G54QKMPCJSCX58T",
+      "last_transition_at": "2026-10-24T14:08:43.641494+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Ready for review: playground on the real kernel, scenario pages removed"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 94462,
-      "shell_pid_created_at": "1792850500.020338"
+      "shell_pid_created_at": "1792850500.020338",
+      "subtasks": {
+        "T102": "done",
+        "T103": "done",
+        "T104": "done",
+        "T105": "done",
+        "T106": "done",
+        "T107": "done",
+        "T108": "done",
+        "T109": "done"
+      }
     },
     "WP19": {
       "actor": "finalize-tasks",
