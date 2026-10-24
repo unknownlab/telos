@@ -357,7 +357,8 @@
       "last_transition_at": "2026-10-24T13:59:37.214124+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: agent pack (tools, introspection tools, MCP server, deterministic client, archetype, GRACE registration)"
+        "Ready for review: agent pack (tools, introspection tools, MCP server, deterministic client, archetype, GRACE registration)",
+        "Review passed: contract-conformant agent pack; verify green; 44 agent tests incl. real stdio MCP round trip and grant test"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
