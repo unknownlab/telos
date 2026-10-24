@@ -325,7 +325,8 @@
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review",
-        "Rework: extension id pinned once in derive.ts; dangling-target test; hasCapability guard removed"
+        "Rework: extension id pinned once in derive.ts; dangling-target test; hasCapability guard removed",
+        "Review passed (cycle 2)"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
