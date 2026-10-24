@@ -8,7 +8,7 @@
 // END_MODULE_CONTRACT
 //
 // START_MODULE_MAP
-//   ClosureCode - the seven closure finding codes
+//   ClosureCode - the eight closure finding codes
 //   ClosureFinding - one closure finding with its file, Loci, detail, message and knowledge
 //   ClosureOptions - the repository root, managed globs, exclusions, workspace packages and path aliases
 //   ClosureReport - the scope, file owners, sorted findings, limits and knowledge of one check
@@ -30,7 +30,8 @@ export type ClosureCode =
   | "closure.undeclared-dependency"
   | "closure.unknown-external"
   | "closure.unresolved-import"
-  | "closure.dynamic-import";
+  | "closure.dynamic-import"
+  | "closure.unparsable";
 
 export interface ClosureFinding {
   readonly code: ClosureCode;
@@ -352,10 +353,46 @@ function checkImport(ctx: FileContext, raw: string): void {
   }
 }
 
+// Reads a file as UTF-8, or returns null when it cannot be read.
+function readText(absolute: string): string | null {
+  try {
+    return readFileSync(absolute, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+// Lists the import specifiers of a file, or returns null when the file does not parse.
+function scanSpecifiers(
+  file: string,
+  text: string,
+): ReadonlyArray<string> | null {
+  const transpiler = new Bun.Transpiler({
+    loader: file.endsWith(".tsx") ? "tsx" : "ts",
+  });
+  try {
+    return transpiler.scanImports(text).map((entry) => entry.path);
+  } catch {
+    return null;
+  }
+}
+
+function unparsable(file: string, owner: string): ClosureFinding {
+  return {
+    code: "closure.unparsable",
+    severity: "error",
+    file,
+    loci: [owner],
+    detail: "parse",
+    message: `${file} could not be parsed, so its imports were not checked.`,
+    knowledge: "derived",
+  };
+}
+
 // START_CONTRACT: checkClosure
 //   PURPOSE: Check the closure of a semantic model against a repository and return a frozen report with every closure finding sorted and de-duplicated.
 //   INPUTS: { model: SemanticModel - a built model; options: ClosureOptions - the root, include and exclude globs, workspace packages and aliases }
-//   OUTPUTS: { Effect<ClosureReport> - the frozen report with scope, files, findings, limits and knowledge }
+//   OUTPUTS: { Effect<ClosureReport> - the frozen report with scope, files, findings, limits and knowledge; a file that cannot be read or parsed becomes a closure.unparsable finding, never a failure }
 //   SIDE_EFFECTS: Reads the files of the repository under the root; writes nothing
 //   LINKS: M-KERNEL-CLOSURE
 // END_CONTRACT: checkClosure
@@ -465,7 +502,11 @@ function computeClosure(
   for (const [file, owner] of [...owners].sort(([a], [b]) =>
     byCodeUnit(a, b),
   )) {
-    const text = readFileSync(posix.join(root, file), "utf8");
+    const text = readText(posix.join(root, file));
+    if (text === null) {
+      findings.push(unparsable(file, owner));
+      continue;
+    }
     if (
       /\bimport\s*\(\s*(?!["'`])/.test(text) ||
       /\bimport\s*\(\s*`[^`]*\$\{/.test(text)
@@ -480,9 +521,11 @@ function computeClosure(
         knowledge: "unknown",
       });
     }
-    const transpiler = new Bun.Transpiler({
-      loader: file.endsWith(".tsx") ? "tsx" : "ts",
-    });
+    const specifiers = scanSpecifiers(file, text);
+    if (specifiers === null) {
+      findings.push(unparsable(file, owner));
+      continue;
+    }
     const ctx: FileContext = {
       model,
       root,
@@ -494,8 +537,8 @@ function computeClosure(
       aliases,
       findings,
     };
-    for (const entry of transpiler.scanImports(text)) {
-      checkImport(ctx, entry.path);
+    for (const specifier of specifiers) {
+      checkImport(ctx, specifier);
     }
   }
 

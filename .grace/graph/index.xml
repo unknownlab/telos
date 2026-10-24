@@ -49,15 +49,22 @@
     </GD-KERNEL-MODEL>
     <GD-KERNEL-VERIFY>
       <Path>graph/kernel-verify.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-VERIFY />
+      </Owns>
     </GD-KERNEL-VERIFY>
     <GD-KERNEL-DESCRIBE>
       <Path>graph/kernel-describe.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-DESCRIBE />
+        <M-KERNEL-INVOKE />
+      </Owns>
     </GD-KERNEL-DESCRIBE>
     <GD-KERNEL-DECODE>
       <Path>graph/kernel-decode.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-DECODE />
+      </Owns>
     </GD-KERNEL-DECODE>
     <GD-KERNEL-CLOSURE>
       <Path>graph/kernel-closure.xml</Path>
@@ -67,7 +74,11 @@
     </GD-KERNEL-CLOSURE>
     <GD-KERNEL-API>
       <Path>graph/kernel-api.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-INTROSPECTION />
+        <M-KERNEL-IMPACT />
+        <M-KERNEL-API />
+      </Owns>
     </GD-KERNEL-API>
     <GD-PACK-CLI>
       <Path>graph/pack-cli.xml</Path>

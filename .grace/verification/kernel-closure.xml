@@ -3,10 +3,12 @@
     <V-M-KERNEL-CLOSURE>
       <TestFiles>
         <File>packages/kernel/test/closure.test.ts</File>
+        <File>packages/kernel/test/closure-unparsable.test.ts</File>
       </TestFiles>
-      <Command>bun test packages/kernel/test/closure.test.ts</Command>
+      <Command>bun test packages/kernel/test/closure.test.ts packages/kernel/test/closure-unparsable.test.ts</Command>
       <Scenario>Each closure code is reported exactly when its rule fails, with the exact finding fields and message, and not reported when the rule holds. Scope, claims, owners, relative, alias, workspace and asset resolution, externals, dynamic imports, limits, the report shape, determinism and hasClosureErrors are checked over temporary fixture repositories.</Scenario>
-      <TraceAssertion>closure.test.ts names one reported and one not-reported test per closure code (closure.unowned, closure.ambiguous, closure.empty-claim, closure.undeclared-dependency, closure.unknown-external, closure.unresolved-import, closure.dynamic-import), and the report, determinism and hasClosureErrors tests.</TraceAssertion>
+      <Scenario>A file that cannot be read or does not parse gives one closure.unparsable error finding, and the check continues with the next file instead of failing.</Scenario>
+      <TraceAssertion>closure.test.ts names one reported and one not-reported test per closure code (closure.unowned, closure.ambiguous, closure.empty-claim, closure.undeclared-dependency, closure.unknown-external, closure.unresolved-import, closure.dynamic-import), and the report, determinism and hasClosureErrors tests. closure-unparsable.test.ts names the reported and not-reported closure.unparsable tests.</TraceAssertion>
     </V-M-KERNEL-CLOSURE>
   </VD-KERNEL-CLOSURE>
 </GraceVerificationDocument>
