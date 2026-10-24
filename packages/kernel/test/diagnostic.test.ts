@@ -29,6 +29,7 @@ const ALL_CODES: ReadonlyArray<DiagnosticCode> = [
   "composition.property-conflict",
   "composition.relation-type-conflict",
   "composition.archetype-id-conflict",
+  "archetype.applies-to-empty",
   "property.invalid",
   "capability.name-malformed",
   "relation.type-unavailable",
@@ -51,7 +52,7 @@ function diag(fields: {
 }
 
 describe("SEVERITY", () => {
-  test("has exactly the seventeen codes of DiagnosticCode", () => {
+  test("has exactly the eighteen codes of DiagnosticCode", () => {
     expect(Object.keys(SEVERITY).sort()).toEqual([...ALL_CODES].sort());
   });
 
@@ -68,7 +69,7 @@ describe("SEVERITY", () => {
       (code) =>
         code !== "relation.duplicate" && code !== "relation.cycle-limit",
     );
-    expect(others.length).toBe(15);
+    expect(others.length).toBe(16);
     for (const code of others) {
       expect(SEVERITY[code]).toBe("error");
     }

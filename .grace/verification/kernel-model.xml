@@ -5,10 +5,13 @@
         <File>packages/kernel/test/model.test.ts</File>
         <File>packages/kernel/test/model-relations.test.ts</File>
         <File>packages/kernel/test/model-determinism.test.ts</File>
+        <File>packages/kernel/test/model-hardening.test.ts</File>
+        <File>packages/kernel/test/readonly-map.test.ts</File>
       </TestFiles>
-      <Command>bun test packages/kernel/test/model.test.ts packages/kernel/test/model-relations.test.ts packages/kernel/test/model-determinism.test.ts</Command>
+      <Command>bun test packages/kernel/test/model.test.ts packages/kernel/test/model-relations.test.ts packages/kernel/test/model-determinism.test.ts packages/kernel/test/model-hardening.test.ts packages/kernel/test/readonly-map.test.ts</Command>
       <Scenario>Each structural diagnostic code is reported for its rule and not reported when the rule holds, with the exact contract message. The Locus tree is traversed in array order, and a shared Locus object is reported as ownership.multiple. Relations are checked, cycles of acyclic types are found with the cycle limit, and the model is frozen, sorted and independent of contains order.</Scenario>
-      <TraceAssertion>model.test.ts names the identity, ownership, composition, property, capability and ancestor tests. model-relations.test.ts names the relation, cycle, ordering and incoming and outgoing tests. model-determinism.test.ts names the contains-order and repeat-call determinism tests.</TraceAssertion>
+      <Scenario>An Archetype with an empty appliesTo list is reported as archetype.applies-to-empty for every Locus whose kind has it, and the loci, extensions and archetypes maps of the model are read-only at runtime: set, delete and clear throw and change nothing.</Scenario>
+      <TraceAssertion>model.test.ts names the identity, ownership, composition, property, capability and ancestor tests. model-relations.test.ts names the relation, cycle, ordering and incoming and outgoing tests. model-determinism.test.ts names the contains-order and repeat-call determinism tests. model-hardening.test.ts names the reported and not-reported archetype.applies-to-empty tests and the read-only model map tests. readonly-map.test.ts names the readonlyMap read, order, copy, frozen and mutation tests.</TraceAssertion>
     </V-M-KERNEL-MODEL>
   </VD-KERNEL-MODEL>
 </GraceVerificationDocument>

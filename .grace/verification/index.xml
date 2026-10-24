@@ -68,7 +68,9 @@
     </VD-KERNEL-DECODE>
     <VD-KERNEL-CLOSURE>
       <Path>verification/kernel-closure.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-CLOSURE />
+      </Owns>
     </VD-KERNEL-CLOSURE>
     <VD-KERNEL-API>
       <Path>verification/kernel-api.xml</Path>
