@@ -191,6 +191,9 @@
       "last_event_id": "01M5PKWAZ35Y0ZDZRKDKSHDYTX",
       "last_transition_at": "2026-10-24T09:29:13.444071+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Ready for review: decode.ts with decode and registry tests, parity test, GRACE registration"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 73400,
