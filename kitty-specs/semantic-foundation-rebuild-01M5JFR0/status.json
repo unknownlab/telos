@@ -160,7 +160,8 @@
       "last_transition_at": "2026-10-24T09:31:34.857274+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: verify archetype rules per locus, 18 tests"
+        "Ready for review: verify archetype rules per locus, 18 tests",
+        "Review passed: contract-exact verify, 18 tests, full verify green; non-blocking note on empty appliesTo"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
