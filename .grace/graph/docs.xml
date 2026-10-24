@@ -1,0 +1,39 @@
+<GraceGraphDocument graceVersion="4.0">
+  <GD-DOCS>
+    <M-DOCS-CONTENT>
+      <Summary>Compiles docs/ into the site's content, search index, llms.txt and index.json, failing on any content problem.</Summary>
+      <Path>apps/docs/scripts/content.ts</Path>
+      <Path>apps/docs/src/lib/content-types.ts</Path>
+      <Path>apps/docs/src/lib/search-options.ts</Path>
+    </M-DOCS-CONTENT>
+    <M-DOCS-SPEC-REPORT>
+      <Summary>Runs the specifications at build time and writes the spec report and build info with provenance, and checks that the built Verification page carries the result.</Summary>
+      <Path>apps/docs/scripts/spec-report.ts</Path>
+      <Path>apps/docs/scripts/check-verification.ts</Path>
+      <M-LOCUS-SPECS />
+    </M-DOCS-SPEC-REPORT>
+    <M-DOCS-SITE>
+      <Summary>The prerendered TanStack Start site: layout, navigation, document pages, theme, search, diagrams, verification page and the static server.</Summary>
+      <Path>apps/docs/vite.config.ts</Path>
+      <Path>apps/docs/src/routes/</Path>
+      <Path>apps/docs/src/components/</Path>
+      <Path>apps/docs/src/lib/</Path>
+      <Path>apps/docs/src/router.tsx</Path>
+      <Path>apps/docs/src/routeTree.gen.ts</Path>
+      <Path>apps/docs/src/styles.css</Path>
+      <Path>apps/docs/scripts/serve-static.ts</Path>
+      <M-DOCS-CONTENT />
+      <M-DOCS-SPEC-REPORT />
+    </M-DOCS-SITE>
+    <M-DOCS-PLAYGROUND>
+      <Summary>Scenarios A to E that run the real packages in the browser on decoded input, with provenance and historical marking.</Summary>
+      <Path>apps/docs/src/playground/</Path>
+      <M-LOCUS-VALIDATION />
+      <M-LOCUS-REVISION />
+      <M-LOCUS-HISTORY />
+      <M-LOCUS-DECODE />
+      <M-LOCUS-SPECS />
+      <M-DOCS-SITE />
+    </M-DOCS-PLAYGROUND>
+  </GD-DOCS>
+</GraceGraphDocument>
