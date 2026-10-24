@@ -450,6 +450,94 @@ describe("closure.unresolved-import", () => {
       },
     ]);
   });
+
+  test("closure.unresolved-import is not reported for a dotted module name that resolves to a .ts, .tsx or index file", async () => {
+    const dir = fixture({
+      "a/x.ts":
+        'import "./routeTree.gen";\nimport "./app.config";\nimport "./parts.v2";\n',
+      "a/routeTree.gen.ts": "export {};\n",
+      "a/app.config.tsx": "export {};\n",
+      "a/parts.v2/index.ts": "export {};\n",
+    });
+    const model = Owned.make({
+      id: "app:root",
+      properties: { sources: ["a/**/*.ts", "a/**/*.tsx"] },
+    });
+    const report = await check(model, dir, {
+      include: ["**/*.ts", "**/*.tsx"],
+    });
+    expect(withCode(report, "closure.unresolved-import")).toEqual([]);
+    expect(report.findings).toEqual([]);
+  });
+
+  test("closure.unresolved-import is reported for a dotted module name when neither the file nor a code file exists", async () => {
+    const dir = fixture({ "a/x.ts": 'import "./routeTree.gen";\n' });
+    const model = Owned.make({
+      id: "app:root",
+      properties: { sources: ["a/**/*.ts"] },
+    });
+    const report = await check(model, dir);
+    expect(report.findings).toEqual([
+      {
+        code: "closure.unresolved-import",
+        severity: "error",
+        file: "a/x.ts",
+        loci: ["app:root"],
+        detail: "./routeTree.gen",
+        message: "./routeTree.gen does not resolve to a file.",
+        knowledge: "derived",
+      },
+    ]);
+  });
+
+  test("an existing asset file wins over a code file with the same name plus .ts", async () => {
+    const dir = fixture({
+      "a/x.ts": 'import "./style.css";\n',
+      "a/style.css": "",
+      "a/style.css.ts": "export {};\n",
+    });
+    const model = Owned.make({
+      id: "app:root",
+      properties: { sources: [] },
+      contains: [
+        Owned.make({ id: "app:a", properties: { sources: ["a/x.ts"] } }),
+        Owned.make({
+          id: "app:b",
+          properties: { sources: ["a/style.css.ts"] },
+        }),
+      ],
+    });
+    const report = await check(model, dir);
+    expect(report.findings).toEqual([]);
+  });
+
+  test("closure.undeclared-dependency is reported for a dotted module import of an unrelated Locus", async () => {
+    const dir = fixture({
+      "a/x.ts": 'import "../b/routeTree.gen";\n',
+      "b/routeTree.gen.ts": "export {};\n",
+    });
+    const model = Owned.make({
+      id: "app:root",
+      properties: { sources: [] },
+      contains: [
+        Owned.make({ id: "app:a", properties: { sources: ["a/**/*.ts"] } }),
+        Owned.make({ id: "app:b", properties: { sources: ["b/**/*.ts"] } }),
+      ],
+    });
+    const report = await check(model, dir);
+    expect(report.findings).toEqual([
+      {
+        code: "closure.undeclared-dependency",
+        severity: "error",
+        file: "a/x.ts",
+        loci: ["app:a", "app:b"],
+        detail: "../b/routeTree.gen",
+        message:
+          "app:a imports app:b through ../b/routeTree.gen without a declared relation.",
+        knowledge: "derived",
+      },
+    ]);
+  });
 });
 
 describe("workspace packages", () => {
@@ -521,6 +609,22 @@ describe("path aliases", () => {
     const dir = fixture({
       "apps/d/src/lib/x.ts": "export const x = 1;\n",
       "apps/d/src/main.ts": 'import { x } from "@/lib/x";\nexport { x };\n',
+    });
+    const model = Owned.make({
+      id: "app:d",
+      properties: { sources: ["apps/d/**/*.ts"] },
+    });
+    const report = await check(model, dir, {
+      aliases: [{ prefix: "@/", dir: "apps/d/src/" }],
+    });
+    expect(report.findings).toEqual([]);
+  });
+
+  test("an alias import of a dotted module name resolves to its .ts file", async () => {
+    const dir = fixture({
+      "apps/d/src/routeTree.gen.ts": "export const tree = 1;\n",
+      "apps/d/test/x.ts":
+        'import { tree } from "@/routeTree.gen";\nexport { tree };\n',
     });
     const model = Owned.make({
       id: "app:d",
