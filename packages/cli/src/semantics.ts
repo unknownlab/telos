@@ -14,7 +14,7 @@
 
 import { Schema } from "effect";
 import { Extension, RelationType } from "@telos/kernel";
-import { CLI_COMMAND_TYPE } from "./derive";
+import { CLI_COMMAND_TYPE, CLI_EXTENSION_ID } from "./derive";
 import { CliInterface } from "./archetype";
 
 // START_CONTRACT: CliCommand
@@ -38,7 +38,7 @@ export const CliCommand = RelationType.make(CLI_COMMAND_TYPE, {
 //   SIDE_EFFECTS: none
 //   LINKS: M-PACK-CLI
 // END_CONTRACT: CliSemantics
-export const CliSemantics = Extension.make("telos.cli", {
+export const CliSemantics = Extension.make(CLI_EXTENSION_ID, {
   description:
     "Marks a Locus as a command-line interface. Its `program` is the executable name.",
   properties: { program: Schema.String },

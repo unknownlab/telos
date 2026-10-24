@@ -21,10 +21,9 @@ import {
   type InvocationError,
   type SemanticModel,
 } from "@telos/kernel";
-import { deriveCommands } from "./derive";
+import { CLI_EXTENSION_ID, deriveCommands } from "./derive";
 import { memoryEnvironment, type Captured } from "./environment";
 
-const CLI_EXTENSION_ID = "telos.cli";
 const DEFAULT_VERSION = "0.0.0";
 
 // START_CONTRACT: CliResult

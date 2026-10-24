@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
-//   PURPOSE: Derive the command-line commands that a CLI Locus exposes, one per exposed capability, sorted and de-duplicated by name.
-//   SCOPE: CLI_COMMAND_TYPE, DerivedCommand and deriveCommands. Out: building the effect/cli program (run.ts), the Archetype rules (archetype.ts) and the Extension and relation type values (semantics.ts).
+//   PURPOSE: Derive the command-line commands that a CLI Locus exposes, one per exposed capability, sorted and de-duplicated by name, and hold the identities that the CLI Pack shares.
+//   SCOPE: CLI_EXTENSION_ID, CLI_COMMAND_TYPE, DerivedCommand and deriveCommands. Out: building the effect/cli program (run.ts), the Archetype rules (archetype.ts) and the Extension and relation type values (semantics.ts).
 //   DEPENDS: M-PACK-CLI
 //   LINKS: M-PACK-CLI, V-M-PACK-CLI
 //   ROLE: RUNTIME
@@ -8,6 +8,7 @@
 // END_MODULE_CONTRACT
 //
 // START_MODULE_MAP
+//   CLI_EXTENSION_ID - the extension id that marks a Locus as a command-line interface
 //   CLI_COMMAND_TYPE - the relation type id of a command exposed by a CLI Locus
 //   DerivedCommand - one command derived from one exposed capability
 //   deriveCommands - the commands a CLI Locus exposes, sorted by name and first per name
@@ -24,7 +25,14 @@ import {
   type SemanticModel,
 } from "@telos/kernel";
 
-const CLI_EXTENSION_ID = "telos.cli";
+// START_CONTRACT: CLI_EXTENSION_ID
+//   PURPOSE: Name the extension that marks a Locus as a command-line interface; the single source of this id for the CLI Pack.
+//   INPUTS: none
+//   OUTPUTS: { "telos.cli" - the extension id, kept as a literal type }
+//   SIDE_EFFECTS: none
+//   LINKS: M-PACK-CLI
+// END_CONTRACT: CLI_EXTENSION_ID
+export const CLI_EXTENSION_ID = "telos.cli";
 
 // START_CONTRACT: CLI_COMMAND_TYPE
 //   PURPOSE: Name the relation type that exposes a capability as a command.
@@ -54,19 +62,6 @@ function byCodeUnit(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
-// True when the Locus of the model declares the capability. A dangling target is reported by the kernel diagnostics, never derived.
-function hasCapability(
-  model: SemanticModel,
-  locus: string,
-  capability: string,
-): boolean {
-  const definition = model.loci.get(locus)?.definition;
-  return (
-    definition !== undefined &&
-    Object.prototype.hasOwnProperty.call(definition.capabilities, capability)
-  );
-}
-
 // START_CONTRACT: deriveCommands
 //   PURPOSE: List the commands of a CLI Locus: one per valid cli.command relation, sorted by capability name then Locus id, first per name.
 //   INPUTS: { model: SemanticModel - the model; cliLocusId: string - the id of the CLI Locus }
@@ -90,12 +85,7 @@ export const deriveCommands = (
         (relation) =>
           relation.valid &&
           relation.type.id === CLI_COMMAND_TYPE &&
-          relation.target.capability !== null &&
-          hasCapability(
-            model,
-            relation.target.locus,
-            relation.target.capability,
-          ),
+          relation.target.capability !== null,
       )
       .map((relation) => ({
         locus: relation.target.locus,

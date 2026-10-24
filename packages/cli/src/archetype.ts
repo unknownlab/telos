@@ -20,7 +20,7 @@ import {
   outgoing,
   violation,
 } from "@telos/kernel";
-import { CLI_COMMAND_TYPE, deriveCommands } from "./derive";
+import { CLI_COMMAND_TYPE, CLI_EXTENSION_ID, deriveCommands } from "./derive";
 import { runCli } from "./run";
 
 // START_CONTRACT: CliInterface
@@ -34,7 +34,7 @@ export const CliInterface = Archetype.make({
   id: "telos.cli.interface",
   description:
     "Checks that a command-line interface Locus exposes derivable, unique commands that reject invalid input.",
-  appliesTo: ["telos.cli"],
+  appliesTo: [CLI_EXTENSION_ID],
   rules: [
     Rule.make({
       id: "cli.commands-exist",
@@ -90,15 +90,6 @@ export const CliInterface = Archetype.make({
             )
               continue;
             const { locus, capability } = relation.target;
-            const definition = ctx.model.loci.get(locus)?.definition;
-            if (
-              definition === undefined ||
-              !Object.prototype.hasOwnProperty.call(
-                definition.capabilities,
-                capability,
-              )
-            )
-              continue;
             const description = yield* describeCapability(
               ctx.model,
               locus,

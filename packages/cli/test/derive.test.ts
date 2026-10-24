@@ -92,6 +92,26 @@ describe("deriveCommands", () => {
       CapabilityRef.make("example:other", "triple"),
     );
   });
+
+  test("skips a relation to a capability that the Locus does not have", async () => {
+    const dangling = Locus.extend(CliSemantics).make({
+      id: "example:cli",
+      properties: { program: "math" },
+      relations: [
+        CliCommand.to("example:math#missing"),
+        CliCommand.to(math.capability("double")),
+      ],
+    });
+    const danglingModel = withCli(dangling);
+    const missing = danglingModel.relations.find(
+      (relation) => relation.target.capability === "missing",
+    );
+    expect(missing?.valid).toBe(false);
+    const commands = await Effect.runPromise(
+      deriveCommands(danglingModel, "example:cli"),
+    );
+    expect(commands.map((command) => command.name)).toEqual(["double"]);
+  });
 });
 
 test("the fixture model builds with no diagnostics", () => {

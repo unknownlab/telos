@@ -69,6 +69,10 @@ const other = Locus.make({
 });
 
 describe("CliInterface archetype", () => {
+  test("the extension id is pinned once: CliSemantics is telos.cli", () => {
+    expect(CliSemantics.id).toBe("telos.cli");
+  });
+
   test("is the telos.cli.interface archetype for telos.cli", () => {
     expect(CliInterface.id).toBe("telos.cli.interface");
     expect(CliInterface.appliesTo).toEqual(["telos.cli"]);
