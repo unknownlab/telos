@@ -30,7 +30,7 @@ Inheritance hierarchies force a single taxonomy on every concept, and mixins hid
 
 ## In practice
 
-- The `Extension` definition and the composition function live in `packages/kernel/src/extension.ts` and `packages/kernel/src/composition.ts`.
+- The `Extension` definition and the composition function live in `packages/kernel/src/extension.ts` and `packages/kernel/src/locus.ts`.
 - A composition with conflicting definitions returns a diagnostic from `packages/kernel/src/diagnostic.ts` with a stable code, and no Locus kind is produced.
 - The built-in `telos.purpose` extension is defined in `packages/kernel/src/extensions/purpose.ts` and is composed like any other extension.
 

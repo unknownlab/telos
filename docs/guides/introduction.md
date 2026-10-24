@@ -14,7 +14,7 @@ related: [foundation, locus, semantic-extension, archetype, first-locus]
 
 ## What Telos is
 
-**Telos by UnknownLab** is a semantic-first, agent-native framework. The name comes from the Greek _telos_, "purpose" or "end". Every unit that Telos manages exists for a declared purpose, which is written in its [Charter](../foundation/terminology/purpose.md).
+**Telos by UnknownLab** is a semantic-first, agent-native framework. The name comes from the Greek _telos_, "purpose" or "end". Every unit that Telos manages can declare its purpose in the optional [purpose](../foundation/terminology/purpose.md) extension.
 
 Software is described as [Loci](../foundation/terminology/locus.md) composed from [semantic extensions](../foundation/terminology/semantic-extension.md). Each Locus is checked by [Archetypes](../foundation/terminology/archetype.md) and is exposed to people and agents through Packs. A Pack turns the model into an interface, such as a command line, a web form or an agent tool.
 

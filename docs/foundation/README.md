@@ -47,7 +47,7 @@ This directory is the authoritative source for what Telos means. The documentati
 
 ## The calculator proof
 
-The calculator in `packages/calculator` is the proof of the model. It is a small arithmetic system declared as Loci, with capabilities, an Archetype for its rules and an interface Locus for the command line and the Web. It shows that the kernel can describe, check and invoke a real system, and it is the example the guides use.
+The calculator in `apps/calculator` is the proof of the model. It is a small arithmetic system declared as Loci, with capabilities, an Archetype for its rules and an interface Locus for the command line and the Web. It shows that the kernel can describe, check and invoke a real system, and it is the example the guides use.
 
 ## What is implemented and what is future
 
