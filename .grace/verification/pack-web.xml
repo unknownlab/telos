@@ -1,3 +1,17 @@
 <GraceVerificationDocument graceVersion="4.0">
-  <VD-PACK-WEB />
+  <VD-PACK-WEB>
+    <V-M-PACK-WEB>
+      <TestFiles>
+        <File>packages/web/test/form.test.ts</File>
+        <File>packages/web/test/archetype.test.ts</File>
+        <File>packages/web/test/fixture.ts</File>
+      </TestFiles>
+      <Command>bun test packages/web/test</Command>
+      <Scenario>formModel derives one form per exposed capability with its fields, input modes, labels, sort order and first-per-name choice.</Scenario>
+      <Scenario>submit coerces text with the kernel rules and returns the kernel outcome, including Negative, InvalidInput and absent fields.</Scenario>
+      <Scenario>formModel fails with LocusNotFound for an unknown Locus and for a Locus without the telos.web extension.</Scenario>
+      <Scenario>Each WebInterface rule passes for a correct web Locus and fails with its exact message for a broken one.</Scenario>
+      <TraceAssertion>form.test.ts names the formModel, submit and LocusNotFound tests; archetype.test.ts names one passing and one failing test for each of the four web rules.</TraceAssertion>
+    </V-M-PACK-WEB>
+  </VD-PACK-WEB>
 </GraceVerificationDocument>
