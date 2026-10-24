@@ -155,8 +155,8 @@ test.describe("without JavaScript", () => {
     const byId = new Map(readIndex().map((doc) => [doc.id, doc]));
     const kinds = [
       "introduction",
-      "P01-everything-is-code",
-      "revision",
+      "P01-one-fundamental-entity",
+      "semantic-extension",
       "ADR-0005",
     ];
     for (const id of kinds) {
@@ -189,13 +189,13 @@ test.describe("without JavaScript", () => {
     await expect(page.locator("[data-spec-id]")).toHaveCount(44);
   });
 
-  test("a playground scenario shows its example input and the notice", async ({
+  test("the playground shows its example input and the notice without JavaScript", async ({
     page,
   }) => {
-    await page.goto("/playground/b");
+    await page.goto("/playground");
     await expect(page.locator('[data-slot="no-js"]')).toBeVisible();
     await expect(page.locator('[data-slot="example-input"]')).toContainText(
-      '"shop:checkout"',
+      '"demo:hello"',
     );
     await expect(page.locator("main")).toContainText(
       "The playground needs JavaScript",

@@ -6,14 +6,14 @@ status: proposed
 maturity: implemented
 date: 2026-10-21
 summary: Stage 0 Relations have one of four kinds (depends-on, refines, satisfies, verifies); targets must exist, self-relations and duplicates are rejected, and only refines must be acyclic.
-related: [relation, P04-explicit-composition, open-questions]
+related: [relation, P02-composable-extensions, open-questions]
 ---
 
 # ADR-0008 — Relations are typed with a closed Stage 0 set of kinds
 
 ## Context
 
-[P04](../foundation/principles/P04-explicit-composition.md) requires connections between Loci to be explicit. Untyped edges say that two things are connected but not how, so no rule can be checked on them. A fully open set of kinds invites synonyms (`uses`, `needs`, `calls`) that mean the same thing.
+[P04](../foundation/principles/P02-composable-extensions.md) requires connections between Loci to be explicit. Untyped edges say that two things are connected but not how, so no rule can be checked on them. A fully open set of kinds invites synonyms (`uses`, `needs`, `calls`) that mean the same thing.
 
 ## Decision
 

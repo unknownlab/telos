@@ -7,14 +7,19 @@ maturity: implemented
 date: 2026-10-21
 summary: Spec Kitty owns the change lifecycle and GRACE owns code-architecture knowledge for developing Telos until Telos mechanisms can take over, each artifact having exactly one owning tool; neither is a Telos dependency.
 related:
-  [foundation, P12-independent-governance, P16-self-application, open-questions]
+  [
+    foundation,
+    P06-archetypes-specialize-verification,
+    P04-code-is-the-source-of-truth,
+    open-questions,
+  ]
 ---
 
 # ADR-0011 — Spec Kitty and GRACE remain temporary external tools with exclusive artifact ownership
 
 ## Context
 
-Telos is meant eventually to govern its own evolution ([P16](../foundation/principles/P16-self-application.md)). Today it cannot: nothing of the Evolution or Verification capabilities exists. The repository already uses Spec Kitty (missions: specify, plan, tasks, implement, review, merge) and GRACE (module graph, verification register, file-local semantic markup). `AGENTS.md` assigns each concern to one of them.
+Telos is meant eventually to govern its own evolution ([P16](../foundation/principles/P04-code-is-the-source-of-truth.md)). Today it cannot: nothing of the Evolution or Verification capabilities exists. The repository already uses Spec Kitty (missions: specify, plan, tasks, implement, review, merge) and GRACE (module graph, verification register, file-local semantic markup). `AGENTS.md` assigns each concern to one of them.
 
 ## Decision
 
@@ -26,7 +31,7 @@ Telos is meant eventually to govern its own evolution ([P16](../foundation/princ
 ## Alternatives
 
 - **Build Telos's own lifecycle first**: no governance for the work that builds it.
-- **Adopt the tools' concepts into Telos**: would tie the model to temporary tools ([P15](../foundation/principles/P15-engine-independence.md)).
+- **Adopt the tools' concepts into Telos**: would tie the model to temporary tools ([P15](../foundation/principles/P14-no-ai-in-the-kernel.md)).
 
 ## Consequences
 

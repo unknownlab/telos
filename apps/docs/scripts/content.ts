@@ -675,7 +675,7 @@ function llmsText(documents: ReadonlyArray<ContentDocument>): string {
   for (const section of NAV_SECTIONS) {
     if (section.id === "playground") {
       blocks.push(
-        `## ${section.title}\n\n- [${section.title}](${section.route}): Scenarios A to E run the real @telos/locus package in your browser.`,
+        `## ${section.title}\n\n- [${section.title}](${section.route}): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.`,
       );
       continue;
     }

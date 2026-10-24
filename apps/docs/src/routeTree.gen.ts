@@ -22,7 +22,6 @@ import { Route as ArchitectureIdRouteImport } from './routes/architecture/$id'
 import { Route as DecisionsIndexRouteImport } from './routes/decisions/index'
 import { Route as DecisionsIdRouteImport } from './routes/decisions/$id'
 import { Route as PlaygroundIndexRouteImport } from './routes/playground/index'
-import { Route as PlaygroundScenarioRouteImport } from './routes/playground/$scenario'
 import { Route as PrinciplesIndexRouteImport } from './routes/principles/index'
 import { Route as PrinciplesIdRouteImport } from './routes/principles/$id'
 import { Route as TerminologyIndexRouteImport } from './routes/terminology/index'
@@ -93,11 +92,6 @@ const PlaygroundIndexRoute = PlaygroundIndexRouteImport.update({
   path: '/playground/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PlaygroundScenarioRoute = PlaygroundScenarioRouteImport.update({
-  id: '/playground/$scenario',
-  path: '/playground/$scenario',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PrinciplesIndexRoute = PrinciplesIndexRouteImport.update({
   id: '/principles/',
   path: '/principles/',
@@ -130,7 +124,6 @@ export interface FileRoutesByFullPath {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
-  '/playground/$scenario': typeof PlaygroundScenarioRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture/': typeof ArchitectureIndexRoute
@@ -150,7 +143,6 @@ export interface FileRoutesByTo {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
-  '/playground/$scenario': typeof PlaygroundScenarioRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture': typeof ArchitectureIndexRoute
@@ -171,7 +163,6 @@ export interface FileRoutesById {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
-  '/playground/$scenario': typeof PlaygroundScenarioRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture/': typeof ArchitectureIndexRoute
@@ -193,7 +184,6 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
-    | '/playground/$scenario'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture/'
@@ -213,7 +203,6 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
-    | '/playground/$scenario'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture'
@@ -233,7 +222,6 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
-    | '/playground/$scenario'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture/'
@@ -254,7 +242,6 @@ export interface RootRouteChildren {
   VerificationRoute: typeof VerificationRoute
   ArchitectureIdRoute: typeof ArchitectureIdRoute
   DecisionsIdRoute: typeof DecisionsIdRoute
-  PlaygroundScenarioRoute: typeof PlaygroundScenarioRoute
   PrinciplesIdRoute: typeof PrinciplesIdRoute
   TerminologyIdRoute: typeof TerminologyIdRoute
   ArchitectureIndexRoute: typeof ArchitectureIndexRoute
@@ -357,13 +344,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlaygroundIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/playground/$scenario': {
-      id: '/playground/$scenario'
-      path: '/playground/$scenario'
-      fullPath: '/playground/$scenario'
-      preLoaderRoute: typeof PlaygroundScenarioRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/principles/': {
       id: '/principles/'
       path: '/principles'
@@ -406,7 +386,6 @@ const rootRouteChildren: RootRouteChildren = {
   VerificationRoute: VerificationRoute,
   ArchitectureIdRoute: ArchitectureIdRoute,
   DecisionsIdRoute: DecisionsIdRoute,
-  PlaygroundScenarioRoute: PlaygroundScenarioRoute,
   PrinciplesIdRoute: PrinciplesIdRoute,
   TerminologyIdRoute: TerminologyIdRoute,
   ArchitectureIndexRoute: ArchitectureIndexRoute,

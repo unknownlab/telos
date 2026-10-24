@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove in Chromium that every result the site shows names its origin, that no result appears outside a result panel, that the labels say where and when each result was produced, and that nothing is shown as a result before a run (FR-021, INV-013, NS-018).
-//   SCOPE: The provenance suite over the static build: the data-provenance values and labels after each scenario run and on /verification, the containment of every result element in a panel, the CI row, and the empty state before any run. Out: the label text rules (provenance.test.ts, Bun).
+//   SCOPE: The provenance suite over the static build: the data-provenance values and labels after a playground run and on /verification, the containment of every result element in a panel, the CI row, and the empty state before any run. Out: the label text rules (provenance.test.ts, Bun).
 //   DEPENDS: M-DOCS-PLAYGROUND
 //   LINKS: V-M-DOCS-PLAYGROUND
 //   ROLE: TEST
@@ -10,8 +10,7 @@
 // START_MODULE_MAP
 //   ORIGINS - the provenance values a result may carry
 //   RESULT_ELEMENTS - the elements that show a result and must sit inside a result panel
-//   RUN_ACTIONS - how each scenario is run before its results are checked
-//   openScenario - opens one scenario and waits until its playground is hydrated
+//   openPlayground - opens the playground and waits until it is hydrated
 //   expectEveryPanelLabelled - asserts that each result panel has a valid origin and a visible, non-empty label
 //   countResultsOutsidePanels - the number of result elements that have no result panel as an ancestor
 // END_MODULE_MAP
@@ -27,24 +26,17 @@ const ORIGINS: ReadonlyArray<string> = [
   "none",
 ];
 const RESULT_ELEMENTS =
-  "[data-revision-id], [data-diagnostic-code], [data-spec-id], [data-change-part], [data-history-step]";
-const RUN_ACTIONS: Readonly<Record<string, string>> = {
-  a: '[data-action="run"]',
-  b: '[data-action="run"]',
-  c: '[data-action="run"]',
-  d: '[data-action="run"]',
-  e: '[data-action="run"]',
-};
+  "[data-revision-id], [data-diagnostic-code], [data-spec-id], [data-change-part], [data-history-step], [data-decode-issue], [data-finding-outcome]";
 
-// START_CONTRACT: openScenario
-//   PURPOSE: Open one scenario and wait for its playground to hydrate, so that no interaction runs before the page is ready.
-//   INPUTS: { page: Page - the page to use, id: string - the scenario letter }
+// START_CONTRACT: openPlayground
+//   PURPOSE: Open the playground and wait for it to hydrate, so that no interaction runs before the page is ready.
+//   INPUTS: { page: Page - the page to use }
 //   OUTPUTS: { Promise<void> - resolves when data-ready is true on the playground }
 //   SIDE_EFFECTS: navigates the page
 //   LINKS: V-M-DOCS-PLAYGROUND
-// END_CONTRACT: openScenario
-async function openScenario(page: Page, id: string): Promise<void> {
-  await page.goto(`/playground/${id}`);
+// END_CONTRACT: openPlayground
+async function openPlayground(page: Page): Promise<void> {
+  await page.goto("/playground");
   await expect(page.locator('[data-slot="playground"]')).toHaveAttribute(
     "data-ready",
     "true",
@@ -93,20 +85,18 @@ async function countResultsOutsidePanels(page: Page): Promise<number> {
 }
 
 test.describe("results name their origin", () => {
-  for (const id of Object.keys(RUN_ACTIONS)) {
-    test(`scenario ${id.toUpperCase()}: every panel after a run has an origin and a visible label`, async ({
-      page,
-    }) => {
-      const check = trackPageErrors(page);
-      await openScenario(page, id);
-      await page.locator(RUN_ACTIONS[id] ?? "").click();
-      await expect(page.locator("[data-result]").first()).toBeVisible();
-      const panels = await expectEveryPanelLabelled(page);
-      expect(panels).toBeGreaterThan(0);
-      expect(await countResultsOutsidePanels(page)).toBe(0);
-      check();
-    });
-  }
+  test("the playground: the result panel after a run has an origin and a visible label", async ({
+    page,
+  }) => {
+    const check = trackPageErrors(page);
+    await openPlayground(page);
+    await page.locator('[data-action="run"]').click();
+    await expect(page.locator("[data-result]").first()).toBeVisible();
+    const panels = await expectEveryPanelLabelled(page);
+    expect(panels).toBeGreaterThan(0);
+    expect(await countResultsOutsidePanels(page)).toBe(0);
+    check();
+  });
 
   test("the verification page: every panel has an origin and a label, and nothing sits outside a panel", async ({
     page,
@@ -119,17 +109,16 @@ test.describe("results name their origin", () => {
     check();
   });
 
-  test("browser labels say where and when the result was made, with the packages and the site commit", async ({
+  test("browser labels say where and when the result was made, with @telos/kernel", async ({
     page,
   }) => {
-    await openScenario(page, "a");
+    await openPlayground(page);
     await page.locator('[data-action="run"]').click();
     const label = page.locator(
-      '[data-result="validation-report"] [data-slot="provenance-label"]',
+      '[data-result="playground"] [data-slot="provenance-label"]',
     );
     await expect(label).toContainText("Run in this browser at");
-    await expect(label).toContainText("@telos/locus");
-    await expect(label).toContainText("site commit");
+    await expect(label).toContainText("@telos/kernel");
   });
 
   test("the verification labels say the build ran the report, and the CI row says CI is not available", async ({
@@ -147,32 +136,27 @@ test.describe("results name their origin", () => {
     await expect(ci).toHaveText("CI: not available");
   });
 
-  test("before any run, no result panel claims an origin other than none", async ({
+  test("before any run, the playground shows what to press and no result panel", async ({
     page,
   }) => {
-    for (const id of ["a", "d"]) {
-      await openScenario(page, id);
-      // The results area is there and says what to press, and it holds no panel yet.
-      await expect(page.locator('[data-slot="results"]')).toContainText(
-        "Press",
-      );
-      await expect(page.locator("[data-result]")).toHaveCount(0);
-    }
+    await openPlayground(page);
+    await expect(page.locator('[data-slot="results"]')).toContainText("Press");
+    await expect(page.locator("[data-result]")).toHaveCount(0);
   });
 
   test("an edited result carries the historical origin and its label says so", async ({
     page,
   }) => {
-    await openScenario(page, "a");
+    await openPlayground(page);
     await page.locator('[data-action="run"]').click();
-    await caretToEnd(page.locator("#fabric-input"));
+    await caretToEnd(page.locator("#playground-input"));
     await page.keyboard.type(" ");
     const label = page.locator(
-      '[data-result="validation-report"] [data-slot="provenance-label"]',
+      '[data-result="playground"] [data-slot="provenance-label"]',
     );
     await expect(label).toContainText("Historical: run in this browser at");
     await expect(
       page.locator('[data-result][data-provenance="historical"]'),
-    ).toHaveCount(2);
+    ).toHaveCount(1);
   });
 });

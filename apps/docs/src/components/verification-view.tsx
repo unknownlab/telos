@@ -91,10 +91,10 @@ export function VerificationView({
         <p>
           <code>bun test packages/locus/test/specs</code> runs every record
           locally.{" "}
-          <a href="/playground/e" className="underline underline-offset-4">
-            Playground scenario E
+          <a href="/playground" className="underline underline-offset-4">
+            The playground
           </a>{" "}
-          runs the same records in this browser.
+          runs the kernel in this browser.
         </p>
       </section>
     </main>

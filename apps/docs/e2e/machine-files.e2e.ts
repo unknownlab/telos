@@ -80,7 +80,7 @@ function headingsOf(text: string): string[] {
 
 // The two llms.txt bullets that name app pages. content.ts writes them, not a document.
 const APP_PAGE_LINES: ReadonlyArray<string> = [
-  "- [Playground](/playground): Scenarios A to E run the real @telos/locus package in your browser.",
+  "- [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.",
   "- [Verification](/verification): The specification report from the build-time Bun run, with its provenance.",
 ];
 
