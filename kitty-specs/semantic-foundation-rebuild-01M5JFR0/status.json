@@ -693,6 +693,9 @@
       "last_event_id": "01M5QW19X42HXQ5E4FJCTTH14M",
       "last_transition_at": "2026-10-24T21:10:59.236993+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Ready for review: coherence sweep S1-S9, SC-006 sweep, terminology maturity, README and tooling; bun run verify exit 0"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 64621,
