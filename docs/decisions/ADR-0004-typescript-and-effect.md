@@ -6,7 +6,12 @@ status: accepted
 maturity: implemented
 date: 2026-10-21
 summary: Telos is authored in ordinary TypeScript with Effect for everything that can fail, needs services, does I/O or takes time; pure data stays plain.
-related: [technical-direction, P01-everything-is-code, P15-engine-independence]
+related:
+  [
+    technical-direction,
+    P04-code-is-the-source-of-truth,
+    P14-no-ai-in-the-kernel,
+  ]
 ---
 
 # ADR-0004 — TypeScript and Effect are the authoring model
@@ -33,4 +38,4 @@ related: [technical-direction, P01-everything-is-code, P15-engine-independence]
 
 - Contributors and agents must know Effect. The docs explain the subset Telos uses.
 - Effect 4 is newer than many models' training data. Implementers must read the installed type definitions rather than rely on memory of Effect 3 APIs.
-- Effect is a deliberate dependency of the foundation, not an accident ([P15](../foundation/principles/P15-engine-independence.md)).
+- Effect is a deliberate dependency of the foundation, not an accident ([P15](../foundation/principles/P14-no-ai-in-the-kernel.md)).

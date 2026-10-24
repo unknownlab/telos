@@ -6,14 +6,14 @@ status: accepted
 maturity: vision
 date: 2026-10-22
 summary: The long-term direction is that Telos is developed by Telos itself. No schedule, order or list of next steps is fixed.
-related: [P16-self-application, ADR-0016, roadmap, foundation]
+related: [P04-code-is-the-source-of-truth, ADR-0016, roadmap, foundation]
 ---
 
 # ADR-0017 — Telos is developed with Telos (north star)
 
 ## Context
 
-The owner's direction (2026-10-22): the current north star is that this framework is developed by this framework. Principle [P16](../foundation/principles/P16-self-application.md) already says Telos applies its own model to itself. What is missing is a statement that this is the direction everything else is measured against.
+The owner's direction (2026-10-22): the current north star is that this framework is developed by this framework. Principle [P16](../foundation/principles/P04-code-is-the-source-of-truth.md) already says Telos applies its own model to itself. What is missing is a statement that this is the direction everything else is measured against.
 
 ## Decision
 

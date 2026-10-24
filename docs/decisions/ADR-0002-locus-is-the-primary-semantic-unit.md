@@ -7,7 +7,13 @@ maturity: proposed
 date: 2026-10-21
 summary: The Locus, a bounded semantic unit with identity, Charter, single owner and typed Relations, is the unit every other Telos concept attaches to.
 related:
-  [locus, charter, conceptual-model, P02-everything-has-meaning, open-questions]
+  [
+    locus,
+    purpose,
+    conceptual-model,
+    P03-no-code-outside-semantics,
+    open-questions,
+  ]
 ---
 
 # ADR-0002 — Locus is the primary semantic unit
@@ -24,7 +30,7 @@ The [conceptual model](../foundation/conceptual-model/README.md#3-the-minimal-mo
 
 ## Alternatives
 
-- **Package or module as the unit**: ties meaning to storage, which [P02](../foundation/principles/P02-everything-has-meaning.md) rejects.
+- **Package or module as the unit**: ties meaning to storage, which [P02](../foundation/principles/P03-no-code-outside-semantics.md) rejects.
 - **Bounded context as the unit**: too coarse; a bounded context typically contains many Loci. A bounded context may be modelled as a Locus with nested Loci, or as a Fabric.
 - **No primary unit, a general graph of typed nodes**: maximally flexible, but every tool would have to rediscover which nodes carry responsibility.
 

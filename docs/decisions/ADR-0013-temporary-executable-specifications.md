@@ -8,9 +8,9 @@ date: 2026-10-21
 summary: Executable specifications for the Locus package are plain data with stable ids linked to invariants, run by one small runner with a bun test adapter and a browser adapter; the core package does not depend on them.
 related:
   [
-    witness,
-    P09-evidence-before-acceptance,
-    P15-engine-independence,
+    future-semantic-evolution,
+    P13-no-unverified-guarantees,
+    P14-no-ai-in-the-kernel,
     ADR-0010,
     ADR-0014,
   ]
