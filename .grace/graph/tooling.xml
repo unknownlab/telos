@@ -1,0 +1,13 @@
+<GraceGraphDocument graceVersion="4.0">
+  <GD-TOOLING>
+    <M-BUN-VERSION-GUARD>
+      <Summary>Refuses to run the toolchain on a Bun older than engines.bun in package.json.</Summary>
+      <Path>scripts/check-bun-version.ts</Path>
+    </M-BUN-VERSION-GUARD>
+    <M-REVIEW-GATE>
+      <Summary>Runs the whole check suite for Spec Kitty's review gate and writes one JUnit report with a test case per check.</Summary>
+      <Path>scripts/review-gate.ts</Path>
+      <M-BUN-VERSION-GUARD />
+    </M-REVIEW-GATE>
+  </GD-TOOLING>
+</GraceGraphDocument>
