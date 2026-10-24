@@ -90,12 +90,13 @@
       <TestFiles>
         <File>apps/docs/test/playground-run.test.ts</File>
         <File>apps/docs/test/playground-safety.test.ts</File>
+        <File>apps/docs/test/playground-results.test.tsx</File>
         <File>apps/docs/test/guide-examples.test.ts</File>
         <File>apps/docs/e2e/playground.e2e.ts</File>
         <File>apps/docs/e2e/keyboard.e2e.ts</File>
         <File>apps/docs/e2e/provenance.e2e.ts</File>
       </TestFiles>
-      <Command>bun test apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts</Command>
+      <Command>bun test apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts apps/docs/test/playground-results.test.tsx</Command>
       <Command>bun run test:e2e apps/docs/e2e/playground.e2e.ts</Command>
       <Scenario>Every example gives its expected diagnostic or "No diagnostics" in Chromium.</Scenario>
       <Scenario>A syntax error shows a decode issue.</Scenario>

@@ -8,7 +8,7 @@
 // END_MODULE_CONTRACT
 //
 // START_MODULE_MAP
-//   PLAYGROUND_CONTROLS - the selector of every button, textarea and input inside a playground
+//   PLAYGROUND_CONTROLS - the selector of every button, textarea, input and select inside a playground
 //   MAX_TAB_PRESSES - the bound on Tab presses before a focus target is reported as unreachable
 //   openPlayground - opens the playground and waits until it is hydrated
 //   tabTo - presses Tab until the focused element matches a selector, and fails when it never does
@@ -19,7 +19,7 @@ import { expect, type Page, test } from "@playwright/test";
 import { trackPageErrors } from "./helpers";
 
 const PLAYGROUND_CONTROLS =
-  '[data-slot="playground"] button, [data-slot="playground"] textarea, [data-slot="playground"] input';
+  '[data-slot="playground"] button, [data-slot="playground"] textarea, [data-slot="playground"] input, [data-slot="playground"] select';
 const MAX_TAB_PRESSES = 300;
 
 // START_CONTRACT: openPlayground
