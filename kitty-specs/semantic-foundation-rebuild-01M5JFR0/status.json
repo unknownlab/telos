@@ -661,7 +661,8 @@
       "last_transition_at": "2026-10-24T21:01:06.071078+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Calculator page, kernel guides with checked examples, packages/locus and the legacy GRACE area removed"
+        "Calculator page, kernel guides with checked examples, packages/locus and the legacy GRACE area removed",
+        "Review passed: verify green (844 unit, 102 e2e, grace 0 errors, telos check ok); locus removed; guides checked against real outputs"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
