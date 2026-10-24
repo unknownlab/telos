@@ -1,21 +1,102 @@
 <GraceVerificationIndex graceVersion="4.0">
   <VerificationDocuments>
-    <VD-MAIN>
-      <Path>verification/main.xml</Path>
+    <VD-TOOLING>
+      <Path>verification/tooling.xml</Path>
       <Owns>
         <V-M-BUN-VERSION-GUARD />
         <V-M-REVIEW-GATE />
+      </Owns>
+    </VD-TOOLING>
+    <VD-LEGACY>
+      <Path>verification/legacy.xml</Path>
+      <Owns>
         <V-M-LOCUS-MODEL />
         <V-M-LOCUS-VALIDATION />
         <V-M-LOCUS-REVISION />
         <V-M-LOCUS-HISTORY />
         <V-M-LOCUS-DECODE />
         <V-M-LOCUS-SPECS />
+      </Owns>
+    </VD-LEGACY>
+    <VD-DOCS>
+      <Path>verification/docs.xml</Path>
+      <Owns>
         <V-M-DOCS-CONTENT />
         <V-M-DOCS-SPEC-REPORT />
         <V-M-DOCS-SITE />
         <V-M-DOCS-PLAYGROUND />
       </Owns>
-    </VD-MAIN>
+    </VD-DOCS>
+    <VD-KERNEL-BASE>
+      <Path>verification/kernel-base.xml</Path>
+      <Owns>
+        <V-M-KERNEL-IDENTITY />
+        <V-M-KERNEL-CANONICAL />
+        <V-M-KERNEL-DIAGNOSTIC />
+      </Owns>
+    </VD-KERNEL-BASE>
+    <VD-KERNEL-DEFINITIONS>
+      <Path>verification/kernel-definitions.xml</Path>
+      <Owns>
+        <V-M-KERNEL-DEFINITIONS />
+      </Owns>
+    </VD-KERNEL-DEFINITIONS>
+    <VD-KERNEL-MODEL>
+      <Path>verification/kernel-model.xml</Path>
+      <Owns>
+        <V-M-KERNEL-MODEL />
+      </Owns>
+    </VD-KERNEL-MODEL>
+    <VD-KERNEL-VERIFY>
+      <Path>verification/kernel-verify.xml</Path>
+      <Owns>
+        <V-M-KERNEL-VERIFY />
+      </Owns>
+    </VD-KERNEL-VERIFY>
+    <VD-KERNEL-DESCRIBE>
+      <Path>verification/kernel-describe.xml</Path>
+      <Owns>
+        <V-M-KERNEL-DESCRIBE />
+        <V-M-KERNEL-INVOKE />
+      </Owns>
+    </VD-KERNEL-DESCRIBE>
+    <VD-KERNEL-DECODE>
+      <Path>verification/kernel-decode.xml</Path>
+      <Owns>
+        <V-M-KERNEL-DECODE />
+      </Owns>
+    </VD-KERNEL-DECODE>
+    <VD-KERNEL-CLOSURE>
+      <Path>verification/kernel-closure.xml</Path>
+      <Owns />
+    </VD-KERNEL-CLOSURE>
+    <VD-KERNEL-API>
+      <Path>verification/kernel-api.xml</Path>
+      <Owns>
+        <V-M-KERNEL-INTROSPECTION />
+        <V-M-KERNEL-IMPACT />
+        <V-M-KERNEL-API />
+      </Owns>
+    </VD-KERNEL-API>
+    <VD-PACK-CLI>
+      <Path>verification/pack-cli.xml</Path>
+      <Owns />
+    </VD-PACK-CLI>
+    <VD-PACK-AGENT>
+      <Path>verification/pack-agent.xml</Path>
+      <Owns />
+    </VD-PACK-AGENT>
+    <VD-PACK-WEB>
+      <Path>verification/pack-web.xml</Path>
+      <Owns />
+    </VD-PACK-WEB>
+    <VD-CALCULATOR-CORE>
+      <Path>verification/calculator-core.xml</Path>
+      <Owns />
+    </VD-CALCULATOR-CORE>
+    <VD-CALCULATOR-INTERFACES>
+      <Path>verification/calculator-interfaces.xml</Path>
+      <Owns />
+    </VD-CALCULATOR-INTERFACES>
   </VerificationDocuments>
 </GraceVerificationIndex>
