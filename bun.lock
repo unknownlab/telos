@@ -33,7 +33,6 @@
         "@tanstack/react-start": "1.169.2",
         "@telos/calculator": "workspace:*",
         "@telos/kernel": "workspace:*",
-        "@telos/locus": "workspace:*",
         "@telos/web": "workspace:*",
         "class-variance-authority": "0.7.1",
         "clsx": "2.1.1",
@@ -76,13 +75,6 @@
     },
     "packages/kernel": {
       "name": "@telos/kernel",
-      "version": "0.1.0",
-      "dependencies": {
-        "effect": "4.0.4",
-      },
-    },
-    "packages/locus": {
-      "name": "@telos/locus",
       "version": "0.1.0",
       "dependencies": {
         "effect": "4.0.4",
@@ -409,8 +401,6 @@
     "@telos/docs": ["@telos/docs@workspace:apps/docs"],
 
     "@telos/kernel": ["@telos/kernel@workspace:packages/kernel"],
-
-    "@telos/locus": ["@telos/locus@workspace:packages/locus"],
 
     "@telos/web": ["@telos/web@workspace:packages/web"],
 

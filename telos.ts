@@ -15,7 +15,6 @@
 //   calculator - the telos:calculator Locus that contains the calculator application
 //   tooling - the telos:tooling Locus over the repository scripts
 //   docsSite - the telos:docs-site Locus over the documentation site
-//   legacyLocus - the telos:legacy-locus Locus over the previous Locus package
 //   repository - the telos:repository Locus that contains every other Locus
 //   repositoryModel - the built semantic model of repository
 // END_MODULE_MAP
@@ -124,22 +123,6 @@ export const tooling = Module.make({
   relations: [SourceDependsOn.to(kernel)],
 });
 
-export const legacyLocus = Module.make({
-  id: "telos:legacy-locus",
-  description:
-    "The legacy locus package holds the previous Locus model, kept until the documentation no longer uses it.",
-  properties: {
-    purpose:
-      "Keeps the previous Locus package until the documentation no longer uses it.",
-    sources: [
-      "packages/locus/src/**/*.ts",
-      "packages/locus/test/**/*.ts",
-      "packages/locus/specs/**/*.ts",
-    ],
-    packages: ["effect"],
-  },
-});
-
 export const docsSite = Module.make({
   id: "telos:docs-site",
   description:
@@ -180,7 +163,6 @@ export const docsSite = Module.make({
     SourceDependsOn.to(kernel),
     SourceDependsOn.to(webPack),
     SourceDependsOn.to(calculator),
-    SourceDependsOn.to(legacyLocus),
   ],
 });
 
@@ -202,7 +184,6 @@ export const repository = Module.make({
     calculator,
     tooling,
     docsSite,
-    legacyLocus,
   ],
 });
 
