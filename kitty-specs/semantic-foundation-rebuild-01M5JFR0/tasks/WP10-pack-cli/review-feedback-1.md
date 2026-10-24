@@ -1,13 +1,3 @@
----
-affected_files: []
-cycle_number: 1
-mission_slug: semantic-foundation-rebuild-01M5JFR0
-reproduction_command:
-reviewed_at: '2026-10-24T13:58:59Z'
-reviewer_agent: claude
-wp_id: WP10
----
-
 # WP10 review cycle 1: changes requested
 
 Verdict: rejected. One required fix; everything else meets the acceptance criteria.
