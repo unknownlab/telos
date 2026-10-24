@@ -92,7 +92,9 @@
     </GD-PACK-WEB>
     <GD-CALCULATOR-CORE>
       <Path>graph/calculator-core.xml</Path>
-      <Owns />
+      <Owns>
+        <M-CALC-ARITHMETIC />
+      </Owns>
     </GD-CALCULATOR-CORE>
     <GD-CALCULATOR-INTERFACES>
       <Path>graph/calculator-interfaces.xml</Path>

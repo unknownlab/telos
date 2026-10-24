@@ -1,3 +1,12 @@
 <GraceGraphDocument graceVersion="4.0">
-  <GD-CALCULATOR-CORE />
+  <GD-CALCULATOR-CORE>
+    <M-CALC-ARITHMETIC>
+      <Summary>Defines the calculator arithmetic Locus with its four pure capabilities, its errors and the ArithmeticBehavior archetype.</Summary>
+      <Path>apps/calculator/src/errors.ts</Path>
+      <Path>apps/calculator/src/arithmetic.ts</Path>
+      <Path>apps/calculator/src/archetypes.ts</Path>
+      <Path>apps/calculator/src/index.ts</Path>
+      <M-KERNEL-API />
+    </M-CALC-ARITHMETIC>
+  </GD-CALCULATOR-CORE>
 </GraceGraphDocument>
