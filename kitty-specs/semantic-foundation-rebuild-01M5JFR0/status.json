@@ -685,7 +685,7 @@
     },
     "WP21": {
       "actor": "user",
-      "agent": "claude",
+      "agent": null,
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
@@ -697,6 +697,7 @@
         "Ready for review: coherence sweep S1-S9, SC-006 sweep, terminology maturity, README and tooling; bun run verify exit 0"
       ],
       "provider": "__resolved_provider_absent__",
+      "review": null,
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/semantic-foundation-rebuild-01M5JFR0/tasks/WP21-coherence-sweep/review-cycle-1.md",
         "reference": "review-cycle://semantic-foundation-rebuild-01M5JFR0/WP21-coherence-sweep/review-cycle-1.md",
@@ -704,13 +705,13 @@
         "verdict": "changes_requested"
       },
       "role": "reviewer",
-      "shell_pid": 80273,
-      "shell_pid_created_at": "1792876413.630315",
+      "shell_pid": null,
+      "shell_pid_created_at": null,
       "subtasks": {
-        "T126": "done",
-        "T127": "done",
-        "T128": "done",
-        "T129": "done"
+        "T126": "planned",
+        "T127": "planned",
+        "T128": "planned",
+        "T129": "planned"
       }
     },
     "WP22": {
