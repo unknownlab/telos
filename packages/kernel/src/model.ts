@@ -24,6 +24,7 @@ import { elementaryCycles, MAX_CYCLES } from "./cycles";
 import { makeDiagnostic, sortDiagnostics, type Diagnostic } from "./diagnostic";
 import type { Extension } from "./extension";
 import { isCapabilityName, isLocusId } from "./identity";
+import { readonlyMap } from "./readonly-map";
 import {
   relationTargetKey,
   type RelationTarget,
@@ -97,7 +98,7 @@ const CONFLICT_TEXT: Record<
 // START_CONTRACT: buildModel
 //   PURPOSE: Check a root Locus tree and return its frozen semantic model with every structural diagnostic.
 //   INPUTS: { root: LocusDefinition - the root Locus of the tree }
-//   OUTPUTS: { SemanticModel - frozen model; diagnostics sorted by sortDiagnostics; never throws }
+//   OUTPUTS: { SemanticModel - frozen model with read-only maps; diagnostics sorted by sortDiagnostics; never throws for definitions made by a LocusKind's make }
 //   SIDE_EFFECTS: none
 //   LINKS: M-KERNEL-MODEL
 // END_CONTRACT: buildModel
@@ -206,6 +207,21 @@ export function buildModel(root: LocusDefinition): SemanticModel {
             message: `Capability name "${name}" does not match the capability name grammar.`,
           }),
         );
+      }
+    }
+    for (const extension of def.kind.extensions) {
+      for (const archetype of extension.archetypes) {
+        if (archetype.appliesTo.length === 0) {
+          diagnostics.push(
+            makeDiagnostic({
+              code: "archetype.applies-to-empty",
+              subject: id,
+              path: "kind",
+              members: [archetype.id],
+              message: `Archetype ${archetype.id} of extension ${extension.id} has an empty appliesTo list, so it would apply to every Locus.`,
+            }),
+          );
+        }
       }
     }
   }
@@ -360,10 +376,10 @@ export function buildModel(root: LocusDefinition): SemanticModel {
   return Object.freeze({
     root: rootId,
     ids: Object.freeze(ids),
-    loci,
+    loci: readonlyMap(loci),
     relations: frozenRelations,
-    extensions: sortedExtensions,
-    archetypes: sortedArchetypes,
+    extensions: readonlyMap(sortedExtensions),
+    archetypes: readonlyMap(sortedArchetypes),
     diagnostics: Object.freeze([...sortDiagnostics(diagnostics)]),
   });
 }

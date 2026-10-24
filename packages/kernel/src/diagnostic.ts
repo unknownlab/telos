@@ -32,7 +32,7 @@ export type Severity = "error" | "warning";
 // START_CONTRACT: DiagnosticCode
 //   PURPOSE: Name each rule violation that kernel checks can report.
 //   INPUTS: none
-//   OUTPUTS: { DiagnosticCode - one of the seventeen stable codes of the kernel contract }
+//   OUTPUTS: { DiagnosticCode - one of the eighteen stable codes of the kernel contract }
 //   SIDE_EFFECTS: none
 //   LINKS: M-KERNEL-DIAGNOSTIC
 // END_CONTRACT: DiagnosticCode
@@ -45,6 +45,7 @@ export type DiagnosticCode =
   | "composition.property-conflict"
   | "composition.relation-type-conflict"
   | "composition.archetype-id-conflict"
+  | "archetype.applies-to-empty"
   | "property.invalid"
   | "capability.name-malformed"
   | "relation.type-unavailable"
@@ -89,6 +90,7 @@ export const SEVERITY: Readonly<Record<DiagnosticCode, Severity>> = deepFreeze({
   "composition.property-conflict": "error",
   "composition.relation-type-conflict": "error",
   "composition.archetype-id-conflict": "error",
+  "archetype.applies-to-empty": "error",
   "property.invalid": "error",
   "capability.name-malformed": "error",
   "relation.type-unavailable": "error",
