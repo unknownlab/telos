@@ -86,7 +86,10 @@
     </GD-PACK-CLI>
     <GD-PACK-AGENT>
       <Path>graph/pack-agent.xml</Path>
-      <Owns />
+      <Owns>
+        <M-PACK-AGENT />
+        <M-PACK-AGENT-MCP />
+      </Owns>
     </GD-PACK-AGENT>
     <GD-PACK-WEB>
       <Path>graph/pack-web.xml</Path>
