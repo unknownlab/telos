@@ -1,0 +1,29 @@
+<GraceVerificationDocument graceVersion="4.0">
+  <VD-TOOLING>
+    <V-M-BUN-VERSION-GUARD>
+      <TestFiles>
+        <File>scripts/check-bun-version.test.ts</File>
+      </TestFiles>
+      <Command>bun test scripts/check-bun-version.test.ts</Command>
+      <Scenario>A Bun at or above the engines.bun minimum is accepted, including later canaries such as 1.4.5-canary.1.</Scenario>
+      <Scenario>A Bun below the minimum, such as 1.4.3, is rejected.</Scenario>
+      <TraceAssertion>The isSupported table test passes for every row of the version-guard contract.</TraceAssertion>
+    </V-M-BUN-VERSION-GUARD>
+    <V-M-REVIEW-GATE>
+      <TestFiles>
+        <File>scripts/review-gate.test.ts</File>
+      </TestFiles>
+      <Command>bun test scripts/review-gate.test.ts</Command>
+      <Scenario>A failing check step becomes a JUnit test case with a failure, so the review gate sees it as a new failure.</Scenario>
+      <Scenario>bun test's own suites are kept in the same report under one testsuites root.</Scenario>
+      <Scenario>The report stays well-formed when step output or bun test's JUnit contains escape codes.</Scenario>
+      <Scenario>A failure message picks the first real error line, not bun's wrapper line or the summary.</Scenario>
+      <Scenario>A checkout without node_modules gets one frozen install before the checks, so type checks do not fail on missing type definitions. With node_modules present no install step is added.</Scenario>
+      <Scenario>A failed install is recorded as a failing verify.install case and the remaining checks still run.</Scenario>
+      <Scenario>Check steps run without colour and without CLAUDECODE, CLAUDE_CODE_ENTRYPOINT or FORCE_COLOR, so a failing type check reports readable text instead of agent-specific XML tags.</Scenario>
+      <Scenario>The gate runs the check steps in the order of the root verify script, and the no-drift test fails when the two lists differ, so a step cannot be added to one and not the other.</Scenario>
+      <Scenario>The docs:build and test:e2e steps each produce their own verify test case, and a failing docs:build is reported as a failing verify.docs:build case.</Scenario>
+      <TraceAssertion>The buildReport, escapeXml, sanitizeText, failureMessage, needsInstall and cleanEnv unit tests pass. The CHECK_STEPS no-drift test ("verifyStepNames of the verify script equals the gate's step names, in order") and the verifyStepNames tests pass. The install scenarios are checked by running the gate in a clone without node_modules.</TraceAssertion>
+    </V-M-REVIEW-GATE>
+  </VD-TOOLING>
+</GraceVerificationDocument>
