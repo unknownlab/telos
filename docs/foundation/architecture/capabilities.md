@@ -76,7 +76,7 @@ flowchart BT
 - **Purpose**: Archetypes, structural diagnostics, composition rules and checks of how Loci depend on one another.
 - **Relation to Locus**: constrains the Loci of a semantic model and their relations.
 - **In this mission**: partly built. Archetypes and rules in `packages/kernel/src/archetype.ts` and `packages/kernel/src/verify.ts`; structural diagnostics in `packages/kernel/src/diagnostic.ts`. The calculator declares its own Archetype.
-- **Not built in this mission**: migration between Archetype versions; import-graph extractors for drift detection. See the [roadmap](../roadmap/README.md).
+- **Not built in this mission**: migration between Archetype versions; attribution of code below file level; type-only import checks; import checks for languages other than TypeScript. The file-level import check of Semantic Closure is built, with the limits in [semantic closure](../terminology/semantic-closure.md) and [ADR-0026](../../decisions/ADR-0026-semantic-closure-at-file-granularity.md). See the [roadmap](../roadmap/README.md).
 - **Maturity**: `proposed`.
 - **Research questions**: OQ-005, OQ-013, OQ-017.
 - **Contribution**: turns architectural intent into executable constraints.

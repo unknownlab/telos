@@ -31,7 +31,7 @@ Code that no one owns accumulates without a stated purpose. Reviews, impact anal
 
 - The Semantic Closure check in `packages/kernel/src/closure.ts` walks the managed tree and matches each file to a Locus owner declared in the model.
 - `bun run telos check` runs the closure check together with the structural diagnostics and prints each unowned file as a finding.
-- The check is part of the repository gate that WP15 adds to `bun run verify`.
+- The check is the last step of `bun run verify`, through `bun run telos check`.
 
 ## Limits
 
