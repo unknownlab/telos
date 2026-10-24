@@ -5,6 +5,8 @@
       <Owns>
         <M-BUN-VERSION-GUARD />
         <M-REVIEW-GATE />
+        <M-REPOSITORY-MODEL />
+        <M-TELOS-COMMAND />
       </Owns>
     </GD-TOOLING>
     <GD-LEGACY>
