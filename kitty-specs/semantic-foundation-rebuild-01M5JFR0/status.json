@@ -456,7 +456,8 @@
       "last_transition_at": "2026-10-24T14:44:52.762177+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Calculator interfaces, binaries and tests; MCP startup-order fix in @telos/agent (sanctioned)"
+        "Calculator interfaces, binaries and tests; MCP startup-order fix in @telos/agent (sanctioned)",
+        "Review passed: 14 cases agree via kernel/CLI/web/agent/MCP; startup-order fix verified; verify exit 0; grace lint 0 errors"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
