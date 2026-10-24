@@ -19,7 +19,12 @@ import {
   inputFields,
   violation,
 } from "@telos/kernel";
-import { exposedRelations, firstExposed, formModel } from "./form";
+import {
+  WEB_EXTENSION_ID,
+  exposedRelations,
+  firstExposed,
+  formModel,
+} from "./form";
 
 // START_CONTRACT: WebInterface
 //   PURPOSE: Check the forms of a telos.web Locus: at least one form, unique names, derivable fields and InvalidInput for missing required input.
@@ -32,7 +37,7 @@ export const WebInterface: Archetype = Archetype.make({
   id: "telos.web.interface",
   description:
     "Checks that a web interface Locus exposes uniquely named forms with derivable fields that reject invalid input.",
-  appliesTo: ["telos.web"],
+  appliesTo: [WEB_EXTENSION_ID],
   rules: [
     Rule.make({
       id: "web.forms-exist",

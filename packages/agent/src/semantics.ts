@@ -15,7 +15,7 @@
 import { Schema } from "effect";
 import { Extension, RelationType } from "@telos/kernel";
 import { AgentInterface } from "./archetype";
-import { AGENT_TOOL_TYPE } from "./tools";
+import { AGENT_EXTENSION_ID, AGENT_TOOL_TYPE } from "./tools";
 
 // START_CONTRACT: AgentTool
 //   PURPOSE: The relation type "agent.tool" from an agent interface Locus to a capability; it grants invocation.
@@ -41,7 +41,7 @@ export const AgentTool: RelationType<"agent.tool"> = RelationType.make(
 //   SIDE_EFFECTS: none
 //   LINKS: M-PACK-AGENT
 // END_CONTRACT: AgentSemantics
-export const AgentSemantics = Extension.make("telos.agent", {
+export const AgentSemantics = Extension.make(AGENT_EXTENSION_ID, {
   description:
     "Marks a Locus as an agent tool interface. Its `server` is the MCP server name.",
   properties: { server: Schema.String },

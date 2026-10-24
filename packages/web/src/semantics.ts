@@ -14,7 +14,7 @@
 
 import { Schema } from "effect";
 import { Extension, RelationType } from "@telos/kernel";
-import { WEB_FORM_TYPE } from "./form";
+import { WEB_EXTENSION_ID, WEB_FORM_TYPE } from "./form";
 import { WebInterface } from "./archetype";
 
 // START_CONTRACT: WebForm
@@ -38,7 +38,7 @@ export const WebForm = RelationType.make(WEB_FORM_TYPE, {
 //   SIDE_EFFECTS: none
 //   LINKS: M-PACK-WEB
 // END_CONTRACT: WebSemantics
-export const WebSemantics = Extension.make("telos.web", {
+export const WebSemantics = Extension.make(WEB_EXTENSION_ID, {
   description:
     "Marks a Locus as a web interface. Its `title` is the page title.",
   properties: { title: Schema.String },
