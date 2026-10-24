@@ -57,7 +57,9 @@
     </GD-KERNEL-DESCRIBE>
     <GD-KERNEL-DECODE>
       <Path>graph/kernel-decode.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-DECODE />
+      </Owns>
     </GD-KERNEL-DECODE>
     <GD-KERNEL-CLOSURE>
       <Path>graph/kernel-closure.xml</Path>

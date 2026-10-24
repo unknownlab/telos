@@ -57,7 +57,9 @@
     </VD-KERNEL-DESCRIBE>
     <VD-KERNEL-DECODE>
       <Path>verification/kernel-decode.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-DECODE />
+      </Owns>
     </VD-KERNEL-DECODE>
     <VD-KERNEL-CLOSURE>
       <Path>verification/kernel-closure.xml</Path>
