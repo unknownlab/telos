@@ -161,7 +161,7 @@ WP18 replaces the old scenario playground before WP19 removes the spec report, b
 
 ### Calculator page (WP20, `/calculator`)
 
-- `src/routes/calculator.tsx` renders `formModel(calculatorModel, "calculator:web")`.
+- `src/routes/calculator.tsx` renders `formModel(calculatorModel, "calculator:web")`. It builds the form model once, with top-level `await Effect.runPromise(...)` at module scope. `Effect.runSync` cannot be used: `formModel` computes contract digests with Web Crypto, which is asynchronous, so `runSync` throws `AsyncFiberError`. A route loader cannot be used either: loader data is serialized, and each form's `submit` is a function. The route module is code-split, so the top-level await runs in the prerender (Bun) and in the lazily loaded browser chunk, and the prerendered HTML contains the derived forms.
 - There is one form per capability. Labeled inputs use `inputMode`. The Submit button shows the `InvocationOutcome` JSON in a result panel with `data-result="calculator"`.
 - The page states that the forms are derived from the capability contracts.
 
@@ -177,7 +177,7 @@ WP18 replaces the old scenario playground before WP19 removes the spec report, b
 **Checked examples** (`apps/docs/test/guide-examples.test.ts`, rewritten). These are fenced blocks whose info string is:
 
 - `ts source=<repo path>#<REGION>`: the block body must equal the text between `// START_BLOCK_<REGION>` and `// END_BLOCK_<REGION>` in that file, with common leading indentation removed and outer blank lines trimmed. The markers already exist: WP13 adds `ARITHMETIC_LOCUS` to `apps/calculator/src/arithmetic.ts`, and WP14 adds `CALCULATOR_APP` to `apps/calculator/src/app.ts`. WP20 only quotes them.
-- `json playground=<name>`: the body must equal `PLAYGROUND_EXAMPLES` entry `<name>`'s `json`.
+- `json playground=<name>`: the body must parse to the same JSON value as `PLAYGROUND_EXAMPLES` entry `<name>`'s `json` (`JSON.stringify(JSON.parse(body)) === JSON.stringify(JSON.parse(example.json))`). The comparison is on the parsed value because `bun run format` reflows JSON fences in Markdown (it puts short arrays on one line); key order still has to match.
 
 ### Removal (WP20)
 
