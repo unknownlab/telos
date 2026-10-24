@@ -44,7 +44,7 @@ const SECTION_CASES: ReadonlyArray<readonly [string, NavSectionId | null]> = [
   ["/", "introduction"],
   ["/principles", "principles"],
   ["/principles/", "principles"],
-  ["/principles/P01-everything-is-code", "principles"],
+  ["/principles/P01-one-fundamental-entity", "principles"],
   ["/architecture/foundation", "architecture"],
   ["/playground/a", "playground"],
   ["/not-found", null],
@@ -241,8 +241,8 @@ describe("real content", () => {
     for (const route of [
       "/",
       "/philosophy",
-      "/principles/P08-preserve-the-baseline",
-      "/terminology/revision",
+      "/principles/P01-one-fundamental-entity",
+      "/terminology/semantic-extension",
       "/architecture/foundation",
       "/decisions/ADR-0012",
     ]) {

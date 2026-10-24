@@ -4,28 +4,54 @@ title: Telos foundation
 kind: index
 status: provisional
 maturity: proposed
-summary: Entry point to the doctrine, principles, terminology, conceptual model and architecture of Telos by UnknownLab.
-related: [evolution-of-determinism, principles, terminology, conceptual-model]
+summary: Entry point to the doctrine of Telos as semantic-first, agent-native programming, with its principles, terminology, conceptual model, what is implemented and what is future direction.
+related:
+  [
+    evolution-of-determinism,
+    ADR-0018,
+    principles,
+    terminology,
+    conceptual-model,
+    future-semantic-evolution,
+    open-questions,
+  ]
 ---
 
 # Telos foundation
 
-**Telos** is a framework by **UnknownLab** for creating, running, verifying, operating and evolving software systems. Its long-term aim is a programmable, graph-native software engineering environment in which applications, infrastructure, AI agents, requirements, risks, policies, processes and verification share one semantic model, authored in TypeScript with Effect.
+**Telos** is a framework by **UnknownLab** for semantic-first, agent-native programming. A system is described as **Loci**: identifiable contexts, each with an identity and optional containment, relations, capabilities and properties. Loci are composed from **semantic extensions**, checked by **Archetypes** and distributed as **Packs**. Agents read the same model through typed introspection and act through granted capabilities. The code is the source of semantic truth, and documentation is derived from it.
 
-The name comes from the Greek _telos_, "purpose" or "end". Every unit Telos manages exists for a declared purpose, its [Charter](terminology/charter.md).
+The name comes from the Greek _telos_, "purpose" or "end". Every Locus that Telos describes exists for a stated purpose, given by the built-in [purpose](terminology/purpose.md) extension.
 
 This directory is the authoritative source for what Telos means. The documentation site and the agent documentation are built from it. If another document disagrees with these files, these files win and the other document is wrong.
 
 ## Reading order
 
 1. [Evolution of Determinism](philosophy/evolution-of-determinism.md): the philosophy.
-2. [Principles](principles/README.md): the sixteen foundational principles.
+2. [Principles](principles/README.md): the sixteen principles of the semantic model.
 3. [Terminology](terminology/README.md): the vocabulary.
-4. [Conceptual model](conceptual-model/README.md): how the concepts relate, the invariants and the minimal model.
+4. [Conceptual model](conceptual-model/README.md): how the concepts relate, with diagrams and invariants.
 5. [Capability map](architecture/capabilities.md) and [technical direction](architecture/technical-direction.md).
-6. [Roadmap](roadmap/README.md).
+6. [Roadmap](roadmap/README.md) and [future semantic evolution](future-semantic-evolution.md).
 7. [Open questions](open-questions.md).
-8. [Architecture decisions](../decisions/README.md) and [research](../research/README.md).
+8. Architecture decisions and research: the decision record for this rebuild is [ADR-0018](../decisions/ADR-0018-semantic-foundation-rebuild.md). See [decisions](../decisions/README.md) and [research](../research/README.md).
+
+## The model in one page
+
+- **Locus** is the only fundamental entity. It has an [identity](terminology/identity.md) and may have [containment](terminology/containment.md), [relations](terminology/relation.md), [capabilities](terminology/capability.md) and properties.
+- **Extensions** add meaning. A [semantic extension](terminology/semantic-extension.md) declares typed properties, [relation types](terminology/relation-type.md) and [Archetypes](terminology/archetype.md). [Composition](terminology/composition.md) combines them into a [Locus kind](terminology/locus-kind.md), and conflicts are reported.
+- **Introspection** answers questions over the [semantic model](terminology/semantic-model.md) with typed queries, including [impact](terminology/impact.md). See [executable introspection](terminology/executable-introspection.md).
+- **Packs** distribute extensions, Archetypes and adapters as ordinary TypeScript packages. [Interface Loci](terminology/interface-locus.md) expose capabilities through a command line, the Web and agent tools.
+- **Semantic Closure** requires every managed code file to belong to a discoverable Locus owner. See [semantic closure](terminology/semantic-closure.md).
+- **Verification** runs Archetype [rules](terminology/rule.md) and records [findings](terminology/finding.md) with a [knowledge status](terminology/knowledge-status.md).
+
+## The calculator proof
+
+The calculator in `packages/calculator` is the proof of the model. It is a small arithmetic system declared as Loci, with capabilities, an Archetype for its rules and an interface Locus for the command line and the Web. It shows that the kernel can describe, check and invoke a real system, and it is the example the guides use.
+
+## What is implemented and what is future
+
+The kernel, the Packs and the calculator are described in the [capability map](architecture/capabilities.md), which names the module for each capability. Anything listed there as "Not built in this mission" is direction only. Concepts such as Variant, Witness, Verdict, Mandate, Evolution and Revision are not implemented and are described in [future semantic evolution](future-semantic-evolution.md).
 
 ## Maturity vocabulary
 
@@ -38,7 +64,7 @@ Every foundation document and every concept carries a `maturity` in its front ma
 | `implemented` | Code that realises the concept exists on the branch the document is on.                           | The work that merges the code.                                           |
 | `verified`    | Implemented, and passing executable specifications exist for a recorded revision and environment. | Never written by hand. Shown only next to the evidence that supports it. |
 
-`verified` is deliberately absent from front matter. A document cannot verify itself (see [P09](principles/P09-evidence-before-acceptance.md) and [P10](principles/P10-uncertainty-must-be-explicit.md)). Tools that display verification status must derive it from actual specification results and show where those results came from.
+`verified` is deliberately absent from front matter. A document cannot verify itself (see [P13](principles/P13-no-unverified-guarantees.md)). Tools that display verification status must derive it from actual specification results and show where those results came from.
 
 `status` is separate from maturity. It says how settled the text is: `stable` (changes need a decision record), `provisional` (expected to change as the model is tested), `proposed` and `accepted` for decisions, `open` for unresolved questions.
 
@@ -58,7 +84,7 @@ Telos will eventually manage its own development. Until it can, external tools h
 | Agent operating rules                                              | `AGENTS.md`, owner-controlled              | `AGENTS.md`                       |
 | Implemented behaviour                                              | The code and its executable specifications | `packages/`, `apps/`              |
 
-A Spec Kitty mission is today's stand-in for a Telos [Evolution](terminology/evolution.md). A git commit is not a Telos [Revision](terminology/revision.md). A JUnit report is not a [Witness](terminology/witness.md), though it carries some of the same information. These mappings are approximations and are named as such wherever they appear.
+A Spec Kitty mission is today's stand-in for a future change record. A git commit is not a Telos revision, and a JUnit report is not evidence in the sense of [future semantic evolution](future-semantic-evolution.md), though it carries some of the same information. These mappings are approximations and are named as such wherever they appear.
 
 ## Front matter schema
 

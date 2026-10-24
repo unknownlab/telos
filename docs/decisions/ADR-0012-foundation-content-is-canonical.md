@@ -7,7 +7,12 @@ maturity: proposed
 date: 2026-10-21
 summary: The doctrine lives in docs/ as Markdown with typed front matter; the documentation site, llms.txt and the machine-readable index are generated from those files at build time and never copied by hand.
 related:
-  [foundation, ADR-0001, P01-everything-is-code, P02-everything-has-meaning]
+  [
+    foundation,
+    ADR-0001,
+    P04-code-is-the-source-of-truth,
+    P03-no-code-outside-semantics,
+  ]
 ---
 
 # ADR-0012 — Foundation content is canonical Markdown with front matter, compiled by the site

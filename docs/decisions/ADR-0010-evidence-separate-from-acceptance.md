@@ -2,21 +2,17 @@
 id: ADR-0010
 title: Evidence is separate from acceptance
 kind: decision
-status: proposed
+status: superseded
 maturity: proposed
 date: 2026-10-21
 summary: A result of running a check (Witness) is a different record from the decision to accept a change (Verdict); in Stage 0 every displayed result carries its provenance and no result is written by hand.
 related:
-  [
-    witness,
-    verdict,
-    P09-evidence-before-acceptance,
-    P10-uncertainty-must-be-explicit,
-    open-questions,
-  ]
+  [future-semantic-evolution, P13-no-unverified-guarantees, open-questions]
 ---
 
 # ADR-0010 — Evidence is separate from acceptance
+
+> Superseded by [ADR-0023](ADR-0023-archetypes-and-knowledge-status.md).
 
 ## Context
 
@@ -24,8 +20,8 @@ related:
 
 ## Decision
 
-1. A [Witness](../foundation/terminology/witness.md) records that a specific check ran against a specific Revision with a specific result, and how (runner, runtime, time, source revision).
-2. A [Verdict](../foundation/terminology/verdict.md) records an acceptance decision about a Variant or Revision, citing Witnesses and the policy applied.
+1. A [Witness](../foundation/future-semantic-evolution.md) records that a specific check ran against a specific Revision with a specific result, and how (runner, runtime, time, source revision).
+2. A [Verdict](../foundation/future-semantic-evolution.md) records an acceptance decision about a Variant or Revision, citing Witnesses and the policy applied.
 3. In Stage 0 neither exists as a type yet. The rule applies to the documentation site: every result it displays comes from an actual execution and shows its provenance — run now in this browser, run by Bun at build time (with the git revision), from CI (unavailable in Stage 0), or historical. The word "verified" is never hand-written in content.
 
 ## Alternatives

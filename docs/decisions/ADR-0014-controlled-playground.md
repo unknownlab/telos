@@ -2,20 +2,16 @@
 id: ADR-0014
 title: The playground runs the real package on structured inputs only
 kind: decision
-status: proposed
+status: superseded
 maturity: implemented
 date: 2026-10-21
 summary: The documentation playground imports the real Locus package, decodes the JSON text that readers type with the package's Effect Schema, never evaluates code, and labels every result with where and when it was produced.
-related:
-  [
-    ADR-0010,
-    ADR-0013,
-    P05-capabilities-instead-of-arbitrary-tools,
-    open-questions,
-  ]
+related: [ADR-0010, ADR-0013, P15-no-arbitrary-agent-privileges, open-questions]
 ---
 
 # ADR-0014 — The playground runs the real package on structured inputs only
+
+> Superseded by [ADR-0025](ADR-0025-living-docs-from-the-real-kernel.md).
 
 ## Context
 

@@ -15,9 +15,9 @@ related:
 
 ## What Telos is
 
-**Telos by UnknownLab** is a framework for creating, running, verifying, operating and evolving software systems. The name comes from the Greek _telos_, "purpose" or "end". Every unit that Telos manages exists for a declared purpose, which is written in its [Charter](../foundation/terminology/charter.md).
+**Telos by UnknownLab** is a framework for creating, running, verifying, operating and evolving software systems. The name comes from the Greek _telos_, "purpose" or "end". Every unit that Telos manages exists for a declared purpose, which is written in its [Charter](../foundation/terminology/purpose.md).
 
-The long-term aim is one semantic model for applications, infrastructure, agents, requirements and checks. The model is written in TypeScript with Effect. Its core is a small set of primitives: an [Identity](../foundation/terminology/identity.md) for each unit, a [Locus](../foundation/terminology/locus.md) that holds the unit's Charter, typed [Relations](../foundation/terminology/relation.md) between Loci, and [Revisions](../foundation/terminology/revision.md) that record each version of a definition.
+The long-term aim is one semantic model for applications, infrastructure, agents, requirements and checks. The model is written in TypeScript with Effect. Its core is a small set of primitives: an [Identity](../foundation/terminology/identity.md) for each unit, a [Locus](../foundation/terminology/locus.md) that holds the unit's Charter, typed [Relations](../foundation/terminology/relation.md) between Loci, and [Revisions](../foundation/future-semantic-evolution.md) that record each version of a definition.
 
 The [foundation documents](../foundation/README.md) are the source for what Telos means. This guide and the other guides describe what exists in the repository today.
 

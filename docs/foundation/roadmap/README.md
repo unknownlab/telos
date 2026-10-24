@@ -4,53 +4,48 @@ title: Roadmap
 kind: roadmap
 status: provisional
 maturity: vision
-summary: The proposed order in which Telos grows from the Stage 0 Locus foundation toward the Software Factory, with the next necessary milestone.
-related: [capabilities, open-questions, P16-self-application]
+summary: What the semantic foundation rebuild delivers, the next candidate steps toward a self-describing Telos, and why all of it is direction only.
+related:
+  [
+    capabilities,
+    open-questions,
+    P16-no-speculative-implementation,
+    future-semantic-evolution,
+  ]
 ---
 
 # Roadmap
 
 **North star ([ADR-0017](../../decisions/ADR-0017-north-star-telos-built-with-telos.md)): Telos is developed with Telos.** It is a direction, not a plan; the owner decides what comes next.
 
-A proposed order of stages. Each stage is one or more Spec Kitty missions, specified and approved on its own. Stages after Stage 0 are direction, not commitment: the evidence gathered in each stage may reorder the next.
+Under [ADR-0016](../../decisions/ADR-0016-mvp-style-development.md), Telos is developed in small working slices. Only TypeScript with Effect is fixed, and Bun is the first target. Every entry below is therefore direction only: each candidate becomes a Spec Kitty mission of its own, specified and approved before it is built, and the evidence from one step may reorder the next. No candidate gets placeholder code before its mission.
 
-## Stage 0 — Foundation (current)
+## Done in this mission
 
-Doctrine, principles, terminology, conceptual model, decisions. The first executable slice of the Semantic Foundation ([CAP-01](../architecture/capabilities.md#cap-01-semantic-foundation)): Locus definitions, Identity, Charter, ownership, typed Relations, immutable Revisions, validation, change detection, executable specifications. A documentation site with an interactive playground that runs the real package.
+The semantic foundation rebuild replaces the earlier Stage 0 model with one fundamental entity, the Locus, composed from semantic extensions. Delivered on this branch, with module paths in the [capability map](../architecture/capabilities.md):
 
-Exit criterion: a new contributor or agent can understand the model, define and validate a Locus, run its specifications and see their real results, from the repository alone.
+- Loci, identity and containment, relations and relation types, capabilities and contracts.
+- Semantic extensions, composition and Locus kinds, with conflicts reported as diagnostics.
+- The semantic model, Archetype rules, findings with knowledge statuses, and Semantic Closure.
+- Introspection through `bun run telos inspect` and agent tools, and invocation that needs a grant.
+- The calculator as the proof application, and a documentation site and playground that run the real kernel.
 
-## Stage 1 — Telos describes itself
+Exit criterion for this step: a new contributor or agent can read the model, declare a small system as Loci, run its Archetype checks and see the real findings, from the repository alone.
 
-The next logically necessary milestone. Stage 0 proves the model on examples; Stage 1 proves it on Telos.
+## Next candidates
 
-- Describe Telos's own packages and apps as Loci, in the repository, with the Stage 0 API ([P16](../principles/P16-self-application.md)).
-- Persist Revisions and histories (a file-based store) so baselines survive between runs.
-- Graph queries and impact analysis over Relations: "what depends on this Locus?"
-- A first drift check between declared Relations and actual package imports ([OQ-012](../open-questions.md#oq-012)), and a mapping between GRACE modules and Loci.
-- A Facet extension point, designed against one real Facet (probably requirements).
+These are the next steps the model points to. None is committed.
 
-## Stage 2 — Evidence and decisions
-
-- Witness and Verdict as real records ([CAP-05](../architecture/capabilities.md#cap-05-verification-and-assurance)); the Stage 0 specification adapters produce Witnesses.
-- Acceptance policies as code.
-- First Laws and a first Archetype check ([CAP-02](../architecture/capabilities.md#cap-02-architecture)).
-- Contextual check selection from Relation impact ([P11](../principles/P11-verification-is-contextual.md)).
-
-## Stage 3 — Capabilities and authority
-
-- Acts with contracts, Mandates, Lenses ([CAP-06](../architecture/capabilities.md#cap-06-agents)).
-- One governed agent working through Acts only, with a threat model for the isolation it actually has ([OQ-016](../open-questions.md#oq-016)).
-
-## Stage 4 — Governed evolution
-
-- Variants and an Evolution engine ([CAP-07](../architecture/capabilities.md#cap-07-evolution)).
-- First handover of a responsibility from Spec Kitty or GRACE to Telos, with the external tool kept as fallback ([OQ-018](../open-questions.md#oq-018)).
+1. **Telos describes itself.** Describe Telos's own packages as Loci in the repository ([P16](../principles/P16-no-speculative-implementation.md) applies: start with the packages that exist). Add a first drift check between declared relations and package imports ([OQ-012](../open-questions.md#oq-012)).
+2. **Reconcile with GRACE.** Decide how the `.grace/` architecture description relates to the semantic model ([OQ-021](../open-questions.md#oq-021)).
+3. **Persist the model.** A file-based store so that a model survives between runs. Revisions and history are designed first, in [future semantic evolution](../future-semantic-evolution.md).
+4. **Requirements extension.** Design it against one real case before adding it ([OQ-008](../open-questions.md#oq-008)).
+5. **More Archetypes.** Apply the rules to more Loci than the calculator, and decide the cycle policy with evidence ([OQ-005](../open-questions.md#oq-005)).
 
 ## Later
 
-Processes, applications, infrastructure, observability and knowledge capabilities, in an order driven by the cases Telos is used for, and eventually the Software Factory ([CAP-14](../architecture/capabilities.md#cap-14-software-factory)).
+Evidence records with provenance, governed agents that work only through capabilities and grants ([OQ-016](../open-questions.md#oq-016)), and governed evolution through revisions. Processes, applications, infrastructure, observability and knowledge capabilities follow, in an order driven by the cases Telos is used for, and eventually the Software Factory ([CAP-14](../architecture/capabilities.md#cap-14-software-factory)), which is out of scope for the current mission.
 
 ## Explicitly not planned
 
-A replacement for Pulumi, Playwright or an AI orchestration platform; a custom TypeScript compiler; a proprietary universal database. Telos integrates such engines ([P15](../principles/P15-engine-independence.md)).
+A replacement for Pulumi, Playwright or an AI orchestration platform; a custom TypeScript compiler; a proprietary universal database. Telos integrates such engines ([P09](../principles/P09-no-duplicated-frameworks.md)).

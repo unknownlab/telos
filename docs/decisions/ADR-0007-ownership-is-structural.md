@@ -2,18 +2,20 @@
 id: ADR-0007
 title: Ownership is a single structural property, not a Relation
 kind: decision
-status: proposed
+status: superseded
 maturity: implemented
 date: 2026-10-21
 summary: Each Locus has at most one owner, declared as a property; the owner must exist in the Fabric, cannot be the Locus itself and ownership cannot form a cycle.
-related: [locus, relation, P03-semantic-ownership, open-questions]
+related: [locus, relation, P01-one-fundamental-entity, open-questions]
 ---
 
 # ADR-0007 — Ownership is a single structural property, not a Relation
 
+> Superseded by [ADR-0020](ADR-0020-containment-is-structural-ownership.md).
+
 ## Context
 
-[P03](../foundation/principles/P03-semantic-ownership.md) requires every managed artefact to have one semantic owner. The minimal-model hypothesis lists only Identity, Locus, Charter, Relation and Revision, so ownership could be one more Relation kind. The [conceptual model](../foundation/conceptual-model/README.md#3-the-minimal-model-hypothesis) found that treating it as a Relation makes "at most one owner" a cross-Relation rule instead of a shape, and makes every query for "the owner" a search.
+[P03](../foundation/principles/P01-one-fundamental-entity.md) requires every managed artefact to have one semantic owner. The minimal-model hypothesis lists only Identity, Locus, Charter, Relation and Revision, so ownership could be one more Relation kind. The [conceptual model](../foundation/conceptual-model/README.md#3-the-minimal-model-hypothesis) found that treating it as a Relation makes "at most one owner" a cross-Relation rule instead of a shape, and makes every query for "the owner" a search.
 
 ## Decision
 
