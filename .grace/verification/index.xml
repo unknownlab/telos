@@ -49,11 +49,16 @@
     </VD-KERNEL-MODEL>
     <VD-KERNEL-VERIFY>
       <Path>verification/kernel-verify.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-VERIFY />
+      </Owns>
     </VD-KERNEL-VERIFY>
     <VD-KERNEL-DESCRIBE>
       <Path>verification/kernel-describe.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-DESCRIBE />
+        <V-M-KERNEL-INVOKE />
+      </Owns>
     </VD-KERNEL-DESCRIBE>
     <VD-KERNEL-DECODE>
       <Path>verification/kernel-decode.xml</Path>
