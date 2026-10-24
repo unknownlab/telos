@@ -80,7 +80,9 @@
     </VD-KERNEL-API>
     <VD-PACK-CLI>
       <Path>verification/pack-cli.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-PACK-CLI />
+      </Owns>
     </VD-PACK-CLI>
     <VD-PACK-AGENT>
       <Path>verification/pack-agent.xml</Path>

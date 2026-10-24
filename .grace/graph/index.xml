@@ -80,7 +80,9 @@
     </GD-KERNEL-API>
     <GD-PACK-CLI>
       <Path>graph/pack-cli.xml</Path>
-      <Owns />
+      <Owns>
+        <M-PACK-CLI />
+      </Owns>
     </GD-PACK-CLI>
     <GD-PACK-AGENT>
       <Path>graph/pack-agent.xml</Path>
