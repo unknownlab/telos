@@ -4,6 +4,7 @@ title: Repository self-description, telos command and gate
 dependencies:
 - WP14
 - WP08
+- WP22
 requirement_refs:
 - FR-022
 - FR-023
@@ -204,13 +205,14 @@ The closure API you call (kernel, Bun only, import from `@telos/kernel/closure`)
 ## closure.ts (WP08) — `@telos/kernel/closure`, Bun only
 
 ```ts
-export type ClosureCode = "closure.unowned" | "closure.ambiguous" | "closure.empty-claim" | "closure.undeclared-dependency" | "closure.unknown-external" | "closure.unresolved-import" | "closure.dynamic-import"
+export type ClosureCode = "closure.unowned" | "closure.ambiguous" | "closure.empty-claim" | "closure.undeclared-dependency" | "closure.unknown-external" | "closure.unresolved-import" | "closure.dynamic-import" | "closure.unparsable"
+// eight codes; "closure.unparsable" was added by WP22 (kernel hardening)
 export interface ClosureFinding {
   readonly code: ClosureCode
   readonly severity: "error" | "warning"     // warning for empty-claim and dynamic-import
   readonly file: string | null               // repository-relative path with "/" separators
   readonly loci: ReadonlyArray<string>
-  readonly detail: string                    // the glob, import specifier or package name concerned
+  readonly detail: string                    // the glob, import specifier or package name concerned; "parse" for closure.unparsable
   readonly message: string
   readonly knowledge: "derived" | "unknown"  // "unknown" for closure.dynamic-import (the dependency cannot be determined), "derived" for every other code
 }
@@ -238,7 +240,7 @@ Algorithm:
 1. Scope = the union of `new Bun.Glob(g).scan({ cwd: root, onlyFiles: true })` over `include`, minus files matching any `exclude` glob (`new Bun.Glob(x).match(file)`). The result is sorted.
 2. Claims: for every model Locus with the `telos.source` extension, each glob in `properties.sources` claims the files it matches. A glob matching no file in scope → `closure.empty-claim`.
 3. Owner of a file: the claiming Loci, reduced to those not an ancestor of another claimant. Exactly one → that Locus. More than one → `closure.ambiguous` (loci sorted). Zero → `closure.unowned`.
-4. For each owned file, run `scanImports` (loader `tsx` for `.tsx`, else `ts`) and resolve each specifier:
+4. For each owned file, in file order, read its text and run `scanImports` (loader `tsx` for `.tsx`, else `ts`). If reading the file throws (for example it is not readable) or `scanImports` throws (the file does not parse), the check does not fail: it records one `closure.unparsable` finding (error, `file` = the file, `loci` = [owner], `detail` = `"parse"`, message `"<file> could not be parsed, so its imports were not checked."`, `knowledge` = `"derived"`), skips the imports of that file and continues with the next file. `checkClosure` never fails or dies because of a file's content or permissions. Otherwise resolve each specifier:
    - Relative (`./`, `../`) → try `<path>`, `<path>.ts`, `<path>.tsx`, `<path>/index.ts`, `<path>/index.tsx`, and `.js` → `.ts` replacement. Not found → `closure.unresolved-import`. Its owner B is checked with the dependency rule.
    - `node:*`, `bun`, `bun:*` → platform, always allowed.
    - A specifier starting with an alias `prefix` → replace the prefix with the alias `dir` and resolve it like a relative path from the repository root. Aliases apply only to files under the alias `dir`'s app (the first path segment pair, e.g. `apps/docs/`).
@@ -247,7 +249,7 @@ Algorithm:
    - A resolved target file that has no owner (outside the scope or unowned) → `closure.unresolved-import` with the message `"<specifier> resolves to <file>, which no Locus owns."`.
    - Another bare specifier → package name = `@scope/name` or the first segment. Allowed if it is listed in `properties.packages` of an `telos.external` Locus that is the owner or an ancestor of the owner. Otherwise → `closure.unknown-external`.
    - Dependency rule: allowed when B === A, B is an ancestor or descendant of A, or a valid relation (any type) exists from A or any ancestor of A to B or to a capability of B. Otherwise → `closure.undeclared-dependency` (loci = [A, B]).
-5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning).
+5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning). This text scan runs on every file whose text was read, before `scanImports`, so a file that was read but does not parse can have both `closure.dynamic-import` and `closure.unparsable`. A file that could not be read has only `closure.unparsable`.
 
 Other kernel functions you use (from `@telos/kernel`): `buildModel`, `hasErrors`, `verify` (`VerifyOptions { runner, methods?, loci?, now? }` → `Effect<VerificationReport>` with `summary { passed, failed, error }` and `findings`), `describeLocus(model, id)` and `describeModel(model)` (both `Effect`), `describeVerifications(model, id, report)`, `impact(model, target)` (plain function), `parseCapabilityKey`, `LocusNotFound`, `CapabilityNotFound`, and the types `ModelDescription`, `VerificationReport`, `VerificationDescription`, `LocusDefinition`.
 
@@ -370,11 +372,11 @@ A WP edits **only** its own area documents and its own `<GD-…>` / `<VD-…>` b
 | docs | `graph/docs.xml` `GD-DOCS` | `verification/docs.xml` `VD-DOCS` | WP01 (move), WP18, WP19, WP20 | `M-DOCS-CONTENT`, `M-DOCS-SPEC-REPORT`, `M-DOCS-SITE`, `M-DOCS-PLAYGROUND` (moved); WP18: rewrite `M-DOCS-PLAYGROUND`; WP19: `M-DOCS-SPEC-REPORT` → `M-DOCS-SEMANTIC-REPORT`, add `M-DOCS-INSPECTOR`; WP20: add `M-DOCS-CALCULATOR` |
 | kernel-base | `graph/kernel-base.xml` `GD-KERNEL-BASE` | `verification/kernel-base.xml` `VD-KERNEL-BASE` | WP02 | `M-KERNEL-IDENTITY` → identity.ts, freeze.ts; `M-KERNEL-CANONICAL` → canonical.ts, digest.ts; `M-KERNEL-DIAGNOSTIC` → diagnostic.ts, cycles.ts |
 | kernel-definitions | `GD-KERNEL-DEFINITIONS` | `VD-KERNEL-DEFINITIONS` | WP03 | `M-KERNEL-DEFINITIONS` → relation.ts, capability.ts, extension.ts, archetype.ts, locus.ts, extensions/purpose.ts, extensions/source.ts |
-| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 | `M-KERNEL-MODEL` → model.ts |
+| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 (WP22: adds a path and test files) | `M-KERNEL-MODEL` → model.ts; WP22 adds readonly-map.ts |
 | kernel-verify | `GD-KERNEL-VERIFY` | `VD-KERNEL-VERIFY` | WP05 | `M-KERNEL-VERIFY` → verify.ts |
 | kernel-describe | `GD-KERNEL-DESCRIBE` | `VD-KERNEL-DESCRIBE` | WP06 | `M-KERNEL-DESCRIBE` → describe.ts, fields.ts; `M-KERNEL-INVOKE` → invoke.ts |
 | kernel-decode | `GD-KERNEL-DECODE` | `VD-KERNEL-DECODE` | WP07 | `M-KERNEL-DECODE` → decode.ts |
-| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 | `M-KERNEL-CLOSURE` → closure.ts |
+| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 (WP22: adds a test file) | `M-KERNEL-CLOSURE` → closure.ts |
 | kernel-api | `GD-KERNEL-API` | `VD-KERNEL-API` | WP09 | `M-KERNEL-INTROSPECTION` → introspection.ts; `M-KERNEL-IMPACT` → impact.ts; `M-KERNEL-API` → index.ts |
 | pack-cli | `GD-PACK-CLI` | `VD-PACK-CLI` | WP10 | `M-PACK-CLI` → all `packages/cli/src/*.ts` |
 | pack-agent | `GD-PACK-AGENT` | `VD-PACK-AGENT` | WP11 | `M-PACK-AGENT` → semantics, archetype, tools, introspection-tools, index; `M-PACK-AGENT-MCP` → mcp.ts, client.ts |

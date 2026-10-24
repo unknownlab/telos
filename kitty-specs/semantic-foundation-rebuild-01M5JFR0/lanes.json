@@ -433,39 +433,25 @@
       "parallel_group": 7
     },
     {
-      "lane_id": "lane-r",
+      "lane_id": "lane-v",
       "wp_ids": [
-        "WP18"
+        "WP22"
       ],
       "write_scope": [
-        ".grace/graph/docs.xml",
-        ".grace/verification/docs.xml",
-        "apps/docs/e2e/equality.e2e.ts",
-        "apps/docs/e2e/keyboard.e2e.ts",
-        "apps/docs/e2e/playground.e2e.ts",
-        "apps/docs/e2e/search.e2e.ts",
-        "apps/docs/src/playground/**",
-        "apps/docs/src/routeTree.gen.ts",
-        "apps/docs/src/routes/playground/**",
-        "apps/docs/test/playground-render-de.test.tsx",
-        "apps/docs/test/playground-render.test.tsx",
-        "apps/docs/test/playground-revisions.test.ts",
-        "apps/docs/test/playground-run.test.ts",
-        "apps/docs/test/playground-specs.test.ts",
-        "apps/docs/test/playground.test.ts",
-        "apps/docs/test/run-state.test.ts"
+        "packages/kernel/src/readonly-map.ts",
+        "packages/kernel/test/closure-unparsable.test.ts",
+        "packages/kernel/test/model-hardening.test.ts",
+        "packages/kernel/test/readonly-map.test.ts"
       ],
       "predicted_surfaces": [
         "api",
-        "app-shell",
-        "artifact-rendering",
         "legacy-cleanup",
         "tracker-integration",
         "workspace"
       ],
       "depends_on_lanes": [
-        "lane-i",
-        "lane-p"
+        "lane-h",
+        "lane-i"
       ],
       "parallel_group": 7
     },
@@ -508,6 +494,44 @@
       "parallel_group": 8
     },
     {
+      "lane_id": "lane-r",
+      "wp_ids": [
+        "WP18"
+      ],
+      "write_scope": [
+        ".grace/graph/docs.xml",
+        ".grace/verification/docs.xml",
+        "apps/docs/e2e/equality.e2e.ts",
+        "apps/docs/e2e/keyboard.e2e.ts",
+        "apps/docs/e2e/playground.e2e.ts",
+        "apps/docs/e2e/search.e2e.ts",
+        "apps/docs/src/playground/**",
+        "apps/docs/src/routeTree.gen.ts",
+        "apps/docs/src/routes/playground/**",
+        "apps/docs/test/playground-render-de.test.tsx",
+        "apps/docs/test/playground-render.test.tsx",
+        "apps/docs/test/playground-revisions.test.ts",
+        "apps/docs/test/playground-run.test.ts",
+        "apps/docs/test/playground-specs.test.ts",
+        "apps/docs/test/playground.test.ts",
+        "apps/docs/test/run-state.test.ts"
+      ],
+      "predicted_surfaces": [
+        "api",
+        "app-shell",
+        "artifact-rendering",
+        "legacy-cleanup",
+        "tracker-integration",
+        "workspace"
+      ],
+      "depends_on_lanes": [
+        "lane-i",
+        "lane-p",
+        "lane-v"
+      ],
+      "parallel_group": 8
+    },
+    {
       "lane_id": "lane-o",
       "wp_ids": [
         "WP15"
@@ -531,7 +555,8 @@
       ],
       "depends_on_lanes": [
         "lane-h",
-        "lane-n"
+        "lane-n",
+        "lane-v"
       ],
       "parallel_group": 9
     },
@@ -590,7 +615,8 @@
       ],
       "depends_on_lanes": [
         "lane-o",
-        "lane-r"
+        "lane-r",
+        "lane-v"
       ],
       "parallel_group": 10
     },
@@ -648,7 +674,7 @@
       "parallel_group": 12
     }
   ],
-  "computed_at": "2026-10-24T08:31:59.028183+00:00",
+  "computed_at": "2026-10-24T13:24:33.993270+00:00",
   "computed_from": "dependency_graph+ownership",
   "planning_artifact_wps": [],
   "planning_commit_sha": "5a05e9d543c1d5a44b9d1c5bf5632d782c6acf0d"

@@ -4,6 +4,7 @@ title: Documentation playground on the real kernel
 dependencies:
 - WP09
 - WP16
+- WP22
 requirement_refs:
 - FR-026
 - NFR-001
@@ -139,10 +140,12 @@ export type DiagnosticCode =
   | "identity.malformed" | "identity.duplicate" | "ownership.multiple"
   | "composition.extension-id-conflict" | "composition.property-conflict"
   | "composition.relation-type-conflict" | "composition.archetype-id-conflict"
+  | "archetype.applies-to-empty"
   | "property.invalid" | "capability.name-malformed"
   | "relation.type-unavailable" | "relation.target-missing" | "relation.capability-missing"
   | "relation.target-kind" | "relation.self" | "relation.duplicate"
   | "relation.cycle" | "relation.cycle-limit"
+// eighteen codes; "archetype.applies-to-empty" was added by WP22 (kernel hardening)
 export interface Diagnostic {
   readonly code: DiagnosticCode
   readonly severity: Severity
@@ -213,7 +216,7 @@ export interface Archetype {
   readonly _tag: "Archetype"
   readonly id: string                   // matches EXTENSION_ID_PATTERN
   readonly description: string
-  readonly appliesTo: ReadonlyArray<string>   // extension ids, non-empty
+  readonly appliesTo: ReadonlyArray<string>   // extension ids, non-empty: buildModel reports an empty list as archetype.applies-to-empty
   readonly rules: ReadonlyArray<Rule>
 }
 export const Rule: { make: (rule: Rule) => Rule }
@@ -353,7 +356,7 @@ Rules:
 - Capabilities use `Capability.declare` (no handler).
 - The kind is `Locus.extend(...extensionsInListedOrder)`.
 
-`buildModel(root: LocusDefinition): SemanticModel` (synchronous, never throws) returns a model whose `diagnostics: ReadonlyArray<Diagnostic>` are sorted. `describeModel(model): Effect<ModelDescription>` returns `{ root, loci, diagnostics, digest }`.
+`buildModel(root: LocusDefinition): SemanticModel` (synchronous, never throws for definitions made by a LocusKind's `make`, which is what `decodeLocus` returns) returns a model whose `diagnostics: ReadonlyArray<Diagnostic>` are sorted. `describeModel(model): Effect<ModelDescription>` returns `{ root, loci, diagnostics, digest }`.
 
 ### The page contract you implement (tests rely on these exact selectors and texts)
 
@@ -492,11 +495,11 @@ A WP edits **only** its own area documents and its own `<GD-…>` / `<VD-…>` b
 | docs | `graph/docs.xml` `GD-DOCS` | `verification/docs.xml` `VD-DOCS` | WP01 (move), WP18, WP19, WP20 | `M-DOCS-CONTENT`, `M-DOCS-SPEC-REPORT`, `M-DOCS-SITE`, `M-DOCS-PLAYGROUND` (moved); WP18: rewrite `M-DOCS-PLAYGROUND`; WP19: `M-DOCS-SPEC-REPORT` → `M-DOCS-SEMANTIC-REPORT`, add `M-DOCS-INSPECTOR`; WP20: add `M-DOCS-CALCULATOR` |
 | kernel-base | `graph/kernel-base.xml` `GD-KERNEL-BASE` | `verification/kernel-base.xml` `VD-KERNEL-BASE` | WP02 | `M-KERNEL-IDENTITY` → identity.ts, freeze.ts; `M-KERNEL-CANONICAL` → canonical.ts, digest.ts; `M-KERNEL-DIAGNOSTIC` → diagnostic.ts, cycles.ts |
 | kernel-definitions | `GD-KERNEL-DEFINITIONS` | `VD-KERNEL-DEFINITIONS` | WP03 | `M-KERNEL-DEFINITIONS` → relation.ts, capability.ts, extension.ts, archetype.ts, locus.ts, extensions/purpose.ts, extensions/source.ts |
-| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 | `M-KERNEL-MODEL` → model.ts |
+| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 (WP22: adds a path and test files) | `M-KERNEL-MODEL` → model.ts; WP22 adds readonly-map.ts |
 | kernel-verify | `GD-KERNEL-VERIFY` | `VD-KERNEL-VERIFY` | WP05 | `M-KERNEL-VERIFY` → verify.ts |
 | kernel-describe | `GD-KERNEL-DESCRIBE` | `VD-KERNEL-DESCRIBE` | WP06 | `M-KERNEL-DESCRIBE` → describe.ts, fields.ts; `M-KERNEL-INVOKE` → invoke.ts |
 | kernel-decode | `GD-KERNEL-DECODE` | `VD-KERNEL-DECODE` | WP07 | `M-KERNEL-DECODE` → decode.ts |
-| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 | `M-KERNEL-CLOSURE` → closure.ts |
+| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 (WP22: adds a test file) | `M-KERNEL-CLOSURE` → closure.ts |
 | kernel-api | `GD-KERNEL-API` | `VD-KERNEL-API` | WP09 | `M-KERNEL-INTROSPECTION` → introspection.ts; `M-KERNEL-IMPACT` → impact.ts; `M-KERNEL-API` → index.ts |
 | pack-cli | `GD-PACK-CLI` | `VD-PACK-CLI` | WP10 | `M-PACK-CLI` → all `packages/cli/src/*.ts` |
 | pack-agent | `GD-PACK-AGENT` | `VD-PACK-AGENT` | WP11 | `M-PACK-AGENT` → semantics, archetype, tools, introspection-tools, index; `M-PACK-AGENT-MCP` → mcp.ts, client.ts |

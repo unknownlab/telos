@@ -492,7 +492,7 @@ Add the GRACE module header above the imports (`ROLE: RUNTIME`, `MAP_MODE: EXPOR
   - `## Grant rule`: who may invoke a capability (the Locus itself, or a Locus with a relation whose type grants invocation).
   - `## Machine-readable files`: `/semantic-report.json`, `/llms.txt` and `/index.json` as inline code.
   - `## Public API of \`@telos/kernel\``: a table `| Export | What it does |` with one row per runtime export, written as `` `name` ``. Get the list with `bun -e 'console.log(Object.keys(await import("@telos/kernel")).sort().join("\n"))'` run in `apps/docs`.
-  - `## Diagnostic codes`: one line per code, `` - `<code>` ``, for the 17 `DiagnosticCode` values, and a link to `(../../kitty-specs/semantic-foundation-rebuild-01M5JFR0/contracts/kernel.md)`.
+  - `## Diagnostic codes`: one line per code, `` - `<code>` ``, for the 18 `DiagnosticCode` values, and a link to `(../../kitty-specs/semantic-foundation-rebuild-01M5JFR0/contracts/kernel.md)`.
 
 ## Rules for this work package
 
@@ -612,11 +612,11 @@ A WP edits **only** its own area documents and its own `<GD-…>` / `<VD-…>` b
 | docs | `graph/docs.xml` `GD-DOCS` | `verification/docs.xml` `VD-DOCS` | WP01 (move), WP18, WP19, WP20 | `M-DOCS-CONTENT`, `M-DOCS-SPEC-REPORT`, `M-DOCS-SITE`, `M-DOCS-PLAYGROUND` (moved); WP18: rewrite `M-DOCS-PLAYGROUND`; WP19: `M-DOCS-SPEC-REPORT` → `M-DOCS-SEMANTIC-REPORT`, add `M-DOCS-INSPECTOR`; WP20: add `M-DOCS-CALCULATOR` |
 | kernel-base | `graph/kernel-base.xml` `GD-KERNEL-BASE` | `verification/kernel-base.xml` `VD-KERNEL-BASE` | WP02 | `M-KERNEL-IDENTITY` → identity.ts, freeze.ts; `M-KERNEL-CANONICAL` → canonical.ts, digest.ts; `M-KERNEL-DIAGNOSTIC` → diagnostic.ts, cycles.ts |
 | kernel-definitions | `GD-KERNEL-DEFINITIONS` | `VD-KERNEL-DEFINITIONS` | WP03 | `M-KERNEL-DEFINITIONS` → relation.ts, capability.ts, extension.ts, archetype.ts, locus.ts, extensions/purpose.ts, extensions/source.ts |
-| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 | `M-KERNEL-MODEL` → model.ts |
+| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 (WP22: adds a path and test files) | `M-KERNEL-MODEL` → model.ts; WP22 adds readonly-map.ts |
 | kernel-verify | `GD-KERNEL-VERIFY` | `VD-KERNEL-VERIFY` | WP05 | `M-KERNEL-VERIFY` → verify.ts |
 | kernel-describe | `GD-KERNEL-DESCRIBE` | `VD-KERNEL-DESCRIBE` | WP06 | `M-KERNEL-DESCRIBE` → describe.ts, fields.ts; `M-KERNEL-INVOKE` → invoke.ts |
 | kernel-decode | `GD-KERNEL-DECODE` | `VD-KERNEL-DECODE` | WP07 | `M-KERNEL-DECODE` → decode.ts |
-| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 | `M-KERNEL-CLOSURE` → closure.ts |
+| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 (WP22: adds a test file) | `M-KERNEL-CLOSURE` → closure.ts |
 | kernel-api | `GD-KERNEL-API` | `VD-KERNEL-API` | WP09 | `M-KERNEL-INTROSPECTION` → introspection.ts; `M-KERNEL-IMPACT` → impact.ts; `M-KERNEL-API` → index.ts |
 | pack-cli | `GD-PACK-CLI` | `VD-PACK-CLI` | WP10 | `M-PACK-CLI` → all `packages/cli/src/*.ts` |
 | pack-agent | `GD-PACK-AGENT` | `VD-PACK-AGENT` | WP11 | `M-PACK-AGENT` → semantics, archetype, tools, introspection-tools, index; `M-PACK-AGENT-MCP` → mcp.ts, client.ts |
@@ -779,7 +779,7 @@ Then:
 - Agent Reference tests:
   - "the public API table lists exactly the runtime exports of @telos/kernel": the `## Public API of \`@telos/kernel\`` table names, sorted, equal `Object.keys(await import("@telos/kernel")).sort()`.
   - "the introspection tools are the six names of INTROSPECTION_TOOL_NAMES": read `packages/agent/src/introspection-tools.ts` as text. Do not import it, because the docs app does not depend on `@telos/agent`. Collect the unique sorted matches of `/"(telos_[a-z_]+)"/g` and compare them with the `` - `telos_…` `` names of the `## Introspection tools` section. Also expect 6 names.
-  - "the diagnostic codes are the DiagnosticCode values of the kernel": read `packages/kernel/src/diagnostic.ts`, take the text from `export type DiagnosticCode =` to the next `;`, and collect `/"([a-z]+\.[a-z-]+)"/g`. That gives 17 codes. Compare them, sorted, with the `## Diagnostic codes` list. The section contains the link `(../../kitty-specs/semantic-foundation-rebuild-01M5JFR0/contracts/kernel.md)`.
+  - "the diagnostic codes are the DiagnosticCode values of the kernel": read `packages/kernel/src/diagnostic.ts`, take the text from `export type DiagnosticCode =` to the next `;`, and collect `/"([a-z]+\.[a-z-]+)"/g`. That gives 18 codes (WP22 added `archetype.applies-to-empty`). Compare them, sorted, with the `## Diagnostic codes` list. The section contains the link `(../../kitty-specs/semantic-foundation-rebuild-01M5JFR0/contracts/kernel.md)`.
 
 Update the module headers: `DEPENDS: M-DOCS-CONTENT, M-KERNEL-API, M-DOCS-PLAYGROUND` and a map line per local helper. Run `bun test apps/docs/test`.
 
