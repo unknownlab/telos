@@ -1,7 +1,7 @@
 {
-  "event_count": 140,
-  "last_event_id": "01M5QWDERX6YHN1K1W3MAX7RYG",
-  "materialized_at": "2026-10-24T21:17:37.437336+00:00",
+  "event_count": 141,
+  "last_event_id": "01M5QWFAQNGDWCCZFB9PF3R2SR",
+  "materialized_at": "2026-10-24T21:18:38.837992+00:00",
   "mission_number": "",
   "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
   "mission_type": "software-dev",
@@ -11,9 +11,9 @@
     "canceled": 0,
     "claimed": 0,
     "done": 0,
-    "for_review": 1,
+    "for_review": 0,
     "in_progress": 0,
-    "in_review": 0,
+    "in_review": 1,
     "planned": 0
   },
   "work_packages": {
@@ -684,14 +684,14 @@
       }
     },
     "WP21": {
-      "actor": "user",
-      "agent": null,
+      "actor": "claude",
+      "agent": "claude",
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
-      "lane": "for_review",
-      "last_event_id": "01M5QWDERX6YHN1K1W3MAX7RYG",
-      "last_transition_at": "2026-10-24T21:17:37.437336+00:00",
+      "lane": "in_review",
+      "last_event_id": "01M5QWFAQNGDWCCZFB9PF3R2SR",
+      "last_transition_at": "2026-10-24T21:18:38.837992+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review: coherence sweep S1-S9, SC-006 sweep, terminology maturity, README and tooling; bun run verify exit 0",
@@ -705,9 +705,9 @@
         "reviewer": "user",
         "verdict": "changes_requested"
       },
-      "role": "implementer",
-      "shell_pid": null,
-      "shell_pid_created_at": null,
+      "role": "reviewer",
+      "shell_pid": 89005,
+      "shell_pid_created_at": "1792876713.586872",
       "subtasks": {
         "T126": "done",
         "T127": "done",
