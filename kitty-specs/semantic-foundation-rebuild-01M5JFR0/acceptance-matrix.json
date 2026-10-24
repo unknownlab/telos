@@ -278,10 +278,10 @@
       "criterion_id": "FR-028",
       "description": "Verify FR-028 is satisfied",
       "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "evidence": "bun run verify exit 0 on lane-u (contains all 22 WPs): 846 unit tests, 102 e2e pass. docs/decisions ADR-0018..0028 and superseded ADRs; apps/docs/test/content.test.ts",
+      "pass_fail": "pass",
+      "verified_by": "claude",
+      "verified_at": "2026-10-24T21:22:25.621106+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
