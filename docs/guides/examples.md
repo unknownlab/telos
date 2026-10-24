@@ -6,303 +6,242 @@ order: 3
 section: examples
 status: provisional
 maturity: implemented
-summary: Worked examples of valid and invalid Fabrics, malformed input, and two Loci with the same meaning, with what the package reports for each.
-related: [first-locus, locus, relation, future-semantic-evolution]
+summary: The calculator reference implementation, from its model and capabilities to its three interfaces, with the invalid definitions the kernel reports.
+related: [first-locus, capability, interface-locus, archetype, impact]
 ---
 
 # Examples
 
-Each example below gives an input, what the package reports for it, and the playground scenario that runs it. The terms are defined in the [terminology](../foundation/terminology/README.md). The [first Locus](first-locus.md) tutorial explains the fields.
+The calculator is the reference implementation of Telos in this repository. It is one arithmetic Locus with four capabilities, and three interfaces that present those capabilities. Every interface calls the same capability, so the command line, the web forms and the agent tools report the same results and the same errors.
 
-## A valid Fabric
+## The model
 
-This is the example Fabric of the API contract. Every Locus has an identity and a Charter. The package reports no diagnostics for it.
+The application Locus `calculator:app` contains the arithmetic Locus and the three interface Loci. Each interface points at the capabilities that it presents.
 
-```json fabric valid example=valid
+```mermaid
+flowchart TD
+  app["calculator:app"] -->|contains| arithmetic["calculator:arithmetic"]
+  app -->|contains| cli["calculator:cli"]
+  app -->|contains| web["calculator:web"]
+  app -->|contains| agent["calculator:agent"]
+  arithmetic -->|capabilities| caps["add, subtract, multiply, divide"]
+  cli -->|cli.command| caps
+  web -->|web.form| caps
+  agent -->|agent.tool| caps
+```
+
+## The arithmetic Locus
+
+The arithmetic Locus is defined once. Its four capabilities take two finite numbers, and `divide` fails with `DivisionByZero` when the divisor is zero.
+
+```ts source=apps/calculator/src/arithmetic.ts#ARITHMETIC_LOCUS
+export const Operands = Schema.Struct({
+  a: Schema.Finite,
+  b: Schema.Finite,
+});
+
+export const Result = Schema.Struct({
+  result: Schema.Finite,
+});
+
+export const Arithmetic = Extension.make("calculator.arithmetic", {
+  description:
+    "Marks a Locus that performs binary arithmetic on finite numbers.",
+  archetypes: [ArithmeticBehavior],
+});
+
+export const add = Capability.make({
+  description: "Adds b to a.",
+  input: Operands,
+  output: Result,
+  errors: [NonFiniteResult],
+  effect: "pure",
+  handler: ({ a, b }) => finite(a + b),
+});
+
+export const subtract = Capability.make({
+  description: "Subtracts b from a.",
+  input: Operands,
+  output: Result,
+  errors: [NonFiniteResult],
+  effect: "pure",
+  handler: ({ a, b }) => finite(a - b),
+});
+
+export const multiply = Capability.make({
+  description: "Multiplies a by b.",
+  input: Operands,
+  output: Result,
+  errors: [NonFiniteResult],
+  effect: "pure",
+  handler: ({ a, b }) => finite(a * b),
+});
+
+export const divide = Capability.make({
+  description: "Divides a by b.",
+  input: Operands,
+  output: Result,
+  errors: [DivisionByZero, NonFiniteResult],
+  effect: "pure",
+  handler: ({ a, b }) =>
+    b === 0
+      ? Effect.fail(new DivisionByZero({ message: DIVISION_BY_ZERO_MESSAGE }))
+      : finite(a / b),
+});
+
+export const arithmetic = Locus.extend(Purpose, Arithmetic).make({
+  id: "calculator:arithmetic",
+  description: "The single arithmetic implementation of the calculator.",
+  properties: {
+    purpose: "Performs the four basic arithmetic operations on finite numbers.",
+    responsibilities: [
+      "add",
+      "subtract",
+      "multiply",
+      "divide",
+      "report division by zero and non-finite results",
+    ],
+    excluded: ["parsing text input", "presentation"],
+  },
+  capabilities: { add, subtract, multiply, divide },
+});
+```
+
+## The application and its interfaces
+
+The application Locus groups the arithmetic Locus with its three interfaces, and builds the model that the interfaces and the site use.
+
+```ts source=apps/calculator/src/app.ts#CALCULATOR_APP
+export const CalculatorApp = Extension.make(APP_EXTENSION_ID, {
+  description:
+    "Marks the calculator application that groups the arithmetic Locus and its interfaces.",
+  archetypes: [CalculatorInterfaces],
+});
+
+export function makeApp(
+  contains: ReadonlyArray<LocusDefinition>,
+): LocusDefinition {
+  return Locus.extend(Purpose, CalculatorApp).make({
+    id: "calculator:app",
+    description: "The calculator application.",
+    properties: { purpose: APP_PURPOSE },
+    contains,
+  });
+}
+
+export const app = makeApp([
+  arithmetic,
+  calculatorCli,
+  calculatorWeb,
+  calculatorAgent,
+]);
+
+export const calculatorModel = buildModel(app);
+```
+
+## Command line
+
+The command line is the `calculator:cli` interface. Each capability is a command, and its inputs are flags. The output of a successful command is the output of the capability.
+
+```sh
+bun run calculator add --a 2 --b 3
+```
+
+```text
+{"result":5}
+```
+
+A division by zero writes the error to standard error and exits with status 1.
+
+```sh
+bun run calculator divide --a 1 --b 0
+```
+
+```text
+{"tag":"DivisionByZero","message":"Division by zero is not defined.","issues":[]}
+```
+
+## Web
+
+The web interface is the `calculator:web` Locus. Its forms are derived from the capability contracts of the arithmetic Locus, and each form submits through the same capability. The [calculator page](/calculator) runs the forms in your browser and shows the outcome of each submit.
+
+## Agent tools
+
+The agent interface is the `calculator:agent` Locus. It exposes each capability as a tool of the Model Context Protocol.
+
+```sh
+bun run calculator:mcp
+bun run calculator:agent-demo
+```
+
+`calculator:mcp` starts the tool server on standard input and output. `calculator:agent-demo` starts that server, lists its tools, reads the capabilities through `telos_capabilities`, calls `add`, calls `divide` with a zero divisor, sends an invalid input, and asks for the impact of `calculator:arithmetic#add`. It needs no network and no credentials, and it ends by reporting that it completed.
+
+## Archetypes and verification
+
+The arithmetic Locus has the archetype `calculator.arithmetic-behavior`. Its rules are named `arithmetic.*` and check the four operations, the purity of the capabilities, division by zero, non-finite results and the examples. The application has the archetype `calculator.interfaces`, whose rules are named `interfaces.*`. They check that every interface is present, that each capability has one implementation, and that the interfaces give the same results. The Packs check their own interfaces with `telos.cli.interface`, `telos.web.interface` and `telos.agent.interface`.
+
+Run the verification of the repository model with:
+
+```sh
+bun run telos verify
+```
+
+## Change impact
+
+The impact of a change to a capability lists the Loci that depend on it, with the checks that apply to them.
+
+```sh
+bun run telos impact calculator:arithmetic#add
+```
+
+The impact of `calculator:arithmetic#add` lists `calculator:cli` through `cli.command`, `calculator:web` through `web.form` and `calculator:agent` through `agent.tool`. Each is at distance 1. The report also lists the Archetype checks that apply to those Loci, and its knowledge status is `derived`.
+
+## Invalid definitions
+
+The kernel reports a definition that breaks a rule as a diagnostic. Two of the playground examples show this. A relation whose target does not exist gives `relation.target-missing`:
+
+```json playground=missing-target
 {
-  "id": "shop:system",
-  "loci": [
+  "id": "demo:flow",
+  "extensions": ["demo.flow"],
+  "description": "Flows nowhere.",
+  "relations": [
     {
-      "id": "shop:storefront",
-      "charter": {
-        "purpose": "Sell products online.",
-        "responsibilities": ["Present the catalogue", "Take orders"]
-      }
-    },
-    {
-      "id": "shop:checkout",
-      "owner": "shop:storefront",
-      "charter": {
-        "purpose": "Turn a basket into an order.",
-        "responsibilities": ["Collect payment details"]
-      },
-      "relations": [{ "kind": "depends-on", "target": "shop:payment" }]
-    },
-    {
-      "id": "shop:payment",
-      "owner": "shop:storefront",
-      "charter": {
-        "purpose": "Authorise payments.",
-        "responsibilities": ["Call the payment provider"]
-      }
+      "type": "demo.flows-to",
+      "target": "demo:nowhere"
     }
   ]
 }
 ```
 
-[Scenario A](/playground) runs this input.
+Two Loci that relate to each other in a cycle give `relation.cycle`:
 
-## Charter problems
-
-In this Fabric, the Charter of `shop:checkout` has a blank purpose, and it lists one responsibility twice. Both problems are rules about Charters, which the [invariants](../foundation/conceptual-model/README.md#5-invariants) state as INV-004.
-
-```json fabric invalid example=invalid
+```json playground=cycle
 {
-  "id": "shop:system",
-  "loci": [
+  "id": "demo:loop",
+  "contains": [
     {
-      "id": "shop:storefront",
-      "charter": {
-        "purpose": "Sell products online.",
-        "responsibilities": ["Present the catalogue", "Take orders"]
-      }
+      "id": "demo:a",
+      "extensions": ["demo.flow"],
+      "description": "First step.",
+      "relations": [
+        {
+          "type": "demo.flows-to",
+          "target": "demo:b"
+        }
+      ]
     },
     {
-      "id": "shop:checkout",
-      "owner": "shop:storefront",
-      "charter": {
-        "purpose": "",
-        "responsibilities": [
-          "Collect payment details",
-          "Collect payment details"
-        ]
-      },
-      "relations": [{ "kind": "depends-on", "target": "shop:payment" }]
-    },
-    {
-      "id": "shop:payment",
-      "owner": "shop:storefront",
-      "charter": {
-        "purpose": "Authorise payments.",
-        "responsibilities": ["Call the payment provider"]
-      }
+      "id": "demo:b",
+      "extensions": ["demo.flow"],
+      "description": "Second step.",
+      "relations": [
+        {
+          "type": "demo.flows-to",
+          "target": "demo:a"
+        }
+      ]
     }
   ]
 }
 ```
-
-```json diagnostics
-[
-  {
-    "code": "charter.entry-duplicate",
-    "scope": "locus",
-    "subject": "shop:checkout",
-    "path": "charter.responsibilities",
-    "detail": "Collect payment details"
-  },
-  {
-    "code": "charter.purpose-blank",
-    "scope": "locus",
-    "subject": "shop:checkout",
-    "path": "charter.purpose"
-  }
-]
-```
-
-[Scenario B](/playground) runs this input.
-
-## Ownership problems
-
-Ownership must form a tree. A Locus has at most one owner, the owner must exist in the Fabric, no Locus may own itself, and the owner chain must end. This Fabric breaks each rule:
-
-- `shop:a` is owned by `shop:b`, and `shop:b` is owned by `shop:a`. This is a cycle. It is reported once, on `shop:a`, the smallest member.
-- `shop:c` is owned by itself.
-- `shop:d` is owned by `shop:nowhere`, which is not in the Fabric.
-
-```json fabric invalid
-{
-  "id": "shop:org",
-  "loci": [
-    {
-      "id": "shop:a",
-      "owner": "shop:b",
-      "charter": { "purpose": "Do A.", "responsibilities": ["Do A"] }
-    },
-    {
-      "id": "shop:b",
-      "owner": "shop:a",
-      "charter": { "purpose": "Do B.", "responsibilities": ["Do B"] }
-    },
-    {
-      "id": "shop:c",
-      "owner": "shop:c",
-      "charter": { "purpose": "Do C.", "responsibilities": ["Do C"] }
-    },
-    {
-      "id": "shop:d",
-      "owner": "shop:nowhere",
-      "charter": { "purpose": "Do D.", "responsibilities": ["Do D"] }
-    }
-  ]
-}
-```
-
-```json diagnostics
-[
-  {
-    "code": "owner.cycle",
-    "scope": "locus",
-    "subject": "shop:a",
-    "path": "owner",
-    "members": ["shop:a", "shop:b"]
-  },
-  {
-    "code": "owner.self",
-    "scope": "locus",
-    "subject": "shop:c",
-    "path": "owner"
-  },
-  {
-    "code": "owner.missing",
-    "scope": "locus",
-    "subject": "shop:d",
-    "path": "owner",
-    "detail": "shop:nowhere"
-  }
-]
-```
-
-[Scenario B](/playground) runs inputs of this kind.
-
-## Relation problems
-
-This Fabric has a `refines` cycle between `shop:checkout` and `shop:payment`, and a `depends-on` relation to a Locus that does not exist. The package reports the cycle once, with its members, and the missing target. A `depends-on` cycle would not be reported, because that kind of cycle is allowed.
-
-```json fabric invalid example=relations
-{
-  "id": "shop:system",
-  "loci": [
-    {
-      "id": "shop:storefront",
-      "charter": {
-        "purpose": "Sell products online.",
-        "responsibilities": ["Present the catalogue", "Take orders"]
-      },
-      "relations": [{ "kind": "depends-on", "target": "shop:ghost" }]
-    },
-    {
-      "id": "shop:checkout",
-      "owner": "shop:storefront",
-      "charter": {
-        "purpose": "Turn a basket into an order.",
-        "responsibilities": ["Collect payment details"]
-      },
-      "relations": [{ "kind": "refines", "target": "shop:payment" }]
-    },
-    {
-      "id": "shop:payment",
-      "owner": "shop:storefront",
-      "charter": {
-        "purpose": "Authorise payments.",
-        "responsibilities": ["Call the payment provider"]
-      },
-      "relations": [{ "kind": "refines", "target": "shop:checkout" }]
-    }
-  ]
-}
-```
-
-```json diagnostics
-[
-  {
-    "code": "relation.refines-cycle",
-    "scope": "locus",
-    "subject": "shop:checkout",
-    "path": "relations",
-    "members": ["shop:checkout", "shop:payment"]
-  },
-  {
-    "code": "relation.target-missing",
-    "scope": "locus",
-    "subject": "shop:storefront",
-    "path": "relations",
-    "detail": "depends-on shop:ghost"
-  }
-]
-```
-
-[Scenario C](/playground) runs this input.
-
-## Input that is not a Fabric
-
-A decode error and a diagnostic are different things. A decode error means the text is not a Fabric: a key is unknown, a value has the wrong type, or a relation kind is not one of the four kinds. The package stops at decoding and reports where the text is wrong. It does not check the rules.
-
-The Relation kind `owns` below is not one of the four kinds, so the input fails to decode:
-
-```json fabric decode-error
-{
-  "id": "shop:system",
-  "loci": [
-    {
-      "id": "shop:a",
-      "charter": { "purpose": "A.", "responsibilities": ["Do A"] },
-      "relations": [{ "kind": "owns", "target": "shop:b" }]
-    }
-  ]
-}
-```
-
-```json decode-issues
-[
-  {
-    "path": "loci[0].relations[0].kind",
-    "message": "Expected \"depends-on\" | \"refines\" | \"satisfies\" | \"verifies\""
-  }
-]
-```
-
-A diagnostic is different. The text is a Fabric, and the model breaks a rule, as in the examples above. Identity grammar, blank strings and duplicates are not decode errors. The package reports them as diagnostics.
-
-[Scenario B](/playground) shows both kinds of result for your own input.
-
-## Same meaning, same id
-
-The order of a set, metadata, and empty optional lists do not change what a Locus means, so they do not change its Revision id. These two definitions differ in the order of their responsibilities, in their metadata, and in empty optional lists. They have the same id, and the change set between them is empty.
-
-```json locus a
-{
-  "id": "shop:catalogue",
-  "charter": {
-    "purpose": "Present products.",
-    "responsibilities": ["Show prices", "List products"],
-    "excluded": ["Take payments"]
-  },
-  "metadata": { "team": "web" }
-}
-```
-
-```json locus b
-{
-  "id": "shop:catalogue",
-  "charter": {
-    "purpose": "Present products.",
-    "responsibilities": ["List products", "Show prices"],
-    "excluded": ["Take payments"],
-    "successConditions": []
-  },
-  "relations": []
-}
-```
-
-```json revisions
-{
-  "a": "sha256:24a275d3475216e097ad87a14041b78d8bd8e2cb1c97029f03d5e7cfcd49ef75",
-  "b": "sha256:24a275d3475216e097ad87a14041b78d8bd8e2cb1c97029f03d5e7cfcd49ef75"
-}
-```
-
-```json changes
-[]
-```
-
-[Scenario D](/playground) compares Revisions like these.

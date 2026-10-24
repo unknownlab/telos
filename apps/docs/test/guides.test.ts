@@ -1,7 +1,7 @@
 // START_MODULE_CONTRACT
-//   PURPOSE: Prove that the four guides in docs/guides make only the claims the real @telos/locus package, the repository and the content compiler support.
-//   SCOPE: Front matter and body shape of each guide; every annotated json block decoded, validated, revised or appended with the real package; every sh command line against package.json and AGENTS.md; the Agent Reference API table and diagnostic code list; the content compile of the whole docs tree.
-//   DEPENDS: M-DOCS-CONTENT, M-LOCUS-MODEL, M-LOCUS-VALIDATION, M-LOCUS-REVISION, M-LOCUS-HISTORY, M-LOCUS-DECODE
+//   PURPOSE: Prove that the four guides in docs/guides make only the claims the real @telos/kernel, the calculator, the repository and the content compiler support.
+//   SCOPE: Front matter and body shape of each guide; the info string of every fenced block; every sh command line against package.json and AGENTS.md; every text block against the real calculator output; the Agent Reference API table, introspection tools and diagnostic codes; the content compile of the whole docs tree. Out: source= and playground= bodies (guide-examples.test.ts).
+//   DEPENDS: M-DOCS-CONTENT, M-KERNEL-API, M-DOCS-PLAYGROUND
 //   LINKS: V-M-DOCS-CONTENT
 //   ROLE: TEST
 //   MAP_MODE: LOCALS
@@ -12,40 +12,25 @@
 //   GUIDES_DIR - the directory of the four guide sources
 //   GUIDE_SPECS - file, title, order, section and maturity of each guide, in nav order
 //   GuideSpec - one entry of GUIDE_SPECS
-//   DIAGNOSTIC_CODES - the fourteen stable diagnostic codes of contracts/locus-api.md
 //   FRONT_MATTER - the front matter pattern the content compiler uses
 //   FENCE - the fenced block pattern the guides are read with
-//   ANNOTATABLE - the json kinds that may carry an example= annotation
-//   JSON_KINDS - every json kind a guide block may use
-//   EXAMPLE_NAMES - the example= names that the playground inputs use
-//   kindOf - the kind of an info string, or undefined when it is not an allowed annotation
-//   Fence - one fenced block with its line, annotation, kind, text and section
+//   kindOf - the kind of an info string, or undefined when it is not allowed
+//   Fence - one fenced block with its line, info string, kind, text and section
 //   Guide - one loaded guide with its front matter, body and fences
 //   loadGuide - read one guide and collect its fences and their sections
 //   GUIDES - the four loaded guides, in nav order
 //   AGENTS - the text of AGENTS.md, the source of the spec-kitty and grace command lines
 //   sectionOf - the text under one level-two heading of a body
-//   decodeFabricText - decode Fabric JSON text with the real package, or throw
-//   decodeFabricFailure - the DecodeError of Fabric JSON text, or undefined when it decodes
-//   decodeLocusText - decode Locus JSON text with the real package, or throw
-//   revisionOf - the Revision of Locus JSON text
-//   earlierInSection - the nearest earlier fence of one kind in the same section
-//   laterInSection - whether a fence of one kind follows in the same section
-//   withoutMessage - a diagnostic without its human-readable message
-//   nameOf - the guide's name ("a" or "b") of a Revision id, or the id itself
-//   idOfName - the Revision id that a guide name ("a", "b" or null) stands for
-//   Step - one step of a json history-steps block
 //   PACKAGE_SCRIPTS - the scripts of the root package.json
 //   DOCS_SCRIPTS - the scripts of apps/docs/package.json
 //   commandProblem - why one sh line is not a known command, or undefined
-//   checkFence - check one annotated block against the real package and the repository
+//   CALCULATOR_PREFIX - the start of an sh line that runs the calculator command line
+//   calculatorOutput - the trimmed stdout and stderr of one calculator command line
 // END_MODULE_MAP
 
 import { describe, expect, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { Effect } from "effect";
-import * as locus from "@telos/locus";
 import docsPackage from "../package.json";
 import rootPackage from "../../../package.json";
 import { compileContent } from "../scripts/content";
@@ -86,65 +71,21 @@ const GUIDE_SPECS = [
 
 type GuideSpec = (typeof GUIDE_SPECS)[number];
 
-// The fourteen stable diagnostic codes of the Diagnostic codes table in
-// kitty-specs/003-locus-foundation-01M5EWDR/contracts/locus-api.md. The
-// DiagnosticCode type of @telos/locus has the same fourteen members.
-const DIAGNOSTIC_CODES = [
-  "identity.malformed",
-  "identity.duplicate",
-  "charter.purpose-blank",
-  "charter.responsibilities-empty",
-  "charter.entry-blank",
-  "charter.entry-duplicate",
-  "owner.missing",
-  "owner.self",
-  "owner.cycle",
-  "relation.target-missing",
-  "relation.self",
-  "relation.duplicate",
-  "relation.refines-cycle",
-  "relation.refines-cycle-limit",
-] as const;
-
 const FRONT_MATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n/;
 const FENCE = /^```([^\n]*)\n([\s\S]*?)^```$/gm;
 
-const ANNOTATABLE = new Set([
-  "fabric valid",
-  "fabric invalid",
-  "locus a",
-  "locus b",
-]);
-const JSON_KINDS = new Set([
-  ...ANNOTATABLE,
-  "fabric decode-error",
-  "diagnostics",
-  "decode-issues",
-  "revisions",
-  "changes",
-  "history-steps",
-]);
-const EXAMPLE_NAMES = new Set([
-  "valid",
-  "invalid",
-  "relations",
-  "history.a",
-  "history.b",
-]);
-
-// The annotation of a fenced block, as the guides' Block annotations section
-// defines it. Anything else is undefined and fails the test.
+// START_CONTRACT: kindOf
+//   PURPOSE: Name the kind of a fenced block from its info string, so that a block with any other info string fails.
+//   INPUTS: { info: string - the info string of a fenced block }
+//   OUTPUTS: { string | undefined - sh, text, mermaid, source or playground; undefined when the info string is not allowed }
+//   SIDE_EFFECTS: none
+//   LINKS: V-M-DOCS-CONTENT
+// END_CONTRACT: kindOf
 function kindOf(info: string): string | undefined {
   if (info === "sh" || info === "text" || info === "mermaid") return info;
-  const match = /^json (.+?)( example=(\S+))?$/.exec(info);
-  if (match === null) return undefined;
-  const kind = match[1] ?? "";
-  if (!JSON_KINDS.has(kind)) return undefined;
-  if (match[2] !== undefined) {
-    if (!ANNOTATABLE.has(kind)) return undefined;
-    if (!EXAMPLE_NAMES.has(match[3] ?? "")) return undefined;
-  }
-  return kind;
+  if (/^ts source=\S+#[A-Z0-9_]+$/.test(info)) return "source";
+  if (/^json playground=[a-z-]+$/.test(info)) return "playground";
+  return undefined;
 }
 
 interface Fence {
@@ -217,92 +158,6 @@ function sectionOf(body: string, heading: string): string {
   return lines.slice(start + 1, next === -1 ? undefined : next).join("\n");
 }
 
-function decodeFabricText(text: string): locus.Fabric {
-  const result = Effect.runSync(Effect.result(locus.decodeFabricJson(text)));
-  if (result._tag === "Failure") {
-    throw new Error(
-      `decodeFabricJson failed: ${JSON.stringify(result.failure.issues)}`,
-    );
-  }
-  return result.success;
-}
-
-function decodeFabricFailure(text: string): locus.DecodeError | undefined {
-  const result = Effect.runSync(Effect.result(locus.decodeFabricJson(text)));
-  return result._tag === "Failure" ? result.failure : undefined;
-}
-
-function decodeLocusText(text: string): locus.LocusDefinition {
-  const result = Effect.runSync(
-    Effect.result(locus.decodeLocus(JSON.parse(text))),
-  );
-  if (result._tag === "Failure") {
-    throw new Error(
-      `decodeLocus failed: ${JSON.stringify(result.failure.issues)}`,
-    );
-  }
-  return result.success;
-}
-
-async function revisionOf(text: string): Promise<locus.Revision> {
-  return Effect.runPromise(locus.createRevision(decodeLocusText(text)));
-}
-
-function earlierInSection(
-  guide: Guide,
-  fence: Fence,
-  kind: string,
-): Fence | undefined {
-  return guide.fences
-    .filter(
-      (f) =>
-        f.index < fence.index && f.section === fence.section && f.kind === kind,
-    )
-    .at(-1);
-}
-
-function laterInSection(guide: Guide, fence: Fence, kind: string): boolean {
-  return guide.fences.some(
-    (f) =>
-      f.index > fence.index && f.section === fence.section && f.kind === kind,
-  );
-}
-
-function withoutMessage(diagnostic: locus.Diagnostic): Record<string, unknown> {
-  return Object.fromEntries(
-    Object.entries(diagnostic).filter(([key]) => key !== "message"),
-  );
-}
-
-// Names a history outcome with the guide's words: "a", "b", null, or the raw id when it is neither.
-function nameOf(
-  id: locus.RevisionId | null,
-  a: locus.Revision,
-  b: locus.Revision,
-): string | null {
-  if (id === null) return null;
-  if (id === a.id) return "a";
-  if (id === b.id) return "b";
-  return id;
-}
-
-function idOfName(
-  name: unknown,
-  a: locus.Revision,
-  b: locus.Revision,
-): locus.RevisionId | null {
-  if (name === null) return null;
-  if (name === "a") return a.id;
-  if (name === "b") return b.id;
-  throw new Error(`expected "a", "b" or null, found ${JSON.stringify(name)}`);
-}
-
-interface Step {
-  readonly append: unknown;
-  readonly expectedHead: unknown;
-  readonly result: unknown;
-}
-
 const PACKAGE_SCRIPTS = rootPackage.scripts as Record<string, string>;
 const DOCS_SCRIPTS = docsPackage.scripts as Record<string, string>;
 
@@ -322,7 +177,7 @@ function commandProblem(line: string): string | undefined {
       : `no script "${script}" in apps/docs/package.json`;
   }
   if (line.startsWith("bun run ")) {
-    const script = line.slice("bun run ".length);
+    const script = line.slice("bun run ".length).split(" ")[0] ?? "";
     return Object.hasOwn(PACKAGE_SCRIPTS, script)
       ? undefined
       : `no script "${script}" in package.json`;
@@ -342,173 +197,27 @@ function commandProblem(line: string): string | undefined {
   return "not a command this test knows";
 }
 
-// START_CONTRACT: checkFence
-//   PURPOSE: Check one annotated block against the real package, its pairing rules and the repository.
-//   INPUTS: { guide: Guide - the guide holding the block; fence: Fence - the block }
-//   OUTPUTS: { Promise<void> - resolves when the claim holds; throws or fails an expectation otherwise }
-//   SIDE_EFFECTS: none beyond the commands checkFence runs for sh blocks
+const CALCULATOR_PREFIX = "bun run calculator ";
+
+// START_CONTRACT: calculatorOutput
+//   PURPOSE: Run one calculator command line of a guide and capture what a reader sees.
+//   INPUTS: { line: string - an sh line that starts with "bun run calculator " }
+//   OUTPUTS: { Promise<string> - the trimmed stdout followed by stderr of the command }
+//   SIDE_EFFECTS: spawns bun run --silent calculator at the repository root
 //   LINKS: V-M-DOCS-CONTENT
-// END_CONTRACT: checkFence
-async function checkFence(guide: Guide, fence: Fence): Promise<void> {
-  const next = guide.fences[fence.index + 1];
-  const previous = guide.fences[fence.index - 1];
-  switch (fence.kind) {
-    case undefined:
-      throw new Error(
-        `unannotated or unknown code block "${fence.info}": use an annotation from the Block annotations table`,
-      );
-
-    case "fabric valid": {
-      const report = locus.validateFabric(decodeFabricText(fence.text));
-      expect(report).toEqual({ valid: true, diagnostics: [] });
-      return;
-    }
-
-    case "fabric invalid": {
-      const report = locus.validateFabric(decodeFabricText(fence.text));
-      expect(report.valid).toBe(false);
-      expect(next?.kind).toBe("diagnostics");
-      return;
-    }
-
-    case "diagnostics": {
-      if (previous?.kind !== "fabric invalid") {
-        throw new Error(
-          "a diagnostics block must follow a fabric invalid block",
-        );
-      }
-      const report = locus.validateFabric(decodeFabricText(previous.text));
-      expect(report.diagnostics.map(withoutMessage)).toEqual(
-        JSON.parse(fence.text),
-      );
-      return;
-    }
-
-    case "fabric decode-error": {
-      const failure = decodeFabricFailure(fence.text);
-      expect(failure?._tag).toBe("DecodeError");
-      expect(next?.kind).toBe("decode-issues");
-      return;
-    }
-
-    case "decode-issues": {
-      if (previous?.kind !== "fabric decode-error") {
-        throw new Error(
-          "a decode-issues block must follow a fabric decode-error block",
-        );
-      }
-      expect(decodeFabricFailure(previous.text)?.issues).toEqual(
-        JSON.parse(fence.text),
-      );
-      return;
-    }
-
-    case "locus a": {
-      decodeLocusText(fence.text);
-      expect(laterInSection(guide, fence, "locus b")).toBe(true);
-      return;
-    }
-
-    case "locus b": {
-      decodeLocusText(fence.text);
-      expect(earlierInSection(guide, fence, "locus a") !== undefined).toBe(
-        true,
-      );
-      return;
-    }
-
-    case "revisions": {
-      const a = earlierInSection(guide, fence, "locus a");
-      const b = earlierInSection(guide, fence, "locus b");
-      if (a === undefined || b === undefined) {
-        throw new Error(
-          "a revisions block needs a locus a and a locus b earlier in its section",
-        );
-      }
-      expect(JSON.parse(fence.text)).toEqual({
-        a: (await revisionOf(a.text)).id,
-        b: (await revisionOf(b.text)).id,
-      });
-      return;
-    }
-
-    case "changes": {
-      const a = earlierInSection(guide, fence, "locus a");
-      const b = earlierInSection(guide, fence, "locus b");
-      if (a === undefined || b === undefined) {
-        throw new Error(
-          "a changes block needs a locus a and a locus b earlier in its section",
-        );
-      }
-      const changeSet = await Effect.runPromise(
-        locus.diffRevisions(await revisionOf(a.text), await revisionOf(b.text)),
-      );
-      expect(changeSet.changes).toEqual(JSON.parse(fence.text));
-      return;
-    }
-
-    case "history-steps": {
-      const a = earlierInSection(guide, fence, "locus a");
-      const b = earlierInSection(guide, fence, "locus b");
-      if (a === undefined || b === undefined) {
-        throw new Error(
-          "a history-steps block needs a locus a and a locus b earlier in its section",
-        );
-      }
-      const revA = await revisionOf(a.text);
-      const revB = await revisionOf(b.text);
-      const steps = JSON.parse(fence.text) as ReadonlyArray<Step>;
-      const observed: unknown[] = await Effect.runPromise(
-        Effect.gen(function* () {
-          const history = yield* locus.RevisionHistory;
-          const outcomes: unknown[] = [];
-          for (const step of steps) {
-            const revision =
-              idOfName(step.append, revA, revB) === revA.id ? revA : revB;
-            const expected = idOfName(step.expectedHead, revA, revB);
-            const attempt = yield* Effect.result(
-              history.append(revision, expected),
-            );
-            outcomes.push(
-              attempt._tag === "Success"
-                ? {
-                    appended: attempt.success.appended,
-                    head: nameOf(attempt.success.head, revA, revB),
-                  }
-                : {
-                    error: attempt.failure._tag,
-                    actual: nameOf(attempt.failure.actual, revA, revB),
-                  },
-            );
-          }
-          return outcomes;
-        }).pipe(Effect.provide(locus.RevisionHistoryInMemory)),
-      );
-      expect(observed).toEqual(steps.map((step) => step.result));
-      return;
-    }
-
-    case "sh": {
-      const problems = fence.text
-        .split("\n")
-        .filter((line) => line.trim() !== "")
-        .flatMap((line) => {
-          const problem = commandProblem(line);
-          return problem === undefined ? [] : [`${line}: ${problem}`];
-        });
-      expect(problems).toEqual([]);
-      return;
-    }
-
-    case "text":
-    case "mermaid":
-      // A reader is not meant to paste these blocks, so they must not be JSON.
-      expect(() => JSON.parse(fence.text)).toThrow();
-      return;
-
-    default:
-      throw new Error(`no check for block kind "${fence.kind}"`);
-  }
+// END_CONTRACT: calculatorOutput
+async function calculatorOutput(line: string): Promise<string> {
+  const args = line.slice(CALCULATOR_PREFIX.length).split(" ");
+  const proc = Bun.spawn(
+    [process.execPath, "run", "--silent", "calculator", ...args],
+    { cwd: REPO_ROOT, stdout: "pipe", stderr: "pipe" },
+  );
+  const [stdout, stderr] = await Promise.all([
+    new Response(proc.stdout).text(),
+    new Response(proc.stderr).text(),
+  ]);
+  await proc.exited;
+  return (stdout + stderr).trim();
 }
 
 describe("guides: front matter and body", () => {
@@ -535,7 +244,7 @@ describe("guides: front matter and body", () => {
     });
 
     test(`${spec.file}.md body: no verification claim in prose`, () => {
-      const prose = guide.body.replace(FENCE, "");
+      const prose = guide.body.replace(FENCE, "").replace(/`[^`]*`/g, "");
       expect(prose.match(/\b(verified|passing|all tests pass)\b/i)).toBeNull();
     });
 
@@ -556,22 +265,60 @@ describe("guides: front matter and body", () => {
   }
 });
 
-describe("guides: annotated blocks", () => {
-  for (const guide of GUIDES) {
-    for (const fence of guide.fences) {
-      test(`${guide.spec.file}.md:${fence.line} ${fence.info}`, async () => {
-        await checkFence(guide, fence);
-      });
+describe("guides: fenced blocks", () => {
+  test("every fenced block has an allowed info string", () => {
+    const unknown = GUIDES.flatMap((guide) =>
+      guide.fences
+        .filter((fence) => fence.kind === undefined)
+        .map((fence) => `${guide.spec.file}.md:${fence.line} ${fence.info}`),
+    );
+    expect(unknown).toEqual([]);
+  });
+
+  test("every sh line is a known command", () => {
+    const problems = GUIDES.flatMap((guide) =>
+      guide.fences
+        .filter((fence) => fence.kind === "sh")
+        .flatMap((fence) =>
+          fence.text
+            .split("\n")
+            .filter((line) => line.trim() !== "")
+            .flatMap((line) => {
+              const problem = commandProblem(line);
+              return problem === undefined
+                ? []
+                : [`${guide.spec.file}.md:${fence.line} ${line}: ${problem}`];
+            }),
+        ),
+    );
+    expect(problems).toEqual([]);
+  });
+
+  test("text blocks show the real output of the calculator command before them", async () => {
+    const texts = GUIDES.flatMap((guide) =>
+      guide.fences
+        .filter((fence) => fence.kind === "text")
+        .map((fence) => ({ guide, fence })),
+    );
+    expect(texts.length).toBeGreaterThan(0);
+    for (const { guide, fence } of texts) {
+      const previous = guide.fences[fence.index - 1];
+      expect(previous?.kind).toBe("sh");
+      const lines = (previous?.text ?? "")
+        .split("\n")
+        .filter((line) => line.startsWith(CALCULATOR_PREFIX));
+      expect(lines).toHaveLength(1);
+      expect(await calculatorOutput(lines[0] ?? "")).toBe(fence.text.trim());
     }
-  }
+  }, 20_000);
 });
 
 describe("guides: Agent Reference", () => {
   const agent = GUIDES.find((g) => g.spec.file === "agent-reference");
   const body = agent?.body ?? "";
 
-  test("the public API table lists exactly the runtime exports of @telos/locus", () => {
-    const rows = sectionOf(body, "Public API of `@telos/locus`")
+  test("the public API table lists exactly the runtime exports of @telos/kernel", async () => {
+    const rows = sectionOf(body, "Public API of `@telos/kernel`")
       .split("\n")
       .filter((line) => line.startsWith("|"))
       .map((line) =>
@@ -584,109 +331,51 @@ describe("guides: Agent Reference", () => {
     const names = rows
       .map((cells) => /^`([^`]+)`$/.exec(cells[0] ?? "")?.[1])
       .filter((name): name is string => name !== undefined);
-    expect([...names].sort()).toEqual(Object.keys(locus).sort());
+    const kernel = await import("@telos/kernel");
+    expect([...names].sort()).toEqual(Object.keys(kernel).sort());
   });
 
-  test("the diagnostic codes are exactly the fourteen codes of the contract", () => {
-    const section = sectionOf(body, "Diagnostic codes");
-    const listed = [...section.matchAll(/^- `([^`]+)`$/gm)].map(
-      (m) => m[1] ?? "",
+  test("the introspection tools are the six names of INTROSPECTION_TOOL_NAMES", () => {
+    const source = readFileSync(
+      join(REPO_ROOT, "packages/agent/src/introspection-tools.ts"),
+      "utf8",
     );
-    expect([...listed].sort()).toEqual([...DIAGNOSTIC_CODES].sort());
-    expect(section).toContain(
-      "(../../kitty-specs/003-locus-foundation-01M5EWDR/contracts/locus-api.md)",
-    );
-  });
-});
-
-describe("guides: claims about behaviour", () => {
-  for (const guide of GUIDES) {
-    for (const fence of guide.fences) {
-      if (fence.kind !== "fabric valid" && fence.kind !== "fabric invalid") {
-        continue;
-      }
-      test(`${guide.spec.file}.md:${fence.line} the report does not depend on the order of the Loci`, () => {
-        const fabric = decodeFabricText(fence.text);
-        const reversed = locus.defineFabric({
-          id: fabric.id,
-          loci: [...fabric.loci].reverse(),
-        });
-        const report = JSON.stringify(locus.validateFabric(fabric));
-        expect(JSON.stringify(locus.validateFabric(fabric))).toBe(report);
-        expect(JSON.stringify(locus.validateFabric(reversed))).toBe(report);
-      });
-    }
-  }
-
-  test("a depends-on cycle is valid", () => {
-    const loop = locus.defineFabric({
-      id: "shop:system",
-      loci: [
-        locus.defineLocus({
-          id: "shop:a",
-          charter: { purpose: "A.", responsibilities: ["Do A"] },
-          relations: [{ kind: "depends-on", target: "shop:b" }],
-        }),
-        locus.defineLocus({
-          id: "shop:b",
-          charter: { purpose: "B.", responsibilities: ["Do B"] },
-          relations: [{ kind: "depends-on", target: "shop:a" }],
-        }),
-      ],
-    });
-    expect(locus.validateFabric(loop)).toEqual({
-      valid: true,
-      diagnostics: [],
-    });
-  });
-
-  test("the four Relation kinds are depends-on, refines, satisfies and verifies, in that order", () => {
-    expect([...locus.RELATION_KINDS]).toEqual([
-      "depends-on",
-      "refines",
-      "satisfies",
-      "verifies",
-    ]);
-  });
-
-  test("shop:checkout is an identity; checkout and Shop:checkout are not", () => {
-    expect(locus.isIdentity("shop:checkout")).toBe(true);
-    expect(locus.isIdentity("checkout")).toBe(false);
-    expect(locus.isIdentity("Shop:checkout")).toBe(false);
-  });
-
-  test("a malformed identity is a diagnostic, not a decode error", () => {
-    const result = Effect.runSync(
-      Effect.result(
-        locus.decodeFabricJson(
-          '{"id":"shop:system","loci":[{"id":"Shop:checkout","charter":{"purpose":"Turn a basket into an order.","responsibilities":["Collect payment details"]}}]}',
-        ),
+    const expected = [
+      ...new Set(
+        [...source.matchAll(/"(telos_[a-z_]+)"/g)].map((m) => m[1] ?? ""),
       ),
+    ].sort();
+    const listed = [
+      ...sectionOf(body, "Introspection tools").matchAll(
+        /^- `(telos_[a-z_]+)`:/gm,
+      ),
+    ]
+      .map((m) => m[1] ?? "")
+      .sort();
+    expect(expected).toHaveLength(6);
+    expect(listed).toEqual(expected);
+  });
+
+  test("the diagnostic codes are the DiagnosticCode values of the kernel", () => {
+    const source = readFileSync(
+      join(REPO_ROOT, "packages/kernel/src/diagnostic.ts"),
+      "utf8",
     );
-    expect(result._tag).toBe("Success");
-    if (result._tag !== "Success") return;
-    expect(
-      locus.validateFabric(result.success).diagnostics.map((d) => d.code),
-    ).toEqual(["identity.malformed"]);
-  });
-
-  test("the first-locus Revision id is the SHA-256 of the canonical form of its Locus", async () => {
-    const guide = GUIDES.find((g) => g.spec.file === "first-locus");
-    const a = guide?.fences.find((f) => f.kind === "locus a");
-    if (a === undefined) throw new Error("first-locus has no locus a block");
-    const digest = new Bun.CryptoHasher("sha256")
-      .update(locus.canonicalForm(decodeLocusText(a.text)))
-      .digest("hex");
-    expect((await revisionOf(a.text)).id).toBe(`sha256:${digest}`);
-  });
-
-  test("a Revision and its definition are frozen", async () => {
-    const guide = GUIDES.find((g) => g.spec.file === "first-locus");
-    const a = guide?.fences.find((f) => f.kind === "locus a");
-    if (a === undefined) throw new Error("first-locus has no locus a block");
-    const revision = await revisionOf(a.text);
-    expect(Object.isFrozen(revision)).toBe(true);
-    expect(Object.isFrozen(revision.definition)).toBe(true);
+    const start = source.indexOf("export type DiagnosticCode =");
+    const declaration = source.slice(start, source.indexOf(";", start));
+    const expected = [...declaration.matchAll(/"([a-z]+\.[a-z-]+)"/g)]
+      .map((m) => m[1] ?? "")
+      .sort();
+    const section = sectionOf(body, "Diagnostic codes");
+    const listed = [...section.matchAll(/^- `([^`]+)`$/gm)]
+      .map((m) => m[1] ?? "")
+      .sort();
+    expect(start).toBeGreaterThan(-1);
+    expect(expected).toHaveLength(18);
+    expect(listed).toEqual(expected);
+    expect(section).toContain(
+      "(../../kitty-specs/semantic-foundation-rebuild-01M5JFR0/contracts/kernel.md)",
+    );
   });
 });
 
