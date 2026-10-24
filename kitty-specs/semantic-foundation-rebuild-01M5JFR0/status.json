@@ -353,6 +353,9 @@
       "last_event_id": "01M5Q2X4E26M4Q6AWR7WR8BRV4",
       "last_transition_at": "2026-10-24T13:51:48.162168+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Web Pack form model implemented; bun run verify green"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 55780,
