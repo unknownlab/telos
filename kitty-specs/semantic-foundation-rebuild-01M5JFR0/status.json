@@ -217,7 +217,8 @@
       "last_transition_at": "2026-10-24T09:02:43.003683+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: ADR-0018 to ADR-0028 written, nine ADRs superseded, README updated; bun run verify passed"
+        "Ready for review: ADR-0018 to ADR-0028 written, nine ADRs superseded, README updated; bun run verify passed",
+        "Review passed: 11 ADRs, 9 supersessions, README, verify green. Minor: ADR-0023 omits the unknown status used by ADR-0026 (spec FR-012)."
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
