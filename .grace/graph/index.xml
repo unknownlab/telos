@@ -72,7 +72,11 @@
     </GD-KERNEL-CLOSURE>
     <GD-KERNEL-API>
       <Path>graph/kernel-api.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-INTROSPECTION />
+        <M-KERNEL-IMPACT />
+        <M-KERNEL-API />
+      </Owns>
     </GD-KERNEL-API>
     <GD-PACK-CLI>
       <Path>graph/pack-cli.xml</Path>

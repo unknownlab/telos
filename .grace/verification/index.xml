@@ -72,7 +72,11 @@
     </VD-KERNEL-CLOSURE>
     <VD-KERNEL-API>
       <Path>verification/kernel-api.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-INTROSPECTION />
+        <V-M-KERNEL-IMPACT />
+        <V-M-KERNEL-API />
+      </Owns>
     </VD-KERNEL-API>
     <VD-PACK-CLI>
       <Path>verification/pack-cli.xml</Path>
