@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: One typed, directed statement from a Locus to a Locus or to a capability, whose meaning is given by its relation type.
 related: [locus, relation-type, capability, grant, identity]
 ---

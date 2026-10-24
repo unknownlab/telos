@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A structural problem in a model, in identity, ownership, composition or relation, with a stable code.
 related: [finding, composition, containment, identity]
 ---

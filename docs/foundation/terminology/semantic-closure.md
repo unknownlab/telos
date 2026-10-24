@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The property that every managed code file belongs to a discoverable Locus owner.
 related: [semantic-model, containment, finding, P03-no-code-outside-semantics]
 ---

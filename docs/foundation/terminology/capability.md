@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A named operation a Locus provides, with an input contract, an output contract, declared errors and an effect class of pure, read or write.
 related:
   [

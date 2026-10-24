@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A named set of verification rules that applies to every Locus whose composition includes the extensions the Archetype names.
 related:
   [

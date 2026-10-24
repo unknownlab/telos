@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A reusable definition that specializes a Locus with typed properties, relation types, Archetypes and new meaning.
 related:
   [

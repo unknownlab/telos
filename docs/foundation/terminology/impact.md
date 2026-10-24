@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The Loci, relations and rules affected by a change to a Locus or capability, computed from the model.
 related: [semantic-model, locus, capability, rule]
 ---

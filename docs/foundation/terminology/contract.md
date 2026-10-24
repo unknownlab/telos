@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The input, output and error schemas of a capability, together with their digest.
 related: [capability, semantic-model, knowledge-status]
 ---
@@ -25,7 +25,7 @@ The input, output and error schemas of a [capability](capability.md), together w
 
 ## In the model
 
-Contracts are built from schemas in `packages/kernel/src/contract.ts`. The digest is computed by the canonical JSON and digest functions in `packages/kernel/src/digest.ts`.
+Contracts are built from schemas in `packages/kernel/src/capability.ts`. The digest is computed by the canonical JSON and digest functions in `packages/kernel/src/digest.ts`.
 
 ## Related
 

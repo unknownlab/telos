@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A named meaning of a relation, defined by a semantic extension, such as "CLI command maps to capability".
 related:
   [relation, semantic-extension, grant, P15-no-arbitrary-agent-privileges]

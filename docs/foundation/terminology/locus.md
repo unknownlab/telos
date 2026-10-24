@@ -8,7 +8,7 @@ fundamental: true
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: "The only fundamental semantic entity: an identifiable context responsible for part of a system, with an identity and optional description, containment, relations, capabilities and properties."
 related:
   [

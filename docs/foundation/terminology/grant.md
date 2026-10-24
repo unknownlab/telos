@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The permission to invoke a capability, derived only from a relation whose type grants invocation.
 related:
   [relation, relation-type, capability, P15-no-arbitrary-agent-privileges]
@@ -26,7 +26,7 @@ Permission to invoke a [capability](capability.md). A grant is derived only from
 
 ## In the model
 
-`invoke` in `packages/kernel/src/invoke.ts` returns `NotGranted` when no grant exists. The grant derivation is in `packages/kernel/src/grant.ts`. See [principle P15](../principles/P15-no-arbitrary-agent-privileges.md).
+`invoke` in `packages/kernel/src/invoke.ts` returns `NotGranted` when no grant exists. The grant check is `isGranted` in the same file. See [principle P15](../principles/P15-no-arbitrary-agent-privileges.md).
 
 ## Related
 

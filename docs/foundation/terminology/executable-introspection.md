@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The practice of answering questions about a system by running typed queries over its model, so that the answer is computed rather than copied from prose.
 related:
   [
@@ -31,7 +31,7 @@ Answering questions about a system by running typed queries over its [semantic m
 
 ## In the model
 
-The introspection API is in `packages/kernel/src/introspect.ts`. `bun run telos inspect` and the agent tools in `packages/agent/src/tools.ts` both call it. [Impact](impact.md) is one of its queries.
+The introspection API is in `packages/kernel/src/introspection.ts`. `bun run telos inspect` and the agent tools in `packages/agent/src/tools.ts` both call it. [Impact](impact.md) is one of its queries.
 
 ## Related
 

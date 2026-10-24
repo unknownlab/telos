@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The declared name of a Locus, written namespace:name, which stays the same while the Locus's definition and location change.
 related: [locus, relation, containment, ADR-0003]
 ---

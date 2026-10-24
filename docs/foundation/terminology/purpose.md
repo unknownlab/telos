@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The declaration of why a Locus exists, given by the built-in telos.purpose extension with its purpose, responsibilities and excluded scope.
 related: [locus, semantic-extension, identity]
 ---

@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: All Loci reachable from a root Locus, with the structure checked by the kernel.
 related:
   [

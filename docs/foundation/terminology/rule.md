@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: One check of an Archetype, with a method that is either static or execution.
 related: [archetype, finding, knowledge-status, P13-no-unverified-guarantees]
 ---

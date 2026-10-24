@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The result of composing zero or more semantic extensions, which is the definition used to make Loci.
 related: [composition, semantic-extension, locus]
 ---
@@ -25,7 +25,7 @@ The result of [composing](composition.md) zero or more [semantic extensions](sem
 
 ## In the model
 
-A Locus kind is produced by the composition function in `packages/kernel/src/composition.ts` and used by `Locus.make` in `packages/kernel/src/locus.ts`. A Locus made from a kind records the kind's extensions as part of its composition.
+A Locus kind is produced by the composition function in `packages/kernel/src/locus.ts` and used by `Locus.make` in the same file. A Locus made from a kind records the kind's extensions as part of its composition.
 
 ## Related
 

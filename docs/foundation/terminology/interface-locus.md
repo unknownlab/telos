@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A Locus that exposes the capabilities of another Locus through a medium such as the command line, the Web or agent tools.
 related: [locus, capability, pack, grant]
 ---
