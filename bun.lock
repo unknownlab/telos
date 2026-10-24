@@ -4,8 +4,25 @@
   "workspaces": {
     "": {
       "name": "telos",
+      "dependencies": {
+        "@telos/calculator": "workspace:*",
+        "@telos/cli": "workspace:*",
+        "@telos/kernel": "workspace:*",
+        "effect": "4.0.4",
+      },
       "devDependencies": {
         "@types/bun": "1.4.3",
+      },
+    },
+    "apps/calculator": {
+      "name": "@telos/calculator",
+      "version": "0.1.0",
+      "dependencies": {
+        "@telos/agent": "workspace:*",
+        "@telos/cli": "workspace:*",
+        "@telos/kernel": "workspace:*",
+        "@telos/web": "workspace:*",
+        "effect": "4.0.4",
       },
     },
     "apps/docs": {
@@ -14,7 +31,10 @@
       "dependencies": {
         "@tanstack/react-router": "1.170.44",
         "@tanstack/react-start": "1.169.2",
+        "@telos/calculator": "workspace:*",
+        "@telos/kernel": "workspace:*",
         "@telos/locus": "workspace:*",
+        "@telos/web": "workspace:*",
         "class-variance-authority": "0.7.1",
         "clsx": "2.1.1",
         "effect": "4.0.4",
@@ -38,10 +58,41 @@
         "vite": "8.3.4",
       },
     },
+    "packages/agent": {
+      "name": "@telos/agent",
+      "version": "0.1.0",
+      "dependencies": {
+        "@telos/kernel": "workspace:*",
+        "effect": "4.0.4",
+      },
+    },
+    "packages/cli": {
+      "name": "@telos/cli",
+      "version": "0.1.0",
+      "dependencies": {
+        "@telos/kernel": "workspace:*",
+        "effect": "4.0.4",
+      },
+    },
+    "packages/kernel": {
+      "name": "@telos/kernel",
+      "version": "0.1.0",
+      "dependencies": {
+        "effect": "4.0.4",
+      },
+    },
     "packages/locus": {
       "name": "@telos/locus",
       "version": "0.1.0",
       "dependencies": {
+        "effect": "4.0.4",
+      },
+    },
+    "packages/web": {
+      "name": "@telos/web",
+      "version": "0.1.0",
+      "dependencies": {
+        "@telos/kernel": "workspace:*",
         "effect": "4.0.4",
       },
     },
@@ -349,9 +400,19 @@
 
     "@tanstack/virtual-file-routes": ["@tanstack/virtual-file-routes@1.162.0", "", {}, "sha512-uhOeFyxLcU41HzvrxsGpiWdcMbScY1EDgbZ5K7DVRMYInbLYWAC0EA/kx9wXAoSM8q82bUG2hRl8+EAjE6XAbA=="],
 
+    "@telos/agent": ["@telos/agent@workspace:packages/agent"],
+
+    "@telos/calculator": ["@telos/calculator@workspace:apps/calculator"],
+
+    "@telos/cli": ["@telos/cli@workspace:packages/cli"],
+
     "@telos/docs": ["@telos/docs@workspace:apps/docs"],
 
+    "@telos/kernel": ["@telos/kernel@workspace:packages/kernel"],
+
     "@telos/locus": ["@telos/locus@workspace:packages/locus"],
+
+    "@telos/web": ["@telos/web@workspace:packages/web"],
 
     "@types/bun": ["@types/bun@1.4.3", "", { "dependencies": { "bun-types": "1.4.3" } }, "sha512-N67Pqy8JXbAY/j0tNraS3V5mubGvc6rrrNDmDCtZLlFzccbUJPDb0tvgUBC5q4m8ybkP93Jcn1QB+RYQ6PvBhw=="],
 
