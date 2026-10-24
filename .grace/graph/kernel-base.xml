@@ -1,3 +1,20 @@
 <GraceGraphDocument graceVersion="4.0">
-  <GD-KERNEL-BASE />
+  <GD-KERNEL-BASE>
+    <M-KERNEL-IDENTITY>
+      <Summary>Defines the grammar of kernel identifiers and the deep freeze that keeps kernel values immutable.</Summary>
+      <Path>packages/kernel/src/identity.ts</Path>
+      <Path>packages/kernel/src/freeze.ts</Path>
+    </M-KERNEL-IDENTITY>
+    <M-KERNEL-CANONICAL>
+      <Summary>Renders values as canonical JSON and computes SHA-256 digests over it.</Summary>
+      <Path>packages/kernel/src/canonical.ts</Path>
+      <Path>packages/kernel/src/digest.ts</Path>
+    </M-KERNEL-CANONICAL>
+    <M-KERNEL-DIAGNOSTIC>
+      <Summary>Defines the diagnostic codes, severities and stable ordering, and enumerates elementary cycles up to a limit.</Summary>
+      <Path>packages/kernel/src/diagnostic.ts</Path>
+      <Path>packages/kernel/src/cycles.ts</Path>
+      <M-KERNEL-IDENTITY />
+    </M-KERNEL-DIAGNOSTIC>
+  </GD-KERNEL-BASE>
 </GraceGraphDocument>

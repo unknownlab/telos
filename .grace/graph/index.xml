@@ -29,7 +29,11 @@
     </GD-DOCS>
     <GD-KERNEL-BASE>
       <Path>graph/kernel-base.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-IDENTITY />
+        <M-KERNEL-CANONICAL />
+        <M-KERNEL-DIAGNOSTIC />
+      </Owns>
     </GD-KERNEL-BASE>
     <GD-KERNEL-DEFINITIONS>
       <Path>graph/kernel-definitions.xml</Path>

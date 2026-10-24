@@ -29,7 +29,11 @@
     </VD-DOCS>
     <VD-KERNEL-BASE>
       <Path>verification/kernel-base.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-IDENTITY />
+        <V-M-KERNEL-CANONICAL />
+        <V-M-KERNEL-DIAGNOSTIC />
+      </Owns>
     </VD-KERNEL-BASE>
     <VD-KERNEL-DEFINITIONS>
       <Path>verification/kernel-definitions.xml</Path>
