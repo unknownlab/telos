@@ -491,7 +491,8 @@
       "last_transition_at": "2026-10-24T19:17:39.984639+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Repository model, telos command and gate; dotted-module-name fix in the kernel closure check (sanctioned)"
+        "Repository model, telos command and gate; dotted-module-name fix in the kernel closure check (sanctioned)",
+        "Review passed: model owns all managed code, telos check fails on unowned and undeclared deps, verify green"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
