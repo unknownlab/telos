@@ -1,3 +1,18 @@
 <GraceVerificationDocument graceVersion="4.0">
-  <VD-CALCULATOR-INTERFACES />
+  <VD-CALCULATOR-INTERFACES>
+    <V-M-CALC-INTERFACES>
+      <TestFiles>
+        <File>apps/calculator/test/interfaces.test.ts</File>
+        <File>apps/calculator/test/app.test.ts</File>
+        <File>apps/calculator/test/verification.test.ts</File>
+        <File>apps/calculator/test/impact.test.ts</File>
+        <File>apps/calculator/test/cli-binary.test.ts</File>
+        <File>apps/calculator/test/mcp.test.ts</File>
+        <File>apps/calculator/test/agent-demo.test.ts</File>
+      </TestFiles>
+      <Command>bun test apps/calculator/test</Command>
+      <Scenario>The model builds without diagnostics; every shared case gives the same normalized outcome through invoke, the CLI in memory, callTool and the web form; each CalculatorInterfaces rule passes on the app and fails on a broken variant; verify reports no failed or errored finding and a finding for every rule of the five applicable archetypes; the impact of the add contract reaches exactly the three interface Loci and a newly added interface without source changes; the CLI binary, the MCP server and the agent demo give the expected exit codes and outputs.</Scenario>
+      <TraceAssertion>interfaces.test.ts names one test per case; app.test.ts names one passing and one failing test per rule; verification.test.ts and impact.test.ts name the verify and impact assertions; cli-binary.test.ts names one test per case and --help; mcp.test.ts names the server name, tools/list, schemas, cases, telos_inspect and unknown tool tests; agent-demo.test.ts names the seven-step run.</TraceAssertion>
+    </V-M-CALC-INTERFACES>
+  </VD-CALCULATOR-INTERFACES>
 </GraceVerificationDocument>

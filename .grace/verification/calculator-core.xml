@@ -1,3 +1,16 @@
 <GraceVerificationDocument graceVersion="4.0">
-  <VD-CALCULATOR-CORE />
+  <VD-CALCULATOR-CORE>
+    <V-M-CALC-ARITHMETIC>
+      <TestFiles>
+        <File>apps/calculator/test/arithmetic.test.ts</File>
+        <File>apps/calculator/test/archetypes.test.ts</File>
+        <File>apps/calculator/test/ergonomics.test.ts</File>
+      </TestFiles>
+      <Command>bun test apps/calculator/test</Command>
+      <Scenario>Each arithmetic capability returns its documented result through invoke, and both declared errors and input rejection are reported with their tags and messages.</Scenario>
+      <Scenario>Each ArithmeticBehavior rule passes on the real arithmetic Locus and fails with its exact message on a broken variant.</Scenario>
+      <Scenario>The arithmetic definition block stays within 80 counted lines with no explicit type arguments and no casts.</Scenario>
+      <TraceAssertion>arithmetic.test.ts names the capability and error tests; archetypes.test.ts names each rule id; ergonomics.test.ts names the NFR-008 size and style checks.</TraceAssertion>
+    </V-M-CALC-ARITHMETIC>
+  </VD-CALCULATOR-CORE>
 </GraceVerificationDocument>

@@ -82,23 +82,34 @@
     </GD-KERNEL-API>
     <GD-PACK-CLI>
       <Path>graph/pack-cli.xml</Path>
-      <Owns />
+      <Owns>
+        <M-PACK-CLI />
+      </Owns>
     </GD-PACK-CLI>
     <GD-PACK-AGENT>
       <Path>graph/pack-agent.xml</Path>
-      <Owns />
+      <Owns>
+        <M-PACK-AGENT />
+        <M-PACK-AGENT-MCP />
+      </Owns>
     </GD-PACK-AGENT>
     <GD-PACK-WEB>
       <Path>graph/pack-web.xml</Path>
-      <Owns />
+      <Owns>
+        <M-PACK-WEB />
+      </Owns>
     </GD-PACK-WEB>
     <GD-CALCULATOR-CORE>
       <Path>graph/calculator-core.xml</Path>
-      <Owns />
+      <Owns>
+        <M-CALC-ARITHMETIC />
+      </Owns>
     </GD-CALCULATOR-CORE>
     <GD-CALCULATOR-INTERFACES>
       <Path>graph/calculator-interfaces.xml</Path>
-      <Owns />
+      <Owns>
+        <M-CALC-INTERFACES />
+      </Owns>
     </GD-CALCULATOR-INTERFACES>
   </GraphDocuments>
 </GraceGraphIndex>
