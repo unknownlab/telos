@@ -28,7 +28,8 @@
       "last_transition_at": "2026-10-24T08:44:40.847118+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review"
+        "Ready for review",
+        "Review passed: bun run verify green, manifests/lock/GRACE split match WP01 contract"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
