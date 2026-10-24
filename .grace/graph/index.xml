@@ -9,17 +9,6 @@
         <M-TELOS-COMMAND />
       </Owns>
     </GD-TOOLING>
-    <GD-LEGACY>
-      <Path>graph/legacy.xml</Path>
-      <Owns>
-        <M-LOCUS-MODEL />
-        <M-LOCUS-VALIDATION />
-        <M-LOCUS-REVISION />
-        <M-LOCUS-HISTORY />
-        <M-LOCUS-DECODE />
-        <M-LOCUS-SPECS />
-      </Owns>
-    </GD-LEGACY>
     <GD-DOCS>
       <Path>graph/docs.xml</Path>
       <Owns>
@@ -28,6 +17,7 @@
         <M-DOCS-SITE />
         <M-DOCS-PLAYGROUND />
         <M-DOCS-INSPECTOR />
+        <M-DOCS-CALCULATOR />
       </Owns>
     </GD-DOCS>
     <GD-KERNEL-BASE>

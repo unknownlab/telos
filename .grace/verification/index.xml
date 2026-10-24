@@ -9,17 +9,6 @@
         <V-M-TELOS-COMMAND />
       </Owns>
     </VD-TOOLING>
-    <VD-LEGACY>
-      <Path>verification/legacy.xml</Path>
-      <Owns>
-        <V-M-LOCUS-MODEL />
-        <V-M-LOCUS-VALIDATION />
-        <V-M-LOCUS-REVISION />
-        <V-M-LOCUS-HISTORY />
-        <V-M-LOCUS-DECODE />
-        <V-M-LOCUS-SPECS />
-      </Owns>
-    </VD-LEGACY>
     <VD-DOCS>
       <Path>verification/docs.xml</Path>
       <Owns>
@@ -28,6 +17,7 @@
         <V-M-DOCS-SITE />
         <V-M-DOCS-PLAYGROUND />
         <V-M-DOCS-INSPECTOR />
+        <V-M-DOCS-CALCULATOR />
       </Owns>
     </VD-DOCS>
     <VD-KERNEL-BASE>

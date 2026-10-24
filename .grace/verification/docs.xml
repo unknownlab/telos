@@ -4,14 +4,17 @@
       <TestFiles>
         <File>apps/docs/test/content.test.ts</File>
         <File>apps/docs/test/guides.test.ts</File>
+        <File>apps/docs/test/guide-snippets.test.ts</File>
       </TestFiles>
-      <Command>bun test apps/docs/test/content.test.ts apps/docs/test/guides.test.ts</Command>
+      <Command>bun test apps/docs/test/content.test.ts apps/docs/test/guides.test.ts apps/docs/test/guide-snippets.test.ts</Command>
       <Command>bun run --cwd apps/docs content</Command>
       <Scenario>The content build of the valid fixture compiles with zero problems, and routes by id are exact.</Scenario>
       <Scenario>Each NS-020 failure case is rejected with a problem instead of producing content.</Scenario>
       <Scenario>Every guide has front matter with its guide, order and section, one H1 title, and no verification claim in its prose.</Scenario>
-      <Scenario>The public API table in the Agent Reference lists exactly the runtime exports of @telos/locus, and the diagnostic codes are exactly the fourteen codes of the contract.</Scenario>
-      <TraceAssertion>The "valid fixture output" tests in content.test.ts, the "NS-020 failure cases" tests, the "guides: front matter and body" tests, and the "the public API table lists exactly the runtime exports of @telos/locus" and "the diagnostic codes are exactly the fourteen codes of the contract" tests pass. The content command writes the content files without error.</TraceAssertion>
+      <Scenario>The public API table in the Agent Reference lists exactly the runtime exports of @telos/kernel, the introspection tools are the six tool names of the agent Pack, and the diagnostic codes are exactly the DiagnosticCode values of the kernel.</Scenario>
+      <Scenario>Every sh line of a guide is a known command, and every text block is the real output of the calculator command before it.</Scenario>
+      <Scenario>The code the first-locus guide quotes builds a model with no diagnostics, inspects demo:greeter and invokes greet through the kernel.</Scenario>
+      <TraceAssertion>The "valid fixture output" tests in content.test.ts, the "NS-020 failure cases" tests, the "guides: front matter and body" tests, the "every sh line is a known command", "text blocks show the real output of the calculator command before them", "the public API table lists exactly the runtime exports of @telos/kernel", "the introspection tools are the six names of INTROSPECTION_TOOL_NAMES" and "the diagnostic codes are the DiagnosticCode values of the kernel" tests, and the four tests of guide-snippets.test.ts pass. The content command writes the content files without error.</TraceAssertion>
     </V-M-DOCS-CONTENT>
     <V-M-DOCS-SEMANTIC-REPORT>
       <TestFiles>
@@ -39,6 +42,17 @@
       <Scenario>Knowledge badges name the knowledge status of each fact, with the label not run for a verification that did not run.</Scenario>
       <TraceAssertion>The "LocusView of calculator:arithmetic" tests and the "every Locus" inspector e2e test pass, the "unknown slug" e2e test returns 404, and the "KnowledgeBadge" test renders each knowledge value with its label.</TraceAssertion>
     </V-M-DOCS-INSPECTOR>
+    <V-M-DOCS-CALCULATOR>
+      <TestFiles>
+        <File>apps/docs/test/calculator.test.tsx</File>
+        <File>apps/docs/e2e/calculator.e2e.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/calculator.test.tsx</Command>
+      <Command>bun run test:e2e apps/docs/e2e/calculator.e2e.ts</Command>
+      <Scenario>The calculator page renders one form per capability of calculator:arithmetic, derived by the web Pack, with labelled decimal inputs.</Scenario>
+      <Scenario>Submitting a form in Chromium shows the same outcome as the command line: a result, DivisionByZero or InvalidInput.</Scenario>
+      <TraceAssertion>The calculator.test.tsx tests and the three tests of calculator.e2e.ts pass.</TraceAssertion>
+    </V-M-DOCS-CALCULATOR>
     <V-M-DOCS-SITE>
       <TestFiles>
         <File>apps/docs/test/manifest.test.ts</File>

@@ -22,6 +22,14 @@
       <M-KERNEL-API />
       <M-DOCS-SITE />
     </M-DOCS-INSPECTOR>
+    <M-DOCS-CALCULATOR>
+      <Summary>The calculator page: web forms derived from the capability contracts of calculator:arithmetic, invoked in the browser.</Summary>
+      <Path>apps/docs/src/routes/calculator.tsx</Path>
+      <Path>apps/docs/src/components/calculator-view.tsx</Path>
+      <M-PACK-WEB />
+      <M-CALC-INTERFACES />
+      <M-DOCS-SITE />
+    </M-DOCS-CALCULATOR>
     <M-DOCS-SITE>
       <Summary>The prerendered TanStack Start site: layout, navigation, document pages, theme, search, diagrams, verification page on the semantic report and the static server.</Summary>
       <Path>apps/docs/vite.config.ts</Path>
