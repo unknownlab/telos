@@ -207,7 +207,8 @@
       "last_transition_at": "2026-10-24T09:32:18.947791+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: decode.ts with decode and registry tests, parity test, GRACE registration"
+        "Ready for review: decode.ts with decode and registry tests, parity test, GRACE registration",
+        "Review passed"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
