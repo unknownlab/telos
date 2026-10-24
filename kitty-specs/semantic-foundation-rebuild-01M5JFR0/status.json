@@ -490,6 +490,9 @@
       "last_event_id": "01M5QNAK5ZX8R862X7CZEXZJGM",
       "last_transition_at": "2026-10-24T19:13:43.615627+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Repository model, telos command and gate; dotted-module-name fix in the kernel closure check (sanctioned)"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 84383,
