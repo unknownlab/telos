@@ -55,7 +55,10 @@
     </GD-KERNEL-VERIFY>
     <GD-KERNEL-DESCRIBE>
       <Path>graph/kernel-describe.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-DESCRIBE />
+        <M-KERNEL-INVOKE />
+      </Owns>
     </GD-KERNEL-DESCRIBE>
     <GD-KERNEL-DECODE>
       <Path>graph/kernel-decode.xml</Path>
