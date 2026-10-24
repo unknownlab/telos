@@ -11,6 +11,8 @@
 //   fixtureServer - the absolute path of the fixture MCP server
 //   TIMEOUT - the test timeout of every subprocess test in milliseconds
 //   spawnFixture - starts the fixture server through the deterministic client
+//   STARTUP_RUNS - how many fresh fixture servers the startup-order test starts
+//   STARTUP_REQUESTS - initialize, notifications/initialized and tools/list as one newline-delimited stdin payload
 // END_MODULE_MAP
 
 import { describe, expect, test } from "bun:test";
@@ -26,6 +28,23 @@ const fixtureServer = join(import.meta.dir, "fixture-server.ts");
 const TIMEOUT = 20000;
 
 const spawnFixture = () => McpStdioClient.spawn(["bun", fixtureServer]);
+const STARTUP_RUNS = 10;
+const STARTUP_REQUESTS = [
+  {
+    jsonrpc: "2.0",
+    id: 1,
+    method: "initialize",
+    params: {
+      protocolVersion: "2025-06-18",
+      capabilities: {},
+      clientInfo: { name: "telos-startup-test", version: "0.0.0" },
+    },
+  },
+  { jsonrpc: "2.0", method: "notifications/initialized" },
+  { jsonrpc: "2.0", id: 2, method: "tools/list", params: {} },
+]
+  .map((message) => JSON.stringify(message) + "\n")
+  .join("");
 
 describe("MCP stdio server and deterministic client", () => {
   test(
@@ -61,6 +80,38 @@ describe("MCP stdio server and deterministic client", () => {
         expect(double.inputSchema).toEqual(derived[0]!.definition.inputSchema);
       } finally {
         await client.close();
+      }
+    },
+    TIMEOUT,
+  );
+
+  test(
+    "tools/list is complete when it is already waiting on stdin as the first request after initialize",
+    async () => {
+      const expected = ["double", ...INTROSPECTION_TOOL_NAMES].sort();
+      for (let run = 0; run < STARTUP_RUNS; run++) {
+        const proc = Bun.spawn(["bun", fixtureServer], {
+          stdin: new TextEncoder().encode(STARTUP_REQUESTS),
+          stdout: "pipe",
+          stderr: "pipe",
+        });
+        const stdout = await new Response(proc.stdout).text();
+        expect(await proc.exited).toBe(0);
+        const response = stdout
+          .split("\n")
+          .filter((line) => line.trim() !== "")
+          .map(
+            (line) =>
+              JSON.parse(line) as {
+                id?: unknown;
+                result?: { tools?: ReadonlyArray<{ name: string }> };
+              },
+          )
+          .find((message) => message.id === 2);
+        const names = (response?.result?.tools ?? [])
+          .map((tool) => tool.name)
+          .sort();
+        expect(names).toEqual(expected);
       }
     },
     TIMEOUT,

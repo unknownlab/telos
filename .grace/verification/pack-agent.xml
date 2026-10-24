@@ -16,8 +16,8 @@
         <File>packages/agent/test/mcp.test.ts</File>
       </TestFiles>
       <Command>bun test packages/agent/test</Command>
-      <Scenario>The subprocess fixture server reports the server name and protocol version, lists the derived and introspection tools with their annotations, answers tools/call round trips with tool results, and a server that never answers makes spawn fail with the initialize timeout.</Scenario>
-      <TraceAssertion>mcp.test.ts names the initialize, tools/list, tools/call success and InvalidInput tests, the telos_inspect call and the timeout test.</TraceAssertion>
+      <Scenario>The subprocess fixture server reports the server name and protocol version, lists the derived and introspection tools with their annotations, answers tools/call round trips with tool results, lists every tool even when tools/list is the first request after initialize and is already waiting on stdin when the server starts, and a server that never answers makes spawn fail with the initialize timeout.</Scenario>
+      <TraceAssertion>mcp.test.ts names the initialize, tools/list, startup-order tools/list, tools/call success and InvalidInput tests, the telos_inspect call and the timeout test.</TraceAssertion>
     </V-M-PACK-AGENT-MCP>
   </VD-PACK-AGENT>
 </GraceVerificationDocument>

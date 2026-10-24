@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Serve the derived agent tools and the introspection tools of one agent Locus as an MCP stdio server on Bun.
-//   SCOPE: BunStdio, registerTools and serveMcp. Out: the derivation rules (tools.ts), the introspection behaviour (introspection-tools.ts) and the client (client.ts).
+//   SCOPE: BunStdio, registerTools, serveMcp and the module-local stdin gate that holds back every request until all tools are registered. Out: the derivation rules (tools.ts), the introspection behaviour (introspection-tools.ts) and the client (client.ts).
 //   DEPENDS: M-PACK-AGENT, M-KERNEL-API
 //   LINKS: M-PACK-AGENT-MCP, V-M-PACK-AGENT-MCP
 //   ROLE: RUNTIME
@@ -16,6 +16,7 @@
 import {
   Cause,
   Context,
+  Deferred,
   Effect,
   Exit,
   Layer,
@@ -63,6 +64,23 @@ export const BunStdio: Layer.Layer<Stdio.Stdio> = Layer.succeed(
     }),
   }),
 );
+
+// Holds back every stdin byte until `ready` is done, so the server reads no request before all tools are registered.
+const gateStdin = (
+  ready: Deferred.Deferred<void>,
+): Layer.Layer<Stdio.Stdio, never, Stdio.Stdio> =>
+  Layer.effect(
+    Stdio.Stdio,
+    Effect.gen(function* () {
+      const stdio = yield* Stdio.Stdio;
+      return Stdio.make({
+        args: stdio.args,
+        stdout: (options) => stdio.stdout(options),
+        stderr: (options) => stdio.stderr(options),
+        stdin: Stream.unwrap(Effect.as(Deferred.await(ready), stdio.stdin)),
+      });
+    }),
+  );
 
 interface Served {
   readonly definition: ToolDefinition;
@@ -121,10 +139,10 @@ export const registerTools = (
   );
 
 // START_CONTRACT: serveMcp
-//   PURPOSE: Serve the agent Locus of a root Locus over MCP stdio, naming the server after its server property.
+//   PURPOSE: Serve the agent Locus of a root Locus over MCP stdio, naming the server after its server property. All tools are registered before the server reads its first request, so tools/list is complete and every tool is callable from the first request on.
 //   INPUTS: { root: LocusDefinition - the root of the model; agentLocusId: string - the agent Locus; options: { version: string } }
 //   OUTPUTS: { Promise<void> - resolves when the stream ends; rejects with "No agent Locus <id> in the model." for an id that is not an agent }
-//   SIDE_EFFECTS: reads stdin and writes the protocol to stdout; sets process.exitCode 1 on a failure that is not an interrupt
+//   SIDE_EFFECTS: reads stdin (only after registerTools has finished) and writes the protocol to stdout; sets process.exitCode 1 on a failure that is not an interrupt
 //   LINKS: M-PACK-AGENT-MCP
 // END_CONTRACT: serveMcp
 export const serveMcp = async (
@@ -141,9 +159,11 @@ export const serveMcp = async (
     throw new Error(`No agent Locus ${agentLocusId} in the model.`);
   }
   const name = String(definition.properties["server"]);
+  const ready = Deferred.makeUnsafe<void>();
   const exit = await Effect.runPromiseExit(
     Layer.launch(
-      registerTools(telos, agentLocusId).pipe(
+      Layer.effectDiscard(Deferred.succeed(ready, undefined)).pipe(
+        Layer.provide(registerTools(telos, agentLocusId)),
         Layer.provide(
           McpServer.layerStdio({
             name,
@@ -151,6 +171,7 @@ export const serveMcp = async (
             protocols: [McpProtocol.v2025_06_18],
           }),
         ),
+        Layer.provide(gateStdin(ready)),
         Layer.provide(BunStdio),
       ),
     ) as Effect.Effect<never, unknown, never>,
