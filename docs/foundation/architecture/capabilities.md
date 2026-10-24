@@ -65,7 +65,7 @@ flowchart BT
 
 - **Purpose**: Loci, identity, containment, relations, capabilities, contracts, semantic extensions, composition, Archetype rules, diagnostics, the semantic model and Semantic Closure.
 - **Relation to Locus**: defines it.
-- **In this mission**: built. `Locus.make` in `packages/kernel/src/locus.ts`; identity in `packages/kernel/src/identity.ts`; containment in `packages/kernel/src/containment.ts`; relations in `packages/kernel/src/relation.ts`; capabilities and contracts in `packages/kernel/src/capability.ts` and `packages/kernel/src/contract.ts`; extensions and composition in `packages/kernel/src/extension.ts` and `packages/kernel/src/composition.ts`; `buildModel` in `packages/kernel/src/model.ts`; Semantic Closure in `packages/kernel/src/closure.ts`.
+- **In this mission**: built. `Locus.make` in `packages/kernel/src/locus.ts`; identity in `packages/kernel/src/identity.ts`; containment in `packages/kernel/src/model.ts`; relations in `packages/kernel/src/relation.ts`; capabilities and contracts in `packages/kernel/src/capability.ts`; extensions in `packages/kernel/src/extension.ts` and composition in `packages/kernel/src/locus.ts`; `buildModel` in `packages/kernel/src/model.ts`; Semantic Closure in `packages/kernel/src/closure.ts`.
 - **Not built in this mission**: revisions, history and diff. See [future semantic evolution](../future-semantic-evolution.md).
 - **Maturity**: `proposed` until the rebuild merges; then `implemented`.
 - **Research questions**: OQ-001 to OQ-013.
@@ -105,7 +105,7 @@ flowchart BT
 
 - **Purpose**: Archetype rules, findings, knowledge statuses and evidence about the system.
 - **Relation to Locus**: Archetypes apply to Loci; findings are recorded per Locus and rule.
-- **In this mission**: built in part. `verify` in `packages/kernel/src/verify.ts` runs rules and records findings with knowledge statuses from `packages/kernel/src/status.ts`. The documentation site shows verification results in `apps/docs`. Temporary executable specifications run with `bun test` ([ADR-0013](../../decisions/ADR-0013-temporary-executable-specifications.md)).
+- **In this mission**: built in part. `verify` in `packages/kernel/src/verify.ts` runs rules and records findings with knowledge statuses of the type `Knowledge` in `packages/kernel/src/describe.ts`. The documentation site shows verification results in `apps/docs`.
 - **Not built in this mission**: evidence records with provenance, acceptance policies and assurance-case views. See [future semantic evolution](../future-semantic-evolution.md).
 - **Maturity**: `proposed`.
 - **Research questions**: OQ-015; assurance cases as Telos structures.
@@ -145,7 +145,7 @@ flowchart BT
 
 - **Purpose**: applications made of Loci, with their capabilities and interfaces.
 - **Relation to Locus**: application parts are Loci with capabilities.
-- **In this mission**: the calculator in `packages/calculator` is the proof application. It is declared as Loci with capabilities, an Archetype and interface Loci for the command line and the Web.
+- **In this mission**: the calculator in `apps/calculator` is the proof application. It is declared as Loci with capabilities, an Archetype and interface Loci for the command line and the Web.
 - **Not built in this mission**: applications beyond the calculator, and generated API layers.
 - **Maturity**: `proposed`.
 - **Research questions**: how much of an application's structure can be derived from its Loci.

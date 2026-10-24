@@ -30,7 +30,7 @@ related:
 1. An [Archetype](../foundation/terminology/archetype.md) is a set of [rules](../foundation/terminology/rule.md). It applies to Loci whose kind includes the extensions it names (`appliesTo`).
 2. A rule has a method: `static`, which reads the model, or `execution`, which runs code.
 3. `verify` records one [finding](../foundation/terminology/finding.md) per rule and Locus, with the outcome `passed`, `failed` or `error`.
-4. A [knowledge status](../foundation/terminology/knowledge-status.md) is attached to each fact. The statuses are `declared`, `derived`, `verified`, `failed` and `not run`. `verified` is used only for a rule result produced by a real execution in this repository. `observed` and `invalidated` are reserved for later use.
+4. A [knowledge status](../foundation/terminology/knowledge-status.md) is attached to each fact. The statuses are `declared`, `derived`, `verified`, `failed`, `not-run` and `unknown`; Semantic Closure gives `unknown` for a file it cannot parse. `verified` is used only for a rule result produced by a real execution in this repository. `observed` and `invalidated` are reserved for later use.
 5. Archetypes replace Laws and Lenses, and the temporary executable specifications of ADR-0013.
 
 ## Alternatives

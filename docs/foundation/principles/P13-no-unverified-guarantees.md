@@ -29,7 +29,7 @@ A model that mixes declarations with checked results invites readers to trust de
 
 ## In practice
 
-- The status vocabulary is defined in `packages/kernel/src/status.ts` and every finding carries one.
+- The status vocabulary is the type `Knowledge` in `packages/kernel/src/describe.ts`, and every finding carries one.
 - Rules run by `verify` in `packages/kernel/src/verify.ts` record `verified` or `failed` only after execution; a rule that did not run records `not run`.
 - The documentation site refuses the words "verified", "passing" and "all tests pass" in front matter and status columns, in `apps/docs/scripts/content.ts`.
 

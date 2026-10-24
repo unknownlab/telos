@@ -29,7 +29,7 @@ A kernel that calls a model cannot be trusted to give the same answer twice, can
 ## In practice
 
 - The `package.json` of `packages/kernel` lists `effect` as its only runtime dependency.
-- No file in `packages/kernel/src` imports a model provider SDK. A check in the repository gate rejects such an import.
+- No file in `packages/kernel/src` imports a model provider SDK. The Semantic Closure check of `bun run telos check` (the last step of `bun run verify`) rejects every package import in `packages/kernel` that `telos:kernel` does not declare in `telos.ts`, and `telos:kernel` declares only `effect`.
 - The agent package `packages/agent` is the only place where model calls may appear, and it calls the kernel through its public API.
 
 ## Limits
