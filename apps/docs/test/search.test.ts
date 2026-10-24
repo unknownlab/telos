@@ -77,17 +77,19 @@ describe("createSearch over the real docs index", () => {
     return createSearch(output.output.search);
   })();
 
-  test("baseline finds the principle and the term", async () => {
+  test("archetype finds the principle and the term", async () => {
     const search = await realSearch;
-    const hits = search("baseline");
+    const hits = search("archetype");
     const routes = hits.map((h) => h.route);
-    expect(routes).toContain("/principles/P08-preserve-the-baseline");
-    expect(routes).toContain("/terminology/revision");
+    expect(routes).toContain(
+      "/principles/P06-archetypes-specialize-verification",
+    );
+    expect(routes).toContain("/terminology/archetype");
   });
 
-  test("baseline results name each route once", async () => {
+  test("archetype results name each route once", async () => {
     const search = await realSearch;
-    const routes = search("baseline").map((h) => h.route);
+    const routes = search("archetype").map((h) => h.route);
     expect(new Set(routes).size).toBe(routes.length);
   });
 
