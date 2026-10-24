@@ -1,7 +1,7 @@
 {
-  "event_count": 88,
-  "last_event_id": "01M5Q2X4E26M4Q6AWR7WR8BRV4",
-  "materialized_at": "2026-10-24T13:51:48.162168+00:00",
+  "event_count": 89,
+  "last_event_id": "01M5Q2YR0V7BJMC879NTRMXFBP",
+  "materialized_at": "2026-10-24T13:52:40.987164+00:00",
   "mission_number": "",
   "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
   "mission_type": "software-dev",
@@ -11,8 +11,8 @@
     "canceled": 0,
     "claimed": 0,
     "done": 0,
-    "for_review": 1,
-    "in_progress": 4,
+    "for_review": 2,
+    "in_progress": 3,
     "in_review": 0,
     "planned": 6
   },
@@ -326,7 +326,15 @@
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 35464,
-      "shell_pid_created_at": "1792849470.237943"
+      "shell_pid_created_at": "1792849470.237943",
+      "subtasks": {
+        "T054": "done",
+        "T055": "done",
+        "T056": "done",
+        "T057": "done",
+        "T058": "done",
+        "T059": "done"
+      }
     },
     "WP11": {
       "actor": "claude",
@@ -495,9 +503,9 @@
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "in_progress",
-      "last_event_id": "01M5Q2HJKQMCNCQSX49KENM92Q",
-      "last_transition_at": "2026-10-24T13:45:29.450787+00:00",
+      "lane": "for_review",
+      "last_event_id": "01M5Q2YR0V7BJMC879NTRMXFBP",
+      "last_transition_at": "2026-10-24T13:52:40.987164+00:00",
       "model": "__resolved_model_absent__",
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
