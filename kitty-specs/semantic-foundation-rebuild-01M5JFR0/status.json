@@ -290,6 +290,9 @@
       "last_event_id": "01M5Q2BXHB1A02J101ZV5VAGQN",
       "last_transition_at": "2026-10-24T13:42:24.043681+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Ready for review: Telos service, impact, diffModels and public API with tests and GRACE markup"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 27887,
