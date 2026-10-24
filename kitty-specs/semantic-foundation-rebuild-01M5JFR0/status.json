@@ -660,6 +660,9 @@
       "last_event_id": "01M5QVAWB0K4A35TQYK4XV06CT",
       "last_transition_at": "2026-10-24T20:58:44.448170+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Calculator page, kernel guides with checked examples, packages/locus and the legacy GRACE area removed"
+      ],
       "provider": "__resolved_provider_absent__",
       "role": "implementer",
       "shell_pid": 39069,
