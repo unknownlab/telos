@@ -37,7 +37,9 @@
     </VD-KERNEL-BASE>
     <VD-KERNEL-DEFINITIONS>
       <Path>verification/kernel-definitions.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-DEFINITIONS />
+      </Owns>
     </VD-KERNEL-DEFINITIONS>
     <VD-KERNEL-MODEL>
       <Path>verification/kernel-model.xml</Path>

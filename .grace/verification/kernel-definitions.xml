@@ -1,3 +1,24 @@
 <GraceVerificationDocument graceVersion="4.0">
-  <VD-KERNEL-DEFINITIONS />
+  <VD-KERNEL-DEFINITIONS>
+    <V-M-KERNEL-DEFINITIONS>
+      <TestFiles>
+        <File>packages/kernel/test/relation.test.ts</File>
+        <File>packages/kernel/test/capability.test.ts</File>
+        <File>packages/kernel/test/archetype.test.ts</File>
+        <File>packages/kernel/test/extension.test.ts</File>
+        <File>packages/kernel/test/locus.test.ts</File>
+        <File>packages/kernel/test/extensions.test.ts</File>
+        <File>packages/kernel/test/types.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/relation.test.ts packages/kernel/test/capability.test.ts packages/kernel/test/archetype.test.ts packages/kernel/test/extension.test.ts packages/kernel/test/locus.test.ts packages/kernel/test/extensions.test.ts packages/kernel/test/types.test.ts</Command>
+      <Scenario>RelationType and CapabilityRef targets resolve locus and capability references, and relations and targets are frozen.</Scenario>
+      <Scenario>Capabilities keep their parts, default errors to an empty list, declare a null handler, and expose the error tag.</Scenario>
+      <Scenario>Rules and archetypes are frozen values, and violation fails with a RuleViolation carrying its message.</Scenario>
+      <Scenario>Extensions default their optional parts and are frozen.</Scenario>
+      <Scenario>Locus kinds compose extensions, skip repeated extension objects, report the four composition conflict codes, never throw on invalid properties, and build frozen Loci.</Scenario>
+      <Scenario>The built-in Purpose, Source and External extensions and the source.depends-on relation type have the specified ids, descriptions and properties.</Scenario>
+      <Scenario>Composed Locus kinds type their required properties, capability names and handler errors at compile time.</Scenario>
+      <TraceAssertion>relation.test.ts: RelationType.make, RelationType.to and relationTargetKey describe blocks. capability.test.ts: Capability.make, Capability.declare and errorTag describe blocks. archetype.test.ts: Rule.make, Archetype.make and violation describe blocks. extension.test.ts: Extension.make describe block. locus.test.ts: minimality, composition, composition.*-conflict and capabilities describe blocks. extensions.test.ts: Purpose, Source, SourceDependsOn and External describe blocks. types.test.ts: compile-time composition describe block.</TraceAssertion>
+    </V-M-KERNEL-DEFINITIONS>
+  </VD-KERNEL-DEFINITIONS>
 </GraceVerificationDocument>

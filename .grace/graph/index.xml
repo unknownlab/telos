@@ -37,7 +37,9 @@
     </GD-KERNEL-BASE>
     <GD-KERNEL-DEFINITIONS>
       <Path>graph/kernel-definitions.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-DEFINITIONS />
+      </Owns>
     </GD-KERNEL-DEFINITIONS>
     <GD-KERNEL-MODEL>
       <Path>graph/kernel-model.xml</Path>

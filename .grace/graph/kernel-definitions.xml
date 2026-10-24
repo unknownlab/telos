@@ -1,3 +1,15 @@
 <GraceGraphDocument graceVersion="4.0">
-  <GD-KERNEL-DEFINITIONS />
+  <GD-KERNEL-DEFINITIONS>
+    <M-KERNEL-DEFINITIONS>
+      <Summary>Defines relation types, capabilities, Archetypes, extensions and Locus kinds, with the two built-in extensions.</Summary>
+      <Path>packages/kernel/src/relation.ts</Path>
+      <Path>packages/kernel/src/capability.ts</Path>
+      <Path>packages/kernel/src/archetype.ts</Path>
+      <Path>packages/kernel/src/extension.ts</Path>
+      <Path>packages/kernel/src/locus.ts</Path>
+      <Path>packages/kernel/src/extensions/purpose.ts</Path>
+      <Path>packages/kernel/src/extensions/source.ts</Path>
+      <M-KERNEL-IDENTITY />
+    </M-KERNEL-DEFINITIONS>
+  </GD-KERNEL-DEFINITIONS>
 </GraceGraphDocument>
