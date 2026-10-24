@@ -1,0 +1,92 @@
+<GraceVerificationDocument graceVersion="4.0">
+  <VD-DOCS>
+    <V-M-DOCS-CONTENT>
+      <TestFiles>
+        <File>apps/docs/test/content.test.ts</File>
+        <File>apps/docs/test/guides.test.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/content.test.ts apps/docs/test/guides.test.ts</Command>
+      <Command>bun run --cwd apps/docs content</Command>
+      <Scenario>The content build of the valid fixture compiles with zero problems, and routes by id are exact.</Scenario>
+      <Scenario>Each NS-020 failure case is rejected with a problem instead of producing content.</Scenario>
+      <Scenario>Every guide has front matter with its guide, order and section, one H1 title, and no verification claim in its prose.</Scenario>
+      <Scenario>The public API table in the Agent Reference lists exactly the runtime exports of @telos/locus, and the diagnostic codes are exactly the fourteen codes of the contract.</Scenario>
+      <TraceAssertion>The "valid fixture output" tests in content.test.ts, the "NS-020 failure cases" tests, the "guides: front matter and body" tests, and the "the public API table lists exactly the runtime exports of @telos/locus" and "the diagnostic codes are exactly the fourteen codes of the contract" tests pass. The content command writes the content files without error.</TraceAssertion>
+    </V-M-DOCS-CONTENT>
+    <V-M-DOCS-SPEC-REPORT>
+      <TestFiles>
+        <File>apps/docs/test/spec-report.test.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/spec-report.test.ts</Command>
+      <Command>bun run --cwd apps/docs spec-report</Command>
+      <Command>bun run docs:build</Command>
+      <Scenario>The spec report runs all 44 records and writes the report and the build info, with bun build and git provenance.</Scenario>
+      <Scenario>A failing record is kept in the report with status fail and counted as failed.</Scenario>
+      <Scenario>A crashed run leaves no report, so a stale report cannot be shipped.</Scenario>
+      <Scenario>A browser origin in the report is refused, and the message names the field.</Scenario>
+      <Scenario>The docs build fails when the built Verification page does not carry the spec-report result, so an invalid report cannot ship as an empty page (INV-013).</Scenario>
+      <TraceAssertion>The "runs all 44 records and writes both files", "a failing record is written with status fail", "a crashed run leaves the stale report removed" and "exits 0 and prints the summary" tests in spec-report.test.ts pass. The docs:build command exits 0 for a valid report, and check-verification.ts exits 1 for a crafted invalid one.</TraceAssertion>
+    </V-M-DOCS-SPEC-REPORT>
+    <V-M-DOCS-SITE>
+      <TestFiles>
+        <File>apps/docs/test/manifest.test.ts</File>
+        <File>apps/docs/test/site.test.ts</File>
+        <File>apps/docs/test/theme.test.ts</File>
+        <File>apps/docs/test/search.test.ts</File>
+        <File>apps/docs/test/shortcuts.test.ts</File>
+        <File>apps/docs/test/provenance.test.ts</File>
+        <File>apps/docs/test/serve-static.test.ts</File>
+        <File>apps/docs/test/components.test.tsx</File>
+        <File>apps/docs/test/widgets.test.tsx</File>
+        <File>apps/docs/test/verification.test.tsx</File>
+        <File>apps/docs/e2e/navigation.e2e.ts</File>
+        <File>apps/docs/e2e/search.e2e.ts</File>
+        <File>apps/docs/e2e/theme.e2e.ts</File>
+        <File>apps/docs/e2e/machine-files.e2e.ts</File>
+        <File>apps/docs/e2e/a11y.e2e.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/manifest.test.ts apps/docs/test/site.test.ts apps/docs/test/theme.test.ts apps/docs/test/search.test.ts apps/docs/test/shortcuts.test.ts apps/docs/test/provenance.test.ts apps/docs/test/serve-static.test.ts apps/docs/test/components.test.tsx apps/docs/test/widgets.test.tsx apps/docs/test/verification.test.tsx</Command>
+      <Command>bun run docs:build</Command>
+      <Command>bun run test:e2e</Command>
+      <Command>bun run test:e2e apps/docs/e2e/a11y.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/machine-files.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/navigation.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/search.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/theme.e2e.ts</Command>
+      <Scenario>Every app route is prerendered and is not the not-found page, and every document loads with its title and no errors.</Scenario>
+      <Scenario>The search index finds the principle and the term in the real docs index, and each result names its route once.</Scenario>
+      <Scenario>The static server serves llms.txt as text/plain, refuses path traversal with 404, and refuses methods other than GET and HEAD with 405.</Scenario>
+      <Scenario>Before any report exists, the Verification page shows the build as not run with origin none, and no result row is counted as passed.</Scenario>
+      <Scenario>Every site page has no serious or critical accessibility violations in the light and the dark theme.</Scenario>
+      <TraceAssertion>The unit tests named in the command pass, including "baseline finds the principle and the term", "refuses traversal and malformed paths with 404" and "no result row is shown and nothing is counted as passed". The Chromium navigation, search, theme, machine-files and a11y specs pass, and docs:build exits 0.</TraceAssertion>
+    </V-M-DOCS-SITE>
+    <V-M-DOCS-PLAYGROUND>
+      <TestFiles>
+        <File>apps/docs/test/run-state.test.ts</File>
+        <File>apps/docs/test/playground-run.test.ts</File>
+        <File>apps/docs/test/playground-safety.test.ts</File>
+        <File>apps/docs/test/guide-examples.test.ts</File>
+        <File>apps/docs/test/playground-revisions.test.ts</File>
+        <File>apps/docs/test/playground-specs.test.ts</File>
+        <File>apps/docs/test/playground-render.test.tsx</File>
+        <File>apps/docs/test/playground-render-de.test.tsx</File>
+        <File>apps/docs/e2e/playground.e2e.ts</File>
+        <File>apps/docs/e2e/keyboard.e2e.ts</File>
+        <File>apps/docs/e2e/equality.e2e.ts</File>
+        <File>apps/docs/e2e/provenance.e2e.ts</File>
+      </TestFiles>
+      <Command>bun test apps/docs/test/run-state.test.ts apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts apps/docs/test/guide-examples.test.ts apps/docs/test/playground-revisions.test.ts apps/docs/test/playground-specs.test.ts apps/docs/test/playground-render.test.tsx apps/docs/test/playground-render-de.test.tsx</Command>
+      <Command>bun run test:e2e</Command>
+      <Command>bun run test:e2e apps/docs/e2e/equality.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/keyboard.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/playground.e2e.ts</Command>
+      <Command>bun run test:e2e apps/docs/e2e/provenance.e2e.ts</Command>
+      <Scenario>Every .ts and .tsx file under the playground passes the source scan: no code evaluation and no raw HTML outside the two known exceptions (C-002).</Scenario>
+      <Scenario>Scenarios A, D and E run the real packages on the decoded input and show Revision ids marked browser, and the Revision ids equal the Bun Revision ids and the golden constants.</Scenario>
+      <Scenario>An edit marks the results historical and keeps their ids, and a run makes them browser results again.</Scenario>
+      <Scenario>Input over 1 MB is refused, and the page stays responsive.</Scenario>
+      <Scenario>All 44 specifications pass in the browser, the golden check matches all eight revision-compare rows, and scenario E's browser statuses equal the build report statuses id by id.</Scenario>
+      <TraceAssertion>The "every file under apps/docs/src/playground passes the playground rules" and "the sources are clean" source-scan tests in playground-safety.test.ts pass. The Chromium equality suite (equality.e2e.ts) passes for scenarios A, D and E, and the playground, keyboard and provenance e2e specs pass.</TraceAssertion>
+    </V-M-DOCS-PLAYGROUND>
+  </VD-DOCS>
+</GraceVerificationDocument>
