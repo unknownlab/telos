@@ -155,8 +155,8 @@ test.describe("without JavaScript", () => {
     const byId = new Map(readIndex().map((doc) => [doc.id, doc]));
     const kinds = [
       "introduction",
-      "P01-everything-is-code",
-      "revision",
+      "P01-one-fundamental-entity",
+      "semantic-extension",
       "ADR-0005",
     ];
     for (const id of kinds) {

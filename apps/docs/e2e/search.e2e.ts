@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove in Chromium that search opens from the slash key, Ctrl or Meta with K and the button, finds the built content, navigates to the first hit, closes with Escape and returns focus, never takes a key typed into a playground field, and loads its index only on the first open (FR-016).
-//   SCOPE: The search suite over the static build: the dialog, the shortcuts, the results for "baseline" and an empty result, and the lazy index request.
+//   SCOPE: The search suite over the static build: the dialog, the shortcuts, the results for "archetype" and an empty result, and the lazy index request.
 //   DEPENDS: M-DOCS-SITE
 //   LINKS: V-M-DOCS-SITE
 //   ROLE: TEST
@@ -44,20 +44,20 @@ function resultLinks(page: Page) {
 }
 
 test.describe("search", () => {
-  test("slash opens the dialog, and a search for baseline finds the Revision term and P08", async ({
+  test("slash opens the dialog, and a search for archetype finds the Archetype term and P06", async ({
     page,
   }) => {
     const check = trackPageErrors(page);
     await page.goto("/");
     await openSearch(page);
-    await page.keyboard.type("baseline");
+    await page.keyboard.type("archetype");
     await expect(resultLinks(page).first()).toBeVisible();
     await expect(
-      page.locator('a[data-search-result="/terminology/revision"]'),
+      page.locator('a[data-search-result="/terminology/archetype"]'),
     ).toBeVisible();
     await expect(
       page.locator(
-        'a[data-search-result="/principles/P08-preserve-the-baseline"]',
+        'a[data-search-result="/principles/P06-archetypes-specialize-verification"]',
       ),
     ).toBeVisible();
     check();
