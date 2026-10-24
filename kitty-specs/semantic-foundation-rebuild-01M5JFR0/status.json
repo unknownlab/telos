@@ -93,7 +93,8 @@
       "last_transition_at": "2026-10-24T09:11:29.670286+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: definition API, tests and GRACE markup; verify green"
+        "Ready for review: definition API, tests and GRACE markup; verify green",
+        "Review passed: bun run verify green (970 tests, grace lint 0 errors); 17 contract-required lint warnings accepted"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
