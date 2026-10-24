@@ -1,3 +1,19 @@
 <GraceGraphDocument graceVersion="4.0">
-  <GD-CALCULATOR-INTERFACES />
+  <GD-CALCULATOR-INTERFACES>
+    <M-CALC-INTERFACES>
+      <Summary>Exposes the calculator arithmetic Locus through CLI, web and agent interface Loci inside the calculator application Locus, checks them with the CalculatorInterfaces archetype, and provides the CLI, MCP server and deterministic agent demo binaries.</Summary>
+      <Path>apps/calculator/src/interfaces.ts</Path>
+      <Path>apps/calculator/src/app.ts</Path>
+      <Path>apps/calculator/src/index.ts</Path>
+      <Path>apps/calculator/bin/cli.ts</Path>
+      <Path>apps/calculator/bin/mcp.ts</Path>
+      <Path>apps/calculator/bin/agent-demo.ts</Path>
+      <M-CALC-ARITHMETIC />
+      <M-PACK-CLI />
+      <M-PACK-WEB />
+      <M-PACK-AGENT />
+      <M-PACK-AGENT-MCP />
+      <M-KERNEL-API />
+    </M-CALC-INTERFACES>
+  </GD-CALCULATOR-INTERFACES>
 </GraceGraphDocument>

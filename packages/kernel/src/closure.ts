@@ -135,6 +135,22 @@ function resolveCodePath(root: string, path: string): string | null {
   return null;
 }
 
+// Returns the first existing code file named by a repository-relative path plus a
+// code suffix, or null. Used when the last segment of the path has a non-code
+// extension but no such file exists, such as "./routeTree.gen" for routeTree.gen.ts.
+function resolveSuffixedCodePath(root: string, path: string): string | null {
+  const candidates = [
+    `${path}.ts`,
+    `${path}.tsx`,
+    `${path}/index.ts`,
+    `${path}/index.tsx`,
+  ];
+  for (const candidate of candidates) {
+    if (isFile(posix.join(root, candidate))) return candidate;
+  }
+  return null;
+}
+
 function isAssetPath(path: string): boolean {
   const ext = posix.extname(path);
   return ext !== "" && !CODE_EXTENSIONS.includes(ext);
@@ -243,9 +259,16 @@ function checkLocalPath(ctx: FileContext, raw: string, path: string): void {
     return;
   }
   if (isAssetPath(path)) {
-    if (!isFile(posix.join(ctx.root, path))) {
+    // An existing file with a non-code extension is an asset. Otherwise the last
+    // segment is a dotted module name, such as "./routeTree.gen", and the code
+    // suffixes are tried before the import is reported as unresolved.
+    if (isFile(posix.join(ctx.root, path))) return;
+    const target = resolveSuffixedCodePath(ctx.root, path);
+    if (target === null) {
       unresolved(ctx, raw, `${raw} does not resolve to a file.`);
+      return;
     }
+    checkTarget(ctx, raw, target);
     return;
   }
   const target = resolveCodePath(ctx.root, path);
