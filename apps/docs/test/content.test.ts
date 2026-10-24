@@ -113,7 +113,7 @@ const EXPECTED_LLMS = `# Telos by UnknownLab
 
 ## Playground
 
-- [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.
+- [Playground](/playground): Type a Locus definition as JSON; the real @telos/kernel decodes, builds and verifies it in your browser.
 
 ## Calculator
 

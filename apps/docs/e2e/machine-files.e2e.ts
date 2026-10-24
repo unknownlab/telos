@@ -81,7 +81,7 @@ function headingsOf(text: string): string[] {
 // The four llms.txt bullets that name app pages. content.ts writes them, not a document.
 const APP_PAGE_LINES: ReadonlyArray<string> = [
   "- [Inspector](/inspector): The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json.",
-  "- [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.",
+  "- [Playground](/playground): Type a Locus definition as JSON; the real @telos/kernel decodes, builds and verifies it in your browser.",
   "- [Calculator](/calculator): The calculator web interface: forms derived from the capability contracts of calculator:arithmetic.",
   "- [Verification](/verification): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.",
 ];
