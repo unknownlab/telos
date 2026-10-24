@@ -12,5 +12,7 @@
   "purpose_tldr": "Rebuild Telos around Locus as the only semantic entity, with composable extensions, Archetype verification and agent-native introspection, proven by one calculator exposed through CLI, Web and agent tools.",
   "slug": "semantic-foundation-rebuild-01M5JFR0",
   "target_branch": "feat/semantic-foundation-rebuild",
-  "topology": "coord"
+  "topology": "coord",
+  "vcs": "git",
+  "vcs_locked_at": "2026-10-24T08:32:58.923897+00:00"
 }
