@@ -1,9 +1,17 @@
 <GraceRequirements graceVersion="4.0">
   <ProjectName>Telos</ProjectName>
-  <Annotation>An everything-as-code full-stack framework for next-generation software, developed as a Bun workspaces monorepo.</Annotation>
-  <Keywords>bun, typescript, monorepo, workspaces, everything-as-code, full-stack framework</Keywords>
+  <Annotation>Telos is a semantic-first, agent-native programming framework: systems are Loci composed from semantic extensions, verified by Archetypes and exposed through Packs.</Annotation>
+  <Keywords>bun, typescript, effect, semantic model, locus, archetype, packs, agent-native</Keywords>
   <Goals>
-    <Goal>Provide a Bun-only monorepo skeleton (apps/*, packages/*) whose checks block wrong behavior before commit and review.</Goal>
+    <Goal>Users define Loci and compose semantic extensions into Locus kinds, with conflicts reported rather than overwritten.</Goal>
+    <Goal>An agent introspects a system through typed queries over the semantic model.</Goal>
+    <Goal>Users operate the calculator proof application through three interfaces: the command line, agent tools and the Web.</Goal>
+    <Goal>An agent discovers and invokes granted capabilities without calling a model provider.</Goal>
+    <Goal>Users verify Loci with Archetype rules that apply according to their composition.</Goal>
+    <Goal>Users see the Loci, relations and rules affected by a change to a capability contract.</Goal>
+    <Goal>Users find every managed code file that no Locus owns.</Goal>
+    <Goal>Readers study the foundation and experiment in the playground on the documentation site.</Goal>
+    <Goal>Maintainers keep the repository free of stale definitions, broken links and unowned artifacts.</Goal>
   </Goals>
   <Users>
     <User>The owner, who directs the work and makes product and architecture decisions.</User>
