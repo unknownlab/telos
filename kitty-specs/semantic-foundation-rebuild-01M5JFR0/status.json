@@ -1,19 +1,19 @@
 {
-  "event_count": 141,
-  "last_event_id": "01M5QWFAQNGDWCCZFB9PF3R2SR",
-  "materialized_at": "2026-10-24T21:18:38.837992+00:00",
+  "event_count": 142,
+  "last_event_id": "01M5QWG2AW4XG6930MY41WQ4FH",
+  "materialized_at": "2026-10-24T21:19:03.004160+00:00",
   "mission_number": "",
   "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
   "mission_type": "software-dev",
   "summary": {
-    "approved": 21,
+    "approved": 22,
     "blocked": 0,
     "canceled": 0,
     "claimed": 0,
     "done": 0,
     "for_review": 0,
     "in_progress": 0,
-    "in_review": 1,
+    "in_review": 0,
     "planned": 0
   },
   "work_packages": {
@@ -684,14 +684,14 @@
       }
     },
     "WP21": {
-      "actor": "claude",
+      "actor": "user",
       "agent": "claude",
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 1,
-      "lane": "in_review",
-      "last_event_id": "01M5QWFAQNGDWCCZFB9PF3R2SR",
-      "last_transition_at": "2026-10-24T21:18:38.837992+00:00",
+      "lane": "approved",
+      "last_event_id": "01M5QWG2AW4XG6930MY41WQ4FH",
+      "last_transition_at": "2026-10-24T21:19:03.004160+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Ready for review: coherence sweep S1-S9, SC-006 sweep, terminology maturity, README and tooling; bun run verify exit 0",
@@ -700,10 +700,10 @@
       "provider": "__resolved_provider_absent__",
       "review": null,
       "review_result": {
-        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/semantic-foundation-rebuild-01M5JFR0/tasks/WP21-coherence-sweep/review-cycle-1.md",
-        "reference": "review-cycle://semantic-foundation-rebuild-01M5JFR0/WP21-coherence-sweep/review-cycle-1.md",
+        "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/semantic-foundation-rebuild-01M5JFR0/tasks/WP21-coherence-sweep/review-cycle-2.md",
+        "reference": "review-cycle://semantic-foundation-rebuild-01M5JFR0/WP21-coherence-sweep/review-cycle-2.md",
         "reviewer": "user",
-        "verdict": "changes_requested"
+        "verdict": "approved"
       },
       "role": "reviewer",
       "shell_pid": 89005,
