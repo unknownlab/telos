@@ -26,7 +26,9 @@
     "calculator": "bun apps/calculator/bin/cli.ts",
     "calculator:mcp": "bun apps/calculator/bin/mcp.ts",
     "calculator:agent-demo": "bun apps/calculator/bin/agent-demo.ts",
-    "verify": "bun run check:bun && bun run format:check && bun run lint && bun run typecheck && bun run test && bun run docs:build && bun run test:e2e && bun run grace:lint"
+    "telos": "bun scripts/telos.ts",
+    "telos:check": "bun scripts/telos.ts check",
+    "verify": "bun run check:bun && bun run format:check && bun run lint && bun run typecheck && bun run test && bun run docs:build && bun run test:e2e && bun run grace:lint && bun run telos:check"
   },
   "dependencies": {
     "@telos/calculator": "workspace:*",

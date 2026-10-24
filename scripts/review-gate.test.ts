@@ -228,13 +228,14 @@ describe("CHECK_STEPS and the root verify script", () => {
     }
   });
 
-  test("docs:build runs after test, test:e2e runs after docs:build, and grace:lint runs last", () => {
+  test("docs:build runs after test, test:e2e runs after docs:build, grace:lint runs after test:e2e, and telos:check runs last", () => {
     const names = CHECK_STEPS.map((step) => step.name);
     const at = (name: string) => names.indexOf(name);
     expect(at("docs:build")).toBeGreaterThan(at("test"));
     expect(at("test:e2e")).toBeGreaterThan(at("docs:build"));
     expect(at("grace:lint")).toBeGreaterThan(at("test:e2e"));
-    expect(names.at(-1)).toBe("grace:lint");
+    expect(at("telos:check")).toBeGreaterThan(at("grace:lint"));
+    expect(names.at(-1)).toBe("telos:check");
   });
 
   test("a failing docs:build is a failing verify.docs:build case, and a passing test:e2e stays passing", () => {
