@@ -5,6 +5,7 @@ dependencies:
 - WP15
 - WP18
 requirement_refs:
+- FR-012
 - FR-025
 planning_base_branch: feat/semantic-foundation-rebuild
 merge_target_branch: feat/semantic-foundation-rebuild

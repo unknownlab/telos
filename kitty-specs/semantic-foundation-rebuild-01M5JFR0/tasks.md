@@ -357,7 +357,7 @@ T041 Register M-KERNEL-DECODE in GRACE (WP07)
 
 ### WP08 – Kernel Semantic Closure check (Bun)
 
-**Prompt**: [tasks/WP08-kernel-closure.md](tasks/WP08-kernel-closure.md) · **Profile**: `implementer-ivan` · **Depends on**: WP04 · **Requirements**: FR-015
+**Prompt**: [tasks/WP08-kernel-closure.md](tasks/WP08-kernel-closure.md) · **Profile**: `implementer-ivan` · **Depends on**: WP04 · **Requirements**: FR-012, FR-015
 
 **Goal**: Check that every managed file has exactly one Locus owner and that cross-Locus imports follow declared relations and externals.
 
@@ -622,7 +622,7 @@ T109 Run bun run verify and record the results (WP18)
 
 ### WP19 – Documentation semantic report, inspector and verification page
 
-**Prompt**: [tasks/WP19-docs-semantic-report.md](tasks/WP19-docs-semantic-report.md) · **Profile**: `frontend-freddy` · **Depends on**: WP15, WP18 · **Requirements**: FR-025
+**Prompt**: [tasks/WP19-docs-semantic-report.md](tasks/WP19-docs-semantic-report.md) · **Profile**: `frontend-freddy` · **Depends on**: WP15, WP18 · **Requirements**: FR-012, FR-025
 
 **Goal**: Show the real repository model and verification on the site, built from `bun run telos report` at build time.
 
@@ -739,7 +739,8 @@ Critical path: WP01 → WP02 → WP03 → WP04 → WP05 → WP06 → WP09 → (W
 | FR-009 | WP03, WP05 |
 | FR-010 | WP05 |
 | FR-011 | WP06, WP09 |
-| FR-012, FR-013 | WP06 |
+| FR-012 | WP06, WP08 (`unknown` on closure findings), WP19 (knowledge badges) |
+| FR-013 | WP06 |
 | FR-014 | WP09 |
 | FR-015 | WP08 |
 | FR-016 | WP07 |

@@ -4,6 +4,7 @@ title: Kernel Semantic Closure check (Bun)
 dependencies:
 - WP04
 requirement_refs:
+- FR-012
 - FR-015
 planning_base_branch: feat/semantic-foundation-rebuild
 merge_target_branch: feat/semantic-foundation-rebuild
