@@ -1,0 +1,9 @@
+<GraceGraphDocument graceVersion="4.0">
+  <GD-KERNEL-DECODE>
+    <M-KERNEL-DECODE>
+      <Summary>Decodes JSON Locus definitions against an extension registry into the Locus values that code builds, without evaluating text.</Summary>
+      <Path>packages/kernel/src/decode.ts</Path>
+      <M-KERNEL-DEFINITIONS />
+    </M-KERNEL-DECODE>
+  </GD-KERNEL-DECODE>
+</GraceGraphDocument>
