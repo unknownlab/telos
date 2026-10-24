@@ -554,7 +554,8 @@
       "last_transition_at": "2026-10-24T14:01:13.043175+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: kernel hardening (archetype.applies-to-empty, closure.unparsable, read-only model maps)"
+        "Ready for review: kernel hardening (archetype.applies-to-empty, closure.unparsable, read-only model maps)",
+        "Review passed: contracts met, 22 new tests real, verify green"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
