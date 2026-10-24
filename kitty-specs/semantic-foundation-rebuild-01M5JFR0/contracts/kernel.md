@@ -58,10 +58,12 @@ export type DiagnosticCode =
   | "identity.malformed" | "identity.duplicate" | "ownership.multiple"
   | "composition.extension-id-conflict" | "composition.property-conflict"
   | "composition.relation-type-conflict" | "composition.archetype-id-conflict"
+  | "archetype.applies-to-empty"
   | "property.invalid" | "capability.name-malformed"
   | "relation.type-unavailable" | "relation.target-missing" | "relation.capability-missing"
   | "relation.target-kind" | "relation.self" | "relation.duplicate"
   | "relation.cycle" | "relation.cycle-limit"
+// eighteen codes; "archetype.applies-to-empty" was added by WP22 (kernel hardening)
 export interface Diagnostic {
   readonly code: DiagnosticCode
   readonly severity: Severity
@@ -174,13 +176,15 @@ export interface Archetype {
   readonly _tag: "Archetype"
   readonly id: string                   // matches EXTENSION_ID_PATTERN
   readonly description: string
-  readonly appliesTo: ReadonlyArray<string>   // extension ids, non-empty
+  readonly appliesTo: ReadonlyArray<string>   // extension ids, non-empty: buildModel reports an empty list as archetype.applies-to-empty
   readonly rules: ReadonlyArray<Rule>
 }
 export const Rule: { make: (rule: Rule) => Rule }
 export const Archetype: { make: (options: Omit<Archetype, "_tag">) => Archetype }
 export const violation: (message: string) => Effect.Effect<never, RuleViolation> // Effect.fail(new RuleViolation({ message }))
 ```
+
+`Archetype.make` does not validate `appliesTo`. An empty list would make the Archetype apply to every Locus (the empty set is a subset of every composition), so `buildModel` reports it as the error `archetype.applies-to-empty` (model.ts step 2). `verify` and `applicableArchetypes` are unchanged; a model with this error fails `hasErrors` and therefore every gate.
 
 `archetype.ts` imports `LocusDefinition` and `SemanticModel` with `import type` only, to avoid runtime cycles.
 
@@ -316,13 +320,15 @@ export interface ModelRelation {
 export interface SemanticModel {
   readonly root: string
   readonly ids: ReadonlyArray<string>                       // all Locus ids, sorted (UTF-16)
-  readonly loci: ReadonlyMap<string, ModelLocus>
+  readonly loci: ReadonlyMap<string, ModelLocus>            // keyed in ids order; read-only at runtime (readonlyMap)
   readonly relations: ReadonlyArray<ModelRelation>          // sorted by from, type.id, relationTargetKey(target), index
-  readonly extensions: ReadonlyMap<string, Extension>       // first extension object seen per id, over all kinds
-  readonly archetypes: ReadonlyMap<string, Archetype>       // first archetype object seen per id, over all kinds
+  readonly extensions: ReadonlyMap<string, Extension>       // first extension object seen per id, over all kinds; keyed in id order; read-only at runtime
+  readonly archetypes: ReadonlyMap<string, Archetype>       // first archetype object seen per id, over all kinds; keyed in id order; read-only at runtime
   readonly diagnostics: ReadonlyArray<Diagnostic>           // sortDiagnostics output
 }
 export function buildModel(root: LocusDefinition): SemanticModel
+// total (never throws) for every LocusDefinition produced by a LocusKind's make (Locus.make, Locus.extend(...).make),
+// including trees whose contains lists were built from such definitions; the behaviour for any other object is undefined
 export function incoming(model: SemanticModel, target: string): ReadonlyArray<ModelRelation>
 // relations whose target.locus === target (Locus or capability targets), valid only, sorted as in model.relations
 export function outgoing(model: SemanticModel, from: string): ReadonlyArray<ModelRelation>
@@ -333,13 +339,17 @@ export function hasErrors(model: SemanticModel): boolean  // any diagnostic with
 Algorithm:
 
 1. Iterative depth-first traversal from `root`, visiting `contains` in array order, with a `Set` of visited objects.
-   - A Locus object reached a second time gets `ownership.multiple` (subject = its id, members = [first container id, second container id]) and is not traversed again.
+   - A Locus object reached a second time gets `ownership.multiple` (subject = its id, path = "contains", message `"Locus <id> is contained by both <first> and <second>."`) and is not traversed again.
+     - `<first>` is the container id of the first visit and `<second>` the container id of this visit. A `null` container (the object was first reached as the root) is written `(root)` in the message.
+     - members = [first container id, second container id] with every `null` dropped.
+     - With definitions produced by a LocusKind's `make` the root cannot be reached a second time (a definition can only contain definitions that existed before it), so the `(root)` and `null` cases are defensive and are not tested.
    - The first registration of an id wins. A different object with the same id gets `identity.duplicate` (members = []).
 2. For every registered Locus:
    - `isLocusId` → `identity.malformed`.
    - Each kind conflict becomes a `composition.*` diagnostic (subject = Locus id, path = "kind", members = conflict.extensions, message names conflict.subject).
    - `propertyIssues` non-empty → one `property.invalid` (path = "properties", message lists the issues as `path: message` joined with "; ").
    - Each capability name failing `isCapabilityName` → `capability.name-malformed` (path = `capabilities/<name>`).
+   - For each extension of `kind.extensions` (composition order) and each Archetype of its `archetypes` (array order) whose `appliesTo.length === 0` → `archetype.applies-to-empty` (error; subject = Locus id, path = "kind", members = [archetype id], message `"Archetype <archetype id> of extension <extension id> has an empty appliesTo list, so it would apply to every Locus."`). Like composition conflicts, it is reported for every Locus whose kind contains that extension. Exact duplicates are dropped by `sortDiagnostics`.
 3. Relations, for each Locus and each relation index `i`, with path `relations/<i>`:
    - The type object is not in `kind.relationTypes` → `relation.type-unavailable`.
    - The target Locus is missing → `relation.target-missing`.
@@ -352,7 +362,21 @@ Algorithm:
    - Each cycle → `relation.cycle` (subject = first member, path = "relations", members = the cycle, message `"<type> cycle: a -> b -> a."`).
    - `exceeded` → one `relation.cycle-limit` (subject = root id, members = [type id]).
 5. `model.extensions` and `model.archetypes` collect all kinds' extensions and archetypes (first per id).
-6. Diagnostics go through `sortDiagnostics`. The model object is frozen (the maps are wrapped as read-only and never exposed for mutation).
+6. Diagnostics go through `sortDiagnostics`. The model object, `ids`, `relations` (and each relation), `diagnostics` and each `ModelLocus` (and its `contains`) are frozen. `loci`, `extensions` and `archetypes` are built with `readonlyMap` (below), so they are read-only at runtime, not only in their type: `set`, `delete` and `clear` throw, and no mutable `Map` is reachable from the model.
+
+## readonly-map.ts (WP22) — internal, not exported from `index.ts`
+
+```ts
+export function readonlyMap<K, V>(entries: Iterable<readonly [K, V]>): ReadonlyMap<K, V>
+// copies the entries into a private Map (insertion order kept; a later duplicate key replaces the value but keeps the first position, as Map does)
+// returns a frozen object whose prototype is also frozen:
+//   get, has, size, forEach(callback(value, key, theReadonlyMap), thisArg), keys, values, entries and [Symbol.iterator] (= entries) behave as on a Map
+//   set, delete and clear exist and always throw new TypeError("SemanticModel maps are read-only.")
+//   Map.prototype.set.call(it, ...) throws a TypeError, because it is not a Map
+//   it is not instanceof Map; Object.prototype.toString.call(it) === "[object ReadonlyMap]"
+```
+
+It has no imports, so it is browser-safe.
 
 ---
 
@@ -630,20 +654,21 @@ export const diffModels: (before: SemanticModel, after: SemanticModel) => Effect
 
 `LOCUS_ID_PATTERN, EXTENSION_ID_PATTERN, CAPABILITY_NAME_PATTERN, isLocusId, isExtensionId, isCapabilityName, capabilityKey, parseCapabilityKey, canonicalJson, jsonEqual, digestOf, Digest, Diagnostic, DiagnosticCode, Severity, compareDiagnostics, RelationType, Relation, RelationTarget, CapabilityRef, relationTargetKey, Capability, EffectClass, ErrorSchema, errorTag, Extension, Archetype, Rule, RuleViolation, RuleContext, RuleMethod, violation, Locus, LocusKind, LocusDefinition, CompositionConflict, MergedFields, PropertiesOf, Purpose, Source, SourceDependsOn, External, SemanticModel, ModelLocus, ModelRelation, buildModel, incoming, outgoing, ancestors, hasErrors, verify, applicableArchetypes, VerifyOptions, VerificationReport, Finding, Outcome, Provenance, Knowledge, JsonSchemaDocument, toJsonSchema, describeLocus, describeModel, describeCapability, describeVerifications, LocusDescription, ModelDescription, CapabilityDescription, RelationDescription, VerificationDescription, invoke, isGranted, InvocationOutcome, InvocationError, InvocationIssue, InvokeOptions, inputFields, coerceInput, InputField, InputFieldType, decodeLocus, decodeLocusText, LocusJson, LocusJsonSchema, DecodeResult, DecodeIssue, ExtensionRegistry, FieldType, Telos, TelosApi, LocusView, LocusNotFound, CapabilityNotFound, impact, ImpactReport, AffectedLocus, diffModels, ModelChange, ModelChangeKind`
 
-`deepFreeze`, `sortKeys`, `makeDiagnostic`, `sortDiagnostics`, `SEVERITY`, `elementaryCycles` and `MAX_CYCLES` stay internal.
+`deepFreeze`, `sortKeys`, `makeDiagnostic`, `sortDiagnostics`, `SEVERITY`, `elementaryCycles`, `MAX_CYCLES` and `readonlyMap` stay internal.
 
 ---
 
 ## closure.ts (WP08) — `@telos/kernel/closure`, Bun only
 
 ```ts
-export type ClosureCode = "closure.unowned" | "closure.ambiguous" | "closure.empty-claim" | "closure.undeclared-dependency" | "closure.unknown-external" | "closure.unresolved-import" | "closure.dynamic-import"
+export type ClosureCode = "closure.unowned" | "closure.ambiguous" | "closure.empty-claim" | "closure.undeclared-dependency" | "closure.unknown-external" | "closure.unresolved-import" | "closure.dynamic-import" | "closure.unparsable"
+// eight codes; "closure.unparsable" was added by WP22 (kernel hardening)
 export interface ClosureFinding {
   readonly code: ClosureCode
   readonly severity: "error" | "warning"     // warning for empty-claim and dynamic-import
   readonly file: string | null               // repository-relative path with "/" separators
   readonly loci: ReadonlyArray<string>
-  readonly detail: string                    // the glob, import specifier or package name concerned
+  readonly detail: string                    // the glob, import specifier or package name concerned; "parse" for closure.unparsable
   readonly message: string
   readonly knowledge: "derived" | "unknown"  // "unknown" for closure.dynamic-import (the dependency cannot be determined), "derived" for every other code
 }
@@ -671,7 +696,7 @@ Algorithm:
 1. Scope = the union of `new Bun.Glob(g).scan({ cwd: root, onlyFiles: true })` over `include`, minus files matching any `exclude` glob (`new Bun.Glob(x).match(file)`). The result is sorted.
 2. Claims: for every model Locus with the `telos.source` extension, each glob in `properties.sources` claims the files it matches. A glob matching no file in scope → `closure.empty-claim`.
 3. Owner of a file: the claiming Loci, reduced to those not an ancestor of another claimant. Exactly one → that Locus. More than one → `closure.ambiguous` (loci sorted). Zero → `closure.unowned`.
-4. For each owned file, run `scanImports` (loader `tsx` for `.tsx`, else `ts`) and resolve each specifier:
+4. For each owned file, in file order, read its text and run `scanImports` (loader `tsx` for `.tsx`, else `ts`). If reading the file throws (for example it is not readable) or `scanImports` throws (the file does not parse), the check does not fail: it records one `closure.unparsable` finding (error, `file` = the file, `loci` = [owner], `detail` = `"parse"`, message `"<file> could not be parsed, so its imports were not checked."`, `knowledge` = `"derived"`), skips the imports of that file and continues with the next file. `checkClosure` never fails or dies because of a file's content or permissions. Otherwise resolve each specifier:
    - Relative (`./`, `../`) → try `<path>`, `<path>.ts`, `<path>.tsx`, `<path>/index.ts`, `<path>/index.tsx`, and `.js` → `.ts` replacement. Not found → `closure.unresolved-import`. Its owner B is checked with the dependency rule.
    - `node:*`, `bun`, `bun:*` → platform, always allowed.
    - A specifier starting with an alias `prefix` → replace the prefix with the alias `dir` and resolve it like a relative path from the repository root. Aliases apply only to files under the alias `dir`'s app (the first path segment pair, e.g. `apps/docs/`).
@@ -680,4 +705,4 @@ Algorithm:
    - A resolved target file that has no owner (outside the scope or unowned) → `closure.unresolved-import` with the message `"<specifier> resolves to <file>, which no Locus owns."`.
    - Another bare specifier → package name = `@scope/name` or the first segment. Allowed if it is listed in `properties.packages` of an `telos.external` Locus that is the owner or an ancestor of the owner. Otherwise → `closure.unknown-external`.
    - Dependency rule: allowed when B === A, B is an ancestor or descendant of A, or a valid relation (any type) exists from A or any ancestor of A to B or to a capability of B. Otherwise → `closure.undeclared-dependency` (loci = [A, B]).
-5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning).
+5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning). This text scan runs on every file whose text was read, before `scanImports`, so a file that was read but does not parse can have both `closure.dynamic-import` and `closure.unparsable`. A file that could not be read has only `closure.unparsable`.
