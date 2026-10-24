@@ -543,7 +543,8 @@
       "last_transition_at": "2026-10-24T14:14:58.911692+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: playground on the real kernel, scenario pages removed"
+        "Ready for review: playground on the real kernel, scenario pages removed",
+        "Review passed: verify green (1081 unit, 86 e2e), real kernel in Chromium"
       ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
