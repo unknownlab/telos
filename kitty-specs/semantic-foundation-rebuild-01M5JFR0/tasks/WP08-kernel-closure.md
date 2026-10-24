@@ -82,6 +82,7 @@ export interface ClosureFinding {
   readonly loci: ReadonlyArray<string>
   readonly detail: string                    // the glob, import specifier or package name concerned
   readonly message: string
+  readonly knowledge: "derived" | "unknown"  // "unknown" for closure.dynamic-import (the dependency cannot be determined), "derived" for every other code
 }
 export interface ClosureOptions {
   readonly root: string                                  // absolute repository root
@@ -116,7 +117,7 @@ Algorithm:
    - A resolved target file that has no owner (outside the scope or unowned) → `closure.unresolved-import` with the message `"<specifier> resolves to <file>, which no Locus owns."`.
    - Another bare specifier → package name = `@scope/name` or the first segment. Allowed if it is listed in `properties.packages` of an `telos.external` Locus that is the owner or an ancestor of the owner. Otherwise → `closure.unknown-external`.
    - Dependency rule: allowed when B === A, B is an ancestor or descendant of A, or a valid relation (any type) exists from A or any ancestor of A to B or to a capability of B. Otherwise → `closure.undeclared-dependency` (loci = [A, B]).
-5. A text match of `/\bimport\s*\(\s*(?!["'`])/` in a file → `closure.dynamic-import`.
+5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning).
 
 > Quoted from `kitty-specs/semantic-foundation-rebuild-01M5JFR0/data-model.md` (authoritative).
 
@@ -130,7 +131,7 @@ Algorithm:
 | `closure.undeclared-dependency` | error | a file of Locus A imports a file owned by Locus B, where B is not A, an ancestor or descendant of A, or a target of a relation from A or its ancestors |
 | `closure.unknown-external` | error | a bare package import that no `External` declaration on the owner or its ancestors lists |
 | `closure.unresolved-import` | error | a relative import whose target file does not exist |
-| `closure.dynamic-import` | warning | a computed `import(...)`, so the dependency is unknown |
+| `closure.dynamic-import` | warning | a computed `import(...)` (a non-literal argument, or a template literal with `${...}`), so the dependency is unknown; the finding has `knowledge: "unknown"` |
 
 Modules you use: `SemanticModel`, `ancestors`, `outgoing` (`./model`); `deepFreeze` (`./freeze`). Read `properties.sources` of Loci whose kind has the extension id `telos.source`, and `properties.packages` of Loci whose kind has `telos.external` (`definition.kind.extensions.some((e) => e.id === "telos.source")`).
 
@@ -386,7 +387,7 @@ Each test runs `Effect.runPromise(checkClosure(buildModel(root), { root: dir, in
 | `closure.undeclared-dependency` | `a/x.ts` (`app:a`) has `import { y } from "../b/y";` and `b/y.ts` is owned by an unrelated `app:b` | the same with `SourceDependsOn.to(b)` on `app:a`; or on a container of `app:a`; or `app:b` contained in `app:a` |
 | `closure.unknown-external` | `import { Effect } from "effect";` with no External | the owner or its container is `OwnedExt` with `packages: ["effect"]`; `import "@scope/pkg/sub"` allowed by `"@scope/pkg"` |
 | `closure.unresolved-import` | `import "./missing";`; also, with `include: ["a/**/*.ts"]`, `a/x.ts` importing `../c/z` where `c/z.ts` exists outside the scope (the second message, `../c/z resolves to c/z.ts, which no Locus owns.`) | `./y` resolves through `./y.ts`, `./dir` through `./dir/index.ts`, `./z.js` through `./z.ts` |
-| `closure.dynamic-import` | `const m = await import(name);` (warning) | `await import("./y")` with a literal is resolved like a static import |
+| `closure.dynamic-import` | `const m = await import(name);` (warning); ``const m = await import(`./m/${name}`);`` (warning) | `await import("./y")` and ``await import(`./y`)`` (no `${`) are resolved like static imports |
 
 More tests:
 
@@ -395,6 +396,7 @@ More tests:
 - Workspace packages: a fixture with `packages/k/package.json` `{ "name": "@x/k", "exports": { ".": "./src/index.ts", "./sub": "./src/sub.ts" } }` and options `packages: [{ name: "@x/k", dir: "packages/k" }]`: `import "@x/k"` and `import "@x/k/sub"` resolve to the owner of those files and then follow the dependency rule; `import "@x/k/nope"` is `closure.unresolved-import`; `import "@x/k/package.json"` is allowed.
 - Aliases: options `aliases: [{ prefix: "@/", dir: "apps/d/src/" }]`; a file under `apps/d/` importing `@/lib/x` resolves to `apps/d/src/lib/x.ts`.
 - `exclude: ["**/gen/**"]` removes `gen/x.ts` from `files`.
+- Knowledge: every `closure.dynamic-import` finding has `knowledge: "unknown"`, and every finding of each other code has `knowledge: "derived"` (assert it in the test of each code).
 - `report.files` is sorted by file and lists the owner (`null` for unowned); `report.limits` equals `CLOSURE_LIMITS`; `report.knowledge` is `"derived"`; `report.scope` echoes include and exclude (`[]` default).
 - The same fixture twice gives identical JSON.
 

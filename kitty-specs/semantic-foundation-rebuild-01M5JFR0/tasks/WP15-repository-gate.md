@@ -87,7 +87,7 @@ The repository describes itself with the kernel (FR-022). One command reads that
 
 ## Root `telos.ts`
 
-The root file imports only `@telos/kernel` and `@telos/calculator`. The root `package.json` has these as `workspace:*` dependencies since WP01.
+The root file imports only `@telos/kernel` and `@telos/calculator`. The root `package.json` has these as `workspace:*` dependencies since WP01, together with `@telos/cli` and `"effect": "4.0.4"` (owner decision of 2026-10-24: `scripts/telos.ts` runs kernel Effects, and Bun's isolated installs expose `effect` to root files only when the root declares it).
 
 ```ts
 import { External, Locus, Purpose, Source, SourceDependsOn, buildModel } from "@telos/kernel"
@@ -107,7 +107,7 @@ export const repositoryModel = buildModel(repository)
 | `telos:agent-pack` | `packages/agent/src/**/*.ts`, `packages/agent/test/**/*.ts` | `effect` | kernel | — |
 | `telos:web-pack` | `packages/web/src/**/*.ts`, `packages/web/test/**/*.ts` | `effect` | kernel | — |
 | `telos:calculator` | `apps/calculator/src/**/*.ts`, `apps/calculator/bin/**/*.ts`, `apps/calculator/test/**/*.ts` | `effect` | kernel, cli-pack, agent-pack, web-pack | `calculatorApp` |
-| `telos:tooling` | `scripts/**/*.ts` | — | kernel | — |
+| `telos:tooling` | `scripts/**/*.ts` | `effect` | kernel | — |
 | `telos:docs-site` | `apps/docs/*.ts`, `apps/docs/src/**/*.ts`, `apps/docs/src/**/*.tsx`, `apps/docs/scripts/**/*.ts`, `apps/docs/test/**/*.ts`, `apps/docs/test/**/*.tsx`, `apps/docs/e2e/**/*.ts` | the third-party packages the docs files import today (see below) | kernel, web-pack, calculator, legacy-locus | — |
 | `telos:legacy-locus` | `packages/locus/src/**/*.ts`, `packages/locus/test/**/*.ts`, `packages/locus/specs/**/*.ts` | `effect` | — | — |
 
@@ -212,6 +212,7 @@ export interface ClosureFinding {
   readonly loci: ReadonlyArray<string>
   readonly detail: string                    // the glob, import specifier or package name concerned
   readonly message: string
+  readonly knowledge: "derived" | "unknown"  // "unknown" for closure.dynamic-import (the dependency cannot be determined), "derived" for every other code
 }
 export interface ClosureOptions {
   readonly root: string                                  // absolute repository root
@@ -246,7 +247,7 @@ Algorithm:
    - A resolved target file that has no owner (outside the scope or unowned) → `closure.unresolved-import` with the message `"<specifier> resolves to <file>, which no Locus owns."`.
    - Another bare specifier → package name = `@scope/name` or the first segment. Allowed if it is listed in `properties.packages` of an `telos.external` Locus that is the owner or an ancestor of the owner. Otherwise → `closure.unknown-external`.
    - Dependency rule: allowed when B === A, B is an ancestor or descendant of A, or a valid relation (any type) exists from A or any ancestor of A to B or to a capability of B. Otherwise → `closure.undeclared-dependency` (loci = [A, B]).
-5. A text match of `/\bimport\s*\(\s*(?!["'`])/` in a file → `closure.dynamic-import`.
+5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning).
 
 Other kernel functions you use (from `@telos/kernel`): `buildModel`, `hasErrors`, `verify` (`VerifyOptions { runner, methods?, loci?, now? }` → `Effect<VerificationReport>` with `summary { passed, failed, error }` and `findings`), `describeLocus(model, id)` and `describeModel(model)` (both `Effect`), `describeVerifications(model, id, report)`, `impact(model, target)` (plain function), `parseCapabilityKey`, `LocusNotFound`, `CapabilityNotFound`, and the types `ModelDescription`, `VerificationReport`, `VerificationDescription`, `LocusDefinition`.
 
@@ -254,7 +255,7 @@ Current state you change:
 
 - Root `package.json` `verify` is `bun run check:bun && bun run format:check && bun run lint && bun run typecheck && bun run test && bun run docs:build && bun run test:e2e && bun run grace:lint`.
 - `scripts/review-gate.ts` `CHECK_STEPS` has the eight steps of that script in order, and `scripts/review-gate.test.ts` compares `CHECK_STEPS` with `verifyStepNames(pkg.scripts.verify)` (the no-drift test, lines 208–235).
-- WP01 already set the root `tsconfig.json` `include` to `["scripts", "telos.ts"]` and the root `dependencies` to `@telos/calculator`, `@telos/cli` and `@telos/kernel` (`workspace:*`).
+- WP01 already set the root `tsconfig.json` `include` to `["scripts", "telos.ts"]` and the root `dependencies` to `@telos/calculator`, `@telos/cli` and `@telos/kernel` (`workspace:*`) and `"effect": "4.0.4"`, so `scripts/telos.ts` can `import { Effect } from "effect"`. Do not add or change any dependency.
 
 ## Rules for this work package
 
@@ -493,7 +494,7 @@ Write `telos.ts` exactly by the contract table and code shape. Purposes (use the
 | `telos:docs-site` | `Builds the documentation site from the foundation documents and the semantic report.` |
 | `telos:legacy-locus` | `Keeps the previous Locus package until the documentation no longer uses it.` |
 
-`telos:tooling` declares `packages: ["effect"]`, because `scripts/telos.ts` runs kernel Effects (a recorded deviation from the table's "—"). `telos:calculator` contains the imported `app` Locus (`calculator:app`), so the calculator Loci are part of the repository model.
+`telos:tooling` declares `packages: ["effect"]` (as in the contract table), because `scripts/telos.ts` runs kernel Effects. `telos:calculator` contains the imported `app` Locus (`calculator:app`), so the calculator Loci are part of the repository model.
 
 **Docs externals procedure** (contract): first write `telos:docs-site` with `packages: []`, run `bun scripts/telos.ts closure`, collect the `detail` of every `closure.unknown-external` finding whose `loci[0]` is `telos:docs-site`, check each against `apps/docs/package.json` (`dependencies` or `devDependencies`), and write the sorted list into `packages`. A planning scan found these third-party packages in the docs files today, all in the manifest: `@axe-core/playwright, @playwright/test, @tailwindcss/vite, @tanstack/react-router, @tanstack/react-start, @vitejs/plugin-react, class-variance-authority, clsx, effect, lucide-react, mermaid, minisearch, radix-ui, react, react-dom, tailwind-merge, vite`. Use the list the closure check gives you; if it names a package that is not in the manifest, stop and report it.
 

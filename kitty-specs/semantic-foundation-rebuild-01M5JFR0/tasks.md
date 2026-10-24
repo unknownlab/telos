@@ -16,6 +16,7 @@ The ownership rule is no overlapping `owned_files`. A few files must be touched 
 | `tsconfig.json` (root), `bun.lock` | WP01 | WP20 | remove `packages/locus` references; `bun install` (workspace entries only) |
 | `apps/docs/package.json` | WP01 | WP19, WP20 | WP19 the `semantic-report` and `build` scripts; WP20 removes `@telos/locus` |
 | `apps/docs/test/manifest.test.ts` | WP01 | WP20 | remove `@telos/locus` from the approved list |
+| `scripts/manifest.test.ts` | WP01 | WP20 | remove an `@telos/locus` entry from the package list only if one exists (WP01 lists the new packages only, so normally no edit) |
 | `packages/{kernel,cli,agent,web}/src/index.ts`, `apps/calculator/src/index.ts` | WP09, WP10, WP11, WP12, WP14 | WP01, WP13 | WP01 creates each with `export {};`; WP13 writes the calculator index with its own names first |
 | `packages/kernel/src/model.ts` | WP04 | WP03 | WP03 creates it with the three model interfaces only (needed by `archetype.ts` as `import type`) |
 | `.grace/graph/<area>.xml`, `.grace/verification/<area>.xml` | the area WP (contracts/conventions.md table) | WP01; docs area: WP19, WP20; tooling area: WP20 | WP01 creates all 16 with the split script; WP19/WP20 add or rename their docs modules; WP20 drops legacy dependencies |
@@ -39,13 +40,17 @@ The ownership rule is no overlapping `owned_files`. A few files must be touched 
 - Each package's `src/index.ts` is created by WP01 with `export {};`, because an empty TypeScript project fails with TS18003 (research R10). The content WP owns it.
 - The 16 GRACE area documents are created empty by WP01 so that parallel lanes never edit the same XML file (research R8).
 - `apps/docs/test/manifest.test.ts` pins the docs dependencies exactly, so WP01 adds `@telos/calculator`, `@telos/kernel` and `@telos/web` to it in the same commit as the manifest.
-- `McpStdioClient` gets a public `readonly server` field holding the result of the `initialize` that `spawn` performs (WP11), because the agent demo (WP14) must report the server name and the contract's `spawn` already consumed that result.
+- `McpStdioClient` gets a public `readonly server` field holding the result of the `initialize` that `spawn` performs (WP11), because the agent demo (WP14) must report the server name and the contract's `spawn` already consumed that result. contracts/packs.md now shows the field.
 - Where a contract names a rule or tool but not its description or violation message, the WP prompt fixes the exact text (Pack Archetypes, introspection tool descriptions), so tests can assert it.
-- `telos:tooling` declares `packages: ["effect"]` (contracts/repository.md shows "—"), because `scripts/telos.ts` runs kernel Effects and the closure check would otherwise report `closure.unknown-external` (WP15).
-- The playground result union carries a `kind` discriminator (`"decode-error"` or `"built"`) in addition to the contract's fields, so the UI and tests can switch on it (WP18).
+- `telos:tooling` declares `packages: ["effect"]`, because `scripts/telos.ts` runs kernel Effects and the closure check would otherwise report `closure.unknown-external` (WP15). contracts/repository.md now shows this.
+- Owner decision (2026-10-24, analysis finding I1): the root `package.json` declares `"effect": "4.0.4"` next to the three workspace links (WP01), because `scripts/telos.ts` imports `effect` and Bun's isolated installs do not expose a package to the root unless the root declares it. The version is the one already pinned in `bun.lock`.
+- Owner decision (2026-10-24, analysis finding U1): every `ClosureFinding` carries `knowledge`: `"unknown"` for `closure.dynamic-import`, `"derived"` for every other code (WP08; WP19 shows the badge).
+- Owner decision (2026-10-24, analysis finding C1): US4 AC4 now reads "MCP reports the tool as not found, and an in-process call through the agent is refused with `NotGranted`", which is what WP11 and WP14 test.
+- WP01's sanctioned creations (the five `src/index.ts` files and the 16 GRACE area documents) stay out of WP01's `owned_files`: listing them there would make WP01 overlap with WP02–WP15 and WP18–WP20 and collapse those lanes into one. WP01 commits them itself before `move-task`, because the move-task auto-commit refuses files outside `owned_files`.
+- The playground result union carries a `kind` discriminator (`"decode-error"` or `"built"`) so the UI and tests can switch on it (WP18). contracts/docs.md now shows it.
 - WP16 changes link targets in `docs/research/**` that point to deleted documents (link integrity), but never research prose. WP18 changes one link in a docs test fixture.
 - WP16 writes every term with `maturity: proposed`, because the code is not on its branch. WP21 raises the terms whose code exists to `implemented`, and lists the code file for each.
-- The plan names a CI provenance origin for the site. The repository has no CI workflow, so WP19 shows two origins only: `bun-build` (the semantic report written at build time) and `browser` (the playground). The CI origin can come back when the owner adds a workflow.
+- The existing docs code has a `ci` provenance origin. The repository has no CI workflow, so WP19 removes it and the site shows two origins only: `bun-build` (the semantic report written at build time) and `browser` (the playground). plan.md records this. The CI origin can come back when the owner adds a workflow.
 - The first-locus guide quotes `apps/docs/test/guide-snippets.ts`, a typed file with its own test (WP20), so every TypeScript block in the guides is compiled and run code. The guide tests run the calculator commands with `bun run --silent`, because `bun run` echoes the command to stderr.
 - The unit-test semantic report fixture is `apps/docs/test/semantic-report-fixture.ts`, not under `test/fixtures/`, because the closure check excludes `test/fixtures/**` and an import into it would be unresolved (WP19).
 - `README.md` is empty today. WP21 writes a short README (overview, links, workspace, commands).
@@ -758,7 +763,15 @@ Critical path: WP01 → WP02 → WP03 → WP04 → WP05 → WP06 → WP09 → (W
 | NFR-006 | WP01, WP21 (every WP ends green) |
 | NFR-007 | WP11, WP14 |
 | NFR-008 | WP13 |
-| C-002 | WP01 |
+| C-001 | WP01 (stack and pinned versions); every code WP (conventions.md "Code": TypeScript, Effect 4.0.4 APIs only, Bun) |
+| C-002 | WP01 (the root `effect` 4.0.4 dependency is owner-approved and already pinned in `bun.lock`); every WP (rule "No new dependencies") |
+| C-003 | WP03, WP04 (every specialization is a Locus with extensions); WP20 (removes `packages/locus`) |
+| C-004 | WP20, WP21 (removed names deleted, no aliases); every code WP (conventions.md "Code") |
+| C-005 | WP06, WP11, WP12 (descriptions, tool schemas and forms derived from definitions); WP15, WP19 (semantic report and inspector derived from `telos.ts`) |
+| C-006 | WP16, WP17, WP20 (content written in `docs/`); WP19 (site reads generated data only) |
+| C-007 | every WP (Spec Kitty lifecycle, GRACE subtask, Conventional Commits without AI attribution) |
+| C-008 | WP11, WP14 (the agent pack serves tools and introspection only; no autonomous change agent or authority delegation) |
+| C-009 | every WP (conventions.md "Code": comments and messages in English); WP16, WP17, WP20 (documentation) |
 
 ## Owner decisions before implementation
 

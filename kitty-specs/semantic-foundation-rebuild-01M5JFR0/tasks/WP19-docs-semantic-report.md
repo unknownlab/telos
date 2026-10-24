@@ -159,7 +159,7 @@ These are safe because Locus ids never contain `--` (identity grammar).
   - diagnostics
 
   An unknown slug renders the not-found component.
-- `/verification`: provenance, the summary counts, a table of findings (Locus, Archetype, rule, method, outcome, message), the closure limits, and the closure findings (empty state text "No closure findings."). The root element carries `data-result="semantic-report"`.
+- `/verification`: provenance, the summary counts, a table of findings (Locus, Archetype, rule, method, outcome, message), the closure limits, and the closure findings, each with a knowledge badge (`derived` or `unknown`) (empty state text "No closure findings."). The root element carries `data-result="semantic-report"`.
 - Components:
   - new: `src/components/locus-view.tsx`, `src/components/knowledge-badge.tsx`, `src/components/semantic-report-view.tsx`
   - delete: `spec-report-table.tsx`, and `verification-view.tsx` or rewrite it as the new view
@@ -312,6 +312,7 @@ export interface ClosureFinding {
   readonly loci: ReadonlyArray<string>
   readonly detail: string
   readonly message: string
+  readonly knowledge: "derived" | "unknown"   // "unknown" for closure.dynamic-import
 }
 ```
 
@@ -530,7 +531,7 @@ The app never imports the root `scripts/telos.ts`, because that would be an unde
     - `<h2>Archetype verification</h2>` and a table with the columns Locus, Archetype, Rule, Method, Outcome, Message. Each row is `<tr data-finding-outcome={f.outcome}>`. The Locus cell is a `Link` to `/inspector/$slug`. With no findings, show `<p data-slot="no-findings">No Archetype applies to this model.</p>`.
     - `<h2>Semantic Closure</h2>`:
       - `<h3>Limits</h3>` with `<li data-closure-limit>` per limit
-      - `<h3>Findings</h3>` with a table with the columns Code, Severity, File, Loci, Message. Each row is `<tr data-closure-code={code}>`, and File shows the file or "—". With no findings, show `<p data-slot="no-closure-findings">No closure findings.</p>`.
+      - `<h3>Findings</h3>` with a table with the columns Code, Severity, File, Loci, Knowledge, Message. Each row is `<tr data-closure-code={code}>`, File shows the file or "—", and Knowledge is `<KnowledgeBadge knowledge={finding.knowledge} />`. With no findings, show `<p data-slot="no-closure-findings">No closure findings.</p>`.
   - After the panel: `<section>` with `<h2>Run it yourself</h2>` and a paragraph that names these commands as `<code>`:
     - `bun run telos verify` runs the Archetype rules.
     - `bun run telos closure` runs the Semantic Closure check.
@@ -849,7 +850,7 @@ Write the unit tests below. Add markup to each test file: `ROLE: TEST`, `MAP_MOD
          limits: ["Ownership is decided per file, never below file level."],
          scope: { include: ["apps/calculator/src/**/*.ts"], exclude: [] },
          fileCount: 3,
-         findings: [{ code: "closure.unowned", severity: "error", file: "apps/calculator/src/stray.ts", loci: [], detail: "apps/calculator/src/stray.ts", message: "apps/calculator/src/stray.ts has no owner." }],
+         findings: [{ code: "closure.unowned", severity: "error", file: "apps/calculator/src/stray.ts", loci: [], detail: "apps/calculator/src/stray.ts", message: "apps/calculator/src/stray.ts has no owner.", knowledge: "derived" }],
        },
        ok: false,
      }
@@ -897,7 +898,7 @@ Write the unit tests below. Add markup to each test file: `ROLE: TEST`, `MAP_MOD
 4. **`apps/docs/test/inspector.test.tsx`**. Render with `renderToStaticMarkup`, as `components.test.tsx` does. React escapes `"` as `&quot;` in text, so match quoted JSON as `&quot;`.
    - `locusSlug("telos:kernel") === "telos--kernel"`, `locusIdOf("telos--kernel") === "telos:kernel"`, and both round-trip every fixture Locus id.
    - `inspectorPages(fixture)` equals `fixture.model.loci.map(l => "/inspector/" + locusSlug(l.id))`.
-   - `KnowledgeBadge` for each of `declared`, `derived`, `verified`, `failed` and `not-run` renders `data-knowledge="<value>"` and its label (`not-run` → "not run").
+   - `KnowledgeBadge` for each of `declared`, `derived`, `verified`, `failed`, `not-run` and `unknown` renders `data-knowledge="<value>"` and its label (`not-run` → "not run").
    - `LocusView` of `calculator:arithmetic` has:
      - `data-capability="add"`, `data-capability="divide"`
      - `data-slot="input-schema"` containing `&quot;properties&quot;`
@@ -915,7 +916,7 @@ Write the unit tests below. Add markup to each test file: `ROLE: TEST`, `MAP_MOD
      - the provenance label text
      - `data-ok="false"`
      - one `data-finding-outcome` row per `fixture.verification.findings` entry
-     - one `data-closure-code="closure.unowned"` row
+     - one `data-closure-code="closure.unowned"` row, containing `data-knowledge="derived"`
      - one `data-closure-limit`
      - `href="/playground"`
    - With the fixture changed to `ok: true` and `closure.findings: []`, it shows `No closure findings.`.

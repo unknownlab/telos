@@ -2,7 +2,7 @@
 
 **Mission Branch**: `feat/semantic-foundation-rebuild` (planning base and merge target)
 **Created**: 2026-10-22
-**Status**: Draft, awaiting owner approval
+**Status**: Approved by the owner on 2026-10-24 (all recommended defaults D1–D8 accepted)
 **Input**: Owner directive "TELOS — Rebuild the Foundation" (copy in [research/owner-directive.md](research/owner-directive.md)).
 
 ## Context
@@ -126,7 +126,7 @@ A deterministic agent client starts the calculator's agent server. It lists the 
 1. **Given** the agent server, **When** the client lists tools, **Then** it receives one tool per capability exposed by the agent interface Locus, plus read-only introspection tools. Each calculator tool's input schema equals the capability's input contract.
 2. **Given** the tool list, **When** the client calls `divide` with 10 and 4, **Then** it receives 2.5.
 3. **Given** an introspection tool, **When** the client inspects `calculator:arithmetic`, **Then** it receives the same description as the in-process introspection API.
-4. **Given** a capability that no agent relation exposes, **When** the client asks to invoke it, **Then** the call is refused with `NotGranted`, even though the client could discover it.
+4. **Given** a capability that no agent relation exposes, **When** the client asks to invoke it, **Then** MCP reports the tool as not found, and an in-process call through the agent is refused with `NotGranted`, even though the client could discover the capability.
 
 ---
 
@@ -277,7 +277,7 @@ Each substantial existing component was audited against the directive (§9). The
 | FR-009 | Archetypes | As a developer, I want Archetypes with static and execution rules that apply to Loci whose composition includes given extensions, so that verification is specialized. | High | Open |
 | FR-010 | Verification report | As a developer, I want a verification run to report every applicable rule per Locus as passed, failed or error, with method and provenance, so that verified knowledge is distinguishable from declared knowledge. | High | Open |
 | FR-011 | Introspection API | As an agent, I want `resolve(id)` with `inspect()`, `relations()`, `capabilities()` and `verifications()` returning structured JSON-compatible descriptions, so that I never need to read implementation files for this information. | High | Open |
-| FR-012 | Knowledge status | As an agent, I want each described fact marked declared, derived, verified, failed, not run or unknown (with observed and invalidated reserved for later sources), so that unverified claims never look like guarantees. | High | Open |
+| FR-012 | Knowledge status | As an agent, I want each described fact marked declared, derived, verified, failed, not run or unknown (with observed and invalidated reserved for later sources; a Semantic Closure finding whose dependency cannot be determined, such as a computed import, is marked unknown), so that unverified claims never look like guarantees. | High | Open |
 | FR-013 | Governed invocation | As an interface, I want to invoke a capability only through a relation whose type grants invocation, with raw input decoded against the contract and a total outcome (output or typed error), so that discovery never grants authority. | High | Open |
 | FR-014 | Change impact | As a developer, I want to compare two models and compute the affected Loci, relations and rules for a changed Locus or capability from the model itself. | High | Open |
 | FR-015 | Semantic Closure check | As a developer, I want a file-level check that reports unowned files, ambiguous ownership, claims that match no file, undeclared cross-Locus imports and unknown external packages, with its limits documented. | High | Open |

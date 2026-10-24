@@ -66,8 +66,8 @@ The prototypes below ran on 2026-10-22 against the installed effect 4.0.4 and Bu
 
 ## R9 Workspace linking
 
-- **Decision**: Bun installs workspaces in isolated mode. The root has no `node_modules/@telos`, so the root `package.json` gains `dependencies` on the workspace packages it imports (`@telos/kernel`, `@telos/cli`, `@telos/calculator`) with `workspace:*`. This lets root `telos.ts` and `scripts/telos.ts` import them. The docs app gains `@telos/kernel`, `@telos/web` and `@telos/calculator`.
-- **Rationale**: no external dependency changes. `bun.lock` changes contain workspace entries only.
+- **Decision**: Bun installs workspaces in isolated mode. The root has no `node_modules/@telos`, so the root `package.json` gains `dependencies` on the workspace packages it imports (`@telos/kernel`, `@telos/cli`, `@telos/calculator`) with `workspace:*`. This lets root `telos.ts` and `scripts/telos.ts` import them. Isolated mode also hides `effect` from root files, and `scripts/telos.ts` runs kernel Effects, so the root `package.json` also declares `"effect": "4.0.4"` (owner decision of 2026-10-24, analysis finding I1). The docs app gains `@telos/kernel`, `@telos/web` and `@telos/calculator`.
+- **Rationale**: no external version changes. `effect` 4.0.4 is already pinned in `bun.lock`. The `bun.lock` changes contain workspace entries and the root `effect` entry only.
 
 ## R10 Empty TS projects
 
@@ -87,7 +87,7 @@ The prototypes below ran on 2026-10-22 against the installed effect 4.0.4 and Bu
 - **Limits (documented)**:
   - Code inside a file is not attributed below file level.
   - Type-only dependencies are not seen.
-  - Computed `import(...)` is found by a separate text scan, `/\bimport\s*\(\s*(?!["'`])/`, and reported as `closure.dynamic-import` (warning, unknown dependency).
+  - Computed `import(...)` is found by a separate text scan, `/\bimport\s*\(\s*(?!["'`])/` or a template literal with an interpolation (`/\bimport\s*\(\s*`[^`]*\$\{/`), and reported as `closure.dynamic-import` (warning, `knowledge: "unknown"`). A template literal without `${` is returned by `scanImports` and resolved like a string literal.
   - Generated files and `node_modules` are excluded by the scope globs.
 
 ## R12 Supply chain

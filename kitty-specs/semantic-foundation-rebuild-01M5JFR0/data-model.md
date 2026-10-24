@@ -38,7 +38,7 @@ The exact TypeScript shapes are in [contracts/kernel.md](contracts/kernel.md). T
    - Definitions are `declared`.
    - Facts computed from the model (incoming relations, `exposedBy`, impact) are `derived`.
    - Rule results are `verified` only when passed in a real run, `failed` when failed or errored, and `not-run` otherwise.
-   - `unknown` marks facts the analysis cannot determine (closure dynamic imports).
+   - `unknown` marks facts the analysis cannot determine: every `closure.dynamic-import` finding has `knowledge: "unknown"`. Every other closure finding has `knowledge: "derived"`.
    - `observed` is reserved for runtime observations, and `invalidated` for facts that a later change or run contradicts. Nothing produces either yet.
 10. **Determinism**: diagnostics, descriptions, relation lists, findings, impact and closure reports are sorted by their documented keys. Digests are taken over canonical JSON.
 
@@ -87,4 +87,4 @@ The exact TypeScript shapes are in [contracts/kernel.md](contracts/kernel.md). T
 | `closure.undeclared-dependency` | error | a file of Locus A imports a file owned by Locus B, where B is not A, an ancestor or descendant of A, or a target of a relation from A or its ancestors |
 | `closure.unknown-external` | error | a bare package import that no `External` declaration on the owner or its ancestors lists |
 | `closure.unresolved-import` | error | a relative import whose target file does not exist |
-| `closure.dynamic-import` | warning | a computed `import(...)`, so the dependency is unknown |
+| `closure.dynamic-import` | warning | a computed `import(...)` (a non-literal argument, or a template literal with `${...}`), so the dependency is unknown; the finding has `knowledge: "unknown"` |

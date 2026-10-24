@@ -207,6 +207,7 @@ export interface CallResult { readonly isError: boolean; readonly text: string; 
 export class McpStdioClient {
   static spawn(command: ReadonlyArray<string>, options?: { readonly cwd?: string; readonly timeoutMs?: number }): Promise<McpStdioClient>
   // Bun.spawn(command, { stdin: "pipe", stdout: "pipe", stderr: "pipe" }); timeoutMs default 10000; then performs initialize
+  readonly server: { readonly serverName: string; readonly protocolVersion: string }  // the result of the initialize that spawn performed
   initialize(): Promise<{ readonly serverName: string; readonly protocolVersion: string }>
   // sends {"jsonrpc":"2.0","id":n,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"telos-deterministic-client","version":"0.0.0"}}}
   // then the notification {"jsonrpc":"2.0","method":"notifications/initialized"}

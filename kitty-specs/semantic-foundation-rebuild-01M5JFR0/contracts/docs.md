@@ -116,7 +116,7 @@ These are safe because Locus ids never contain `--` (identity grammar).
   - diagnostics
 
   An unknown slug renders the not-found component.
-- `/verification`: provenance, the summary counts, a table of findings (Locus, Archetype, rule, method, outcome, message), the closure limits, and the closure findings (empty state text "No closure findings."). The root element carries `data-result="semantic-report"`.
+- `/verification`: provenance, the summary counts, a table of findings (Locus, Archetype, rule, method, outcome, message), the closure limits, and the closure findings, each with a knowledge badge (`derived` or `unknown`) (empty state text "No closure findings."). The root element carries `data-result="semantic-report"`.
 - Components:
   - new: `src/components/locus-view.tsx`, `src/components/knowledge-badge.tsx`, `src/components/semantic-report-view.tsx`
   - delete: `spec-report-table.tsx`, and `verification-view.tsx` or rewrite it as the new view
@@ -155,7 +155,7 @@ WP18 replaces the old scenario playground before WP19 removes the spec report, b
   | `malformed-id` | no | id `Demo Hello` → `identity.malformed` |
   | `unknown-extension` | no | `extensions: ["demo.unknown"]` → decode issue |
 
-- `src/playground/run.ts`: `runDefinition(text: string): Effect<PlaygroundResult>`. It calls `decodeLocusText`, then `buildModel`, `verify(model, { runner: "browser", methods: ["static"] })` and `describeModel`. The result is `{ decodeIssues } | { diagnostics, report, description }`.
+- `src/playground/run.ts`: `runDefinition(text: string): Effect<PlaygroundResult>`. It calls `decodeLocusText`, then `buildModel`, `verify(model, { runner: "browser", methods: ["static"] })` and `describeModel`. The result is `{ kind: "decode-error", decodeIssues } | { kind: "built", diagnostics, report, description }`; the `kind` discriminator lets the UI and tests switch on the result.
 - UI: an example picker, a JSON editor (the existing `json-editor` component), a Run button, and result panels for decode issues, diagnostics, verification findings and the model description. The result root has `data-result="playground"`.
 - Delete the old scenario files: `run-fabric.ts`, `run-revisions.ts`, `run-specs.ts`, `locus-text.ts`, `run-state.ts`, `use-run.ts`, the scenario components, `routes/playground/$scenario.tsx`, and their tests (`test/playground-*.test.ts(x)` except `playground-safety.test.ts`, and `test/run-state.test.ts`). The new playground keeps its run state inside its own component.
 

@@ -645,6 +645,7 @@ export interface ClosureFinding {
   readonly loci: ReadonlyArray<string>
   readonly detail: string                    // the glob, import specifier or package name concerned
   readonly message: string
+  readonly knowledge: "derived" | "unknown"  // "unknown" for closure.dynamic-import (the dependency cannot be determined), "derived" for every other code
 }
 export interface ClosureOptions {
   readonly root: string                                  // absolute repository root
@@ -679,4 +680,4 @@ Algorithm:
    - A resolved target file that has no owner (outside the scope or unowned) → `closure.unresolved-import` with the message `"<specifier> resolves to <file>, which no Locus owns."`.
    - Another bare specifier → package name = `@scope/name` or the first segment. Allowed if it is listed in `properties.packages` of an `telos.external` Locus that is the owner or an ancestor of the owner. Otherwise → `closure.unknown-external`.
    - Dependency rule: allowed when B === A, B is an ancestor or descendant of A, or a valid relation (any type) exists from A or any ancestor of A to B or to a capability of B. Otherwise → `closure.undeclared-dependency` (loci = [A, B]).
-5. A text match of `/\bimport\s*\(\s*(?!["'`])/` in a file → `closure.dynamic-import`.
+5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning).

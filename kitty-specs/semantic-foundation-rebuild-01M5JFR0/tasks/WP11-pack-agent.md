@@ -221,6 +221,7 @@ export interface CallResult { readonly isError: boolean; readonly text: string; 
 export class McpStdioClient {
   static spawn(command: ReadonlyArray<string>, options?: { readonly cwd?: string; readonly timeoutMs?: number }): Promise<McpStdioClient>
   // Bun.spawn(command, { stdin: "pipe", stdout: "pipe", stderr: "pipe" }); timeoutMs default 10000; then performs initialize
+  readonly server: { readonly serverName: string; readonly protocolVersion: string }  // the result of the initialize that spawn performed
   initialize(): Promise<{ readonly serverName: string; readonly protocolVersion: string }>
   // sends {"jsonrpc":"2.0","id":n,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"telos-deterministic-client","version":"0.0.0"}}}
   // then the notification {"jsonrpc":"2.0","method":"notifications/initialized"}
@@ -760,7 +761,7 @@ Run the tests and see them fail.
 
 ### T064 – `client.ts`
 
-`McpStdioClient` as quoted, following the client prototype: one reader loop that splits stdout on `"\n"`, parses each non-empty line, and resolves the pending request with the same `id` (ignore lines without a pending id). `spawn` calls `initialize()` and stores its result in a public `readonly server: { readonly serverName: string; readonly protocolVersion: string }` field (a planned addition to the contract: the agent demo of WP14 and the tests read it). If `initialize` fails inside `spawn`, kill the process (`proc.kill()`) and rethrow. Each request has its own timer of `timeoutMs`; clear it when the response arrives. `close()` ends stdin and returns `await proc.exited`.
+`McpStdioClient` as quoted, following the client prototype: one reader loop that splits stdout on `"\n"`, parses each non-empty line, and resolves the pending request with the same `id` (ignore lines without a pending id). `spawn` calls `initialize()` and stores its result in a public `readonly server: { readonly serverName: string; readonly protocolVersion: string }` field (part of the contract: the agent demo of WP14 and the tests read it). If `initialize` fails inside `spawn`, kill the process (`proc.kill()`) and rethrow. Each request has its own timer of `timeoutMs`; clear it when the response arrives. `close()` ends stdin and returns `await proc.exited`.
 
 ### T065 – `semantics.ts` and `archetype.ts`
 

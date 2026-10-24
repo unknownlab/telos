@@ -39,9 +39,9 @@ All design choices that the directive leaves open are the defaults D1–D8 in th
 | 036 black-box integration testing | Pass | The calculator, MCP and CLI tests run real binaries and protocols (WP14). |
 | 037 living documentation sync | Pass | Docs are derived from code (inspector, report, tool schemas). Prose docs are rewritten in WP16, WP17 and WP20. |
 | 043 close defect classes by construction | Pass | Tool schemas and forms are derived, never written by hand, and the closure gate prevents unowned code. |
-| 051 supply-chain install safety | Pass | No dependency is added or upgraded. WP01 runs `bun install` only to link workspaces, and `bun.lock` changes contain workspace entries only. |
+| 051 supply-chain install safety | Pass | No third-party package is added or upgraded. WP01 runs `bun install` only to link workspaces and to declare the already-pinned `effect` 4.0.4 at the root (owner decision of 2026-10-24), so `bun.lock` changes contain workspace entries and that root entry only. |
 | Model routing (AGENTS.md) | Pass | WPs are written for Haiku implementers, reviewed by Sonnet, with an Opus mission review after merge. |
-| Owner decisions (AGENTS.md) | Pending owner | Spec decisions D1–D8, and approval of the spec and this plan before implementation. |
+| Owner decisions (AGENTS.md) | Spec approved | The owner approved the spec with D1–D8 on 2026-10-24, together with the analysis decisions (root `effect` dependency, `unknown` knowledge on closure findings, US4 AC4 wording). The owner approves this plan and the work packages before WP01 starts. |
 
 Re-checked after design: no violation. No complexity justification needed.
 
@@ -159,7 +159,7 @@ flowchart LR
 
 WP16 (foundation docs) depends on nothing and runs alongside the code from the start. WP17 (decisions) follows WP16, because WP16 deletes the old terms and principles and fixes every link to them, including the links in ADRs; WP17 then rewrites the ADR content without touching the same lines in parallel.
 
-The docs site work is split in three sequential WPs. WP18 replaces the old scenario playground with the kernel playground first, because the old scenario E reads the spec report through `apps/docs/src/lib/build.ts`. WP19 can then replace the spec report with the semantic report, the inspector and the new verification page. WP20 adds the calculator page, rewrites the guides and removes `packages/locus`. WP21 is the final coherence sweep. This order was fixed during task generation (the earlier draft had 20 WPs).
+The docs site work is split in three sequential WPs. WP18 replaces the old scenario playground with the kernel playground first, because the old scenario E reads the spec report through `apps/docs/src/lib/build.ts`. WP19 can then replace the spec report with the semantic report, the inspector and the new verification page. WP20 adds the calculator page, rewrites the guides and removes `packages/locus`. WP21 is the final coherence sweep. This order was fixed during task generation (the earlier draft had 20 WPs). Result provenance on the site has two origins: `bun-build` (the semantic report written at build time, WP19) and `browser` (the playground, WP18). The existing `ci` origin of `apps/docs/src/lib/provenance.ts` is removed, because the repository has no CI workflow; it can come back when the owner adds one.
 
 ## Implementation Concern Map
 

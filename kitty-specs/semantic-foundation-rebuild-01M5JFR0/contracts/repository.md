@@ -4,7 +4,7 @@ The repository describes itself with the kernel (FR-022). One command reads that
 
 ## Root `telos.ts`
 
-The root file imports only `@telos/kernel` and `@telos/calculator`. The root `package.json` has these as `workspace:*` dependencies since WP01.
+The root file imports only `@telos/kernel` and `@telos/calculator`. The root `package.json` has these as `workspace:*` dependencies since WP01, together with `@telos/cli` and `"effect": "4.0.4"` (owner decision of 2026-10-24: `scripts/telos.ts` runs kernel Effects, and Bun's isolated installs expose `effect` to root files only when the root declares it).
 
 ```ts
 import { External, Locus, Purpose, Source, SourceDependsOn, buildModel } from "@telos/kernel"
@@ -24,7 +24,7 @@ export const repositoryModel = buildModel(repository)
 | `telos:agent-pack` | `packages/agent/src/**/*.ts`, `packages/agent/test/**/*.ts` | `effect` | kernel | — |
 | `telos:web-pack` | `packages/web/src/**/*.ts`, `packages/web/test/**/*.ts` | `effect` | kernel | — |
 | `telos:calculator` | `apps/calculator/src/**/*.ts`, `apps/calculator/bin/**/*.ts`, `apps/calculator/test/**/*.ts` | `effect` | kernel, cli-pack, agent-pack, web-pack | `calculatorApp` |
-| `telos:tooling` | `scripts/**/*.ts` | — | kernel | — |
+| `telos:tooling` | `scripts/**/*.ts` | `effect` | kernel | — |
 | `telos:docs-site` | `apps/docs/*.ts`, `apps/docs/src/**/*.ts`, `apps/docs/src/**/*.tsx`, `apps/docs/scripts/**/*.ts`, `apps/docs/test/**/*.ts`, `apps/docs/test/**/*.tsx`, `apps/docs/e2e/**/*.ts` | the third-party packages the docs files import today (see below) | kernel, web-pack, calculator, legacy-locus | — |
 | `telos:legacy-locus` | `packages/locus/src/**/*.ts`, `packages/locus/test/**/*.ts`, `packages/locus/specs/**/*.ts` | `effect` | — | — |
 

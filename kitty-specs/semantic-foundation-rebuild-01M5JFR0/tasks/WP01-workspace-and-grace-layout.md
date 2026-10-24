@@ -164,6 +164,8 @@ Read these rules before you write anything. They are part of the acceptance crit
 - Create `packages/{kernel,cli,agent,web}/src/index.ts` and `apps/calculator/src/index.ts` with the single line `export {};` (owned later by WP09, WP10, WP11, WP12 and WP14).
 - Create the 16 area documents `.grace/graph/<area>.xml` and `.grace/verification/<area>.xml` with the split script (each is owned later by its area WP; see the conventions table).
 
+These created files are deliberately **not** in `owned_files` (listing them would collapse the later WPs' lanes into this one). Commit all of them yourself, in your worktree, before you run `move-task`: the move-task auto-commit refuses uncommitted files outside `owned_files` (`OWNED_DELIVERABLE_SCOPE_REFUSED`). Run `git status --short` before `move-task` and check that it prints nothing.
+
 ## Branch Strategy
 
 - **Planning base branch**: `feat/semantic-foundation-rebuild`
@@ -195,7 +197,7 @@ d='apps/calculator'
 w(f'{d}/tsconfig.json', json.dumps({"extends":"../../tsconfig.base.json","compilerOptions":{"lib":["ESNext","DOM"],"composite":True,"noEmit":False},"include":["src","bin"]},indent=2)+"\n")
 w(f'{d}/test/tsconfig.json', json.dumps({"extends":"../../../tsconfig.base.json","compilerOptions":{"lib":["ESNext","DOM"],"composite":True,"noEmit":False},"include":[".","../src","../bin"]},indent=2)+"\n")
 w(f'{d}/src/index.ts','export {};\n')
-r=json.load(open('package.json')); r['dependencies']={"@telos/calculator":"workspace:*","@telos/cli":"workspace:*","@telos/kernel":"workspace:*"}
+r=json.load(open('package.json')); r['dependencies']={"@telos/calculator":"workspace:*","@telos/cli":"workspace:*","@telos/kernel":"workspace:*","effect":"4.0.4"}
 # keep key order: put dependencies before devDependencies
 order=['name','private','type','workspaces','engines','packageManager','scripts','dependencies','devDependencies']
 r={k:r[k] for k in order}
@@ -297,7 +299,7 @@ Expected results (check them after the script ran):
 
 The script of T001 already:
 
-- added to the root `package.json`, between `scripts` and `devDependencies`: `"dependencies": { "@telos/calculator": "workspace:*", "@telos/cli": "workspace:*", "@telos/kernel": "workspace:*" }` (the root `telos.ts` of WP15 and `scripts/telos.ts` import these);
+- added to the root `package.json`, between `scripts` and `devDependencies`: `"dependencies": { "@telos/calculator": "workspace:*", "@telos/cli": "workspace:*", "@telos/kernel": "workspace:*", "effect": "4.0.4" }` (the root `telos.ts` of WP15 and `scripts/telos.ts` import these; `scripts/telos.ts` runs kernel Effects, and Bun's isolated installs expose `effect` to root files only when the root declares it. The owner approved this root `effect` dependency on 2026-10-24; the version is the one already pinned in `bun.lock`);
 - set the root `tsconfig.json` `include` to `["scripts", "telos.ts"]` and its `references` to `packages/locus`, `packages/locus/test`, `packages/kernel`, `packages/kernel/test`, `packages/cli`, `packages/cli/test`, `packages/agent`, `packages/agent/test`, `packages/web`, `packages/web/test`, `apps/calculator`, `apps/calculator/test`, `apps/docs` (in this order);
 - added `"@telos/calculator": "workspace:*"`, `"@telos/kernel": "workspace:*"` and `"@telos/web": "workspace:*"` to `apps/docs/package.json` `dependencies`, keeping the keys sorted.
 
@@ -311,10 +313,10 @@ Now do by hand:
    "@telos/web": "workspace:*",
    ```
 2. Run `bun run format` (it normalises the JSON the script wrote).
-3. Run `bun install`. Then run `git diff bun.lock` and check that the only changes are workspace entries for the five new packages and the new `workspace:*` dependencies. If any third-party package version is added or changed, stop and report it (C-002).
-4. Check the links: `ls node_modules/@telos` lists `calculator`, `cli` and `kernel` (root dependencies).
+3. Run `bun install`. Then run `git diff bun.lock` and check that the only changes are workspace entries for the five new packages, the new `workspace:*` dependencies and the root `"effect": "4.0.4"` dependency entry. `effect` must stay at the version already in the lockfile (4.0.4). If any third-party package version is added or changed, stop and report it (C-002).
+4. Check the links: `ls node_modules/@telos` lists `calculator`, `cli` and `kernel` (root dependencies), and `ls node_modules/effect/package.json` exists (root `effect` dependency).
 
-**Acceptance**: `bun run typecheck` passes with the new references; `bun test apps/docs/test/manifest.test.ts` passes; `bun.lock` diff contains workspace entries only.
+**Acceptance**: `bun run typecheck` passes with the new references; `bun test apps/docs/test/manifest.test.ts` passes; `bun.lock` diff contains workspace entries and the root `effect` 4.0.4 entry only (no third-party version added or changed); `bun -e 'import("effect").then(() => console.log("ok"))'` run from the repository root prints `ok`.
 
 ### T003 – `scripts/manifest.test.ts`
 
