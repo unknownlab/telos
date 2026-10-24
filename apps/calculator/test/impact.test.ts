@@ -31,7 +31,6 @@ import { AgentInterface } from "@telos/agent";
 import {
   Arithmetic,
   Operands,
-  add,
   arithmetic,
   divide,
   multiply,

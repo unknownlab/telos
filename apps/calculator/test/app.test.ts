@@ -31,7 +31,6 @@ import { WebSemantics } from "@telos/web";
 import {
   add,
   arithmetic,
-  divide,
   multiply,
   subtract,
   Operands,
