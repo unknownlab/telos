@@ -21,6 +21,8 @@ import { Route as ArchitectureIndexRouteImport } from './routes/architecture/ind
 import { Route as ArchitectureIdRouteImport } from './routes/architecture/$id'
 import { Route as DecisionsIndexRouteImport } from './routes/decisions/index'
 import { Route as DecisionsIdRouteImport } from './routes/decisions/$id'
+import { Route as InspectorIndexRouteImport } from './routes/inspector/index'
+import { Route as InspectorSlugRouteImport } from './routes/inspector/$slug'
 import { Route as PlaygroundIndexRouteImport } from './routes/playground/index'
 import { Route as PrinciplesIndexRouteImport } from './routes/principles/index'
 import { Route as PrinciplesIdRouteImport } from './routes/principles/$id'
@@ -87,6 +89,16 @@ const DecisionsIdRoute = DecisionsIdRouteImport.update({
   path: '/decisions/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InspectorIndexRoute = InspectorIndexRouteImport.update({
+  id: '/inspector/',
+  path: '/inspector/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InspectorSlugRoute = InspectorSlugRouteImport.update({
+  id: '/inspector/$slug',
+  path: '/inspector/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlaygroundIndexRoute = PlaygroundIndexRouteImport.update({
   id: '/playground/',
   path: '/playground/',
@@ -124,10 +136,12 @@ export interface FileRoutesByFullPath {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
+  '/inspector/$slug': typeof InspectorSlugRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture/': typeof ArchitectureIndexRoute
   '/decisions/': typeof DecisionsIndexRoute
+  '/inspector/': typeof InspectorIndexRoute
   '/playground/': typeof PlaygroundIndexRoute
   '/principles/': typeof PrinciplesIndexRoute
   '/terminology/': typeof TerminologyIndexRoute
@@ -143,10 +157,12 @@ export interface FileRoutesByTo {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
+  '/inspector/$slug': typeof InspectorSlugRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture': typeof ArchitectureIndexRoute
   '/decisions': typeof DecisionsIndexRoute
+  '/inspector': typeof InspectorIndexRoute
   '/playground': typeof PlaygroundIndexRoute
   '/principles': typeof PrinciplesIndexRoute
   '/terminology': typeof TerminologyIndexRoute
@@ -163,10 +179,12 @@ export interface FileRoutesById {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
+  '/inspector/$slug': typeof InspectorSlugRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture/': typeof ArchitectureIndexRoute
   '/decisions/': typeof DecisionsIndexRoute
+  '/inspector/': typeof InspectorIndexRoute
   '/playground/': typeof PlaygroundIndexRoute
   '/principles/': typeof PrinciplesIndexRoute
   '/terminology/': typeof TerminologyIndexRoute
@@ -184,10 +202,12 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
+    | '/inspector/$slug'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture/'
     | '/decisions/'
+    | '/inspector/'
     | '/playground/'
     | '/principles/'
     | '/terminology/'
@@ -203,10 +223,12 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
+    | '/inspector/$slug'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture'
     | '/decisions'
+    | '/inspector'
     | '/playground'
     | '/principles'
     | '/terminology'
@@ -222,10 +244,12 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
+    | '/inspector/$slug'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture/'
     | '/decisions/'
+    | '/inspector/'
     | '/playground/'
     | '/principles/'
     | '/terminology/'
@@ -242,10 +266,12 @@ export interface RootRouteChildren {
   VerificationRoute: typeof VerificationRoute
   ArchitectureIdRoute: typeof ArchitectureIdRoute
   DecisionsIdRoute: typeof DecisionsIdRoute
+  InspectorSlugRoute: typeof InspectorSlugRoute
   PrinciplesIdRoute: typeof PrinciplesIdRoute
   TerminologyIdRoute: typeof TerminologyIdRoute
   ArchitectureIndexRoute: typeof ArchitectureIndexRoute
   DecisionsIndexRoute: typeof DecisionsIndexRoute
+  InspectorIndexRoute: typeof InspectorIndexRoute
   PlaygroundIndexRoute: typeof PlaygroundIndexRoute
   PrinciplesIndexRoute: typeof PrinciplesIndexRoute
   TerminologyIndexRoute: typeof TerminologyIndexRoute
@@ -337,6 +363,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DecisionsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inspector/': {
+      id: '/inspector/'
+      path: '/inspector'
+      fullPath: '/inspector/'
+      preLoaderRoute: typeof InspectorIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inspector/$slug': {
+      id: '/inspector/$slug'
+      path: '/inspector/$slug'
+      fullPath: '/inspector/$slug'
+      preLoaderRoute: typeof InspectorSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/playground/': {
       id: '/playground/'
       path: '/playground'
@@ -386,10 +426,12 @@ const rootRouteChildren: RootRouteChildren = {
   VerificationRoute: VerificationRoute,
   ArchitectureIdRoute: ArchitectureIdRoute,
   DecisionsIdRoute: DecisionsIdRoute,
+  InspectorSlugRoute: InspectorSlugRoute,
   PrinciplesIdRoute: PrinciplesIdRoute,
   TerminologyIdRoute: TerminologyIdRoute,
   ArchitectureIndexRoute: ArchitectureIndexRoute,
   DecisionsIndexRoute: DecisionsIndexRoute,
+  InspectorIndexRoute: InspectorIndexRoute,
   PlaygroundIndexRoute: PlaygroundIndexRoute,
   PrinciplesIndexRoute: PrinciplesIndexRoute,
   TerminologyIndexRoute: TerminologyIndexRoute,

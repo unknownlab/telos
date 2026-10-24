@@ -17,7 +17,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import type { ContentFile } from "./src/lib/content-types";
-import { prerenderPaths } from "./src/lib/prerender";
+import { APP_PAGES, inspectorPages, prerenderPaths } from "./src/lib/prerender";
 
 function readContent(): ContentFile {
   const url = new URL("./src/generated/content.json", import.meta.url);
@@ -26,6 +26,20 @@ function readContent(): ContentFile {
   } catch (cause) {
     throw new Error(
       "apps/docs/src/generated/content.json is missing or unreadable; run `bun run content` first",
+      { cause },
+    );
+  }
+}
+
+function readSemanticReport(): {
+  readonly model: { readonly loci: ReadonlyArray<{ readonly id: string }> };
+} {
+  const url = new URL("./src/generated/semantic-report.json", import.meta.url);
+  try {
+    return JSON.parse(readFileSync(url, "utf8"));
+  } catch (cause) {
+    throw new Error(
+      "apps/docs/src/generated/semantic-report.json is missing or unreadable; run `bun run semantic-report` first",
       { cause },
     );
   }
@@ -52,7 +66,10 @@ export default defineConfig({
         failOnError: true,
         autoStaticPathsDiscovery: false,
       },
-      pages: prerenderPaths(readContent()).map((path) => ({ path })),
+      pages: prerenderPaths(readContent(), [
+        ...APP_PAGES,
+        ...inspectorPages(readSemanticReport()),
+      ]).map((path) => ({ path })),
     }),
     viteReact(),
   ],

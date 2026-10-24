@@ -24,9 +24,10 @@
       <Path>graph/docs.xml</Path>
       <Owns>
         <M-DOCS-CONTENT />
-        <M-DOCS-SPEC-REPORT />
+        <M-DOCS-SEMANTIC-REPORT />
         <M-DOCS-SITE />
         <M-DOCS-PLAYGROUND />
+        <M-DOCS-INSPECTOR />
       </Owns>
     </GD-DOCS>
     <GD-KERNEL-BASE>

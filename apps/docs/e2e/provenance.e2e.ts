@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove in Chromium that every result the site shows names its origin, that no result appears outside a result panel, that the labels say where and when each result was produced, and that nothing is shown as a result before a run (FR-021, INV-013, NS-018).
-//   SCOPE: The provenance suite over the static build: the data-provenance values and labels after a playground run and on /verification, the containment of every result element in a panel, the CI row, and the empty state before any run. Out: the label text rules (provenance.test.ts, Bun).
+//   SCOPE: The provenance suite over the static build: the data-provenance values and labels after a playground run and on /verification, the containment of every result element in a panel, and the empty state before any run. Out: the label text rules (provenance.test.ts, Bun).
 //   DEPENDS: M-DOCS-PLAYGROUND
 //   LINKS: V-M-DOCS-PLAYGROUND
 //   ROLE: TEST
@@ -21,12 +21,11 @@ import { caretToEnd, trackPageErrors } from "./helpers";
 const ORIGINS: ReadonlyArray<string> = [
   "browser",
   "bun-build",
-  "ci",
   "historical",
   "none",
 ];
 const RESULT_ELEMENTS =
-  "[data-revision-id], [data-diagnostic-code], [data-spec-id], [data-change-part], [data-history-step], [data-decode-issue], [data-finding-outcome]";
+  "[data-diagnostic-code], [data-decode-issue], [data-finding-outcome], [data-closure-code]";
 
 // START_CONTRACT: openPlayground
 //   PURPOSE: Open the playground and wait for it to hydrate, so that no interaction runs before the page is ready.
@@ -121,19 +120,15 @@ test.describe("results name their origin", () => {
     await expect(label).toContainText("@telos/kernel");
   });
 
-  test("the verification labels say the build ran the report, and the CI row says CI is not available", async ({
+  test("the verification label says the build ran the report", async ({
     page,
   }) => {
     await page.goto("/verification");
     const build = page.locator(
-      '[data-result="spec-report"][data-provenance="bun-build"] [data-slot="provenance-label"]',
+      '[data-result="semantic-report"][data-provenance="bun-build"] [data-slot="provenance-label"]',
     );
     await expect(build).toContainText("at build time");
     await expect(build).toContainText("commit");
-    const ci = page.locator(
-      '[data-result="spec-report"][data-provenance="ci"] [data-slot="provenance-label"]',
-    );
-    await expect(ci).toHaveText("CI: not available");
   });
 
   test("before any run, the playground shows what to press and no result panel", async ({

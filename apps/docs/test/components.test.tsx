@@ -354,7 +354,7 @@ describe("the route tree", () => {
           route: "/terminology/example-term",
         }),
       ]),
-      specReportJson: null,
+      semanticReportJson: null,
       buildInfoJson: null,
     }));
   });

@@ -57,6 +57,7 @@ export type NavSectionId =
   | "architecture"
   | "first-locus"
   | "examples"
+  | "inspector"
   | "playground"
   | "verification"
   | "roadmap"
@@ -76,6 +77,7 @@ export const NAV_SECTIONS: ReadonlyArray<{
   { id: "architecture", title: "Architecture", route: "/architecture" },
   { id: "first-locus", title: "First Locus", route: "/first-locus" },
   { id: "examples", title: "Examples", route: "/examples" },
+  { id: "inspector", title: "Inspector", route: "/inspector" },
   { id: "playground", title: "Playground", route: "/playground" },
   { id: "verification", title: "Verification", route: "/verification" },
   { id: "roadmap", title: "Roadmap", route: "/roadmap" },
@@ -90,6 +92,7 @@ export const NAV_SECTIONS: ReadonlyArray<{
 /** Routes the app renders without a source document. Absolute content links may target them. */
 export const APP_ROUTES: ReadonlyArray<string> = [
   "/architecture",
+  "/inspector",
   "/playground",
   "/verification",
 ];

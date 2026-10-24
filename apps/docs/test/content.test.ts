@@ -107,13 +107,17 @@ const EXPECTED_LLMS = `# Telos by UnknownLab
 - [Foundation](/architecture/foundation): Entry point of the fixture foundation.
 - [Prior art](/architecture/prior-art): What exists already.
 
+## Inspector
+
+- [Inspector](/inspector): The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json.
+
 ## Playground
 
 - [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.
 
 ## Verification
 
-- [Verification](/verification): The specification report from the build-time Bun run, with its provenance.
+- [Verification](/verification): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.
 
 ## Decisions
 

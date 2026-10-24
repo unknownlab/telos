@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove that the pages that carry the site's content, its playground and its verification report have no serious or critical WCAG 2.0 and 2.1 A and AA violations in the light and the dark theme (NFR-004).
-//   SCOPE: The accessibility suite over the static build: the home page, the first principle, term and decision of the index, the playground after a valid run and after a run with diagnostics, and the verification page, each scanned with axe-core in both themes. Out: rule configuration; no rule is disabled.
+//   SCOPE: The accessibility suite over the static build: the home page, the first principle, term and decision of the index, the playground after a valid run and after a run with diagnostics, the verification page and the inspector pages, each scanned with axe-core in both themes. Out: rule configuration; no rule is disabled.
 //   DEPENDS: M-DOCS-SITE
 //   LINKS: V-M-DOCS-SITE
 //   ROLE: TEST
@@ -115,6 +115,8 @@ const PAGES: ReadonlyArray<AuditedPage> = [
     prepare: (page) => runExample(page, "cycle"),
   },
   { name: "verification", path: "/verification" },
+  { name: "inspector", path: "/inspector" },
+  { name: "inspector Locus page", path: "/inspector/calculator--arithmetic" },
 ];
 
 test.describe("accessibility", () => {

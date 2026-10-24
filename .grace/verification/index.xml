@@ -24,9 +24,10 @@
       <Path>verification/docs.xml</Path>
       <Owns>
         <V-M-DOCS-CONTENT />
-        <V-M-DOCS-SPEC-REPORT />
+        <V-M-DOCS-SEMANTIC-REPORT />
         <V-M-DOCS-SITE />
         <V-M-DOCS-PLAYGROUND />
+        <V-M-DOCS-INSPECTOR />
       </Owns>
     </VD-DOCS>
     <VD-KERNEL-BASE>

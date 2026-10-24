@@ -679,9 +679,15 @@ function llmsText(documents: ReadonlyArray<ContentDocument>): string {
       );
       continue;
     }
+    if (section.id === "inspector") {
+      blocks.push(
+        `## ${section.title}\n\n- [${section.title}](${section.route}): The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json.`,
+      );
+      continue;
+    }
     if (section.id === "verification") {
       blocks.push(
-        `## ${section.title}\n\n- [${section.title}](${section.route}): The specification report from the build-time Bun run, with its provenance.`,
+        `## ${section.title}\n\n- [${section.title}](${section.route}): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.`,
       );
       continue;
     }
