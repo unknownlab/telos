@@ -49,7 +49,9 @@
     </VD-KERNEL-MODEL>
     <VD-KERNEL-VERIFY>
       <Path>verification/kernel-verify.xml</Path>
-      <Owns />
+      <Owns>
+        <V-M-KERNEL-VERIFY />
+      </Owns>
     </VD-KERNEL-VERIFY>
     <VD-KERNEL-DESCRIBE>
       <Path>verification/kernel-describe.xml</Path>

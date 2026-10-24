@@ -49,7 +49,9 @@
     </GD-KERNEL-MODEL>
     <GD-KERNEL-VERIFY>
       <Path>graph/kernel-verify.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-VERIFY />
+      </Owns>
     </GD-KERNEL-VERIFY>
     <GD-KERNEL-DESCRIBE>
       <Path>graph/kernel-describe.xml</Path>

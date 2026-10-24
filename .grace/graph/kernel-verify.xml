@@ -1,3 +1,11 @@
 <GraceGraphDocument graceVersion="4.0">
-  <GD-KERNEL-VERIFY />
+  <GD-KERNEL-VERIFY>
+    <M-KERNEL-VERIFY>
+      <Summary>Runs the Archetype rules of each Locus of a model and reports passed, failed and error findings with provenance.</Summary>
+      <Path>packages/kernel/src/verify.ts</Path>
+      <M-KERNEL-MODEL />
+      <M-KERNEL-DEFINITIONS />
+      <M-KERNEL-IDENTITY />
+    </M-KERNEL-VERIFY>
+  </GD-KERNEL-VERIFY>
 </GraceGraphDocument>
