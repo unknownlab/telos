@@ -43,7 +43,9 @@
     </GD-KERNEL-DEFINITIONS>
     <GD-KERNEL-MODEL>
       <Path>graph/kernel-model.xml</Path>
-      <Owns />
+      <Owns>
+        <M-KERNEL-MODEL />
+      </Owns>
     </GD-KERNEL-MODEL>
     <GD-KERNEL-VERIFY>
       <Path>graph/kernel-verify.xml</Path>

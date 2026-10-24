@@ -1,3 +1,14 @@
 <GraceVerificationDocument graceVersion="4.0">
-  <VD-KERNEL-MODEL />
+  <VD-KERNEL-MODEL>
+    <V-M-KERNEL-MODEL>
+      <TestFiles>
+        <File>packages/kernel/test/model.test.ts</File>
+        <File>packages/kernel/test/model-relations.test.ts</File>
+        <File>packages/kernel/test/model-determinism.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/model.test.ts packages/kernel/test/model-relations.test.ts packages/kernel/test/model-determinism.test.ts</Command>
+      <Scenario>Each structural diagnostic code is reported for its rule and not reported when the rule holds, with the exact contract message. The Locus tree is traversed in array order, and a shared Locus object is reported as ownership.multiple. Relations are checked, cycles of acyclic types are found with the cycle limit, and the model is frozen, sorted and independent of contains order.</Scenario>
+      <TraceAssertion>model.test.ts names the identity, ownership, composition, property, capability and ancestor tests. model-relations.test.ts names the relation, cycle, ordering and incoming and outgoing tests. model-determinism.test.ts names the contains-order and repeat-call determinism tests.</TraceAssertion>
+    </V-M-KERNEL-MODEL>
+  </VD-KERNEL-MODEL>
 </GraceVerificationDocument>
