@@ -1,7 +1,7 @@
 {
-  "event_count": 53,
-  "last_event_id": "01M5PKH7Z9RM3A7B0W49WMAQK0",
-  "materialized_at": "2026-10-24T09:23:09.928682+00:00",
+  "event_count": 57,
+  "last_event_id": "01M5PKHK87MZ301FE5NQ3B8ENR",
+  "materialized_at": "2026-10-24T09:23:21.477606+00:00",
   "mission_number": "",
   "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
   "mission_type": "software-dev",
@@ -12,9 +12,9 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 1,
+    "in_progress": 3,
     "in_review": 0,
-    "planned": 14
+    "planned": 12
   },
   "work_packages": {
     "WP01": {
@@ -172,18 +172,34 @@
       "last_transition_at": "2026-10-23T21:13:16.809584+00:00"
     },
     "WP07": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5N9RSTKY1E7TK6A5Z3AFAZ1",
-      "last_transition_at": "2026-10-23T21:13:17.395444+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5PKHEZQK835NMNX2WNT17TY",
+      "last_transition_at": "2026-10-24T09:23:17.110267+00:00",
+      "model": "__resolved_model_absent__",
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer",
+      "shell_pid": 73400,
+      "shell_pid_created_at": "1792833784.132541"
     },
     "WP08": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5N9RTD1YCTMTHJ7GHAWT2YD",
-      "last_transition_at": "2026-10-23T21:13:17.985240+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5PKHK87MZ301FE5NQ3B8ENR",
+      "last_transition_at": "2026-10-24T09:23:21.477606+00:00",
+      "model": "__resolved_model_absent__",
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer",
+      "shell_pid": 73948,
+      "shell_pid_created_at": "1792833787.543629"
     },
     "WP09": {
       "actor": "finalize-tasks",
