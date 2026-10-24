@@ -1,7 +1,7 @@
 {
-  "event_count": 33,
-  "last_event_id": "01M5PHW3G06BMC6RAEYQA4ZAPJ",
-  "materialized_at": "2026-10-24T08:54:08.640421+00:00",
+  "event_count": 35,
+  "last_event_id": "01M5PHX0K99680VAFBHPCJ186Z",
+  "materialized_at": "2026-10-24T08:54:38.440619+00:00",
   "mission_number": "",
   "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
   "mission_type": "software-dev",
@@ -12,9 +12,9 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 1,
+    "in_progress": 2,
     "in_review": 0,
-    "planned": 18
+    "planned": 17
   },
   "work_packages": {
     "WP01": {
@@ -189,11 +189,14 @@
       }
     },
     "WP17": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5N9RZK061YX9SZE82TKT0QZ",
-      "last_transition_at": "2026-10-23T21:13:23.296652+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5PHX0K99680VAFBHPCJ186Z",
+      "last_transition_at": "2026-10-24T08:54:38.440619+00:00",
+      "shell_pid": 49525,
+      "shell_pid_created_at": "1792832070.029102"
     },
     "WP18": {
       "actor": "finalize-tasks",
