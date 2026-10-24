@@ -29,12 +29,12 @@ related:
 2. A capability [contract](../foundation/terminology/contract.md) carries a `contractDigest`, so a changed contract is visible.
 3. `diffModels` compares two [semantic models](../foundation/terminology/semantic-model.md).
 4. `impact` lists the Loci, relations and rules affected by a change, as the [impact](../foundation/terminology/impact.md) term defines.
-5. The RevisionHistory service is removed (spec D1). Later revisioning can build on digests and `diffModels`, as [future semantic evolution](../foundation/future-semantic-evolution.md) describes.
+5. The revision history service is removed (spec D1). Later revisioning can build on digests and `diffModels`, as [future semantic evolution](../foundation/future-semantic-evolution.md) describes.
 
 ## Alternatives
 
 - **`Bun.CryptoHasher`.** Rejected: it is synchronous and Bun-only, so it would break the requirement to run in the browser (research R4).
-- **Keep the RevisionHistory service.** Rejected by spec D1: no consumer uses it yet.
+- **Keep the revision history service.** Rejected by spec D1: no consumer uses it yet.
 - **Compare models by file hashes.** Rejected: file hashes change with formatting and unrelated files, while the model should change only when its meaning changes.
 
 ## Consequences
