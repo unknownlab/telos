@@ -694,7 +694,8 @@
       "last_transition_at": "2026-10-24T21:17:37.437336+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
-        "Ready for review: coherence sweep S1-S9, SC-006 sweep, terminology maturity, README and tooling; bun run verify exit 0"
+        "Ready for review: coherence sweep S1-S9, SC-006 sweep, terminology maturity, README and tooling; bun run verify exit 0",
+        "Review cycle 1 fixes: roadmap, capability map, semantic closure and P03/P14 now describe the built closure check; verify exit 0"
       ],
       "provider": "__resolved_provider_absent__",
       "review": null,
