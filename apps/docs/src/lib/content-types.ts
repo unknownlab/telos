@@ -91,11 +91,6 @@ export const NAV_SECTIONS: ReadonlyArray<{
 export const APP_ROUTES: ReadonlyArray<string> = [
   "/architecture",
   "/playground",
-  "/playground/a",
-  "/playground/b",
-  "/playground/c",
-  "/playground/d",
-  "/playground/e",
   "/verification",
 ];
 

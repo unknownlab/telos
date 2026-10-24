@@ -62,31 +62,21 @@
     </V-M-DOCS-SITE>
     <V-M-DOCS-PLAYGROUND>
       <TestFiles>
-        <File>apps/docs/test/run-state.test.ts</File>
         <File>apps/docs/test/playground-run.test.ts</File>
         <File>apps/docs/test/playground-safety.test.ts</File>
         <File>apps/docs/test/guide-examples.test.ts</File>
-        <File>apps/docs/test/playground-revisions.test.ts</File>
-        <File>apps/docs/test/playground-specs.test.ts</File>
-        <File>apps/docs/test/playground-render.test.tsx</File>
-        <File>apps/docs/test/playground-render-de.test.tsx</File>
         <File>apps/docs/e2e/playground.e2e.ts</File>
         <File>apps/docs/e2e/keyboard.e2e.ts</File>
-        <File>apps/docs/e2e/equality.e2e.ts</File>
         <File>apps/docs/e2e/provenance.e2e.ts</File>
       </TestFiles>
-      <Command>bun test apps/docs/test/run-state.test.ts apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts apps/docs/test/guide-examples.test.ts apps/docs/test/playground-revisions.test.ts apps/docs/test/playground-specs.test.ts apps/docs/test/playground-render.test.tsx apps/docs/test/playground-render-de.test.tsx</Command>
-      <Command>bun run test:e2e</Command>
-      <Command>bun run test:e2e apps/docs/e2e/equality.e2e.ts</Command>
-      <Command>bun run test:e2e apps/docs/e2e/keyboard.e2e.ts</Command>
+      <Command>bun test apps/docs/test/playground-run.test.ts apps/docs/test/playground-safety.test.ts</Command>
       <Command>bun run test:e2e apps/docs/e2e/playground.e2e.ts</Command>
-      <Command>bun run test:e2e apps/docs/e2e/provenance.e2e.ts</Command>
-      <Scenario>Every .ts and .tsx file under the playground passes the source scan: no code evaluation and no raw HTML outside the two known exceptions (C-002).</Scenario>
-      <Scenario>Scenarios A, D and E run the real packages on the decoded input and show Revision ids marked browser, and the Revision ids equal the Bun Revision ids and the golden constants.</Scenario>
-      <Scenario>An edit marks the results historical and keeps their ids, and a run makes them browser results again.</Scenario>
-      <Scenario>Input over 1 MB is refused, and the page stays responsive.</Scenario>
-      <Scenario>All 44 specifications pass in the browser, the golden check matches all eight revision-compare rows, and scenario E's browser statuses equal the build report statuses id by id.</Scenario>
-      <TraceAssertion>The "every file under apps/docs/src/playground passes the playground rules" and "the sources are clean" source-scan tests in playground-safety.test.ts pass. The Chromium equality suite (equality.e2e.ts) passes for scenarios A, D and E, and the playground, keyboard and provenance e2e specs pass.</TraceAssertion>
+      <Scenario>Every example gives its expected diagnostic or "No diagnostics" in Chromium.</Scenario>
+      <Scenario>A syntax error shows a decode issue.</Scenario>
+      <Scenario>Input over 1 MB is refused.</Scenario>
+      <Scenario>An edit marks the result historical.</Scenario>
+      <Scenario>Every playground source passes the safety scan.</Scenario>
+      <TraceAssertion>The per-example tests in playground-run.test.ts and playground.e2e.ts, the syntax-error and edit tests of playground.e2e.ts, the oversized-input test of playground-run.test.ts, and the "every file under apps/docs/src/playground passes the playground rules" source-scan tests in playground-safety.test.ts pass.</TraceAssertion>
     </V-M-DOCS-PLAYGROUND>
   </VD-DOCS>
 </GraceVerificationDocument>

@@ -50,7 +50,7 @@ This is the example Fabric of the API contract. Every Locus has an identity and 
 }
 ```
 
-[Scenario A](/playground/a) runs this input.
+[Scenario A](/playground) runs this input.
 
 ## Charter problems
 
@@ -109,7 +109,7 @@ In this Fabric, the Charter of `shop:checkout` has a blank purpose, and it lists
 ]
 ```
 
-[Scenario B](/playground/b) runs this input.
+[Scenario B](/playground) runs this input.
 
 ## Ownership problems
 
@@ -172,7 +172,7 @@ Ownership must form a tree. A Locus has at most one owner, the owner must exist 
 ]
 ```
 
-[Scenario B](/playground/b) runs inputs of this kind.
+[Scenario B](/playground) runs inputs of this kind.
 
 ## Relation problems
 
@@ -231,7 +231,7 @@ This Fabric has a `refines` cycle between `shop:checkout` and `shop:payment`, an
 ]
 ```
 
-[Scenario C](/playground/c) runs this input.
+[Scenario C](/playground) runs this input.
 
 ## Input that is not a Fabric
 
@@ -263,7 +263,7 @@ The Relation kind `owns` below is not one of the four kinds, so the input fails 
 
 A diagnostic is different. The text is a Fabric, and the model breaks a rule, as in the examples above. Identity grammar, blank strings and duplicates are not decode errors. The package reports them as diagnostics.
 
-[Scenario B](/playground/b) shows both kinds of result for your own input.
+[Scenario B](/playground) shows both kinds of result for your own input.
 
 ## Same meaning, same id
 
@@ -305,4 +305,4 @@ The order of a set, metadata, and empty optional lists do not change what a Locu
 []
 ```
 
-[Scenario D](/playground/d) compares Revisions like these.
+[Scenario D](/playground) compares Revisions like these.

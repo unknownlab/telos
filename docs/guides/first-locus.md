@@ -81,7 +81,7 @@ The fields `excluded`, `successConditions`, `owner`, `relations` and `metadata` 
 
 The package reports this Fabric as valid, with no diagnostics.
 
-Try it: [Scenario A in the playground](/playground/a).
+Try it: [Scenario A in the playground](/playground).
 
 ## 2. See validation fail
 
@@ -156,7 +156,7 @@ Each diagnostic also has a `message` for people. The text of the message is not 
 
 Malformed input is a different case. If the text is not a Fabric at all, the package reports a decode error instead, with the location of the problem. [Examples](examples.md) shows one.
 
-Try it: [Scenario B in the playground](/playground/b).
+Try it: [Scenario B in the playground](/playground).
 
 ## 3. Relate Loci
 
@@ -228,7 +228,7 @@ The package reports two diagnostics:
 
 The `members` field lists the Loci of a cycle, starting from the smallest identity. Each cycle is reported once.
 
-Try it: [Scenario C in the playground](/playground/c).
+Try it: [Scenario C in the playground](/playground).
 
 ## 4. Revise a Locus
 
@@ -317,7 +317,7 @@ The history below runs four steps, one after another. Each step names the Revisi
 
 The first step appends A to an empty history. The second appends B after A. The third expects A, but the head is B, so it is refused. The fourth appends B when B is already the head, so nothing changes, and the package reports `appended: false`.
 
-Try it: [Scenario D in the playground](/playground/d).
+Try it: [Scenario D in the playground](/playground).
 
 ## 5. Run the specifications
 
@@ -327,9 +327,9 @@ The executable specifications are records that check the invariants of the model
 bun run test
 ```
 
-The playground runs the same records in the browser. [Scenario E](/playground/e) runs them with one button. The [Verification](/verification) page shows the report of the build-time run, with where and when it was produced, or it says that no report exists.
+The playground runs the same records in the browser. [Scenario E](/playground) runs them with one button. The [Verification](/verification) page shows the report of the build-time run, with where and when it was produced, or it says that no report exists.
 
-Try it: [Scenario E in the playground](/playground/e), and then [Verification](/verification).
+Try it: [Scenario E in the playground](/playground), and then [Verification](/verification).
 
 ## Next steps
 

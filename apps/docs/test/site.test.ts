@@ -46,7 +46,7 @@ const SECTION_CASES: ReadonlyArray<readonly [string, NavSectionId | null]> = [
   ["/principles/", "principles"],
   ["/principles/P01-one-fundamental-entity", "principles"],
   ["/architecture/foundation", "architecture"],
-  ["/playground/a", "playground"],
+  ["/playground", "playground"],
   ["/not-found", null],
   ["/philosophyx", null],
 ];

@@ -26,13 +26,9 @@
       <M-DOCS-SPEC-REPORT />
     </M-DOCS-SITE>
     <M-DOCS-PLAYGROUND>
-      <Summary>Scenarios A to E that run the real packages in the browser on decoded input, with provenance and historical marking.</Summary>
+      <Summary>One page that decodes, builds, verifies and describes a JSON Locus definition with the real kernel in the browser.</Summary>
       <Path>apps/docs/src/playground/</Path>
-      <M-LOCUS-VALIDATION />
-      <M-LOCUS-REVISION />
-      <M-LOCUS-HISTORY />
-      <M-LOCUS-DECODE />
-      <M-LOCUS-SPECS />
+      <M-KERNEL-API />
       <M-DOCS-SITE />
     </M-DOCS-PLAYGROUND>
   </GD-DOCS>
