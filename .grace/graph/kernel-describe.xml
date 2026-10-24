@@ -1,0 +1,19 @@
+<GraceGraphDocument graceVersion="4.0">
+  <GD-KERNEL-DESCRIBE>
+    <M-KERNEL-DESCRIBE>
+      <Summary>Describes capabilities, Loci, the model and verification state as JSON with knowledge statuses and digests, and derives and coerces input fields from capability descriptions.</Summary>
+      <Path>packages/kernel/src/describe.ts</Path>
+      <Path>packages/kernel/src/fields.ts</Path>
+      <M-KERNEL-MODEL />
+      <M-KERNEL-VERIFY />
+      <M-KERNEL-CANONICAL />
+    </M-KERNEL-DESCRIBE>
+    <M-KERNEL-INVOKE>
+      <Summary>Runs a capability only through a grant, decoding its input and encoding its output against its contract, and reports every outcome as a value.</Summary>
+      <Path>packages/kernel/src/invoke.ts</Path>
+      <M-KERNEL-MODEL />
+      <M-KERNEL-DEFINITIONS />
+      <M-KERNEL-IDENTITY />
+    </M-KERNEL-INVOKE>
+  </GD-KERNEL-DESCRIBE>
+</GraceGraphDocument>
