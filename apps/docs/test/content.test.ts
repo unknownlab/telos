@@ -107,13 +107,21 @@ const EXPECTED_LLMS = `# Telos by UnknownLab
 - [Foundation](/architecture/foundation): Entry point of the fixture foundation.
 - [Prior art](/architecture/prior-art): What exists already.
 
+## Inspector
+
+- [Inspector](/inspector): The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json.
+
 ## Playground
 
-- [Playground](/playground): Scenarios A to E run the real @telos/locus package in your browser.
+- [Playground](/playground): Type a Locus definition as JSON; the real /kernel decodes, builds and verifies it in your browser.
+
+## Calculator
+
+- [Calculator](/calculator): The calculator web interface: forms derived from the capability contracts of calculator:arithmetic.
 
 ## Verification
 
-- [Verification](/verification): The specification report from the build-time Bun run, with its provenance.
+- [Verification](/verification): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.
 
 ## Decisions
 
@@ -416,7 +424,7 @@ const CASES: readonly Case[] = [
   {
     name: "case 16: a site link to an unknown route",
     changes: () => ({
-      [PRIOR]: fixture(PRIOR).replace("/playground/a", "/playground/z"),
+      [PRIOR]: fixture(PRIOR).replace("](/playground)", "](/playground/z)"),
     }),
     problems: [`${PRIOR}: unknown site route "/playground/z"`],
   },
@@ -634,7 +642,7 @@ describe("valid fixture output", () => {
     expect(prior).toContain(
       'href="/architecture/foundation#maturity-vocabulary"',
     );
-    expect(prior).toContain('href="/playground/a"');
+    expect(prior).toContain('href="/playground"');
     expect(prior).toContain('href="https://example.org/x?a=1&amp;b=2"');
   });
 

@@ -10,4 +10,4 @@ related: [foundation]
 
 # Prior art
 
-See the [vocabulary](../foundation/README.md#maturity-vocabulary), [scenario A](/playground/a) and [an external page](https://example.org/x?a=1&b=2).
+See the [vocabulary](../foundation/README.md#maturity-vocabulary), [the playground](/playground) and [an external page](https://example.org/x?a=1&b=2).

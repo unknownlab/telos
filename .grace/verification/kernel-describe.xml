@@ -1,0 +1,21 @@
+<GraceVerificationDocument graceVersion="4.0">
+  <VD-KERNEL-DESCRIBE>
+    <V-M-KERNEL-DESCRIBE>
+      <TestFiles>
+        <File>packages/kernel/test/describe.test.ts</File>
+        <File>packages/kernel/test/fields.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/describe.test.ts packages/kernel/test/fields.test.ts</Command>
+      <Scenario>Capability descriptions carry their ref, effect, schemas, implementation state, exposure and a contract digest; Locus descriptions carry decoded properties, sorted capabilities, derived incoming relations, archetype rules, diagnostics and a digest; the model description follows model order with a digest over the Locus digests; verification descriptions are not-run without a report and never verified without a passed finding; input fields are derived from descriptions with $ref resolution; text is coerced to input values with the contract edge cases.</Scenario>
+      <TraceAssertion>describe.test.ts names the describeCapability, describeLocus, describeModel and describeVerifications tests, including the digest, knowledge and freezing checks; fields.test.ts names the inputFields and coerceInput tests.</TraceAssertion>
+    </V-M-KERNEL-DESCRIBE>
+    <V-M-KERNEL-INVOKE>
+      <TestFiles>
+        <File>packages/kernel/test/invoke.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/invoke.test.ts</Command>
+      <Scenario>A capability runs only for its own Locus or a valid granting relation; each invocation error tag (LocusNotFound, CapabilityNotFound, NotGranted, InvalidInput, NotImplemented, Defect, InvalidOutput, and declared handler errors) is returned as a value with the contract message; invalid input never reaches the handler; a successful call returns the encoded output.</Scenario>
+      <TraceAssertion>invoke.test.ts names the isGranted tests and one invoke outcome test per error tag, plus the success, handler-skipping and handler-count tests.</TraceAssertion>
+    </V-M-KERNEL-INVOKE>
+  </VD-KERNEL-DESCRIBE>
+</GraceVerificationDocument>

@@ -1,21 +1,108 @@
 <GraceGraphIndex graceVersion="4.0">
   <GraphDocuments>
-    <GD-MAIN>
-      <Path>graph/main.xml</Path>
+    <GD-TOOLING>
+      <Path>graph/tooling.xml</Path>
       <Owns>
         <M-BUN-VERSION-GUARD />
         <M-REVIEW-GATE />
-        <M-LOCUS-MODEL />
-        <M-LOCUS-VALIDATION />
-        <M-LOCUS-REVISION />
-        <M-LOCUS-HISTORY />
-        <M-LOCUS-DECODE />
-        <M-LOCUS-SPECS />
+        <M-REPOSITORY-MODEL />
+        <M-TELOS-COMMAND />
+      </Owns>
+    </GD-TOOLING>
+    <GD-DOCS>
+      <Path>graph/docs.xml</Path>
+      <Owns>
         <M-DOCS-CONTENT />
-        <M-DOCS-SPEC-REPORT />
+        <M-DOCS-SEMANTIC-REPORT />
         <M-DOCS-SITE />
         <M-DOCS-PLAYGROUND />
+        <M-DOCS-INSPECTOR />
+        <M-DOCS-CALCULATOR />
       </Owns>
-    </GD-MAIN>
+    </GD-DOCS>
+    <GD-KERNEL-BASE>
+      <Path>graph/kernel-base.xml</Path>
+      <Owns>
+        <M-KERNEL-IDENTITY />
+        <M-KERNEL-CANONICAL />
+        <M-KERNEL-DIAGNOSTIC />
+      </Owns>
+    </GD-KERNEL-BASE>
+    <GD-KERNEL-DEFINITIONS>
+      <Path>graph/kernel-definitions.xml</Path>
+      <Owns>
+        <M-KERNEL-DEFINITIONS />
+      </Owns>
+    </GD-KERNEL-DEFINITIONS>
+    <GD-KERNEL-MODEL>
+      <Path>graph/kernel-model.xml</Path>
+      <Owns>
+        <M-KERNEL-MODEL />
+      </Owns>
+    </GD-KERNEL-MODEL>
+    <GD-KERNEL-VERIFY>
+      <Path>graph/kernel-verify.xml</Path>
+      <Owns>
+        <M-KERNEL-VERIFY />
+      </Owns>
+    </GD-KERNEL-VERIFY>
+    <GD-KERNEL-DESCRIBE>
+      <Path>graph/kernel-describe.xml</Path>
+      <Owns>
+        <M-KERNEL-DESCRIBE />
+        <M-KERNEL-INVOKE />
+      </Owns>
+    </GD-KERNEL-DESCRIBE>
+    <GD-KERNEL-DECODE>
+      <Path>graph/kernel-decode.xml</Path>
+      <Owns>
+        <M-KERNEL-DECODE />
+      </Owns>
+    </GD-KERNEL-DECODE>
+    <GD-KERNEL-CLOSURE>
+      <Path>graph/kernel-closure.xml</Path>
+      <Owns>
+        <M-KERNEL-CLOSURE />
+      </Owns>
+    </GD-KERNEL-CLOSURE>
+    <GD-KERNEL-API>
+      <Path>graph/kernel-api.xml</Path>
+      <Owns>
+        <M-KERNEL-INTROSPECTION />
+        <M-KERNEL-IMPACT />
+        <M-KERNEL-API />
+      </Owns>
+    </GD-KERNEL-API>
+    <GD-PACK-CLI>
+      <Path>graph/pack-cli.xml</Path>
+      <Owns>
+        <M-PACK-CLI />
+      </Owns>
+    </GD-PACK-CLI>
+    <GD-PACK-AGENT>
+      <Path>graph/pack-agent.xml</Path>
+      <Owns>
+        <M-PACK-AGENT />
+        <M-PACK-AGENT-MCP />
+      </Owns>
+    </GD-PACK-AGENT>
+    <GD-PACK-WEB>
+      <Path>graph/pack-web.xml</Path>
+      <Owns>
+        <M-PACK-WEB />
+      </Owns>
+    </GD-PACK-WEB>
+    <GD-CALCULATOR-CORE>
+      <Path>graph/calculator-core.xml</Path>
+      <Owns>
+        <M-CALC-ARITHMETIC />
+      </Owns>
+    </GD-CALCULATOR-CORE>
+    <GD-CALCULATOR-INTERFACES>
+      <Path>graph/calculator-interfaces.xml</Path>
+      <Owns>
+        <M-CALC-INTERFACES />
+      </Owns>
+    </GD-CALCULATOR-INTERFACES>
   </GraphDocuments>
 </GraceGraphIndex>
