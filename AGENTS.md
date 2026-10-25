@@ -45,30 +45,30 @@ Resume only the work that matches the owner's current request. Report any other 
 
 ## Model routing (owner rule)
 
-The root session is the coordinator. It runs on Sonnet at medium effort, which is the project default in `.claude/settings.json`. It reads state, delegates, and relays results. It also does tooling recovery, Spec Kitty state repair and mechanical fixes itself: formatting, a lint fix, a status repair, anything that needs no design decision. It writes no specs, plans, WP prompts, product code or reviews.
+Telos work runs on OpenAI models through Codex. Anthropic models are not used.
 
-The coordinator checks the routing itself at the start of every session: `python3 tools/agents/settings/routing.py check`, run where the session started. If a key differs, for example in a worktree, which has no `.claude/` of its own, it runs `routing.py apply` there, which keeps the other settings, and checks again. Settings load only when a session starts. So after an `apply`, or when the session is not on Sonnet and the owner did not choose its model, the coordinator tells the owner in one line that a restart is needed before it starts the work. It never carries on silently on another model, such as the user default Opus at xhigh.
+The root session is the coordinator. Start it with `codex -m gpt-6-luna -c model_reasoning_effort=medium` from the checkout. It reads state, delegates, and relays results. It also does tooling recovery, Spec Kitty state repair and mechanical fixes itself: formatting, a lint fix, a status repair, anything that needs no design decision. It writes no specs, plans, WP prompts, product code or reviews. If the session runs on another model and the owner did not choose it, the coordinator tells the owner in one line before it starts the work.
 
-Every Agent call sets `model` and `effort`. Without them a subagent gets the coordinator's model and a default effort, and Spec Kitty regenerates the agent definitions without model fields.
+The coordinator delegates with `codex exec -m <model> -c model_reasoning_effort=<effort> -C <checkout or worktree> "<brief>"`, so every delegation sets `model` and `effort` and runs where the work lives. The agent's own output is its final report. Spec Kitty commands take `--agent codex`.
 
 | Work | Model, effort |
 | --- | --- |
-| Specify and plan; open design questions; the tasks outline with WP boundaries and cross-WP interfaces; WP prompt files | Opus, high |
-| WP prompt files from a settled outline, as an optional trial (`tools/agents/delegation.md`) | Sonnet, high |
-| WP implementation, with the WP's `agent_profile` | Haiku, medium |
-| WP review (`reviewer-renata`) | Sonnet, medium |
-| Hard cross-WP problems: an interface conflict, a defect that spans WPs, a design question a writer or reviewer escalates | Opus, high |
-| Mission review after merge | Opus, high |
+| Specify and plan; open design questions; the tasks outline with WP boundaries and cross-WP interfaces; WP prompt files | gpt-6.1-sol, high |
+| WP implementation, with the WP's `agent_profile` | gpt-6-luna, medium |
+| WP review (`reviewer-renata`) | gpt-6-sol, medium |
+| Hard cross-WP problems: an interface conflict, a defect that spans WPs, a design question a writer or reviewer escalates | gpt-6.1-sol, high |
+| Mission review after merge | gpt-6.1-sol, high |
 
-- Use xhigh or max only when the owner asks for it.
+- The models come from `~/.codex/models_cache.json`. Change the table here when the owner picks other models; nothing else names a model.
+- Use xhigh, max or ultra only when the owner asks for it.
 - Run WPs with no dependency between them in parallel.
 - Never swap these roles without the owner. If a WP is rejected twice, ask the owner before changing the model.
 
 ## Planning and context
 
-- Opus settles design questions, WP boundaries and cross-WP interfaces before WP prompts are written. A prompt writer that meets an open question sends back one focused question; the coordinator asks Opus and passes the answer on.
+- The planner model settles design questions, WP boundaries and cross-WP interfaces before WP prompts are written. A prompt writer that meets an open question sends back one focused question; the coordinator asks the planner and passes the answer on.
 - Decisions, interfaces, open questions and progress live in the mission artifacts (spec, plan, contracts, tasks, Spec Kitty status), not in chat or agent memory.
-- Write WP prompts so a Haiku model can finish the WP from the prompt and the files it names: exact files, APIs and acceptance tests. Quote only the contract text the WP needs, and reference the rest by file and section.
+- Write WP prompts so the implementation model can finish the WP from the prompt and the files it names: exact files, APIs and acceptance tests. Quote only the contract text the WP needs, and reference the rest by file and section.
 - Give each subagent what its role needs: the WP, the requirements it covers, the interfaces it touches and how to verify them. The coordinator reads the brief templates in `tools/agents/delegation.md` before delegating.
 - Every subagent ends with a short report: result, changed files, checks run and their outcomes, unresolved issues, links to commits or files.
 - Start fresh agents and sessions at phase boundaries: plan approved, tasks finalized, mission merged. Reuse an agent while its context still helps, for example an implementer fixing its own rejected WP. A reviewer never implemented the WP it reviews.
