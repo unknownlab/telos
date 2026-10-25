@@ -1,7 +1,7 @@
 {
-  "event_count": 9,
-  "last_event_id": "01M5T2VQXCTV3Q27DTPWQX6ZBH",
-  "materialized_at": "2026-10-25T17:48:45.868935+00:00",
+  "event_count": 11,
+  "last_event_id": "01M5T2W4FB5K2YE87KHG9NXDJJ",
+  "materialized_at": "2026-10-25T17:48:58.655757+00:00",
   "mission_number": "",
   "mission_slug": "m0-cleanup-01M5SPZC",
   "mission_type": "",
@@ -12,9 +12,9 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "in_review": 0,
-    "planned": 3
+    "planned": 2
   },
   "work_packages": {
     "WP01": {
@@ -48,11 +48,19 @@
       }
     },
     "WP02": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
+      "agent_profile": "__resolved_profile_absent__",
+      "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5T2937DTZ2SD7Z6Z7J58XFX",
-      "last_transition_at": "2026-10-25T17:38:34.861748+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5T2W4FB5K2YE87KHG9NXDJJ",
+      "last_transition_at": "2026-10-25T17:48:58.655757+00:00",
+      "model": "__resolved_model_absent__",
+      "provider": "__resolved_provider_absent__",
+      "role": "implementer",
+      "shell_pid": 91221,
+      "shell_pid_created_at": "1792950536.057706"
     },
     "WP03": {
       "actor": "finalize-tasks",
