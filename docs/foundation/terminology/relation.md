@@ -25,7 +25,7 @@ One typed, directed statement from a Locus to a Locus or to a [capability](capab
 
 ## In the model
 
-Relations are stored on the source Locus in `packages/kernel/src/relation.ts`. `buildModel` in `packages/kernel/src/model.ts` checks that each relation's target exists and that its relation type is declared by an extension in the composition of the source Locus. A relation whose type grants invocation is the only source of a [grant](grant.md).
+Relations are stored on the source Locus in `packages/kernel/src/relation.ts`. `buildModel` in `packages/kernel/src/model.ts` checks that each relation's target exists and that its relation type is declared by an extension in the composition of the source Locus. A relation whose type grants invocation is a source of a [grant](grant.md); a Locus calling its own capability needs no relation (see [grant](grant.md)).
 
 ## Related
 

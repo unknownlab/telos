@@ -160,9 +160,9 @@ Evidence needed: the first need to persist digests across Telos versions.
 
 **How is drift between the model and code detected?**
 
-Current state: partly resolved. The Semantic Closure check reports managed files without an owner. It does not detect a Locus whose declared capabilities no longer match the code behind them.
+Current state: partly resolved. The Semantic Closure check reports unowned and ambiguous files, undeclared dependencies between Loci, unknown external packages, unresolved and unparsable imports, and computed imports (`closure.unowned`, `closure.ambiguous`, `closure.undeclared-dependency`, `closure.unknown-external`, `closure.unresolved-import`, `closure.unparsable`, `closure.dynamic-import`). It still does not detect a Locus whose declared capabilities no longer match the code behind them.
 
-Alternatives: import-graph comparison; markup that names Loci in source; declarations colocated with code; types generated from declarations.
+Alternatives: import-graph comparison against declared capabilities (the file-level import check exists; the capability-level comparison does not); markup that names Loci in source; declarations colocated with code; types generated from declarations.
 
 Evidence needed: a prototype on the Telos packages themselves.
 

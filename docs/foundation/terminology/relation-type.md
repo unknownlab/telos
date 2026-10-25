@@ -26,7 +26,7 @@ A named meaning of a [relation](relation.md), defined by a [semantic extension](
 
 ## In the model
 
-Relation types are declared in an extension definition in `packages/kernel/src/extension.ts`. A relation type can mark that it grants invocation; only such a type can produce a [grant](grant.md).
+Relation types are declared in an extension definition in `packages/kernel/src/extension.ts`. A relation type can mark that it grants invocation; only such a type can produce a [grant](grant.md) through a relation.
 
 ## Related
 

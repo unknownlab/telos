@@ -18,7 +18,9 @@ related:
 
 ## Definition
 
-Permission to invoke a [capability](capability.md). A grant is derived only from a [relation](relation.md) whose [relation type](relation-type.md) grants invocation. No other source produces a grant.
+Permission to invoke a [capability](capability.md). A grant exists in exactly two cases: a valid [relation](relation.md) whose [relation type](relation-type.md) grants invocation runs from the caller to the capability's Locus, or the caller is that Locus itself. No other source produces a grant.
+
+The caller is identified by the `via` value passed to `invoke`. The kernel trusts that value; it is not authenticated. The CLI, web and agent packs set `via` to their own interface Locus, so a request through those packs cannot choose it.
 
 ## Avoid
 
