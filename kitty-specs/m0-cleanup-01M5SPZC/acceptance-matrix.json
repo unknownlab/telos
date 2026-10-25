@@ -117,11 +117,11 @@
     {
       "criterion_id": "FR-012",
       "description": "Verify FR-012 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "grep glossary",
+      "evidence": "lane-b tip c3095bb: grep -ciE grace|docs/foundation .kittify/glossaries/team_domain.yaml = 0",
+      "pass_fail": "pass",
+      "verified_by": "reviewer-renata",
+      "verified_at": "2026-10-25T18:03:52.102388+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
