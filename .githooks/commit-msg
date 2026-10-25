@@ -19,6 +19,14 @@ case "$subject" in
   "Merge "* | "Revert \""* | "fixup! "* | "squash! "* | "amend! "*) exit 0 ;;
 esac
 
+# Spec Kitty appends " [agent]" to its bookkeeping subjects; strip it.
+stripped=$(printf '%s\n' "$subject" | sed -E 's/ \[(claude|codex)\]$//')
+if [ "$stripped" != "$subject" ]; then
+  tmp="$msg_file.tmp.$$"
+  { printf '%s\n' "$stripped"; sed '1d' "$msg_file"; } > "$tmp" && mv "$tmp" "$msg_file"
+  subject="$stripped"
+fi
+
 # Spec Kitty 3.2.7 writes these four messages itself and has no setting to change them.
 # Rewrite them to the convention instead of breaking the mission workflow.
 rewritten=$(printf '%s\n' "$subject" | sed -E \

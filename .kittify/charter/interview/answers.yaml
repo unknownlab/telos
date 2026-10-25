@@ -25,12 +25,13 @@ answers:
     Gates are never bypassed (--no-verify,
     --force, --skip-*, *_DISABLE) without an explicit owner decision.
   review_policy: >-
-    Model routing for missions (strict): the root session runs on Sonnet and
-    only calls subagents; Claude Opus at high effort creates the mission and
-    does specify, plan and tasks; tasks are written by Opus for Haiku only,
-    sized so that Haiku can implement each one from its prompt alone; Haiku
-    implements every work package; Claude Sonnet reviews every work package;
-    the post-merge mission review runs on Claude Opus at high effort. Roles
+    Model routing for missions (strict): all work runs on OpenAI models
+    through Codex. The root session runs gpt-6-luna at medium effort; gpt-6.1-sol
+    at high effort creates the mission and does specify, plan and tasks; tasks
+    are written for the implementation model, sized so that it can implement
+    each one from its prompt alone; gpt-6-luna implements every work package;
+    gpt-6-sol reviews every work package; the post-merge mission review runs on
+    gpt-6.1-sol at high effort. Roles
     are never swapped.
     Reviewers check spec fidelity (FR/NFR/C coverage), test-first evidence,
     gate results reported exactly. Reject on any unverified
