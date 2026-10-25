@@ -127,11 +127,11 @@
     {
       "criterion_id": "FR-013",
       "description": "Verify FR-013 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "grep tracked tooling notes",
+      "evidence": "lane-b tip c3095bb: tools/agents/settings/README.md has no docs/grace refs; NFR-005 search empty over all tracked files outside historical records",
+      "pass_fail": "pass",
+      "verified_by": "reviewer-renata",
+      "verified_at": "2026-10-25T18:03:54.371447+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
