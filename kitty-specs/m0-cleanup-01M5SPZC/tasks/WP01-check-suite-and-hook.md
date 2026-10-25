@@ -8,9 +8,6 @@ requirement_refs:
 planning_base_branch: feat/m0-cleanup
 merge_target_branch: feat/m0-cleanup
 branch_strategy: Planning artifacts for this mission were generated on feat/m0-cleanup. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/m0-cleanup unless the human explicitly redirects the landing branch.
-base_branch: kitty/mission-m0-cleanup-01M5SPZC
-base_commit: 7adc5e8fc221e7f34ba7d95e04ed08c8f5e6b123
-created_at: '2026-10-25T17:43:25.138334+00:00'
 subtasks:
 - T001
 - T002
