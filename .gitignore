@@ -47,3 +47,6 @@ apps/docs/public/semantic-report.json
 apps/docs/test-results/
 apps/docs/playwright-report/
 apps/docs/.tanstack/
+
+# Python caches of the agent usage tools
+tools/agents/**/__pycache__/

@@ -35,6 +35,9 @@ ignorePatterns = [
   "apps/docs/test-results/**",
   "apps/docs/playwright-report/**",
   "apps/docs/test/fixtures/**",
+  "tools/agents/usage/ledgers/**",
+  "tools/agents/experiments/*/outputs/**",
+  "tools/agents/experiments/*/briefs/**",
 ]
 
 [test]

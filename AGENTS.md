@@ -20,6 +20,8 @@ Two usage patterns:
 
 These rules apply to every coding agent in this repo. Codex reads this file, and Claude Code imports it through `CLAUDE.md`. Keep agent rules here only. The owner-facing overview is `docs/tooling.md`.
 
+Spec Kitty generates the block above and prints the same text from its SessionStart hook. Where it disagrees with these rules, these rules win: answer questions directly and make small operations (state reads, recovery, mechanical fixes, git) directly. Run `spec-kitty dispatch` only when the owner asks for a tracked Op.
+
 The owner directs the work in plain language and makes the decisions. You choose and run the tools, skills, and commands yourself. Never ask the owner to run a command or to name a tool, skill, or workflow phase.
 
 ## Telos foundation
@@ -28,7 +30,7 @@ Telos by UnknownLab is defined in `docs/foundation/README.md` (doctrine, princip
 
 ## Read state before working
 
-Before starting or resuming work (not needed for pure questions), query the native state. Do not keep your own notes or trackers.
+The coordinator (the root session) queries the native state before starting or resuming work, but not for pure questions. Subagents skip this; their brief carries the state they need. Do not keep your own notes or trackers.
 - `git status` and `git worktree list`
 - for each mission in `kitty-specs/`: `spec-kitty agent tasks status --mission <slug> --json` and `spec-kitty next --mission <slug> --json` (query mode does not advance)
 - open Spec Kitty Ops: `spec-kitty invocations list`
@@ -41,18 +43,39 @@ Resume only the work that matches the owner's current request. Report any other 
 - **Product changes** (features, behavior, interfaces, data, dependencies, architecture) go through a Spec Kitty mission (`spk-start-here`). The phases are specify → plan → tasks → implement/review → accept → merge, advanced with `spec-kitty next` (`spk-run-next`).
 - **Questions, investigation, explanation**: answer directly. When `.grace/` exists, use `grace-ask` and `grace-cli`.
 - **Edits that change no behavior** (typos, comments, formatting): make them directly, then run the checks.
-- **Stuck workflow**: use `spk-run-blocked-recovery`. **Broken tooling**: use `spk-admin-setup-doctor`.
+- **Stuck workflow**: use `spk-run-blocked-recovery`. **Broken tooling**: use `spk-admin-setup-doctor`. The coordinator handles both itself.
 - **GRACE** owns architecture knowledge and its validation: contracts, the module graph, verification, and semantic markup. The skills are `grace-status`, `grace-ask`, `grace-cli`, `grace-reviewer`, `grace-verification`, `grace-refresh`, `grace-fix`, `grace-refactor`, and `grace-explainer`. When `.grace/` exists, every mission keeps `.grace/` and the code markup in sync inside its own work packages. The mission must also pass `grace lint --path . --assertions current`.
 - **Spec Kitty** owns the change lifecycle. Do not use `grace-spec`, `grace-plan`, `grace-execute`, `grace-setup-subagents`, or `.grace/changes/`. The mission is the change record.
-- **Model routing (strict, owner rule, no exceptions without the owner):**
-  - The root session runs on Sonnet and only calls subagents and relays their result. It does not write specs, plans, tasks, code or reviews itself.
-  - Creating a mission and every planning phase (specify, plan, tasks) are done by an Opus subagent at high effort.
-  - Tasks (work packages) are written by Opus for Haiku only. Decompose them so a Haiku model can finish each one from its prompt alone: exact files, APIs, contracts and acceptance tests quoted in the prompt.
-  - Each work package is implemented by a Haiku subagent, using the WP's `agent_profile`, in its own subagent. Run work packages with no dependency between them in parallel.
-  - Each work package is reviewed by a Sonnet subagent (`reviewer-renata`).
-  - After merge, the mission review is done by an Opus subagent at high effort.
-  - Never swap these roles. If a WP is rejected twice, ask the owner before changing the model.
 - If `.grace/` is absent, do not create it yourself. Offer `grace-init` when a mission first defines architecture. If GRACE proposes rules that conflict with this file, this file wins. Tell the owner about the conflict.
+
+## Model routing (owner rule)
+
+The root session is the coordinator. It runs on Sonnet at medium effort, which is the project default in `.claude/settings.json`. It reads state, delegates, and relays results. It also does tooling recovery, Spec Kitty state repair and mechanical fixes itself: formatting, a lint fix, a status repair, anything that needs no design decision. It writes no specs, plans, WP prompts, product code or reviews.
+
+Every Agent call sets `model` and `effort`. Without them a subagent gets the coordinator's model and a default effort, and Spec Kitty regenerates the agent definitions without model fields.
+
+| Work | Model, effort |
+| --- | --- |
+| Specify and plan; open design questions; WP boundaries and cross-WP interfaces in the tasks outline | Opus, high |
+| WP prompt files from the settled outline (trial) | Sonnet, high |
+| WP implementation, with the WP's `agent_profile` | Haiku, medium |
+| WP review (`reviewer-renata`) | Sonnet, medium |
+| Hard cross-WP problems: an interface conflict, a defect that spans WPs, a design question a writer or reviewer escalates | Opus, high |
+| Mission review after merge | Opus, high |
+
+- Use xhigh or max only when the owner asks for it.
+- Run WPs with no dependency between them in parallel.
+- Never swap these roles without the owner. If a WP is rejected twice, ask the owner before changing the model.
+
+## Planning and context
+
+- Opus settles design questions, WP boundaries and cross-WP interfaces before WP prompts are written. A prompt writer that meets an open question sends back one focused question; the coordinator asks Opus and passes the answer on.
+- Decisions, interfaces, open questions and progress live in the mission artifacts (spec, plan, contracts, tasks, Spec Kitty status), not in chat or agent memory.
+- Write WP prompts so a Haiku model can finish the WP from the prompt and the files it names: exact files, APIs and acceptance tests. Quote only the contract text the WP needs, and reference the rest by file and section.
+- Give each subagent what its role needs: the WP, the requirements it covers, the interfaces it touches and how to verify them. The coordinator reads the brief templates in `tools/agents/delegation.md` before delegating.
+- Every subagent ends with a short report: result, changed files, checks run and their outcomes, unresolved issues, links to commits or files.
+- Start fresh agents and sessions at phase boundaries: plan approved, tasks finalized, mission merged. Reuse an agent while its context still helps, for example an implementer fixing its own rejected WP. A reviewer never implemented the WP it reviews.
+- Add adversarial squads or extra review layers only when a concrete failure calls for one.
 
 ## Owner decisions
 

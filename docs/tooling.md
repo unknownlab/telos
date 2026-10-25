@@ -31,10 +31,15 @@ Enforced by the tools:
 - Spec Kitty's review gate runs the whole check suite through `scripts/review-gate.ts` and blocks a review on any new failure (`review:` in `.kittify/config.yaml`).
 - Spec Kitty checks review artifacts at merge; bypassing that needs a recorded note.
 - Claude Code hooks (`.claude/settings.json`). `spec-kitty session-start` injects orientation and open Ops. `spec-kitty session-stop` reminds about open Ops.
+- Claude Code project settings (`.claude/settings.json`, see [setup](#one-time-setup-on-a-new-machine-or-fresh-clone)):
+  - Sonnet is the default model, with medium effort for Sonnet and high for Opus. xhigh is never a default.
+  - Spec Kitty's `.claude/CLAUDE.md` and the `CLAUDE.md` at each worktree root are not loaded, because they repeat what `AGENTS.md` already provides.
+  - Claude Code adds no attribution to commits and PRs.
 
 Advisory: the instructions in `AGENTS.md`. Agents normally follow them, but nothing guarantees it. They cover:
 
 - tool routing
+- model routing, with the brief templates in `tools/agents/delegation.md`
 - reading state before work
 - approval boundaries
 - running `bun run verify` before review, accept and merge
@@ -67,6 +72,7 @@ Bun >=1.4.4-canary.1 required, found 1.4.3. Run: bun upgrade --canary
   - `packages/web`: `@telos/web`, the Web Pack (forms derived from capability contracts).
 - `telos.ts`: the repository's own Telos model.
 - `scripts/`: repository scripts: `check-bun-version.ts` (the version guard), `review-gate.ts` (the review gate runner) and `telos.ts` (the `bun run telos` command).
+- `tools/agents/`: agent process material outside the product. It holds the coordinator's brief templates (`delegation.md`), the usage ledger (`usage/`) and agent experiments (`experiments/`).
 - `tsconfig.base.json`: strict compiler options shared by every package. `tsconfig.json` at the root checks `scripts/` and lists packages under `references`.
 - `bunfig.toml`: linter, formatter and test-discovery settings. Spec Kitty, GRACE and generated files are excluded from the linter and formatter. `bun test` skips Spec Kitty's folders (`kitty-specs/`, `.kittify/`, `.spec-kitty/`), `.worktrees/` and `node_modules/`.
 
@@ -157,6 +163,25 @@ bunx playwright install chromium    # browser for test:e2e; downloads into ~/Lib
 ```
 
 Codex may ask once to trust the project directory.
+
+Then add these keys to `.claude/settings.json` next to the hooks Spec Kitty wrote. Use this checkout's absolute path in `claudeMdExcludes`. Spec Kitty keeps other keys when it re-registers its hooks.
+
+```json
+{
+  "model": "sonnet",
+  "modelSettings": {
+    "claude-opus-5-5": { "effortLevel": "high" },
+    "claude-sonnet-5-5": { "effortLevel": "medium" }
+  },
+  "claudeMdExcludes": [
+    "<repo>/.claude/CLAUDE.md",
+    "<repo>/.worktrees/*/CLAUDE.md"
+  ],
+  "attribution": { "commit": "", "pr": "", "sessionUrl": false }
+}
+```
+
+Claude Code ignores `claudeMdExcludes` from project settings in sessions started with `--cloud`, `--remote` or `--attach-serve`. A change to `claudeMdExcludes` takes effect in new sessions.
 
 ## After a mission merge
 
