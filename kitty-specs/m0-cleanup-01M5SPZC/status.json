@@ -27,6 +27,9 @@
       "last_event_id": "01M5T2VQXCTV3Q27DTPWQX6ZBH",
       "last_transition_at": "2026-10-25T17:48:45.868935+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Review passed: diff identical to reference patch, verify green (846 pass), parity ok"
+      ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/m0-cleanup-01M5SPZC/tasks/WP01-check-suite-and-hook/review-cycle-1.md",
