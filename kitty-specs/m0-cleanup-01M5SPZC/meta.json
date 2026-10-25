@@ -1,4 +1,16 @@
 {
+  "acceptance_history": [
+    {
+      "acceptance_mode": "pr",
+      "accepted_at": "2026-10-25T18:04:59.480131+00:00",
+      "accepted_by": "unknownhero",
+      "accepted_from_commit": "0f940d4aa062a29c906e5706e5bdbcf3ec05ced3"
+    }
+  ],
+  "acceptance_mode": "pr",
+  "accepted_at": "2026-10-25T18:04:59.480131+00:00",
+  "accepted_by": "unknownhero",
+  "accepted_from_commit": "0f940d4aa062a29c906e5706e5bdbcf3ec05ced3",
   "coordination_branch": "kitty/mission-m0-cleanup-01M5SPZC",
   "created_at": "2026-10-25T14:21:02.466931+00:00",
   "flattened": false,
