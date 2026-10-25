@@ -1,16 +1,16 @@
 {
-  "event_count": 25,
-  "last_event_id": "01M5T3T0RSYGF9HQPJYA5S98NF",
-  "materialized_at": "2026-10-25T18:05:17.977871+00:00",
+  "event_count": 26,
+  "last_event_id": "01M5T3T1T0ZN8QQKEYQJG3GV2C",
+  "materialized_at": "2026-10-25T18:05:19.040376+00:00",
   "mission_number": "5",
   "mission_slug": "m0-cleanup-01M5SPZC",
   "mission_type": "software-dev",
   "summary": {
-    "approved": 3,
+    "approved": 2,
     "blocked": 0,
     "canceled": 0,
     "claimed": 0,
-    "done": 1,
+    "done": 2,
     "for_review": 0,
     "in_progress": 0,
     "in_review": 0,
@@ -48,14 +48,14 @@
       }
     },
     "WP02": {
-      "actor": "claude",
+      "actor": "merge",
       "agent": "claude",
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "approved",
-      "last_event_id": "01M5T33XVA3CBJKY1RFR2C4JMT",
-      "last_transition_at": "2026-10-25T17:53:14.090805+00:00",
+      "lane": "done",
+      "last_event_id": "01M5T3T1T0ZN8QQKEYQJG3GV2C",
+      "last_transition_at": "2026-10-25T18:05:19.040376+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Review passed: diff equals reference patch, verify green (526 pass), parity ok"
