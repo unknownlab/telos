@@ -1,7 +1,7 @@
 {
-  "event_count": 4,
-  "last_event_id": "01M5T2948T8XQ9MFZVP8GSNJB8",
-  "materialized_at": "2026-10-25T17:38:35.930124+00:00",
+  "event_count": 6,
+  "last_event_id": "01M5T2HYZKC4M07HVN28WVB00Y",
+  "materialized_at": "2026-10-25T17:43:25.427291+00:00",
   "mission_number": "",
   "mission_slug": "m0-cleanup-01M5SPZC",
   "mission_type": "",
@@ -12,17 +12,20 @@
     "claimed": 0,
     "done": 0,
     "for_review": 0,
-    "in_progress": 0,
+    "in_progress": 1,
     "in_review": 0,
-    "planned": 4
+    "planned": 3
   },
   "work_packages": {
     "WP01": {
-      "actor": "finalize-tasks",
+      "actor": "claude",
+      "agent": "claude",
       "force_count": 0,
-      "lane": "planned",
-      "last_event_id": "01M5T292EZWPE8QB6J72K5A40F",
-      "last_transition_at": "2026-10-25T17:38:34.079938+00:00"
+      "lane": "in_progress",
+      "last_event_id": "01M5T2HYZKC4M07HVN28WVB00Y",
+      "last_transition_at": "2026-10-25T17:43:25.427291+00:00",
+      "shell_pid": 88230,
+      "shell_pid_created_at": "1792950195.343073"
     },
     "WP02": {
       "actor": "finalize-tasks",
