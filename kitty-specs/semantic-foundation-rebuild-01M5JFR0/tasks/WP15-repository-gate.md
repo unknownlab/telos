@@ -4,6 +4,7 @@ title: Repository self-description, telos command and gate
 dependencies:
 - WP14
 - WP08
+- WP22
 requirement_refs:
 - FR-022
 - FR-023
@@ -12,6 +13,9 @@ requirement_refs:
 planning_base_branch: feat/semantic-foundation-rebuild
 merge_target_branch: feat/semantic-foundation-rebuild
 branch_strategy: Planning artifacts for this mission were generated on feat/semantic-foundation-rebuild. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/semantic-foundation-rebuild unless the human explicitly redirects the landing branch.
+base_branch: kitty/mission-semantic-foundation-rebuild-01M5JFR0
+base_commit: 4bf5c72e10cca6d0efe03744c32ac971881d7212
+created_at: '2026-10-24T14:45:45.262020+00:00'
 subtasks:
 - T084
 - T085
@@ -66,6 +70,399 @@ If the profile cannot be loaded, run `spec-kitty agent profile list` and pick th
 ## Important: Review Feedback
 
 Check `spec-kitty agent tasks status --mission semantic-foundation-rebuild-01M5JFR0` and the review feedback of this WP before you start. If the WP was rejected before, address every point of the feedback first.
+
+---
+
+## Resume: the remaining work (added 2026-10-24)
+
+WP15 is `in_progress`. Its worktree is `/Users/unknownhero/projects/unknownlab/telos/.worktrees/semantic-foundation-rebuild-01M5JFR0-lane-o` (branch `kitty/mission-semantic-foundation-rebuild-01M5JFR0-lane-o`). It already contains WP08 (lane-h), WP14 (lane-n) and WP22 (lane-v). T084 to T087 are written there and are **not committed yet**:
+
+- new: `telos.ts`, `scripts/telos.ts`, `scripts/telos.test.ts`
+
+Work only in that worktree. Run `git status --short` first and check that it shows exactly these three untracked files. **Keep this work.** Do not delete, rewrite or `git checkout`/`git restore` these files, and do not stash them. Change them only as R4 says. Do not run `spec-kitty agent action implement` again: the WP is already claimed. Then do R1 to R10 in order.
+
+At planning time, `bun test scripts/telos.test.ts` gave 10 pass and 3 fail (`check on the repository exits 0 with ok true`, `report --out writes a version 1 SemanticReport ...`, `closure completes in under 10000 ms`). All three fail only because `bun scripts/telos.ts closure` reports closure errors. These are the 129 `closure.unknown-external` findings of `telos:docs-site` (R4 declares them) and two `closure.unresolved-import` findings caused by a defect in the kernel (R1 to R3 fix it):
+
+- `apps/docs/src/router.tsx` imports `./routeTree.gen`
+- `apps/docs/test/components.test.tsx` imports `@/routeTree.gen`
+
+`apps/docs/src/routeTree.gen.ts` exists and is tracked. `isAssetPath` in `packages/kernel/src/closure.ts` treats any extension other than `.ts`, `.tsx` or `.js` as an asset, so `.gen` is looked up as the file `routeTree.gen`, and `routeTree.gen.ts` is never tried. The contract was wrong and is now corrected (see the quoted closure contract below, the asset rule). You fix the code as a sanctioned edit of WP08's files. **Never exclude files from `CLOSURE_SCOPE`** to make an error go away.
+
+The six `closure.dynamic-import` **warnings** (two docs tests, `packages/kernel/src/closure.ts`, two kernel closure tests and `packages/locus/test/specs/scan.test.ts`) are expected. Warnings do not fail `check`. Leave them as they are.
+
+### R1 – Regression tests in `packages/kernel/test/closure.test.ts` (write them first, see them fail)
+
+Sanctioned edit. Change nothing else in the file. The module map does not change: the new tests add no local helper.
+
+1. Inside `describe("closure.unresolved-import", () => { ... })`, directly after the end of the test `"asset imports are allowed when the file exists and are unresolved when it does not"` (that is, just before the `});` that closes the describe, which is followed by `describe("workspace packages", () => {`), add:
+
+```ts
+  test("closure.unresolved-import is not reported for a dotted module name that resolves to a .ts, .tsx or index file", async () => {
+    const dir = fixture({
+      "a/x.ts":
+        'import "./routeTree.gen";\nimport "./app.config";\nimport "./parts.v2";\n',
+      "a/routeTree.gen.ts": "export {};\n",
+      "a/app.config.tsx": "export {};\n",
+      "a/parts.v2/index.ts": "export {};\n",
+    });
+    const model = Owned.make({
+      id: "app:root",
+      properties: { sources: ["a/**/*.ts", "a/**/*.tsx"] },
+    });
+    const report = await check(model, dir, {
+      include: ["**/*.ts", "**/*.tsx"],
+    });
+    expect(withCode(report, "closure.unresolved-import")).toEqual([]);
+    expect(report.findings).toEqual([]);
+  });
+
+  test("closure.unresolved-import is reported for a dotted module name when neither the file nor a code file exists", async () => {
+    const dir = fixture({ "a/x.ts": 'import "./routeTree.gen";\n' });
+    const model = Owned.make({
+      id: "app:root",
+      properties: { sources: ["a/**/*.ts"] },
+    });
+    const report = await check(model, dir);
+    expect(report.findings).toEqual([
+      {
+        code: "closure.unresolved-import",
+        severity: "error",
+        file: "a/x.ts",
+        loci: ["app:root"],
+        detail: "./routeTree.gen",
+        message: "./routeTree.gen does not resolve to a file.",
+        knowledge: "derived",
+      },
+    ]);
+  });
+
+  test("an existing asset file wins over a code file with the same name plus .ts", async () => {
+    const dir = fixture({
+      "a/x.ts": 'import "./style.css";\n',
+      "a/style.css": "",
+      "a/style.css.ts": "export {};\n",
+    });
+    const model = Owned.make({
+      id: "app:root",
+      properties: { sources: [] },
+      contains: [
+        Owned.make({ id: "app:a", properties: { sources: ["a/x.ts"] } }),
+        Owned.make({
+          id: "app:b",
+          properties: { sources: ["a/style.css.ts"] },
+        }),
+      ],
+    });
+    const report = await check(model, dir);
+    expect(report.findings).toEqual([]);
+  });
+
+  test("closure.undeclared-dependency is reported for a dotted module import of an unrelated Locus", async () => {
+    const dir = fixture({
+      "a/x.ts": 'import "../b/routeTree.gen";\n',
+      "b/routeTree.gen.ts": "export {};\n",
+    });
+    const model = Owned.make({
+      id: "app:root",
+      properties: { sources: [] },
+      contains: [
+        Owned.make({ id: "app:a", properties: { sources: ["a/**/*.ts"] } }),
+        Owned.make({ id: "app:b", properties: { sources: ["b/**/*.ts"] } }),
+      ],
+    });
+    const report = await check(model, dir);
+    expect(report.findings).toEqual([
+      {
+        code: "closure.undeclared-dependency",
+        severity: "error",
+        file: "a/x.ts",
+        loci: ["app:a", "app:b"],
+        detail: "../b/routeTree.gen",
+        message:
+          "app:a imports app:b through ../b/routeTree.gen without a declared relation.",
+        knowledge: "derived",
+      },
+    ]);
+  });
+```
+
+2. Inside `describe("path aliases", () => { ... })`, directly after the end of the test `"an alias import from a file under the alias app resolves to the aliased file"` (just before the `});` that closes the describe, which is followed by `describe("closure.dynamic-import", () => {`), add:
+
+```ts
+  test("an alias import of a dotted module name resolves to its .ts file", async () => {
+    const dir = fixture({
+      "apps/d/src/routeTree.gen.ts": "export const tree = 1;\n",
+      "apps/d/test/x.ts":
+        'import { tree } from "@/routeTree.gen";\nexport { tree };\n',
+    });
+    const model = Owned.make({
+      id: "app:d",
+      properties: { sources: ["apps/d/**/*.ts"] },
+    });
+    const report = await check(model, dir, {
+      aliases: [{ prefix: "@/", dir: "apps/d/src/" }],
+    });
+    expect(report.findings).toEqual([]);
+  });
+```
+
+Run `bun test packages/kernel/test/closure.test.ts`. Before R2 it must report **3 fail**: the `.ts, .tsx or index file` test, the `closure.undeclared-dependency ... dotted module import` test and the alias test. The other two new tests pass already; they pin behaviour that must not change. When this was planned, the result was 31 pass, 3 fail. Note the failures for your report.
+
+### R2 – Fix the resolver (sanctioned edit of `packages/kernel/src/closure.ts`)
+
+Make exactly these two changes and nothing else. The module map, the module contract and the `checkClosure` contract do not change (the new function is module-local and not exported).
+
+1. Directly before the line `function isAssetPath(path: string): boolean {`, add:
+
+```ts
+// Returns the first existing code file named by a repository-relative path plus a
+// code suffix, or null. Used when the last segment of the path has a non-code
+// extension but no such file exists, such as "./routeTree.gen" for routeTree.gen.ts.
+function resolveSuffixedCodePath(root: string, path: string): string | null {
+  const candidates = [
+    `${path}.ts`,
+    `${path}.tsx`,
+    `${path}/index.ts`,
+    `${path}/index.tsx`,
+  ];
+  for (const candidate of candidates) {
+    if (isFile(posix.join(root, candidate))) return candidate;
+  }
+  return null;
+}
+```
+
+2. In `checkLocalPath`, replace this block:
+
+```ts
+  if (isAssetPath(path)) {
+    if (!isFile(posix.join(ctx.root, path))) {
+      unresolved(ctx, raw, `${raw} does not resolve to a file.`);
+    }
+    return;
+  }
+```
+
+with:
+
+```ts
+  if (isAssetPath(path)) {
+    // An existing file with a non-code extension is an asset. Otherwise the last
+    // segment is a dotted module name, such as "./routeTree.gen", and the code
+    // suffixes are tried before the import is reported as unresolved.
+    if (isFile(posix.join(ctx.root, path))) return;
+    const target = resolveSuffixedCodePath(ctx.root, path);
+    if (target === null) {
+      unresolved(ctx, raw, `${raw} does not resolve to a file.`);
+      return;
+    }
+    checkTarget(ctx, raw, target);
+    return;
+  }
+```
+
+Acceptance for R1 and R2: `bun test packages/kernel/test/closure.test.ts packages/kernel/test/closure-unparsable.test.ts` passes. When this was planned, the patched copy gave 34 pass in `closure.test.ts` (29 old + 5 new) and 35 pass over both files before the new tests were added; `bun fmt --check` and `bun lint` were clean on both changed files. Then run `bun test packages/kernel/test`: it must pass.
+
+### R3 – GRACE for the kernel-closure fix (sanctioned edit of `.grace/verification/kernel-closure.xml`)
+
+In `V-M-KERNEL-CLOSURE` only:
+
+1. Directly after the second `<Scenario>` line (the one that starts `A file that cannot be read or does not parse`), add this line with the same indentation:
+
+```xml
+      <Scenario>A relative or alias import whose last segment has a non-code extension is an asset when that exact file exists; otherwise it resolves to the .ts, .tsx or index file of that name (./routeTree.gen to routeTree.gen.ts), which then follows the owner and dependency rules, and it is unresolved when neither exists.</Scenario>
+```
+
+2. In `<TraceAssertion>`, replace the text `and the report, determinism and hasClosureErrors tests.` with `the dotted-module-name tests (resolved to a .ts, .tsx or index file, unresolved when nothing exists, an existing asset wins, the dependency rule through a dotted name, and the alias form), and the report, determinism and hasClosureErrors tests.`
+
+`.grace/graph/kernel-closure.xml` (`M-KERNEL-CLOSURE`) does not change.
+
+### R4 – Docs externals in `telos.ts` (finish T085)
+
+Run `bun scripts/telos.ts closure > /tmp/closure.json` (exit 1 is expected here) and collect the sorted, de-duplicated `detail` of every finding with `code` `closure.unknown-external` whose `loci[0]` is `telos:docs-site`. Check that each name is a key of `dependencies` or `devDependencies` in `apps/docs/package.json`. If one is not, stop and report it. When this was planned, the list was exactly these 17 names, all in the manifest:
+
+```ts
+    packages: [
+      "@axe-core/playwright",
+      "@playwright/test",
+      "@tailwindcss/vite",
+      "@tanstack/react-router",
+      "@tanstack/react-start",
+      "@vitejs/plugin-react",
+      "class-variance-authority",
+      "clsx",
+      "effect",
+      "lucide-react",
+      "mermaid",
+      "minisearch",
+      "radix-ui",
+      "react",
+      "react-dom",
+      "tailwind-merge",
+      "vite",
+    ],
+```
+
+In `telos.ts`, in `docsSite`, replace `packages: [],` with the list the closure check gave you (sorted by code unit, as above). Do not touch `repository`'s `packages: []`. Then run `bun scripts/telos.ts closure` again: it must exit 0, and its `findings` must contain no finding with `severity` `"error"` (only the six `closure.dynamic-import` warnings). If any error is left, stop and report it with its `code`, `file` and `detail`. Do not exclude files and do not add a relation that is not true.
+
+Also check the descriptions in `telos.ts`. The contract asks for "a `purpose` sentence and a `description`" per Locus, where the description is one further sentence that states what the package does. Replace short placeholders such as `"The documentation site."` or `"The Telos repository."` with one real sentence each (for example, for `telos:docs-site`: `"A TanStack Start site that renders the foundation documents, the playground on the real kernel and the semantic report."`). Do not change ids, purposes, sources, packages, relations or containment.
+
+### R5 – Gate wiring (T088)
+
+1. Root `package.json` (sanctioned edit), in `scripts`:
+   - add `"telos": "bun scripts/telos.ts",` and `"telos:check": "bun scripts/telos.ts check",` directly after the `"calculator:agent-demo"` line;
+   - change `verify` to end with `&& bun run grace:lint && bun run telos:check` (append ` && bun run telos:check`; nothing else in the line changes).
+2. `scripts/review-gate.ts`:
+   - append `  { name: "telos:check", command: ["bun", "run", "telos:check"] },` as the last entry of `CHECK_STEPS`, after the `grace:lint` entry;
+   - in the `START_CONTRACT: CHECK_STEPS` block, change `//   OUTPUTS: { ReadonlyArray<CheckStep> - check:bun, format:check, lint, typecheck, test, docs:build, test:e2e, grace:lint; the test step` to `//   OUTPUTS: { ReadonlyArray<CheckStep> - check:bun, format:check, lint, typecheck, test, docs:build, test:e2e, grace:lint, telos:check; the test step` (the rest of the line stays).
+3. `scripts/review-gate.test.ts`: replace the whole test `"docs:build runs after test, test:e2e runs after docs:build, and grace:lint runs last"` with:
+
+```ts
+  test("docs:build runs after test, test:e2e runs after docs:build, grace:lint runs after test:e2e, and telos:check runs last", () => {
+    const names = CHECK_STEPS.map((step) => step.name);
+    const at = (name: string) => names.indexOf(name);
+    expect(at("docs:build")).toBeGreaterThan(at("test"));
+    expect(at("test:e2e")).toBeGreaterThan(at("docs:build"));
+    expect(at("grace:lint")).toBeGreaterThan(at("test:e2e"));
+    expect(at("telos:check")).toBeGreaterThan(at("grace:lint"));
+    expect(names.at(-1)).toBe("telos:check");
+  });
+```
+
+   Write this test change first and run `bun test scripts/review-gate.test.ts`: it must fail before steps 1 and 2 are done (`telos:check` is not in `CHECK_STEPS`), and pass after them, including the no-drift test `"verifyStepNames of the verify script equals the gate's step names, in order (no drift)"`.
+4. Do not edit `.kittify/config.yaml`.
+
+Then run `bun run telos check`. It must exit 0 with `"ok":true`.
+
+### R6 – Register `M-REPOSITORY-MODEL` and `M-TELOS-COMMAND` (T089)
+
+Write `.grace/graph/tooling.xml` exactly as (the two existing modules are unchanged; the two new ones are added after them):
+
+```xml
+<GraceGraphDocument graceVersion="4.0">
+  <GD-TOOLING>
+    <M-BUN-VERSION-GUARD>
+      <Summary>Refuses to run the toolchain on a Bun older than engines.bun in package.json.</Summary>
+      <Path>scripts/check-bun-version.ts</Path>
+    </M-BUN-VERSION-GUARD>
+    <M-REVIEW-GATE>
+      <Summary>Runs the whole check suite for Spec Kitty's review gate and writes one JUnit report with a test case per check.</Summary>
+      <Path>scripts/review-gate.ts</Path>
+      <M-BUN-VERSION-GUARD />
+    </M-REVIEW-GATE>
+    <M-REPOSITORY-MODEL>
+      <Summary>Describes the repository as a Telos model: one Locus per package, application and tooling area, with its purpose, source claims, external packages and dependency relations.</Summary>
+      <Path>telos.ts</Path>
+      <M-KERNEL-API />
+      <M-CALC-INTERFACES />
+    </M-REPOSITORY-MODEL>
+    <M-TELOS-COMMAND>
+      <Summary>Runs the bun run telos developer command over the repository model: list, inspect, verify, closure, impact, check and report, each printing one JSON document.</Summary>
+      <Path>scripts/telos.ts</Path>
+      <M-REPOSITORY-MODEL />
+      <M-KERNEL-API />
+      <M-KERNEL-CLOSURE />
+    </M-TELOS-COMMAND>
+  </GD-TOOLING>
+</GraceGraphDocument>
+```
+
+In `.grace/verification/tooling.xml`:
+
+1. In `V-M-REVIEW-GATE`, replace the Scenario `The gate runs the check steps in the order of the root verify script, and the no-drift test fails when the two lists differ, so a step cannot be added to one and not the other.` with `The gate runs the check steps in the order of the root verify script, ending with grace:lint and then telos:check, and the no-drift test fails when the two lists differ, so a step cannot be added to one and not the other.` Nothing else in `V-M-REVIEW-GATE` changes.
+2. Directly after `</V-M-REVIEW-GATE>` and before `</VD-TOOLING>`, add:
+
+```xml
+    <V-M-REPOSITORY-MODEL>
+      <TestFiles>
+        <File>scripts/telos.test.ts</File>
+      </TestFiles>
+      <Command>bun test scripts/telos.test.ts</Command>
+      <Scenario>The repository model lists telos:kernel and calculator:arithmetic, describes telos:kernel as declared knowledge, and passes check on the real repository with no error diagnostic, no failed or errored verification finding and no closure error.</Scenario>
+      <TraceAssertion>telos.test.ts names the list test, the inspect telos:kernel test and the check-on-the-repository test.</TraceAssertion>
+    </V-M-REPOSITORY-MODEL>
+    <V-M-TELOS-COMMAND>
+      <TestFiles>
+        <File>scripts/telos.test.ts</File>
+      </TestFiles>
+      <Command>bun test scripts/telos.test.ts</Command>
+      <Scenario>Each command prints one JSON document with its documented exit code: list, inspect (exit 2 with LocusNotFound for an unknown id), check (exit 1 for a fixture root with a malformed relation), closure (closure.unowned for an unclaimed fixture file), impact (calculator:arithmetic#add reaches calculator:cli), report (writes a version 1 SemanticReport) and the usage errors (exit 2).</Scenario>
+      <Scenario>On the real repository, verify --static completes in under 2000 ms and closure in under 10000 ms (NFR-003).</Scenario>
+      <TraceAssertion>telos.test.ts names one test per command, the usage error tests, the closure scope test and the two NFR-003 timing tests.</TraceAssertion>
+    </V-M-TELOS-COMMAND>
+```
+
+In `.grace/graph/index.xml`, change only the `GD-TOOLING` block's `<Owns>` to:
+
+```xml
+      <Owns>
+        <M-BUN-VERSION-GUARD />
+        <M-REVIEW-GATE />
+        <M-REPOSITORY-MODEL />
+        <M-TELOS-COMMAND />
+      </Owns>
+```
+
+In `.grace/verification/index.xml`, change only the `VD-TOOLING` block's `<Owns>` to:
+
+```xml
+      <Owns>
+        <V-M-BUN-VERSION-GUARD />
+        <V-M-REVIEW-GATE />
+        <V-M-REPOSITORY-MODEL />
+        <V-M-TELOS-COMMAND />
+      </Owns>
+```
+
+Check the markup of the three new files against "GRACE file markup" below: every export of `telos.ts` and `scripts/telos.ts` has a MODULE_MAP line in file order and a contract block (types and interfaces need only the map line), and `scripts/telos.test.ts` uses `ROLE: TEST`, `MAP_MODE: LOCALS` with every local helper in its map. Run `bun run grace:lint`: it must report `Errors: 0`. If it reports errors in your files, fix them with those rules and name each one in your report.
+
+### R7 – Closure rerun, timing and the fast checks
+
+1. `bun run telos closure`: exit 0, no error finding.
+2. `bun test scripts/telos.test.ts`: 0 fail, including `verify --static completes in under 2000 ms` and `closure completes in under 10000 ms`. At planning time the corrected closure check ran over the 276 files of lane-o in about 70 ms. The limits come from NFR-003; never raise them.
+3. `bun run format` (it writes). At planning time `telos.ts` and `scripts/telos.ts` needed formatting.
+4. `bun run typecheck`, `bun run lint` (exit 0; the existing `no-explicit-any` warning on `parseJson` in `scripts/telos.test.ts` is a warning, not an error), `bun run grace:lint`.
+
+### R8 – The full gate, through the lock wrapper
+
+Other agents may run e2e tests on the same fixed port, so run the full gate through the lock wrapper:
+
+`bash /private/tmp/claude-501/-Users-unknownhero-projects-unknownlab-telos/48f2abba-47cc-4641-91d5-0369d350dc60/scratchpad/withlock.sh bun run verify`
+
+It waits until no other agent holds the lock. Report each step exactly: `check:bun`, `format:check`, `lint`, `typecheck`, `test`, `docs:build`, `test:e2e`, `grace:lint`, `telos:check`. If a step fails and the fix is outside your owned files and the sanctioned edits, stop and report it. If `docs:build` changes a tracked file (for example `apps/docs/src/routeTree.gen.ts`), report it and do not commit that change unless it is part of your work.
+
+### R9 – Commit in the lane worktree
+
+Commit only after R8 is green: the pre-commit hook runs `bun test` and `grace lint` on the whole working tree, so it fails while any part of R1 to R6 is missing. Stage paths explicitly. Never use `git add -A` or `git add .`, never `--no-verify`, and add no AI names or author, co-author or session lines. The shell is fish: pass the body with a second `-m`.
+
+1. The kernel fix:
+   `git add packages/kernel/src/closure.ts packages/kernel/test/closure.test.ts .grace/verification/kernel-closure.xml`
+   `git commit -m "fix(kernel): resolve dotted module names in the closure check" -m "Sanctioned edit by WP15 (tasks.md Shared files): packages/kernel/src/closure.ts, packages/kernel/test/closure.test.ts and .grace/verification/kernel-closure.xml. A relative or alias path with a non-code extension is an asset only when that file exists; otherwise its .ts, .tsx and index files are tried, so ./routeTree.gen resolves to routeTree.gen.ts."`
+2. The repository model and the telos command:
+   `git add telos.ts scripts/telos.ts scripts/telos.test.ts .grace/graph/tooling.xml .grace/verification/tooling.xml .grace/graph/index.xml .grace/verification/index.xml`
+   `git commit -m "feat(tooling): describe the repository with the kernel and add the telos command" -m "Sanctioned edits: own GD-TOOLING and VD-TOOLING blocks of the two GRACE index files."`
+3. The gate wiring:
+   `git add package.json scripts/review-gate.ts scripts/review-gate.test.ts`
+   `git commit -m "build(gate): run telos:check at the end of verify and the review gate" -m "Sanctioned edit: root package.json (telos and telos:check scripts, verify ends with telos:check)."`
+4. `git status --short` must now show nothing outside `kitty-specs/`. `git diff --stat HEAD~3 HEAD` (your three commits) must list only your owned files and the sanctioned edits named in this prompt. Do not compare against `feat/semantic-foundation-rebuild`: lane-o also contains the merged dependency lanes, so that diff is larger.
+
+If the hook fails, fix the cause and commit again. Never bypass it.
+
+### R10 – Clean the lane's planning files, then hand over to review
+
+1. In the lane worktree, run `git restore --source feat/semantic-foundation-rebuild --staged --worktree -- kitty-specs/`. If `git status --short -- kitty-specs/` then shows changes, commit them: `git commit -m "chore(workspace): remove planning artifacts from lane branch"`. Finally `git diff --stat feat/semantic-foundation-rebuild -- kitty-specs/` must print nothing.
+2. Mark T084 to T089 done: `spec-kitty agent tasks mark-status T084 --status done --mission semantic-foundation-rebuild-01M5JFR0`, and the same for T085, T086, T087, T088 and T089.
+3. `spec-kitty agent tasks move-task WP15 --to for_review --mission semantic-foundation-rebuild-01M5JFR0 --note "Repository model, telos command and gate; dotted-module-name fix in the kernel closure check (sanctioned)"`.
+4. If `mark-status` or `move-task` refuses, stop and report the exact message. Do not use `--force` or any skip flag.
+
+Your final message is the reviewer's evidence. Report:
+
+- the R1 failures before the fix (test names and counts);
+- the docs externals list from R4 and the closure result after R4;
+- the R5 review-gate test failure before the wiring and its pass after;
+- each `verify` step from R8, and `grace lint`;
+- the three commit hashes;
+- the move-task result.
 
 ---
 
@@ -204,13 +601,14 @@ The closure API you call (kernel, Bun only, import from `@telos/kernel/closure`)
 ## closure.ts (WP08) — `@telos/kernel/closure`, Bun only
 
 ```ts
-export type ClosureCode = "closure.unowned" | "closure.ambiguous" | "closure.empty-claim" | "closure.undeclared-dependency" | "closure.unknown-external" | "closure.unresolved-import" | "closure.dynamic-import"
+export type ClosureCode = "closure.unowned" | "closure.ambiguous" | "closure.empty-claim" | "closure.undeclared-dependency" | "closure.unknown-external" | "closure.unresolved-import" | "closure.dynamic-import" | "closure.unparsable"
+// eight codes; "closure.unparsable" was added by WP22 (kernel hardening)
 export interface ClosureFinding {
   readonly code: ClosureCode
   readonly severity: "error" | "warning"     // warning for empty-claim and dynamic-import
   readonly file: string | null               // repository-relative path with "/" separators
   readonly loci: ReadonlyArray<string>
-  readonly detail: string                    // the glob, import specifier or package name concerned
+  readonly detail: string                    // the glob, import specifier or package name concerned; "parse" for closure.unparsable
   readonly message: string
   readonly knowledge: "derived" | "unknown"  // "unknown" for closure.dynamic-import (the dependency cannot be determined), "derived" for every other code
 }
@@ -238,16 +636,21 @@ Algorithm:
 1. Scope = the union of `new Bun.Glob(g).scan({ cwd: root, onlyFiles: true })` over `include`, minus files matching any `exclude` glob (`new Bun.Glob(x).match(file)`). The result is sorted.
 2. Claims: for every model Locus with the `telos.source` extension, each glob in `properties.sources` claims the files it matches. A glob matching no file in scope → `closure.empty-claim`.
 3. Owner of a file: the claiming Loci, reduced to those not an ancestor of another claimant. Exactly one → that Locus. More than one → `closure.ambiguous` (loci sorted). Zero → `closure.unowned`.
-4. For each owned file, run `scanImports` (loader `tsx` for `.tsx`, else `ts`) and resolve each specifier:
+4. For each owned file, in file order, read its text and run `scanImports` (loader `tsx` for `.tsx`, else `ts`). If reading the file throws (for example it is not readable) or `scanImports` throws (the file does not parse), the check does not fail: it records one `closure.unparsable` finding (error, `file` = the file, `loci` = [owner], `detail` = `"parse"`, message `"<file> could not be parsed, so its imports were not checked."`, `knowledge` = `"derived"`), skips the imports of that file and continues with the next file. `checkClosure` never fails or dies because of a file's content or permissions. Otherwise resolve each specifier:
    - Relative (`./`, `../`) → try `<path>`, `<path>.ts`, `<path>.tsx`, `<path>/index.ts`, `<path>/index.tsx`, and `.js` → `.ts` replacement. Not found → `closure.unresolved-import`. Its owner B is checked with the dependency rule.
    - `node:*`, `bun`, `bun:*` → platform, always allowed.
    - A specifier starting with an alias `prefix` → replace the prefix with the alias `dir` and resolve it like a relative path from the repository root. Aliases apply only to files under the alias `dir`'s app (the first path segment pair, e.g. `apps/docs/`).
    - A name in `options.packages` (exact, or `name/<sub>`) → read `<root>/<dir>/package.json` and take `exports["."]` (bare name) or `exports["./<sub>"]`. Only string values are used. Resolve it to a repository-relative file. B = the owner of that file. A missing export or file → `closure.unresolved-import`. Then the dependency rule.
-   - Before resolving, remove a query suffix (`?url`, `?raw`). A relative or alias path that then ends with an extension other than `.ts`, `.tsx` or `.js` (for example `.css`, `.json`) is an **asset**: it is allowed when the file exists, and `closure.unresolved-import` otherwise. A workspace subpath that ends with `/package.json` is also an asset and is allowed.
+   - Before resolving, remove a query suffix (`?url`, `?raw`). A relative or alias path whose last segment then has an extension other than `.ts`, `.tsx` or `.js` (for example `.css`, `.json`, `.svg`, and also dotted module names such as `routeTree.gen` or `app.config`) is resolved in this order, which is the order Bun and Vite use (the exact file first, then the code suffixes):
+     1. The file `<path>` exists → an **asset**: allowed, with no owner or dependency check.
+     2. Otherwise the first existing file of `<path>.ts`, `<path>.tsx`, `<path>/index.ts`, `<path>/index.tsx` is a code target (for example `./routeTree.gen` → `routeTree.gen.ts`). It follows the unowned-target rule and the dependency rule below, like any other resolved file.
+     3. Neither → `closure.unresolved-import` with the message `"<specifier> does not resolve to a file."`.
+
+     A path with no extension, or ending with `.ts`, `.tsx` or `.js`, keeps the candidate list of the relative rule above. A workspace subpath that ends with `/package.json` is also an asset and is allowed. (Amended 2026-10-24 while implementing WP15: the first version treated every non-code extension as an asset, so `./routeTree.gen` was reported as unresolved although `routeTree.gen.ts` exists. See the tasks.md deviation "Dotted module names in the closure resolver".)
    - A resolved target file that has no owner (outside the scope or unowned) → `closure.unresolved-import` with the message `"<specifier> resolves to <file>, which no Locus owns."`.
    - Another bare specifier → package name = `@scope/name` or the first segment. Allowed if it is listed in `properties.packages` of an `telos.external` Locus that is the owner or an ancestor of the owner. Otherwise → `closure.unknown-external`.
    - Dependency rule: allowed when B === A, B is an ancestor or descendant of A, or a valid relation (any type) exists from A or any ancestor of A to B or to a capability of B. Otherwise → `closure.undeclared-dependency` (loci = [A, B]).
-5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning).
+5. A file whose text matches `/\bimport\s*\(\s*(?!["'`])/` (a non-literal argument, e.g. `import(name)`) or `/\bimport\s*\(\s*`[^`]*\$\{/` (a template literal with an interpolation, e.g. ``import(`./m/${name}`)``) → one `closure.dynamic-import` finding for that file. A template literal without `${` is a literal: `scanImports` returns it, and it is resolved like a static import (checked with Bun 1.4.4-canary.1 while planning). This text scan runs on every file whose text was read, before `scanImports`, so a file that was read but does not parse can have both `closure.dynamic-import` and `closure.unparsable`. A file that could not be read has only `closure.unparsable`.
 
 Other kernel functions you use (from `@telos/kernel`): `buildModel`, `hasErrors`, `verify` (`VerifyOptions { runner, methods?, loci?, now? }` → `Effect<VerificationReport>` with `summary { passed, failed, error }` and `findings`), `describeLocus(model, id)` and `describeModel(model)` (both `Effect`), `describeVerifications(model, id, report)`, `impact(model, target)` (plain function), `parseCapabilityKey`, `LocusNotFound`, `CapabilityNotFound`, and the types `ModelDescription`, `VerificationReport`, `VerificationDescription`, `LocusDefinition`.
 
@@ -313,6 +716,10 @@ Read these rules before you write anything. They are part of the acceptance crit
 **Sanctioned edits outside `owned_files`** (name each one in your commit body):
 
 - Root `package.json` (owned by WP01): add the `telos` and `telos:check` scripts and append `&& bun run telos:check` to `verify`.
+- `packages/kernel/src/closure.ts` (owned by WP08): the dotted-module-name fix, exactly as in Resume R2.
+- `packages/kernel/test/closure.test.ts` (owned by WP08): the five tests of Resume R1.
+- `.grace/verification/kernel-closure.xml` (owned by WP08): one Scenario and the TraceAssertion change of Resume R3.
+- Your own `GD-TOOLING` / `VD-TOOLING` blocks of `.grace/graph/index.xml` and `.grace/verification/index.xml`.
 
 ## GRACE synchronisation (part of this WP)
 
@@ -351,7 +758,7 @@ Each exported function, constant or class has a contract block right above it:
 // END_CONTRACT: <exportName>
 ```
 
-Exported types and interfaces need only the MODULE_MAP line. Test files use `ROLE: TEST` and `MAP_MODE: LOCALS`, and list their local helpers (or "none") in the map. Optional named regions use `// START_BLOCK_<NAME>` / `// END_BLOCK_<NAME>`. The guides quote these regions (contracts/docs.md).
+Exported types and interfaces need only the MODULE_MAP line. Test files use `ROLE: TEST` and `MAP_MODE: LOCALS`, and list their local helpers in the map. A test file with no local helpers has exactly one map line `(none) - no local helpers`, with the parentheses. Never write `none - no local helpers`: `grace lint` reads the leading identifier of each map line as a symbol name, so a bare `none` counts as a helper that does not exist and fails with `markup.module-map-mismatch`. `(none)` does not start with an identifier, so it keeps the map non-empty (no `markup.module-map-missing`) without naming a symbol. Optional named regions use `// START_BLOCK_<NAME>` / `// END_BLOCK_<NAME>`. The guides quote these regions (contracts/docs.md).
 
 ## GRACE graph and verification layout (created by WP01)
 
@@ -370,11 +777,11 @@ A WP edits **only** its own area documents and its own `<GD-…>` / `<VD-…>` b
 | docs | `graph/docs.xml` `GD-DOCS` | `verification/docs.xml` `VD-DOCS` | WP01 (move), WP18, WP19, WP20 | `M-DOCS-CONTENT`, `M-DOCS-SPEC-REPORT`, `M-DOCS-SITE`, `M-DOCS-PLAYGROUND` (moved); WP18: rewrite `M-DOCS-PLAYGROUND`; WP19: `M-DOCS-SPEC-REPORT` → `M-DOCS-SEMANTIC-REPORT`, add `M-DOCS-INSPECTOR`; WP20: add `M-DOCS-CALCULATOR` |
 | kernel-base | `graph/kernel-base.xml` `GD-KERNEL-BASE` | `verification/kernel-base.xml` `VD-KERNEL-BASE` | WP02 | `M-KERNEL-IDENTITY` → identity.ts, freeze.ts; `M-KERNEL-CANONICAL` → canonical.ts, digest.ts; `M-KERNEL-DIAGNOSTIC` → diagnostic.ts, cycles.ts |
 | kernel-definitions | `GD-KERNEL-DEFINITIONS` | `VD-KERNEL-DEFINITIONS` | WP03 | `M-KERNEL-DEFINITIONS` → relation.ts, capability.ts, extension.ts, archetype.ts, locus.ts, extensions/purpose.ts, extensions/source.ts |
-| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 | `M-KERNEL-MODEL` → model.ts |
+| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 (WP22: adds a path and test files) | `M-KERNEL-MODEL` → model.ts; WP22 adds readonly-map.ts |
 | kernel-verify | `GD-KERNEL-VERIFY` | `VD-KERNEL-VERIFY` | WP05 | `M-KERNEL-VERIFY` → verify.ts |
 | kernel-describe | `GD-KERNEL-DESCRIBE` | `VD-KERNEL-DESCRIBE` | WP06 | `M-KERNEL-DESCRIBE` → describe.ts, fields.ts; `M-KERNEL-INVOKE` → invoke.ts |
 | kernel-decode | `GD-KERNEL-DECODE` | `VD-KERNEL-DECODE` | WP07 | `M-KERNEL-DECODE` → decode.ts |
-| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 | `M-KERNEL-CLOSURE` → closure.ts |
+| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 (WP22: adds a test file) | `M-KERNEL-CLOSURE` → closure.ts |
 | kernel-api | `GD-KERNEL-API` | `VD-KERNEL-API` | WP09 | `M-KERNEL-INTROSPECTION` → introspection.ts; `M-KERNEL-IMPACT` → impact.ts; `M-KERNEL-API` → index.ts |
 | pack-cli | `GD-PACK-CLI` | `VD-PACK-CLI` | WP10 | `M-PACK-CLI` → all `packages/cli/src/*.ts` |
 | pack-agent | `GD-PACK-AGENT` | `VD-PACK-AGENT` | WP11 | `M-PACK-AGENT` → semantics, archetype, tools, introspection-tools, index; `M-PACK-AGENT-MCP` → mcp.ts, client.ts |
@@ -459,7 +866,7 @@ and in `.grace/verification/index.xml` the same with `<VD-…>` and `<V-M-… />
 Lint rules that were confirmed while planning (they fail the gate when ignored):
 
 - `START_MODULE_MAP` lists **every** export of the file, one line each (types and interfaces too), in file order.
-- Test files use `ROLE: TEST`, `MAP_MODE: LOCALS`, and a **non-empty** map: list the local helpers, or one line `none - no local helpers`.
+- Test files use `ROLE: TEST`, `MAP_MODE: LOCALS`, and a **non-empty** map: list the local helpers, or exactly one line `(none) - no local helpers` (with the parentheses; a bare `none` fails `grace lint` with `markup.module-map-mismatch`).
 - Every `<File>` in a verification entry must exist. Register a module only together with its verification entry, after the test files exist.
 - A module's dependency modules are empty child elements (`<M-KERNEL-DIAGNOSTIC />`) and must be registered ids.
 
@@ -474,7 +881,7 @@ Execution worktrees are allocated per computed lane from `lanes.json`. Start wit
 
 ### T084 – Failing tests
 
-Create `scripts/telos.test.ts` (GRACE test markup) with every test of the contract's Tests list. Use `mkdtempSync(join(tmpdir(), "telos-cmd-"))` for temporary directories and remove them in `afterEach`. The fixture root for `check` is `Locus.make({ id: "fix:root", contains: [Locus.extend(Source).make({ id: "fix:a", properties: { sources: ["a/**/*.ts"] }, relations: [SourceDependsOn.to("fix:missing")] })] })` (a relation to a missing Locus is an error diagnostic). The closure fixture writes `a/x.ts` (claimed) and `b/y.ts` (unclaimed) into the temporary directory and runs `runTelos(["closure"], { root, cwd: dir })`; assert a `closure.unowned` finding for `b/y.ts` and exit code 1. Timing tests measure `performance.now()` around `runTelos` on the real repository. Each test that runs on the real repository gets a 30 s timeout.
+Create `scripts/telos.test.ts` (GRACE test markup) with every test of the contract's Tests list. Use `mkdtempSync(join(tmpdir(), "telos-cmd-"))` for temporary directories and remove them in `afterEach`. The fixture root for `check` is `Locus.make({ id: "fix:root", contains: [Locus.extend(Source).make({ id: "fix:a", properties: { sources: ["a/**/*.ts"] }, relations: [SourceDependsOn.to("fix:missing")] })] })` (a relation to a missing Locus is an error diagnostic). The closure fixture writes `scripts/a/x.ts` (claimed) and `scripts/b/y.ts` (unclaimed) into the temporary directory and runs `runTelos(["closure"], { root, cwd: dir })` with a root whose Source Locus claims `scripts/a/**/*.ts`; assert a `closure.unowned` finding for `scripts/b/y.ts` and exit code 1. (The files must be under `scripts/`, because `closure` always uses `CLOSURE_SCOPE`, and `a/x.ts` or `b/y.ts` would be outside it. Corrected 2026-10-24.) Timing tests measure `performance.now()` around `runTelos` on the real repository. Each test that runs on the real repository gets a 30 s timeout.
 
 Run them and see them fail.
 

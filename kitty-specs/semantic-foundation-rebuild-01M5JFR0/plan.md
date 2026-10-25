@@ -25,7 +25,7 @@ All design choices that the directive leaves open are the defaults D1–D8 in th
 **Project Type**: Bun workspace monorepo (`packages/*`, `apps/*`)
 **Performance Goals**: NFR-003. Repository model build plus static rules under 2 s, and closure under 10 s.
 **Constraints**: C-001..C-009. Every work package leaves `bun run verify` green. There are no compatibility aliases for removed names.
-**Scale/Scope**: about 20 kernel and pack modules, 1 app, about 25 new or rewritten docs, and 21 work packages.
+**Scale/Scope**: about 20 kernel and pack modules, 1 app, about 25 new or rewritten docs, and 22 work packages (WP22 was added after the reviews of WP03, WP04 and WP08).
 
 ## Charter Check
 
@@ -150,12 +150,15 @@ flowchart LR
   WP06 & WP07 --> WP09
   WP09 --> WP10 & WP11 & WP12 & WP13
   WP10 & WP11 & WP12 & WP13 --> WP14
-  WP14 & WP08 --> WP15
+  WP08 & WP09 --> WP22
+  WP14 & WP08 & WP22 --> WP15
   WP16 --> WP17
-  WP09 & WP16 --> WP18
-  WP15 & WP18 --> WP19 --> WP20
+  WP09 & WP16 & WP22 --> WP18
+  WP15 & WP18 & WP22 --> WP19 --> WP20
   WP20 & WP17 --> WP21
 ```
+
+WP22 (kernel hardening) was added during implementation from the reviews of WP03, WP04 and WP08: `buildModel` reports an empty Archetype `appliesTo` (`archetype.applies-to-empty`), `checkClosure` reports a file it cannot read or parse (`closure.unparsable`) instead of failing, and the model maps are read-only at runtime. It runs after WP08 and WP09 and before WP15, WP18 and WP19, whose prompts quote the closure codes, `DiagnosticCode` or the model maps.
 
 WP16 (foundation docs) depends on nothing and runs alongside the code from the start. WP17 (decisions) follows WP16, because WP16 deletes the old terms and principles and fixes every link to them, including the links in ADRs; WP17 then rewrites the ADR content without touching the same lines in parallel.
 

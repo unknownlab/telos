@@ -11,6 +11,9 @@ requirement_refs:
 planning_base_branch: feat/semantic-foundation-rebuild
 merge_target_branch: feat/semantic-foundation-rebuild
 branch_strategy: Planning artifacts for this mission were generated on feat/semantic-foundation-rebuild. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/semantic-foundation-rebuild unless the human explicitly redirects the landing branch.
+base_branch: kitty/mission-semantic-foundation-rebuild-01M5JFR0
+base_commit: eff4051992c42fa386790cc69bb48c7300e876fc
+created_at: '2026-10-24T09:32:09.544509+00:00'
 subtasks:
 - T030
 - T031
@@ -329,7 +332,7 @@ Each exported function, constant or class has a contract block right above it:
 // END_CONTRACT: <exportName>
 ```
 
-Exported types and interfaces need only the MODULE_MAP line. Test files use `ROLE: TEST` and `MAP_MODE: LOCALS`, and list their local helpers (or "none") in the map. Optional named regions use `// START_BLOCK_<NAME>` / `// END_BLOCK_<NAME>`. The guides quote these regions (contracts/docs.md).
+Exported types and interfaces need only the MODULE_MAP line. Test files use `ROLE: TEST` and `MAP_MODE: LOCALS`, and list their local helpers in the map. A test file with no local helpers has exactly one map line `(none) - no local helpers`, with the parentheses. Never write `none - no local helpers`: `grace lint` reads the leading identifier of each map line as a symbol name, so a bare `none` counts as a helper that does not exist and fails with `markup.module-map-mismatch`. `(none)` does not start with an identifier, so it keeps the map non-empty (no `markup.module-map-missing`) without naming a symbol. Optional named regions use `// START_BLOCK_<NAME>` / `// END_BLOCK_<NAME>`. The guides quote these regions (contracts/docs.md).
 
 ## GRACE graph and verification layout (created by WP01)
 
@@ -437,7 +440,7 @@ and in `.grace/verification/index.xml` the same with `<VD-…>` and `<V-M-… />
 Lint rules that were confirmed while planning (they fail the gate when ignored):
 
 - `START_MODULE_MAP` lists **every** export of the file, one line each (types and interfaces too), in file order.
-- Test files use `ROLE: TEST`, `MAP_MODE: LOCALS`, and a **non-empty** map: list the local helpers, or one line `none - no local helpers`.
+- Test files use `ROLE: TEST`, `MAP_MODE: LOCALS`, and a **non-empty** map: list the local helpers, or exactly one line `(none) - no local helpers` (with the parentheses; a bare `none` fails `grace lint` with `markup.module-map-mismatch`).
 - Every `<File>` in a verification entry must exist. Register a module only together with its verification entry, after the test files exist.
 - A module's dependency modules are empty child elements (`<M-KERNEL-DIAGNOSTIC />`) and must be registered ids.
 

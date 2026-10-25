@@ -93,6 +93,311 @@ Check `spec-kitty agent tasks status --mission semantic-foundation-rebuild-01M5J
 
 ---
 
+## Resume: the remaining work (added 2026-10-24)
+
+WP14 is `in_progress`. Its worktree is `.worktrees/semantic-foundation-rebuild-01M5JFR0-lane-n` (branch `kitty/mission-semantic-foundation-rebuild-01M5JFR0-lane-n`). Nearly all of T076–T082 is already written there and is **not committed yet**:
+
+- modified: `apps/calculator/src/index.ts`, `package.json`
+- new: `apps/calculator/bin/` (`cli.ts`, `mcp.ts`, `agent-demo.ts`), `apps/calculator/src/app.ts`, `apps/calculator/src/interfaces.ts`, and `apps/calculator/test/` (`agent-demo.test.ts`, `app.test.ts`, `cases.ts`, `cli-binary.test.ts`, `impact.test.ts`, `interfaces.test.ts`, `mcp.test.ts`, `verification.test.ts`)
+
+Work only in that worktree. Run `git status --short` first and check that it shows these files. **Keep this work.** Do not delete, rewrite or `git checkout`/`git restore` any of these files, and do not stash them. Change them only as R3 says. Then do R1 to R7 in order. Do not run `spec-kitty agent action implement` again: the WP is already claimed.
+
+### R1 – Regression test for the MCP startup race (write it first, see it fail)
+
+**The defect.** `serveMcp` (`packages/agent/src/mcp.ts`, WP11) builds `McpServer.layerStdio`, which starts reading stdin, *before* `registerTools` adds the tools. When a request is already waiting on stdin, the server answers it with no tools: `tools/list` is `[]`, and `tools/call add` fails with "Tool 'add' not found". That is why `apps/calculator/test/mcp.test.ts` and `agent-demo.test.ts` fail at random. The fix is a sanctioned edit of WP11's files (tasks.md Shared files table; contracts/packs.md, "Startup order").
+
+Edit `packages/agent/test/mcp.test.ts` (sanctioned edit):
+
+1. In its `START_MODULE_MAP`, add two lines directly after the `spawnFixture` line:
+
+```ts
+//   STARTUP_RUNS - how many fresh fixture servers the startup-order test starts
+//   STARTUP_REQUESTS - initialize, notifications/initialized and tools/list as one newline-delimited stdin payload
+```
+
+2. Directly after the line `const spawnFixture = () => McpStdioClient.spawn(["bun", fixtureServer]);`, add:
+
+```ts
+const STARTUP_RUNS = 10;
+const STARTUP_REQUESTS = [
+  {
+    jsonrpc: "2.0",
+    id: 1,
+    method: "initialize",
+    params: {
+      protocolVersion: "2025-06-18",
+      capabilities: {},
+      clientInfo: { name: "telos-startup-test", version: "0.0.0" },
+    },
+  },
+  { jsonrpc: "2.0", method: "notifications/initialized" },
+  { jsonrpc: "2.0", id: 2, method: "tools/list", params: {} },
+]
+  .map((message) => JSON.stringify(message) + "\n")
+  .join("");
+```
+
+3. Inside the `describe`, directly before the test named `"tools/call double returns the output as text and structured content"`, add:
+
+```ts
+  test(
+    "tools/list is complete when it is already waiting on stdin as the first request after initialize",
+    async () => {
+      const expected = ["double", ...INTROSPECTION_TOOL_NAMES].sort();
+      for (let run = 0; run < STARTUP_RUNS; run++) {
+        const proc = Bun.spawn(["bun", fixtureServer], {
+          stdin: new TextEncoder().encode(STARTUP_REQUESTS),
+          stdout: "pipe",
+          stderr: "pipe",
+        });
+        const stdout = await new Response(proc.stdout).text();
+        expect(await proc.exited).toBe(0);
+        const response = stdout
+          .split("\n")
+          .filter((line) => line.trim() !== "")
+          .map(
+            (line) =>
+              JSON.parse(line) as {
+                id?: unknown;
+                result?: { tools?: ReadonlyArray<{ name: string }> };
+              },
+          )
+          .find((message) => message.id === 2);
+        const names = (response?.result?.tools ?? [])
+          .map((tool) => tool.name)
+          .sort();
+        expect(names).toEqual(expected);
+      }
+    },
+    TIMEOUT,
+  );
+```
+
+Run `bun test packages/agent/test/mcp.test.ts`. The new test must **fail** before R2, because `names` is `[]`. When this was planned, 18 of 20 runs failed this way. Note the failure for your report.
+
+### R2 – Fix `serveMcp` (sanctioned edit of `packages/agent/src/mcp.ts`)
+
+Make exactly these changes and nothing else:
+
+1. Module contract `SCOPE` line. Replace `//   SCOPE: BunStdio, registerTools and serveMcp. Out:` with `//   SCOPE: BunStdio, registerTools, serveMcp and the module-local stdin gate that holds back every request until all tools are registered. Out:`. Keep the rest of the line.
+2. Add `Deferred,` to the `import { ... } from "effect";` list, between `Context,` and `Effect,`.
+3. Directly before `interface Served {`, add this module-local helper. Do not export it and do not add it to the MODULE_MAP: the map lists exports only (`MAP_MODE: EXPORTS`).
+
+```ts
+// Holds back every stdin byte until `ready` is done, so the server reads no request before all tools are registered.
+const gateStdin = (
+  ready: Deferred.Deferred<void>,
+): Layer.Layer<Stdio.Stdio, never, Stdio.Stdio> =>
+  Layer.effect(
+    Stdio.Stdio,
+    Effect.gen(function* () {
+      const stdio = yield* Stdio.Stdio;
+      return Stdio.make({
+        args: stdio.args,
+        stdout: (options) => stdio.stdout(options),
+        stderr: (options) => stdio.stderr(options),
+        stdin: Stream.unwrap(Effect.as(Deferred.await(ready), stdio.stdin)),
+      });
+    }),
+  );
+```
+
+4. In the `serveMcp` contract block:
+   - Replace the PURPOSE line with `//   PURPOSE: Serve the agent Locus of a root Locus over MCP stdio, naming the server after its server property. All tools are registered before the server reads its first request, so tools/list is complete and every tool is callable from the first request on.`
+   - Replace the SIDE_EFFECTS line with `//   SIDE_EFFECTS: reads stdin (only after registerTools has finished) and writes the protocol to stdout; sets process.exitCode 1 on a failure that is not an interrupt`.
+5. In the body of `serveMcp`, replace the `const exit = await Effect.runPromiseExit(...)` statement with:
+
+```ts
+  const ready = Deferred.makeUnsafe<void>();
+  const exit = await Effect.runPromiseExit(
+    Layer.launch(
+      Layer.effectDiscard(Deferred.succeed(ready, undefined)).pipe(
+        Layer.provide(registerTools(telos, agentLocusId)),
+        Layer.provide(
+          McpServer.layerStdio({
+            name,
+            version: options.version,
+            protocols: [McpProtocol.v2025_06_18],
+          }),
+        ),
+        Layer.provide(gateStdin(ready)),
+        Layer.provide(BunStdio),
+      ),
+    ) as Effect.Effect<never, unknown, never>,
+  );
+```
+
+`Layer.provide` builds the provided layer first. So the build order is `BunStdio`, then the gate, then the server (its stdin reader waits on `ready`), then `registerTools`, then the layer that completes `ready`. `BunStdio`, `registerTools`, the exit handling after this statement and every export stay unchanged.
+
+6. In `.grace/verification/pack-agent.xml` (sanctioned edit), change only the `V-M-PACK-AGENT-MCP` sentences:
+   - In `<Scenario>`, replace `answers tools/call round trips with tool results, and a server` with `answers tools/call round trips with tool results, lists every tool even when tools/list is the first request after initialize and is already waiting on stdin when the server starts, and a server`.
+   - In `<TraceAssertion>`, replace `mcp.test.ts names the initialize, tools/list, tools/call` with `mcp.test.ts names the initialize, tools/list, startup-order tools/list, tools/call`.
+
+   The graph entry `M-PACK-AGENT-MCP` (`.grace/graph/pack-agent.xml`) does not change.
+
+Acceptance for R1 and R2:
+
+- `bun test packages/agent/test` passes, including the new test.
+- Run `bun test apps/calculator/test/mcp.test.ts apps/calculator/test/agent-demo.test.ts packages/agent/test/mcp.test.ts` **five times** in a row. Every run must report `0 fail`. When this was planned, 8 of 8 runs passed with the fix, and the calculator server listed all 10 tools in 30 of 30 fresh starts.
+
+If an API above does not exist or does not typecheck, stop and report it. Do not change the design.
+
+### R3 – Open GRACE markup items in the calculator files
+
+Run `bun run grace:lint`. At planning time it reported these 11 errors. Fix each one exactly as described:
+
+1. `apps/calculator/src/app.ts`, `markup.overlapping-markers` / `markup.mismatched-marker` (8 errors). A contract marker may not sit inside a `START_BLOCK_`. Move the four contract blocks `START_CONTRACT: CalculatorApp`, `makeApp`, `app` and `calculatorModel` (each from its `// START_CONTRACT:` line to its `// END_CONTRACT:` line) out of the block. Put them directly above `// START_BLOCK_CALCULATOR_APP`, in the same order, with one blank line between them. Inside the block keep only the code: `export const CalculatorApp = ...`, `export function makeApp(...)`, `export const app = ...` and `export const calculatorModel = buildModel(app);`, each separated by one blank line, and then `// END_BLOCK_CALCULATOR_APP`. This is the same shape WP13 used for `ARITHMETIC_LOCUS` in `apps/calculator/src/arithmetic.ts`. Do not change any code line.
+2. `apps/calculator/test/cases.ts`, `markup.module-map-mismatch`. Replace the MODULE_MAP body with these lines in this order (file order):
+
+```ts
+//   Case - one row of the shared case table
+//   Normalized - the comparable outcome of one interface
+//   byCodeUnit - plain code-unit comparison of two strings
+//   pathsOf - the sorted issue paths of an invocation error
+//   CASES - the fourteen shared cases in table order
+//   argvOf - the CLI argv of a case
+//   normalizeOutcome - normalizes a kernel invocation outcome
+//   normalizeCli - normalizes a CLI result
+//   normalizeTool - normalizes a tool result
+//   matchesExpected - whether a normalized outcome matches a case's expectation
+```
+
+3. `apps/calculator/test/mcp.test.ts`, `markup.module-map-mismatch`. Add the line `//   ARITHMETIC_ID - the id of the arithmetic Locus` directly after the `//   MCP - ...` map line.
+4. `apps/calculator/test/verification.test.ts`, `markup.module-map-mismatch`. Add the line `//   ARCHETYPES - the five archetypes that apply to the calculator` directly before the `//   APPLICABLE - ...` map line.
+
+The next item is not reported by lint, but it is required.
+
+5. `apps/calculator/bin/agent-demo.ts` has local helpers, but its map says `(none) - no local helpers`. It is a script with no exports. In its module contract, change `ROLE: RUNTIME` to `ROLE: SCRIPT` and `MAP_MODE: EXPORTS` to `MAP_MODE: LOCALS`: grace requires `MAP_MODE EXPORTS` for `RUNTIME` and `LOCALS` for `SCRIPT`. Then replace its MODULE_MAP body with these lines (file order):
+
+```ts
+//   MCP - the absolute path of bin/mcp.ts
+//   ARITHMETIC_ID - the id of the arithmetic Locus
+//   OPERATION_NAMES - the names of the four calculator tools
+//   EXPECTED_AFFECTED - the interface Loci the impact step expects
+//   FIXED_VALUES - the fixed operand values of the call-add step
+//   CallResponse - the part of a tools/call result the steps read
+//   outputOf - the output of a successful tool result
+//   errorTagOf - the error tag of a failed tool result
+//   CapabilityEntry - one capability of the telos_capabilities output
+//   addEntryOf - the add capability of a telos_capabilities response
+//   requiredOf - the required field names of an input schema
+//   failed - the names of the steps whose expectation did not hold
+//   printStep - prints one step line to stdout
+//   runStep - runs one step, records whether it held and prints it
+//   client - the deterministic MCP client of the run
+```
+
+If `grace lint` reports errors that are not in this list, fix them with the rules in "GRACE file markup" below, and name each one in your report. `bin/cli.ts` and `bin/mcp.ts` keep `ROLE: RUNTIME`, `MAP_MODE: EXPORTS` and `(none) - no local helpers`; lint accepts them.
+
+### R4 – Register `M-CALC-INTERFACES` (T083)
+
+Write `.grace/graph/calculator-interfaces.xml` exactly as:
+
+```xml
+<GraceGraphDocument graceVersion="4.0">
+  <GD-CALCULATOR-INTERFACES>
+    <M-CALC-INTERFACES>
+      <Summary>Exposes the calculator arithmetic Locus through CLI, web and agent interface Loci inside the calculator application Locus, checks them with the CalculatorInterfaces archetype, and provides the CLI, MCP server and deterministic agent demo binaries.</Summary>
+      <Path>apps/calculator/src/interfaces.ts</Path>
+      <Path>apps/calculator/src/app.ts</Path>
+      <Path>apps/calculator/src/index.ts</Path>
+      <Path>apps/calculator/bin/cli.ts</Path>
+      <Path>apps/calculator/bin/mcp.ts</Path>
+      <Path>apps/calculator/bin/agent-demo.ts</Path>
+      <M-CALC-ARITHMETIC />
+      <M-PACK-CLI />
+      <M-PACK-WEB />
+      <M-PACK-AGENT />
+      <M-PACK-AGENT-MCP />
+      <M-KERNEL-API />
+    </M-CALC-INTERFACES>
+  </GD-CALCULATOR-INTERFACES>
+</GraceGraphDocument>
+```
+
+Write `.grace/verification/calculator-interfaces.xml` exactly as:
+
+```xml
+<GraceVerificationDocument graceVersion="4.0">
+  <VD-CALCULATOR-INTERFACES>
+    <V-M-CALC-INTERFACES>
+      <TestFiles>
+        <File>apps/calculator/test/interfaces.test.ts</File>
+        <File>apps/calculator/test/app.test.ts</File>
+        <File>apps/calculator/test/verification.test.ts</File>
+        <File>apps/calculator/test/impact.test.ts</File>
+        <File>apps/calculator/test/cli-binary.test.ts</File>
+        <File>apps/calculator/test/mcp.test.ts</File>
+        <File>apps/calculator/test/agent-demo.test.ts</File>
+      </TestFiles>
+      <Command>bun test apps/calculator/test</Command>
+      <Scenario>The model builds without diagnostics; every shared case gives the same normalized outcome through invoke, the CLI in memory, callTool and the web form; each CalculatorInterfaces rule passes on the app and fails on a broken variant; verify reports no failed or errored finding and a finding for every rule of the five applicable archetypes; the impact of the add contract reaches exactly the three interface Loci and a newly added interface without source changes; the CLI binary, the MCP server and the agent demo give the expected exit codes and outputs.</Scenario>
+      <TraceAssertion>interfaces.test.ts names one test per case; app.test.ts names one passing and one failing test per rule; verification.test.ts and impact.test.ts name the verify and impact assertions; cli-binary.test.ts names one test per case and --help; mcp.test.ts names the server name, tools/list, schemas, cases, telos_inspect and unknown tool tests; agent-demo.test.ts names the seven-step run.</TraceAssertion>
+    </V-M-CALC-INTERFACES>
+  </VD-CALCULATOR-INTERFACES>
+</GraceVerificationDocument>
+```
+
+In `.grace/graph/index.xml`, change only the `GD-CALCULATOR-INTERFACES` block: replace its `<Owns />` with
+
+```xml
+      <Owns>
+        <M-CALC-INTERFACES />
+      </Owns>
+```
+
+In `.grace/verification/index.xml`, change only the `VD-CALCULATOR-INTERFACES` block: replace its `<Owns />` with
+
+```xml
+      <Owns>
+        <V-M-CALC-INTERFACES />
+      </Owns>
+```
+
+In `.grace/graph/calculator-core.xml` (sanctioned edit), delete only the line `      <Path>apps/calculator/src/index.ts</Path>` from `M-CALC-ARITHMETIC`.
+
+`bun run grace:lint` must then report `Errors: 0`. When this was planned, R1 to R4 together gave `No issues found.`
+
+### R5 – Format and the full gate
+
+1. `bun run format` (it writes). At planning time, nine of the new calculator files needed formatting.
+2. `bun run verify`. Report each step exactly: `check:bun`, `format:check`, `lint`, `typecheck`, `test`, `docs:build`, `test:e2e`, `grace:lint`. Lint warnings that already existed are not failures; lint must exit 0.
+3. Run the five-times loop from R2 once more after formatting.
+
+If a step fails and the fix is outside your owned files and the sanctioned edits, stop and report it.
+
+### R6 – Commit in the lane worktree
+
+Stage paths explicitly. Never use `git add -A` or `git add .`, never `--no-verify`, and add no AI names or author, co-author or session lines. The shell is fish: pass the body with a second `-m`.
+
+1. The agent fix, in one commit:
+   `git add packages/agent/src/mcp.ts packages/agent/test/mcp.test.ts .grace/verification/pack-agent.xml`
+   `git commit -m "fix(agent): register every MCP tool before the server reads stdin" -m "Sanctioned edit by WP14 (tasks.md Shared files): packages/agent/src/mcp.ts, packages/agent/test/mcp.test.ts and .grace/verification/pack-agent.xml. serveMcp now gates stdin until registerTools has finished, so tools/list is complete from the first request."`
+2. The calculator work, in one commit:
+   `git add apps/calculator package.json .grace/graph/calculator-interfaces.xml .grace/verification/calculator-interfaces.xml .grace/graph/index.xml .grace/verification/index.xml .grace/graph/calculator-core.xml`
+   `git commit -m "feat(calculator): expose arithmetic through CLI, web and agent interfaces" -m "Sanctioned edits: root package.json (three calculator scripts), .grace/graph/calculator-core.xml (index.ts path removed from M-CALC-ARITHMETIC), own GD-/VD-CALCULATOR-INTERFACES blocks of the two GRACE index files."`
+3. `git status --short` must now show nothing outside `kitty-specs/`. `git diff --stat HEAD~2 HEAD` (your two commits) must list only your owned files and the sanctioned edits named in this prompt. Do not compare against `feat/semantic-foundation-rebuild`: lane-n also contains the merged dependency lanes, so that diff is larger.
+
+The pre-commit hook runs checks. If it fails, fix the cause and commit again. Never bypass it.
+
+### R7 – Clean the lane's planning files, then hand over to review
+
+1. In the lane worktree, run `git restore --source feat/semantic-foundation-rebuild --staged --worktree -- kitty-specs/`. If `git status --short -- kitty-specs/` then shows changes, commit them: `git commit -m "chore(workspace): remove planning artifacts from lane branch"`. Finally `git diff --stat feat/semantic-foundation-rebuild -- kitty-specs/` must print nothing.
+2. Mark T076 to T083 done: `spec-kitty agent tasks mark-status T076 --status done --mission semantic-foundation-rebuild-01M5JFR0`, and the same for T077, T078, T079, T080, T081, T082 and T083.
+3. `spec-kitty agent tasks move-task WP14 --to for_review --mission semantic-foundation-rebuild-01M5JFR0 --note "Calculator interfaces, binaries and tests; MCP startup-order fix in @telos/agent (sanctioned)"`.
+4. If `mark-status` or `move-task` refuses, stop and report the exact message. Do not use `--force` or any skip flag.
+
+Your final message is the reviewer's evidence. Report:
+
+- the R1 failure before the fix;
+- the five-run loop results;
+- each `verify` step;
+- `grace lint`;
+- both commit hashes;
+- the move-task result.
+
+---
+
 ## Objective
 
 Expose the one arithmetic implementation (`calculator:arithmetic`, WP13) through three interface Loci (CLI, Web, Agent) inside the `calculator:app` Locus, check them with the `CalculatorInterfaces` Archetype, add the three binaries (CLI, MCP server, deterministic agent demo), and prove with tests that all interfaces agree on a shared case table.
@@ -270,6 +575,7 @@ export function toolInputSchema(input: JsonSchemaDocument): Readonly<Record<stri
 export const INTROSPECTION_TOOL_NAMES: ReadonlyArray<string>
 // @telos/agent/mcp (Bun only; bin files only)
 export const serveMcp: (root: LocusDefinition, agentLocusId: string, options: { readonly version: string }) => Promise<void>
+// registers every tool before it reads the first request: tools/list is complete from the first request on (contracts/packs.md "Startup order"; WP14 applies this fix, R2)
 // @telos/agent/client (Bun only; bin files and tests only)
 export class McpStdioClient {
   static spawn(command: ReadonlyArray<string>, options?: { readonly cwd?: string; readonly timeoutMs?: number }): Promise<McpStdioClient> // performs initialize
@@ -347,6 +653,9 @@ Read these rules before you write anything. They are part of the acceptance crit
 
 - Root `package.json` (owned by WP01): add the three `calculator*` scripts only.
 - `.grace/graph/calculator-core.xml` (WP13): remove the `apps/calculator/src/index.ts` `<Path>` from `M-CALC-ARITHMETIC` only.
+- `packages/agent/src/mcp.ts` (WP11): the MCP startup-order fix exactly as R2. Add the module-local `gateStdin`, the new `serveMcp` composition, and the SCOPE, PURPOSE and SIDE_EFFECTS lines. Nothing else.
+- `packages/agent/test/mcp.test.ts` (WP11): the startup-order test with `STARTUP_RUNS`, `STARTUP_REQUESTS` and their two map lines, exactly as R1.
+- `.grace/verification/pack-agent.xml` (WP11): the two `V-M-PACK-AGENT-MCP` sentence changes of R2 step 6.
 
 ## GRACE synchronisation (part of this WP)
 
@@ -385,7 +694,7 @@ Each exported function, constant or class has a contract block right above it:
 // END_CONTRACT: <exportName>
 ```
 
-Exported types and interfaces need only the MODULE_MAP line. Test files use `ROLE: TEST` and `MAP_MODE: LOCALS`, and list their local helpers (or "none") in the map. Optional named regions use `// START_BLOCK_<NAME>` / `// END_BLOCK_<NAME>`. The guides quote these regions (contracts/docs.md).
+Exported types and interfaces need only the MODULE_MAP line. Test files use `ROLE: TEST` and `MAP_MODE: LOCALS`, and list their local helpers in the map. A test file with no local helpers has exactly one map line `(none) - no local helpers`, with the parentheses. Never write `none - no local helpers`: `grace lint` reads the leading identifier of each map line as a symbol name, so a bare `none` counts as a helper that does not exist and fails with `markup.module-map-mismatch`. `(none)` does not start with an identifier, so it keeps the map non-empty (no `markup.module-map-missing`) without naming a symbol. Optional named regions use `// START_BLOCK_<NAME>` / `// END_BLOCK_<NAME>`. The guides quote these regions (contracts/docs.md).
 
 ## GRACE graph and verification layout (created by WP01)
 
@@ -404,11 +713,11 @@ A WP edits **only** its own area documents and its own `<GD-…>` / `<VD-…>` b
 | docs | `graph/docs.xml` `GD-DOCS` | `verification/docs.xml` `VD-DOCS` | WP01 (move), WP18, WP19, WP20 | `M-DOCS-CONTENT`, `M-DOCS-SPEC-REPORT`, `M-DOCS-SITE`, `M-DOCS-PLAYGROUND` (moved); WP18: rewrite `M-DOCS-PLAYGROUND`; WP19: `M-DOCS-SPEC-REPORT` → `M-DOCS-SEMANTIC-REPORT`, add `M-DOCS-INSPECTOR`; WP20: add `M-DOCS-CALCULATOR` |
 | kernel-base | `graph/kernel-base.xml` `GD-KERNEL-BASE` | `verification/kernel-base.xml` `VD-KERNEL-BASE` | WP02 | `M-KERNEL-IDENTITY` → identity.ts, freeze.ts; `M-KERNEL-CANONICAL` → canonical.ts, digest.ts; `M-KERNEL-DIAGNOSTIC` → diagnostic.ts, cycles.ts |
 | kernel-definitions | `GD-KERNEL-DEFINITIONS` | `VD-KERNEL-DEFINITIONS` | WP03 | `M-KERNEL-DEFINITIONS` → relation.ts, capability.ts, extension.ts, archetype.ts, locus.ts, extensions/purpose.ts, extensions/source.ts |
-| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 | `M-KERNEL-MODEL` → model.ts |
+| kernel-model | `GD-KERNEL-MODEL` | `VD-KERNEL-MODEL` | WP04 (WP22: adds a path and test files) | `M-KERNEL-MODEL` → model.ts; WP22 adds readonly-map.ts |
 | kernel-verify | `GD-KERNEL-VERIFY` | `VD-KERNEL-VERIFY` | WP05 | `M-KERNEL-VERIFY` → verify.ts |
 | kernel-describe | `GD-KERNEL-DESCRIBE` | `VD-KERNEL-DESCRIBE` | WP06 | `M-KERNEL-DESCRIBE` → describe.ts, fields.ts; `M-KERNEL-INVOKE` → invoke.ts |
 | kernel-decode | `GD-KERNEL-DECODE` | `VD-KERNEL-DECODE` | WP07 | `M-KERNEL-DECODE` → decode.ts |
-| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 | `M-KERNEL-CLOSURE` → closure.ts |
+| kernel-closure | `GD-KERNEL-CLOSURE` | `VD-KERNEL-CLOSURE` | WP08 (WP22: adds a test file) | `M-KERNEL-CLOSURE` → closure.ts |
 | kernel-api | `GD-KERNEL-API` | `VD-KERNEL-API` | WP09 | `M-KERNEL-INTROSPECTION` → introspection.ts; `M-KERNEL-IMPACT` → impact.ts; `M-KERNEL-API` → index.ts |
 | pack-cli | `GD-PACK-CLI` | `VD-PACK-CLI` | WP10 | `M-PACK-CLI` → all `packages/cli/src/*.ts` |
 | pack-agent | `GD-PACK-AGENT` | `VD-PACK-AGENT` | WP11 | `M-PACK-AGENT` → semantics, archetype, tools, introspection-tools, index; `M-PACK-AGENT-MCP` → mcp.ts, client.ts |
@@ -493,7 +802,7 @@ and in `.grace/verification/index.xml` the same with `<VD-…>` and `<V-M-… />
 Lint rules that were confirmed while planning (they fail the gate when ignored):
 
 - `START_MODULE_MAP` lists **every** export of the file, one line each (types and interfaces too), in file order.
-- Test files use `ROLE: TEST`, `MAP_MODE: LOCALS`, and a **non-empty** map: list the local helpers, or one line `none - no local helpers`.
+- Test files use `ROLE: TEST`, `MAP_MODE: LOCALS`, and a **non-empty** map: list the local helpers, or exactly one line `(none) - no local helpers` (with the parentheses; a bare `none` fails `grace lint` with `markup.module-map-mismatch`).
 - Every `<File>` in a verification entry must exist. Register a module only together with its verification entry, after the test files exist.
 - A module's dependency modules are empty child elements (`<M-KERNEL-DIAGNOSTIC />`) and must be registered ids.
 
@@ -592,6 +901,8 @@ Export exactly the contract list: WP13's names plus `calculatorCli, calculatorWe
 
 Implement the deterministic agent exactly as the contract's seven steps, using `McpStdioClient.spawn(["bun", join(import.meta.dir, "mcp.ts")])`. Print one line per step: `JSON.stringify({ step, request, response })` (for `initialize` the request is `null` and the response `client.server`). Each step records whether its expectation held; a thrown error in a step counts as failed and the remaining steps still run when the client is usable. Always `close()` in `finally`. The last line is `{"ok":true}` (exit 0) or `{"ok":false,"failed":[...]}` (exit 1, set `process.exitCode`). In step 3, read the required field names from `inputSchema.required` of the `add` capability description in `structuredContent.output.capabilities`, and build the step-4 arguments from those names with `a = 2`, `b = 3`.
 
+`bin/agent-demo.ts` exports nothing and has local helpers, so its header uses `ROLE: SCRIPT` and `MAP_MODE: LOCALS` and lists every top-level declaration (R3 item 5).
+
 `apps/calculator/test/agent-demo.test.ts` (20 s): spawn `bin/agent-demo.ts`; exit code 0; the last non-empty stdout line is `{"ok":true}`; there are 8 lines and their `step` values are the seven step names in order.
 
 ### T082 – Verification and impact tests
@@ -600,11 +911,12 @@ Implement the deterministic agent exactly as the contract's seven steps, using `
 
 ### T083 – GRACE
 
-Area `calculator-interfaces`: `M-CALC-INTERFACES` with paths `apps/calculator/src/interfaces.ts`, `apps/calculator/src/app.ts`, `apps/calculator/src/index.ts`, `apps/calculator/bin/cli.ts`, `apps/calculator/bin/mcp.ts`, `apps/calculator/bin/agent-demo.ts`; children `<M-CALC-ARITHMETIC />`, `<M-PACK-CLI />`, `<M-PACK-WEB />`, `<M-PACK-AGENT />`, `<M-PACK-AGENT-MCP />`, `<M-KERNEL-API />`; `V-M-CALC-INTERFACES` with the seven test files of this WP and `bun test apps/calculator/test`. Sanctioned edit: remove the `index.ts` `<Path>` from `M-CALC-ARITHMETIC` in `.grace/graph/calculator-core.xml`. Add the ids to your `<Owns>` blocks. Run `bun run grace:lint`.
+Area `calculator-interfaces`: `M-CALC-INTERFACES` with paths `apps/calculator/src/interfaces.ts`, `apps/calculator/src/app.ts`, `apps/calculator/src/index.ts`, `apps/calculator/bin/cli.ts`, `apps/calculator/bin/mcp.ts`, `apps/calculator/bin/agent-demo.ts`; children `<M-CALC-ARITHMETIC />`, `<M-PACK-CLI />`, `<M-PACK-WEB />`, `<M-PACK-AGENT />`, `<M-PACK-AGENT-MCP />`, `<M-KERNEL-API />`; `V-M-CALC-INTERFACES` with the seven test files of this WP and `bun test apps/calculator/test`. Sanctioned edit: remove the `index.ts` `<Path>` from `M-CALC-ARITHMETIC` in `.grace/graph/calculator-core.xml`. Add the ids to your `<Owns>` blocks. Run `bun run grace:lint`. R4 gives the exact XML of both documents and both index blocks.
 
 ## Definition of Done
 
 - [ ] Every subtask of this WP is done, and its tests were written first.
+- [ ] R1–R7 are done. The startup-order test failed before the fix and passes after it. The five-run MCP loop shows `0 fail` every time.
 - [ ] Every new or changed source and test file carries GRACE markup; your modules and verification entries are registered in your own area documents and index blocks.
 - [ ] `bun run format`, then `bun run verify` passes in the worktree (report each step exactly). From WP15 on, `verify` includes `telos:check`.
 - [ ] `bun run grace:lint` passes.
@@ -623,3 +935,5 @@ Area `calculator-interfaces`: `M-CALC-INTERFACES` with paths `apps/calculator/sr
 - The 14 cases agree through kernel, CLI (in memory and binary), MCP and the web form.
 - Each `CalculatorInterfaces` rule has a passing and a failing test; the web variant's message names `calculator:web` and `divide`.
 - The agent demo uses no network and no credentials.
+- The `@telos/agent` change matches R2 exactly. `gateStdin` is not exported. The startup-order test (R1) exists, and the implementer's report shows it failing before the fix. The MCP tests pass in five runs in a row.
+- `bun run grace:lint` reports no issues. `bin/agent-demo.ts` is `ROLE: SCRIPT` / `MAP_MODE: LOCALS` with real entries. The CALCULATOR_APP block contains no contract marker.

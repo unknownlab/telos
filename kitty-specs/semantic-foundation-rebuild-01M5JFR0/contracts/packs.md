@@ -193,9 +193,21 @@ export const registerTools: (telos: TelosApi, agentLocusId: string) => Layer.Lay
 // content MUST be plain objects (McpSchema.TextContent instances cause an InternalError)
 export const serveMcp: (root: LocusDefinition, agentLocusId: string, options: { readonly version: string }) => Promise<void>
 // builds Telos.make(root); server name = the agent Locus properties.server;
-// Layer.launch(registerTools(...).pipe(Layer.provide(McpServer.layerStdio({ name, version, protocols: [McpProtocol.v2025_06_18] })), Layer.provide(BunStdio)))
+// const ready = Deferred.makeUnsafe<void>();
+// Layer.launch(Layer.effectDiscard(Deferred.succeed(ready, undefined)).pipe(
+//   Layer.provide(registerTools(telos, agentLocusId)),
+//   Layer.provide(McpServer.layerStdio({ name, version, protocols: [McpProtocol.v2025_06_18] })),
+//   Layer.provide(gateStdin(ready)),
+//   Layer.provide(BunStdio)))
+// gateStdin (module-local, not exported): Layer.effect(Stdio.Stdio, ...) over the provided Stdio, returning
+//   Stdio.make({ args: stdio.args, stdout: (o) => stdio.stdout(o), stderr: (o) => stdio.stderr(o),
+//                stdin: Stream.unwrap(Effect.as(Deferred.await(ready), stdio.stdin)) })
 // logs nothing to stdout (stdout carries the protocol)
 ```
+
+**Startup order (required).** `serveMcp` registers every tool before the server reads its first request. `tools/list` is complete from the first request on, and every tool is callable from the first request on. This holds even when the requests are already waiting on stdin when the process starts.
+
+Why the gate is needed: `McpServer.layerStdio` starts the server and its stdin reader when the layer is built. `registerTools` is built after it, and `deriveTools` crosses an asynchronous boundary. Without the gate, a request already on stdin is answered before the tools exist: `tools/list` returns `[]` and `tools/call` fails with `Tool '<name>' not found`. WP14 found this with the calculator server (17 of 20 fresh starts listed no tool). The `notifications/tools/list_changed` that `addTool` sends does not help, because the deterministic client ignores notifications. `Layer.provide` builds the provided layer first. So the order is `BunStdio`, then the gate, then the server (its stdin reader waits on `ready`), then `registerTools`, then `ready` is completed.
 
 Do not use `McpServer.toolkit`: it answers invalid params with JSON-RPC `-32602` and bypasses kernel `InvalidInput` (research R6).
 
@@ -299,7 +311,7 @@ Exports `WEB_FORM_TYPE, WebForm, WebSemantics, WebInterface, formModel, WebFormM
 
 ## Tests (each Pack's `test/` directory)
 
-Each Pack builds a tiny fixture model in `test/fixture.ts`: an `example:math` Locus with a `double` capability (input `{ n: Schema.Finite }`, output `{ value: Schema.Finite }`, error `Negative` when `n < 0`) and one interface Locus exposing it. Every Archetype rule has one passing and one failing test (NFR-005). The CLI tests use `runCli` in memory. The agent tests use `callTool`, `introspectionTools`, and one subprocess test that spawns `bun test/fixture-server.ts` (calls `serveMcp`) through `McpStdioClient`, then asserts `tools/list` names, annotations and a `tools/call` round trip. The web tests use `formModel`.
+Each Pack builds a tiny fixture model in `test/fixture.ts`: an `example:math` Locus with a `double` capability (input `{ n: Schema.Finite }`, output `{ value: Schema.Finite }`, error `Negative` when `n < 0`) and one interface Locus exposing it. Every Archetype rule has one passing and one failing test (NFR-005). The CLI tests use `runCli` in memory. The agent tests use `callTool`, `introspectionTools`, and one subprocess test that spawns `bun test/fixture-server.ts` (calls `serveMcp`) through `McpStdioClient`, then asserts `tools/list` names, annotations and a `tools/call` round trip. A startup-order test in `test/mcp.test.ts` spawns `bun test/fixture-server.ts` ten times in a row. Each time it passes `initialize`, `notifications/initialized` and `tools/list` (id 2) as stdin that is already written before the server starts (`Bun.spawn(..., { stdin: <encoded payload> })`). It asserts that each run exits 0 and that the id-2 response names `double` and every introspection tool. The test fails without the stdin gate (18 of 20 runs listed no tool when it was planned). The web tests use `formModel`.
 
 **Discovery never grants invocation (US4.4, spec D6).** The agent fixture's `example:math` Locus also declares a capability `secret` (input `{}`, output `{ ok: Schema.Boolean }`, effect `read`) that no `agent.tool` relation exposes. `test/grant.test.ts` asserts three things:
 
