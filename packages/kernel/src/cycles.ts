@@ -1,37 +1,7 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Enumerate the elementary cycles of a directed graph up to a fixed limit, in a deterministic order.
-//   SCOPE: MAX_CYCLES and elementaryCycles, with Johnson's search written without recursion. Out: the diagnostics built from cycles and any model rule.
-//   DEPENDS: M-KERNEL-IDENTITY
-//   LINKS: M-KERNEL-DIAGNOSTIC
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   MAX_CYCLES - the most cycles elementaryCycles reports
-//   elementaryCycles - the elementary cycles of a graph, each rotated to its smallest member, sorted, with an exceeded flag
-// END_MODULE_MAP
-
 import { deepFreeze } from "./freeze";
 
-// START_CONTRACT: MAX_CYCLES
-//   PURPOSE: Bound the number of cycles that elementaryCycles collects.
-//   INPUTS: none
-//   OUTPUTS: { number - 100 }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DIAGNOSTIC
-// END_CONTRACT: MAX_CYCLES
-/** The most cycles elementaryCycles reports. */
 export const MAX_CYCLES = 100;
 
-// START_CONTRACT: elementaryCycles
-//   PURPOSE: List the elementary cycles of a directed graph, once each, up to MAX_CYCLES.
-//   INPUTS: { nodes: ReadonlyArray<string> - node ids, sorted; edges: ReadonlyArray<readonly [string, string]> - from and to ids, both in nodes }
-//   OUTPUTS: { { cycles: ReadonlyArray<ReadonlyArray<string>>, exceeded: boolean } - cycles rotated to their smallest member and sorted by join(","); exceeded is true when more cycles exist }
-//   SIDE_EFFECTS: none. Result is deeply frozen.
-//   LINKS: M-KERNEL-DIAGNOSTIC
-// END_CONTRACT: elementaryCycles
-/** Reports at most MAX_CYCLES elementary cycles. Edges outside the nodes and self-edges are ignored. */
 export function elementaryCycles(
   nodes: ReadonlyArray<string>,
   edges: ReadonlyArray<readonly [string, string]>,
@@ -79,7 +49,6 @@ export function elementaryCycles(
   return deepFreeze({ cycles: found, exceeded });
 }
 
-// Rotates a cycle so that its smallest member comes first. The cycle order is kept.
 function rotateToSmallest(cycle: ReadonlyArray<string>): string[] {
   let best = 0;
   for (let i = 1; i < cycle.length; i += 1) {
@@ -88,9 +57,6 @@ function rotateToSmallest(cycle: ReadonlyArray<string>): string[] {
   return [...cycle.slice(best), ...cycle.slice(0, best)];
 }
 
-// Nodes that lie on a cycle through `s` using only nodes with index >= s.
-// That is the strongly connected component of `s` in the subgraph, computed
-// as the intersection of what `s` reaches and what reaches `s`.
 function cyclicComponent(
   s: number,
   successors: ReadonlyArray<ReadonlyArray<number>>,
@@ -105,7 +71,6 @@ function cyclicComponent(
   return component;
 }
 
-// Breadth-first reach from `start` through `edges`, visiting only nodes >= start.
 function reachWithin(
   start: number,
   edges: ReadonlyArray<ReadonlyArray<number>>,
@@ -124,9 +89,6 @@ function reachWithin(
   return seen;
 }
 
-// Johnson's elementary-cycle search from `s` inside `component`, iterative.
-// Calls `onCycle` once per cycle, with node indices in cycle order starting at `s`.
-// The search ends at once when `onCycle` returns false.
 function findElementaryCycles(
   s: number,
   successors: ReadonlyArray<ReadonlyArray<number>>,
@@ -178,7 +140,6 @@ function findElementaryCycles(
   }
 }
 
-// Clears the blocked mark of `start` and, transitively, of the nodes it blocked.
 function unblock(
   start: number,
   blocked: Set<number>,

@@ -31,9 +31,6 @@
     },
     {
       "path": "apps/calculator/test"
-    },
-    {
-      "path": "apps/docs"
     }
   ]
 }

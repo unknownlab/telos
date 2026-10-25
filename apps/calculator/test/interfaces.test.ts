@@ -1,20 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that every shared case gives the same normalized outcome through the kernel, the in-memory CLI, the agent tools and the web form, and that the app model builds without diagnostics.
-//   SCOPE: The diagnostics of the app model and one test per case of the shared table. Out: the subprocess binaries (cli-binary.test.ts, mcp.test.ts) and the archetype rules (app.test.ts).
-//   DEPENDS: M-CALC-INTERFACES, M-CALC-ARITHMETIC, M-PACK-CLI, M-PACK-WEB, M-PACK-AGENT
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ARITHMETIC_ID - the Locus id of the arithmetic implementation
-//   CLI_ID - the Locus id of the command line interface
-//   WEB_ID - the Locus id of the web interface
-//   AGENT_ID - the Locus id of the agent interface
-//   submitWeb - submits the web form of one case and returns its outcome
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import { buildModel, invoke } from "@telos/kernel";

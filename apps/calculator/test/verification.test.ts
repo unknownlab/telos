@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that verifying the calculator model passes with no failed or errored findings and reports a finding for every rule of every Archetype that applies.
-//   SCOPE: The full verify run over calculatorModel. Out: the rule-level pass and failure cases (archetypes.test.ts, app.test.ts).
-//   DEPENDS: M-CALC-INTERFACES, M-KERNEL-API, M-PACK-CLI, M-PACK-WEB, M-PACK-AGENT
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ARCHETYPES - the five archetypes that apply to the calculator
-//   APPLICABLE - the (archetype id, rule id) pairs of the five archetypes of the calculator
-//   report - the verify report of calculatorModel
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import { verify } from "@telos/kernel";

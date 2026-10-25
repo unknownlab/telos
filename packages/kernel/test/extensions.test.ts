@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the two built-in extension files define their ids, descriptions, properties and relation types as specified.
-//   SCOPE: Tests of extensions/purpose.ts and extensions/source.ts only. Out: composition rules, which locus.test.ts covers.
-//   DEPENDS: M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-DEFINITIONS, V-M-KERNEL-DEFINITIONS
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Locus } from "../src/locus";
 import { Purpose } from "../src/extensions/purpose";

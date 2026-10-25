@@ -1,21 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that decodeLocus and decodeLocusText build the same Loci that code builds, report every structural and registry problem with its path, and never evaluate text.
-//   SCOPE: Tests of decode.ts. Out: the semantic checks of buildModel (model-relations.test.ts) and the Locus kind rules (locus.test.ts).
-//   DEPENDS: M-KERNEL-DECODE, M-KERNEL-DEFINITIONS, M-KERNEL-MODEL, M-KERNEL-DIAGNOSTIC
-//   LINKS: M-KERNEL-DECODE, V-M-KERNEL-DECODE
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   flowsTo - acyclic relation type between Loci used by the decode fixtures
-//   Flow - test extension test.flow that declares flowsTo
-//   registry - the extension registry the decode fixtures are decoded against
-//   expectRoot - the decoded root of a result that must be ok
-//   issuesOf - the issues of a result that must not be ok
-//   parseError - the message that JSON.parse gives for an input
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Schema } from "effect";
 import { buildModel } from "../src/model";

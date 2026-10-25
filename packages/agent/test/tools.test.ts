@@ -1,19 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that tools.ts derives agent tools only from exposed capabilities, calls them through the kernel grant, and turns JSON input schemas into MCP object schemas.
-//   SCOPE: deriveTools, callTool, toToolResult and toolInputSchema, one test per rule. Out: the introspection tools and the MCP transport, which their own test files cover.
-//   DEPENDS: M-PACK-AGENT
-//   LINKS: V-M-PACK-AGENT
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   writer - a write capability exposed by a second agent
-//   writerAgent - the agent Locus that exposes writer
-//   writeModel - the model holding writerAgent and the writer Locus
-//   run - runs an Effect to its value in a test
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import { Capability, CapabilityRef, Locus, toJsonSchema } from "@telos/kernel";

@@ -1,17 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that runCli turns argv into kernel invocations and writes exactly the documented stdout, stderr and exit code.
-//   SCOPE: The argv table of the contract, unknown CLI Loci, the EXIT_CODE mapping and the help and version flags. Out: derivation (derive.test.ts) and the Bun entry (bun.test.ts).
-//   DEPENDS: M-PACK-CLI
-//   LINKS: M-PACK-CLI, V-M-PACK-CLI
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   run - runs runCli on the fixture model with the given argv
-//   parseLine - parses the single JSON line of a captured stream
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import type { InvocationError } from "@telos/kernel";

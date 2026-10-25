@@ -1,23 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Decode Locus definitions given as JSON against an extension registry into the same LocusDefinition values that code builds, without evaluating any text.
-//   SCOPE: The structural schema of the JSON form, the registry checks of extension ids and relation types, and the building of Loci, capabilities and relations. Out: the semantic checks of buildModel and the parsing of text beyond JSON.parse.
-//   DEPENDS: M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-DECODE, V-M-KERNEL-DECODE
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ExtensionRegistry - the extensions that JSON definitions may name, looked up by id
-//   FieldType - the scalar field types a JSON capability may declare
-//   LocusJson - the JSON form of a Locus definition, before registry checks
-//   DecodeIssue - one problem found while decoding, with its path joined by slashes
-//   DecodeResult - the decoded root Locus or the list of issues
-//   LocusJsonSchema - the recursive structural schema of the JSON form
-//   decodeLocus - decodes a JSON value against a registry into a Locus or its issues
-//   decodeLocusText - decodes JSON text against a registry, reporting a syntax error at the empty path
-// END_MODULE_MAP
-
 import { Cause, Exit, Option, Schema, SchemaIssue } from "effect";
 import { Capability, type EffectClass } from "./capability";
 import type { Extension } from "./extension";
@@ -75,13 +55,6 @@ const CapabilityJsonSchema = Schema.Struct({
   output: Schema.Record(Schema.String, FieldTypeSchema),
 });
 
-// START_CONTRACT: LocusJsonSchema
-//   PURPOSE: Check the shape of a JSON Locus definition, recursively through contains; ids are not checked here.
-//   INPUTS: { value: unknown - the JSON value to decode }
-//   OUTPUTS: { Schema.Codec<LocusJson> - the structural schema of the JSON form }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DECODE
-// END_CONTRACT: LocusJsonSchema
 export const LocusJsonSchema: Schema.Codec<LocusJson> = Schema.Struct({
   id: Schema.String,
   extensions: Schema.optionalKey(Schema.Array(Schema.String)),
@@ -224,13 +197,6 @@ function buildLocus(json: LocusJson, lookup: Lookup): LocusDefinition {
   return make(definition);
 }
 
-// START_CONTRACT: decodeLocus
-//   PURPOSE: Decode a JSON value into a Locus, reporting unknown extension ids and relation types with their paths, sorted by path then message.
-//   INPUTS: { input: unknown - the JSON value, registry: ExtensionRegistry - the extensions that may be named }
-//   OUTPUTS: { DecodeResult - the decoded root Locus when ok, otherwise the sorted issues }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DECODE
-// END_CONTRACT: decodeLocus
 export function decodeLocus(
   input: unknown,
   registry: ExtensionRegistry,
@@ -249,13 +215,6 @@ export function decodeLocus(
   return { ok: true, root: buildLocus(json, lookup) };
 }
 
-// START_CONTRACT: decodeLocusText
-//   PURPOSE: Parse JSON text and decode it with decodeLocus; a syntax error becomes one issue at the empty path.
-//   INPUTS: { text: string - the JSON text, registry: ExtensionRegistry - the extensions that may be named }
-//   OUTPUTS: { DecodeResult - the decoded root Locus, the decodeLocus issues, or one syntax issue }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DECODE
-// END_CONTRACT: decodeLocusText
 export function decodeLocusText(
   text: string,
   registry: ExtensionRegistry,

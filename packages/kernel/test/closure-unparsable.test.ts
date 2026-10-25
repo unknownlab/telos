@@ -1,22 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that checkClosure reports a file it cannot read or parse as closure.unparsable and continues with the next file instead of failing.
-//   SCOPE: Tests of the closure.unparsable finding of closure.ts over temporary fixture repositories. Out: the other closure codes (closure.test.ts).
-//   DEPENDS: M-KERNEL-CLOSURE, M-KERNEL-MODEL, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-CLOSURE, V-M-KERNEL-CLOSURE
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Owned - the test kind with the source extension
-//   created - the fixture directories to remove after each test
-//   fixture - writes the files of a fixture repository into a new temporary directory
-//   check - runs checkClosure over a built model of the fixture repository
-//   withCode - the findings of a report that carry one closure code
-//   model - the Owned Locus that owns every fixture file under a/
-//   unparsableFinding - the expected closure.unparsable finding of one file
-// END_MODULE_MAP
-
 import { afterEach, describe, expect, test } from "bun:test";
 import {
   chmodSync,

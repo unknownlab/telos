@@ -1,27 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Derive agent tools from the capabilities an agent interface Locus exposes, and call them only through the kernel grant.
-//   SCOPE: AGENT_TOOL_TYPE, AGENT_EXTENSION_ID, TOOL_NAME_PATTERN, the tool interfaces, exposedRelations, toolInputSchema, toToolResult, deriveTools and callTool. Out: the introspection tools, the MCP transport and the Archetype rules, which their own modules own.
-//   DEPENDS: none
-//   LINKS: M-PACK-AGENT, V-M-PACK-AGENT
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   AGENT_TOOL_TYPE - the relation type id that exposes a capability as a tool
-//   AGENT_EXTENSION_ID - the extension id that marks an agent interface Locus
-//   TOOL_NAME_PATTERN - the pattern of a valid tool name
-//   ToolAnnotations - the MCP annotations of a tool
-//   ToolDefinition - the MCP definition of a tool
-//   ToolResult - the result of a tool call
-//   DerivedTool - a tool derived from one exposed capability with its reference
-//   exposedRelations - the valid tool relations of an agent Locus, sorted and unique by name
-//   toolInputSchema - turns a JSON Schema document into an MCP object input schema
-//   toToolResult - turns a kernel invocation outcome into a tool result
-//   deriveTools - the tools of an agent Locus, one per exposed capability name
-//   callTool - calls a tool of an agent Locus through the kernel
-// END_MODULE_MAP
-
 import { Effect } from "effect";
 import {
   CapabilityRef,
@@ -37,31 +13,10 @@ import {
   type SemanticModel,
 } from "@telos/kernel";
 
-// START_CONTRACT: AGENT_TOOL_TYPE
-//   PURPOSE: The relation type id of the relation that exposes a capability as an agent tool.
-//   INPUTS: {}
-//   OUTPUTS: { "agent.tool" - the relation type id }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: AGENT_TOOL_TYPE
 export const AGENT_TOOL_TYPE = "agent.tool";
 
-// START_CONTRACT: AGENT_EXTENSION_ID
-//   PURPOSE: The extension id that marks a Locus as an agent tool interface.
-//   INPUTS: {}
-//   OUTPUTS: { "telos.agent" - the extension id }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: AGENT_EXTENSION_ID
 export const AGENT_EXTENSION_ID = "telos.agent";
 
-// START_CONTRACT: TOOL_NAME_PATTERN
-//   PURPOSE: The pattern that every agent tool name must match.
-//   INPUTS: {}
-//   OUTPUTS: { RegExp - matches 1 to 64 letters, digits, underscores and hyphens }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: TOOL_NAME_PATTERN
 export const TOOL_NAME_PATTERN: RegExp = /^[a-zA-Z0-9_-]{1,64}$/;
 
 export interface ToolAnnotations {
@@ -99,13 +54,6 @@ const byCodeUnit = (a: string, b: string): number =>
 const hasOwn = (record: object, key: string): boolean =>
   Object.prototype.hasOwnProperty.call(record, key);
 
-// START_CONTRACT: exposedRelations
-//   PURPOSE: List the valid agent tool relations of an agent Locus, sorted by capability name then Locus id, keeping only the first relation of each name.
-//   INPUTS: { model: SemanticModel - a built model; agentLocusId: string - the agent Locus id }
-//   OUTPUTS: { ReadonlyArray<ModelRelation> - unique by capability name; empty for a Locus without the agent kind }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: exposedRelations
 export function exposedRelations(
   model: SemanticModel,
   agentLocusId: string,
@@ -142,13 +90,6 @@ export function exposedRelations(
 
 const REF_PATTERN = /^#\/\$defs\/(.+)$/;
 
-// START_CONTRACT: toolInputSchema
-//   PURPOSE: Turn a kernel JSON Schema document into the object input schema that MCP requires.
-//   INPUTS: { input: JsonSchemaDocument - the schema and definitions of a capability input }
-//   OUTPUTS: { Record<string, unknown> - the schema with a top-level type object, or the schema as it is when it is not an object }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: toolInputSchema
 export function toolInputSchema(
   input: JsonSchemaDocument,
 ): Readonly<Record<string, unknown>> {
@@ -176,13 +117,6 @@ export function toolInputSchema(
   return { ...(top as Record<string, unknown>) };
 }
 
-// START_CONTRACT: toToolResult
-//   PURPOSE: Turn a kernel invocation outcome into the text and structured result of a tool call.
-//   INPUTS: { outcome: InvocationOutcome - the value or the error of an invocation }
-//   OUTPUTS: { ToolResult - isError false with the output, or isError true with the error }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: toToolResult
 export function toToolResult(outcome: InvocationOutcome): ToolResult {
   if (outcome.ok) {
     return {
@@ -198,13 +132,6 @@ export function toToolResult(outcome: InvocationOutcome): ToolResult {
   };
 }
 
-// START_CONTRACT: deriveTools
-//   PURPOSE: Derive one tool per exposed capability name of an agent Locus, with its contract and annotations.
-//   INPUTS: { model: SemanticModel - a built model; agentLocusId: string - the agent Locus id }
-//   OUTPUTS: { Effect<ReadonlyArray<DerivedTool>> - tools in the order of exposedRelations }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: deriveTools
 export const deriveTools = (
   model: SemanticModel,
   agentLocusId: string,
@@ -243,13 +170,6 @@ export const deriveTools = (
     ),
   );
 
-// START_CONTRACT: callTool
-//   PURPOSE: Call a tool of an agent Locus by name, through the kernel grant of that Locus, without coercing the arguments.
-//   INPUTS: { model: SemanticModel; agentLocusId: string - the agent Locus; name: string - the tool name; args: unknown - the JSON arguments }
-//   OUTPUTS: { Effect<ToolResult> - CapabilityNotFound when no tool has the name, else the kernel outcome as a tool result }
-//   SIDE_EFFECTS: none beyond the handler of the invoked capability
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: callTool
 export const callTool = (
   model: SemanticModel,
   agentLocusId: string,

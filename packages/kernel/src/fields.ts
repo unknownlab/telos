@@ -1,19 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Derive input fields from a capability description and turn raw text into input values the same way for every interface.
-//   SCOPE: InputFieldType, InputField, inputFields and coerceInput. Out: decoding the input (invoke.ts) and rendering any interface.
-//   DEPENDS: M-KERNEL-DESCRIBE
-//   LINKS: M-KERNEL-DESCRIBE, V-M-KERNEL-DESCRIBE
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   InputFieldType - the field types an interface can show: number, integer, string, boolean or unsupported
-//   InputField - one input field with its name, type, required flag and description
-//   inputFields - the input fields of a capability description, in property order
-//   coerceInput - turns the raw text of each field into its input value
-// END_MODULE_MAP
-
 import type { CapabilityDescription } from "./describe";
 
 export type InputFieldType =
@@ -34,7 +18,6 @@ function isObject(value: unknown): value is Json {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-// Resolves one "#/$defs/<Name>" reference through the definitions. Any other schema is returned as it is.
 function resolveOnce(schema: unknown, definitions: Json): unknown {
   if (!isObject(schema) || typeof schema["$ref"] !== "string") return schema;
   const match = REF_PATTERN.exec(schema["$ref"]);
@@ -52,14 +35,6 @@ function fieldTypeOf(schema: unknown): InputFieldType {
     : "unsupported";
 }
 
-// START_CONTRACT: inputFields
-//   PURPOSE: List the input fields of a capability, one per property of its input object schema.
-//   INPUTS: { capability: CapabilityDescription - a described capability whose input document is used }
-//   OUTPUTS: { ReadonlyArray<InputField> - fields in property order; empty when the input is not an object with properties }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DESCRIBE
-// END_CONTRACT: inputFields
-/** The input fields of a capability. $ref is resolved once at the top level and for each property. */
 export function inputFields(
   capability: CapabilityDescription,
 ): ReadonlyArray<InputField> {
@@ -89,14 +64,6 @@ export function inputFields(
   );
 }
 
-// START_CONTRACT: coerceInput
-//   PURPOSE: Turn the raw text of each field into its input value, keeping the text when it cannot be converted.
-//   INPUTS: { fields: ReadonlyArray<InputField> - the fields; raw: Record<string, string | undefined> - the raw text by field name }
-//   OUTPUTS: { Record<string, unknown> - the coerced values of the fields that have raw text; absent fields are omitted }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DESCRIBE
-// END_CONTRACT: coerceInput
-/** Coerces the raw text of each present field to the value its type expects. */
 export function coerceInput(
   fields: ReadonlyArray<InputField>,
   raw: Readonly<Record<string, string | undefined>>,

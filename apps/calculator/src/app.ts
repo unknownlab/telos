@@ -1,22 +1,5 @@
 //@unknownhero wtf this comments ? Who need this shit ? just rmove comments everywhere
 
-// START_MODULE_CONTRACT
-//   PURPOSE: Define the calculator application Locus, the CalculatorInterfaces archetype that checks its interfaces, and the calculator model built from it.
-//   SCOPE: The app extension, the CalculatorInterfaces archetype with its three rules, the app Locus builder and the calculator model. It never implements an operation and never builds a presentation.
-//   DEPENDS: M-CALC-ARITHMETIC, M-CALC-INTERFACES, M-PACK-CLI, M-PACK-WEB, M-PACK-AGENT, M-KERNEL-API
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   CalculatorApp - the calculator.app extension that marks the application Locus
-//   CalculatorInterfaces - the archetype that checks completeness, single implementation and parity of the interfaces
-//   app - the calculator:app Locus that groups the arithmetic Locus and its three interfaces
-//   calculatorModel - the built semantic model of app
-//   makeApp - builds an application Locus of the same kind and id over the given contained Loci
-// END_MODULE_MAP
-
 import { Effect } from "effect";
 import { AgentSemantics, callTool } from "@telos/agent";
 import { CliSemantics, runCli } from "@telos/cli";
@@ -166,14 +149,6 @@ const webOutcome = (
     return normalize(yield* form.submit(input.text));
   });
 
-// START_CONTRACT: CalculatorInterfaces
-//   PURPOSE: Check that the calculator interfaces expose every arithmetic capability, that only the arithmetic Locus implements capabilities, and that the interfaces agree with the kernel on the parity inputs.
-//   INPUTS: none
-//   OUTPUTS: { Archetype - calculator.interfaces with three rules applied to calculator.app }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: CalculatorInterfaces
-
 //@unknownhero i think we need to remove archetype system, just focus on only locus
 export const CalculatorInterfaces = Archetype.make({
   id: "calculator.interfaces",
@@ -294,39 +269,6 @@ export const CalculatorInterfaces = Archetype.make({
   ],
 });
 
-// START_CONTRACT: CalculatorApp
-//   PURPOSE: The extension that marks the calculator application Locus and carries CalculatorInterfaces.
-//   INPUTS: none
-//   OUTPUTS: { Extension<"calculator.app", {}> - the calculator.app extension }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: CalculatorApp
-
-// START_CONTRACT: makeApp
-//   PURPOSE: Build an application Locus of the calculator kind over the given contained Loci.
-//   INPUTS: { contains: ReadonlyArray<LocusDefinition> - the Loci the application contains }
-//   OUTPUTS: { LocusDefinition - calculator:app of kind Purpose + CalculatorApp }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: makeApp
-
-// START_CONTRACT: app
-//   PURPOSE: The calculator application with the arithmetic Locus and its three interfaces.
-//   INPUTS: none
-//   OUTPUTS: { LocusDefinition - calculator:app containing arithmetic, calculatorCli, calculatorWeb and calculatorAgent }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: app
-
-// START_CONTRACT: calculatorModel
-//   PURPOSE: The built semantic model of the calculator application.
-//   INPUTS: none
-//   OUTPUTS: { SemanticModel - buildModel(app) }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: calculatorModel
-
-// START_BLOCK_CALCULATOR_APP
 export const CalculatorApp = Extension.make(APP_EXTENSION_ID, {
   //@unknownhero no more extensions
   description:
@@ -356,4 +298,3 @@ export const app = makeApp([
 
 //@unknownhero what is this ? if its semantic builders, so locus must contain semantic, not calculated outside
 export const calculatorModel = buildModel(app);
-// END_BLOCK_CALCULATOR_APP

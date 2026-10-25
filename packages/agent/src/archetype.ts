@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Check that an agent interface Locus exposes uniquely named, valid tools with object inputs that reject missing input with InvalidInput.
-//   SCOPE: AgentInterface and its four rules. Out: the relation type and the extension, which semantics.ts builds, and the derivation of tools, which tools.ts owns.
-//   DEPENDS: M-PACK-AGENT, M-KERNEL-API
-//   LINKS: M-PACK-AGENT, V-M-PACK-AGENT
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   AgentInterface - the archetype that checks an agent interface Locus
-// END_MODULE_MAP
-
 import { Effect } from "effect";
 import {
   Archetype,
@@ -29,13 +16,6 @@ import {
 } from "./tools";
 import { INTROSPECTION_TOOL_NAMES } from "./introspection-tools";
 
-// START_CONTRACT: AgentInterface
-//   PURPOSE: The archetype of agent interface Loci with the rules agent.tools-exist, agent.tool-names, agent.input-object and agent.invalid-input-error.
-//   INPUTS: {}
-//   OUTPUTS: { Archetype - id telos.agent.interface, applies to telos.agent }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: AgentInterface
 export const AgentInterface: Archetype = Archetype.make({
   id: "telos.agent.interface",
   description:

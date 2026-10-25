@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that deriveCommands lists the exposed capabilities of a CLI Locus as commands, sorted and de-duplicated by the shared rules.
-//   SCOPE: deriveCommands for the fixture, unknown ids, Loci without CliSemantics, and sorting with duplicate names. Out: running commands (run.test.ts) and Archetype rules (archetype.test.ts).
-//   DEPENDS: M-PACK-CLI
-//   LINKS: M-PACK-CLI, V-M-PACK-CLI
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import { Capability, CapabilityRef, Locus } from "@telos/kernel";

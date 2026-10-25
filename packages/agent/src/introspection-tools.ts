@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Give agents six read-only telos_* tools that describe the model through the kernel Telos service and never invoke a capability.
-//   SCOPE: INTROSPECTION_TOOL_NAMES, IntrospectionTool and introspectionTools with the input decoding and failure mapping of each tool. Out: the agent tools that invoke capabilities (tools.ts) and the MCP transport (mcp.ts).
-//   DEPENDS: M-PACK-AGENT, M-KERNEL-API
-//   LINKS: M-PACK-AGENT, V-M-PACK-AGENT
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   INTROSPECTION_TOOL_NAMES - the names of the six introspection tools in sorted order
-//   IntrospectionTool - one introspection tool with its definition and call
-//   introspectionTools - the six introspection tools of a Telos service, sorted by name
-// END_MODULE_MAP
-
 import { Cause, Effect, Exit, Option, Schema, SchemaIssue } from "effect";
 import {
   toJsonSchema,
@@ -27,13 +12,6 @@ import {
   type ToolResult,
 } from "./tools";
 
-// START_CONTRACT: INTROSPECTION_TOOL_NAMES
-//   PURPOSE: The names of the introspection tools, sorted by code unit.
-//   INPUTS: {}
-//   OUTPUTS: { ReadonlyArray<string> - the six telos_* names }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: INTROSPECTION_TOOL_NAMES
 export const INTROSPECTION_TOOL_NAMES: ReadonlyArray<string> = [
   "telos_capabilities",
   "telos_impact",
@@ -62,13 +40,6 @@ interface ToolSpec<A> {
 
 const formatIssues = SchemaIssue.makeFormatterStandardSchemaV1();
 
-// START_CONTRACT: makeTool
-//   PURPOSE: Build one introspection tool from its name, description, input schema and run function.
-//   INPUTS: { telos: TelosApi - the service; spec: ToolSpec - the tool specification }
-//   OUTPUTS: { IntrospectionTool - the definition with read annotations and the call }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: makeTool
 function makeTool<A>(telos: TelosApi, spec: ToolSpec<A>): IntrospectionTool {
   return {
     definition: {
@@ -126,13 +97,6 @@ const IdInput = Schema.Struct({ id: Schema.String });
 const TargetInput = Schema.Struct({ target: Schema.String });
 const NoInput = Schema.Struct({});
 
-// START_CONTRACT: introspectionTools
-//   PURPOSE: Build the six introspection tools over one Telos service, sorted by name.
-//   INPUTS: { telos: TelosApi - the service the tools describe }
-//   OUTPUTS: { ReadonlyArray<IntrospectionTool> - the tools in INTROSPECTION_TOOL_NAMES order }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-AGENT
-// END_CONTRACT: introspectionTools
 export function introspectionTools(
   telos: TelosApi,
 ): ReadonlyArray<IntrospectionTool> {

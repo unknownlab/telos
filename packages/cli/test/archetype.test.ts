@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that each rule of the CliInterface Archetype passes on the fixture and fails with its exact message on a broken variant.
-//   SCOPE: One passing and one failing model for each of the four rules, verified through the kernel verify function. Out: the derivation and run modules themselves (their own tests).
-//   DEPENDS: M-PACK-CLI
-//   LINKS: M-PACK-CLI, V-M-PACK-CLI
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   findingFor - runs verify on one model and returns the finding of one rule of example:cli
-//   buildWith - builds a model from a custom example:math Locus, a custom interface Locus and extra Loci
-//   other - the example:other Locus with its own double capability
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import {

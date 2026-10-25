@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that canonical JSON ignores object key order and undefined members and keeps array order.
-//   SCOPE: Tests of canonical.ts only. Out: digests and diagnostics.
-//   DEPENDS: M-KERNEL-CANONICAL
-//   LINKS: M-KERNEL-CANONICAL, V-M-KERNEL-CANONICAL
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { canonicalJson, jsonEqual, sortKeys } from "../src/canonical";
 

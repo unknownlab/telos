@@ -1,25 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that buildModel checks every relation, reports each relation problem with its code, finds acyclic cycles with their limit and orders the relations of a model.
-//   SCOPE: Tests of the relation, cycle and query parts of model.ts. Out: per-Locus identity and composition checks (model.test.ts) and determinism (model-determinism.test.ts).
-//   DEPENDS: M-KERNEL-MODEL, M-KERNEL-DEFINITIONS, M-KERNEL-DIAGNOSTIC
-//   LINKS: M-KERNEL-MODEL, V-M-KERNEL-MODEL
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   uses - relation type between Loci, not acyclic
-//   calls - relation type to a capability
-//   flows - acyclic relation type between Loci
-//   links - extension that declares the three relation types
-//   Links - Locus kind composed of the links extension
-//   svc - Locus app:svc with the capability run
-//   runCap - declared capability used by the fixture Loci
-//   build - buildModel of a root that contains the given Loci
-//   withCode - the diagnostics of a model that carry one code
-//   project - the relations of a model as readable strings
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Schema } from "effect";
 import { Capability } from "../src/capability";

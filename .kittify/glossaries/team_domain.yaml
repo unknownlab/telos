@@ -1,6 +1,6 @@
 terms:
   - surface: telos
-    definition: "Telos by UnknownLab: a framework in which software systems are described, verified and evolved as code, see docs/foundation."
+    definition: "Telos by UnknownLab: a framework in which software systems are described, verified and evolved as code."
     confidence: 1.0
     status: active
   - surface: workspace
@@ -24,7 +24,7 @@ terms:
     confidence: 1.0
     status: active
   - surface: check suite
-    definition: The full read-only set of repository checks, run by "bun run verify" - version guard, format check, lint, typecheck, test and grace lint. Use instead of "CI checks" (there is no CI).
+    definition: The full read-only set of repository checks, run by "bun run verify" - version guard, format check, lint, typecheck, test and the Telos check (telos:check). Use instead of "CI checks" (there is no CI).
     confidence: 1.0
     status: active
   - surface: verify
@@ -40,15 +40,11 @@ terms:
     confidence: 1.0
     status: active
   - surface: pre-commit hook
-    definition: .githooks/pre-commit - formats and restages staged files, then blocks the commit on lint, typecheck, test or grace lint failure. Distinct from the commit-msg hook, which checks Conventional Commits.
+    definition: .githooks/pre-commit - formats and restages staged files, then blocks the commit on lint, typecheck or test failure. Distinct from the commit-msg hook, which checks Conventional Commits.
     confidence: 1.0
     status: active
   - surface: review gate
     definition: Spec Kitty's pre-review check driven by review.test_command in .kittify/config.yaml; runs the check suite and blocks review on regression.
-    confidence: 1.0
-    status: active
-  - surface: grace
-    definition: GRACE 4, the architecture knowledge layer in .grace/ (contracts, module graph, verification, semantic markup), validated by "grace lint". Owns architecture knowledge; Spec Kitty owns the change lifecycle.
     confidence: 1.0
     status: active
   - surface: owner

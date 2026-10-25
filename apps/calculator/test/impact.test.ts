@@ -1,20 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that a change to the add capability affects exactly the three interfaces, that the checks cover their Archetypes, that diffModels reports a contract change, and that a new interface Locus is found by impact.
-//   SCOPE: impact and diffModels on calculatorModel and on makeApp variants. Out: the archetype rules and the verify findings (verification.test.ts).
-//   DEPENDS: M-CALC-INTERFACES, M-CALC-ARITHMETIC, M-KERNEL-API, M-PACK-CLI, M-PACK-WEB, M-PACK-AGENT
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   TARGET - the impact target, the add capability of the arithmetic Locus
-//   EXPECTED_AFFECTED - the Loci that must be affected at distance 1
-//   checksOf - the (locus, archetype, rule) triples of an impact report
-//   sumAdd - an add capability whose output is { sum }
-//   variantArithmetic - an arithmetic Locus whose add has the { sum } output
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import {
