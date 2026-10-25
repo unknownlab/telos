@@ -164,7 +164,7 @@ python3 tools/agents/settings/routing.py check
 
 ## After a mission merge
 
-Spec Kitty 3.2.7 resets `mission_number` to `null` in the mission's `meta.json` when it merges (an upstream bug). After every merge, check `kitty-specs/<number>-<slug>/meta.json`. If `mission_number` is `null`, set it back to the number in the directory name and commit the fix.
+Spec Kitty 3.2.7 resets `mission_number` to `null` in the mission's `meta.json` when it merges (an upstream bug). After every merge, check `kitty-specs/<slug>/meta.json`. If `mission_number` is `null`, set it back to the number the merge printed ("Assigned mission_number=N") and commit the fix.
 
 Accept runs strictly. `project.path_conventions` in `.kittify/config.yaml` points Spec Kitty's workspace and tests checks at `packages/`, so `--lenient` is not needed.
 
