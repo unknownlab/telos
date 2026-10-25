@@ -6,7 +6,7 @@ answers:
     Telos is a new "everything as code" full-stack framework for next-generation
     software. It is developed as a Bun workspaces monorepo: deployable apps in
     apps/, reusable framework packages in packages/. Product and architecture
-    changes go through Spec Kitty missions; GRACE holds architecture knowledge.
+    changes go through Spec Kitty missions.
   languages_frameworks: >-
     TypeScript (strict) on Bun only (minimum version pinned in package.json
     engines.bun; currently a canary build because Bun's built-in lint and fmt
@@ -20,9 +20,9 @@ answers:
     always-passing tests. Prefer black-box tests at package boundaries.
   quality_gates: >-
     Blocking gates before review, accept and merge: format check, lint,
-    typecheck, tests, the documentation build with its Verification check, the
-    browser tests and grace lint (bun run verify). The pre-commit hook runs the
-    fast checks on staged work (no documentation build, no browser tests). Gates are never bypassed (--no-verify,
+    typecheck, tests and the repository self-check (bun run verify). The
+    pre-commit hook runs format, lint, typecheck and tests on staged work.
+    Gates are never bypassed (--no-verify,
     --force, --skip-*, *_DISABLE) without an explicit owner decision.
   review_policy: >-
     Model routing for missions (strict): the root session runs on Sonnet and
@@ -33,7 +33,7 @@ answers:
     the post-merge mission review runs on Claude Opus at high effort. Roles
     are never swapped.
     Reviewers check spec fidelity (FR/NFR/C coverage), test-first evidence,
-    gate results reported exactly, and GRACE sync. Reject on any unverified
+    gate results reported exactly. Reject on any unverified
     claim.
   performance_targets: >-
     Local developer loop stays fast: pre-commit hook under 5 seconds on small
@@ -44,15 +44,14 @@ answers:
     to main only through pull requests after owner approval. Releases and
     deploys are owner decisions.
   documentation_policy: >-
-    docs/tooling.md is the owner-facing tooling overview and must match shipped
-    behavior in the same mission that changes it. Product terms are defined in
-    docs/foundation/terminology/; process terms live in the Spec Kitty glossary.
-    Both are used consistently in specs, code and docs.
-    Architecture knowledge lives in .grace/, kept in sync inside each mission.
+    tools/README.md is the owner-facing tooling overview and must match shipped
+    behavior in the same mission that changes it. There is no product
+    documentation until Telos is written by Telos. Process terms live in the
+    Spec Kitty glossary.
   risk_boundaries: >-
     The most costly failure is wrong behavior: silent logic bugs and drift
     between spec and code. Mitigations: test-first, spec-fidelity review,
-    GRACE contracts and verification, smallest viable diffs. Dependencies are
+    smallest viable diffs. Dependencies are
     added only with owner approval and supply-chain checks (pinned versions,
     no unreviewed install scripts). No credentials in the repo.
   amendment_process: >-
@@ -82,7 +81,6 @@ selected_directives:
   - DIRECTIVE_034
   - DIRECTIVE_035
   - DIRECTIVE_036
-  - DIRECTIVE_037
   - DIRECTIVE_041
   - DIRECTIVE_043
   - DIRECTIVE_045
