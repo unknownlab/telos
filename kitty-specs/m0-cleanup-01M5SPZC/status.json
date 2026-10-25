@@ -118,6 +118,9 @@
       "last_event_id": "01M5T3K11XYPXH8EXJBVH7YCS8",
       "last_transition_at": "2026-10-25T18:01:28.893815+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Review passed: patch-identical diff, 11 edits match spec, verify 522 pass"
+      ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/m0-cleanup-01M5SPZC/tasks/WP04-agents-md-rule-edits/review-cycle-1.md",
