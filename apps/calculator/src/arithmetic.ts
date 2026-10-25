@@ -156,6 +156,7 @@ export const arithmetic = Locus.extend(Purpose, Arithmetic).make({
   id: "calculator:arithmetic",
   description: "The single arithmetic implementation of the calculator.",
   properties: {
+    //@unknownhero wtf is this ?
     purpose: "Performs the four basic arithmetic operations on finite numbers.",
     responsibilities: [
       "add",
@@ -164,8 +165,8 @@ export const arithmetic = Locus.extend(Purpose, Arithmetic).make({
       "divide",
       "report division by zero and non-finite results",
     ],
-    excluded: ["parsing text input", "presentation"],
+    excluded: ["parsing text input", "presentation"], //@unknownhero why ? we cant describe all excludes, no sense
   },
-  capabilities: { add, subtract, multiply, divide },
+  capabilities: { add, subtract, multiply, divide }, //@unknownhero too abstract, still must be more functional and composition, think as graph deps, not extension everything to everything
 });
 // END_BLOCK_ARITHMETIC_LOCUS

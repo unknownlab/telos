@@ -93,6 +93,7 @@ export const arithmetic = Locus.extend(Purpose, Arithmetic).make({
   id: "calculator:arithmetic",
   description: "The single arithmetic implementation of the calculator.",
   properties: {
+    //@unknownhero wtf is this ?
     purpose: "Performs the four basic arithmetic operations on finite numbers.",
     responsibilities: [
       "add",
@@ -101,9 +102,9 @@ export const arithmetic = Locus.extend(Purpose, Arithmetic).make({
       "divide",
       "report division by zero and non-finite results",
     ],
-    excluded: ["parsing text input", "presentation"],
+    excluded: ["parsing text input", "presentation"], //@unknownhero why ? we cant describe all excludes, no sense
   },
-  capabilities: { add, subtract, multiply, divide },
+  capabilities: { add, subtract, multiply, divide }, //@unknownhero too abstract, still must be more functional and composition, think as graph deps, not extension everything to everything
 });
 ```
 
@@ -113,6 +114,7 @@ The application Locus groups the arithmetic Locus with its three interfaces, and
 
 ```ts source=apps/calculator/src/app.ts#CALCULATOR_APP
 export const CalculatorApp = Extension.make(APP_EXTENSION_ID, {
+  //@unknownhero no more extensions
   description:
     "Marks the calculator application that groups the arithmetic Locus and its interfaces.",
   archetypes: [CalculatorInterfaces],
@@ -122,6 +124,7 @@ export function makeApp(
   contains: ReadonlyArray<LocusDefinition>,
 ): LocusDefinition {
   return Locus.extend(Purpose, CalculatorApp).make({
+    //@unknownheroits anonymus extend, very bad
     id: "calculator:app",
     description: "The calculator application.",
     properties: { purpose: APP_PURPOSE },
@@ -130,12 +133,14 @@ export function makeApp(
 }
 
 export const app = makeApp([
+  //@unknownhero its constructor, we can use it as direct usage
   arithmetic,
   calculatorCli,
   calculatorWeb,
   calculatorAgent,
 ]);
 
+//@unknownhero what is this ? if its semantic builders, so locus must contain semantic, not calculated outside
 export const calculatorModel = buildModel(app);
 ```
 

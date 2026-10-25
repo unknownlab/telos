@@ -13,7 +13,7 @@
 //   DIVISION_BY_ZERO_MESSAGE - the fixed message of DivisionByZero
 //   NON_FINITE_MESSAGE - the fixed message of NonFiniteResult
 // END_MODULE_MAP
-
+//@unknownhero NOT GLOBAL ERRORS and technical names like "errors", errors must be belong to where its can be triggered, not global
 import { Schema } from "effect";
 
 // START_CONTRACT: DivisionByZero

@@ -27,10 +27,12 @@ const cliFor = (
   names: ReadonlyArray<string>,
 ): LocusDefinition =>
   Locus.extend(CliSemantics).make({
+    //@unknownhero NOT allways use global locus. Locus must be used once on high level, like AppLocus = Locus.create, and then if we need nested locus its must be AppLocus.newLocus() and then compose/extend, so we always have ctx of all app.
     id: "calculator:cli",
     description: "The calculator command line.",
     properties: { program: "calculator" },
     relations: names.map((name) =>
+      //@unknownhero do we need it ?
       CliCommand.to(CapabilityRef.make(target.id, name)),
     ),
   });
