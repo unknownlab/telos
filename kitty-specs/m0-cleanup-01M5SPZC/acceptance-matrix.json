@@ -97,11 +97,11 @@
     {
       "criterion_id": "FR-010",
       "description": "Verify FR-010 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "grep config files; bun run verify",
+      "evidence": "lane-b tip c3095bb: no docs/grace refs in tsconfig*.json, bunfig.toml, .gitignore; verify (typecheck, lint, format) all pass",
+      "pass_fail": "pass",
+      "verified_by": "reviewer-renata",
+      "verified_at": "2026-10-25T18:03:47.603679+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
