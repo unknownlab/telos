@@ -1,6 +1,6 @@
 // START_MODULE_CONTRACT
 //   PURPOSE: Prove in Chromium that the playground can be used with the keyboard alone, that every control in it has an accessible name, and that the focused control shows a visible focus ring (NFR-004).
-//   SCOPE: The keyboard suite over the static build: scenarios A, D and E operated with Tab, Enter and Space through page.keyboard only, the accessible names of the controls, and the focus indicator. Out: pointer interaction, covered by playground.e2e.ts.
+//   SCOPE: The keyboard suite over the static build: the playground operated with Tab, Enter and Space through page.keyboard only, the accessible names of the controls, and the focus indicator. Out: pointer interaction, covered by playground.e2e.ts.
 //   DEPENDS: M-DOCS-PLAYGROUND
 //   LINKS: V-M-DOCS-PLAYGROUND
 //   ROLE: TEST
@@ -8,9 +8,9 @@
 // END_MODULE_CONTRACT
 //
 // START_MODULE_MAP
-//   PLAYGROUND_CONTROLS - the selector of every button, textarea and input inside a playground
+//   PLAYGROUND_CONTROLS - the selector of every button, textarea, input and select inside a playground
 //   MAX_TAB_PRESSES - the bound on Tab presses before a focus target is reported as unreachable
-//   openScenario - opens one scenario and waits until its playground is hydrated
+//   openPlayground - opens the playground and waits until it is hydrated
 //   tabTo - presses Tab until the focused element matches a selector, and fails when it never does
 //   focusRingShown - true when the focused element shows an outline or a box shadow
 // END_MODULE_MAP
@@ -19,18 +19,18 @@ import { expect, type Page, test } from "@playwright/test";
 import { trackPageErrors } from "./helpers";
 
 const PLAYGROUND_CONTROLS =
-  '[data-slot="playground"] button, [data-slot="playground"] textarea, [data-slot="playground"] input';
+  '[data-slot="playground"] button, [data-slot="playground"] textarea, [data-slot="playground"] input, [data-slot="playground"] select';
 const MAX_TAB_PRESSES = 300;
 
-// START_CONTRACT: openScenario
-//   PURPOSE: Open one scenario and wait for its playground to hydrate, so that the keyboard is used only after the controls exist.
-//   INPUTS: { page: Page - the page to use, id: string - the scenario letter }
+// START_CONTRACT: openPlayground
+//   PURPOSE: Open the playground and wait for it to hydrate, so that the keyboard is used only after the controls exist.
+//   INPUTS: { page: Page - the page to use }
 //   OUTPUTS: { Promise<void> - resolves when data-ready is true on the playground }
 //   SIDE_EFFECTS: navigates the page
 //   LINKS: V-M-DOCS-PLAYGROUND
-// END_CONTRACT: openScenario
-async function openScenario(page: Page, id: string): Promise<void> {
-  await page.goto(`/playground/${id}`);
+// END_CONTRACT: openPlayground
+async function openPlayground(page: Page): Promise<void> {
+  await page.goto("/playground");
   await expect(page.locator('[data-slot="playground"]')).toHaveAttribute(
     "data-ready",
     "true",
@@ -75,107 +75,48 @@ async function focusRingShown(page: Page): Promise<boolean> {
 }
 
 test.describe("keyboard only", () => {
-  test("scenario A: Tab to the input, type a change, Tab to Validate, press Enter", async ({
+  test("Tab to the input, type a change, Tab to Run, press Enter", async ({
     page,
   }) => {
     const check = trackPageErrors(page);
-    await openScenario(page, "a");
-    await tabTo(page, "#fabric-input");
+    await openPlayground(page);
+    await tabTo(page, "#playground-input");
     await page.keyboard.type(" ");
     await tabTo(page, '[data-action="run"]');
     await page.keyboard.press("Enter");
-    await expect(page.locator('[data-valid="true"]')).toBeVisible();
     await expect(
-      page.locator('[data-result][data-provenance="browser"]'),
-    ).toHaveCount(2);
+      page.locator('[data-result="playground"][data-provenance="browser"]'),
+    ).toHaveCount(1);
+    await expect(
+      page.locator('[data-result="playground"][data-valid="true"]'),
+    ).toHaveCount(1);
     check();
   });
 
-  test("scenario D: append A, append B, use the head and append B again, with Tab, Enter and Space", async ({
+  test("every control in the playground has a non-empty accessible name", async ({
     page,
   }) => {
-    const check = trackPageErrors(page);
-    await openScenario(page, "d");
-    await tabTo(page, '[data-action="run"]');
-    await page.keyboard.press("Enter");
-    await expect(
-      page.locator('[data-side="b"] [data-revision-id]'),
-    ).toBeVisible();
-
-    await tabTo(page, '[data-action="append-a"]');
-    await page.keyboard.press("Enter");
-    await expect(page.locator('[data-history-step="0"]')).toHaveAttribute(
-      "data-history-outcome",
-      "appended",
-    );
-
-    await tabTo(page, '[data-action="append-b"]');
-    await page.keyboard.press("Enter");
-    await expect(page.locator('[data-history-step="1"]')).toHaveAttribute(
-      "data-history-outcome",
-      "stale",
-    );
-
-    await tabTo(page, '[data-action="use-head"]');
-    await page.keyboard.press("Space");
-    await tabTo(page, '[data-action="append-b"]');
-    await page.keyboard.press("Enter");
-    await expect(page.locator('[data-history-step="2"]')).toHaveAttribute(
-      "data-history-outcome",
-      "appended",
-    );
-    check();
-  });
-
-  test("scenario E: Tab to Run all and press Enter", async ({ page }) => {
-    const check = trackPageErrors(page);
-    await openScenario(page, "e");
-    await tabTo(page, '[data-action="run"]');
-    await page.keyboard.press("Enter");
-    await expect(
-      page
-        .locator('[data-result="spec-report"][data-provenance="browser"]')
-        .first(),
-    ).toBeVisible();
-    await expect(page.locator('[data-golden-match="true"]')).toHaveCount(8);
-    check();
-  });
-
-  test("every control in a playground has a non-empty accessible name", async ({
-    page,
-  }) => {
-    for (const id of ["a", "b", "c", "d", "e"]) {
-      await openScenario(page, id);
-      // Run the scenario first: scenario D's history controls exist only after Compute.
-      await page.locator('[data-action="run"]').click();
-      await expect(page.locator("[data-result]").first()).toBeVisible();
-      if (id === "d") {
-        await expect(page.locator('[data-slot="expected-head"]')).toHaveCount(
-          1,
-        );
-      }
-      const controls = page.locator(PLAYGROUND_CONTROLS);
-      const count = await controls.count();
-      expect(count, `controls in scenario ${id}`).toBeGreaterThan(0);
-      for (let index = 0; index < count; index += 1) {
-        // The computed accessible name, not the snapshot text: a textarea's value is in the snapshot too.
-        await expect
-          .soft(
-            controls.nth(index),
-            `control ${index} in scenario ${id} has an accessible name`,
-          )
-          .toHaveAccessibleName(/\S/);
-      }
+    await openPlayground(page);
+    await page.locator('[data-action="run"]').click();
+    await expect(page.locator("[data-result]").first()).toBeVisible();
+    const controls = page.locator(PLAYGROUND_CONTROLS);
+    const count = await controls.count();
+    expect(count, "controls in the playground").toBeGreaterThan(0);
+    for (let index = 0; index < count; index += 1) {
+      // The computed accessible name, not the snapshot text: a textarea's value is in the snapshot too.
+      await expect
+        .soft(controls.nth(index), `control ${index} has an accessible name`)
+        .toHaveAccessibleName(/\S/);
     }
   });
 
   test("the focused control shows a visible focus indicator", async ({
     page,
   }) => {
-    await openScenario(page, "a");
-    await tabTo(page, "#fabric-input");
+    await openPlayground(page);
+    await tabTo(page, "#playground-input");
     expect(await focusRingShown(page), "textarea focus indicator").toBe(true);
     await tabTo(page, '[data-action="run"]');
-    expect(await focusRingShown(page), "Validate focus indicator").toBe(true);
+    expect(await focusRingShown(page), "Run focus indicator").toBe(true);
   });
 });

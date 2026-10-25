@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The structural ownership of one Locus by another, where each Locus has at most one container and a root has none.
 related: [locus, identity, semantic-model, ADR-0007]
 ---
@@ -25,7 +25,7 @@ The structural ownership of one [Locus](locus.md) by another. Each Locus has at 
 
 ## In the model
 
-Containment is a single structural field on the Locus. The kernel checks in `packages/kernel/src/containment.ts` that a container exists, is not the Locus itself, and that containment is acyclic. Containment is not a [relation](relation.md).
+Containment is a single structural field on the Locus. The kernel checks in `packages/kernel/src/model.ts` that a container exists, is not the Locus itself, and that containment is acyclic. Containment is not a [relation](relation.md).
 
 ## Related
 

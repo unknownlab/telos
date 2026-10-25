@@ -23,7 +23,7 @@ Telos is meant eventually to govern its own evolution ([P16](../foundation/princ
 
 ## Decision
 
-1. Spec Kitty and GRACE remain the engineering tools for developing Telos in Stage 0 and until a Telos mechanism matches the responsibility on real changes ([OQ-018](../foundation/open-questions.md#oq-018)).
+1. Spec Kitty and GRACE remain the engineering tools for developing Telos in the current stage and until a Telos mechanism matches the responsibility on real changes ([OQ-018](../foundation/open-questions.md#oq-018)).
 2. Each artifact has exactly one owning tool, as tabled in the [foundation README](../foundation/README.md#who-owns-which-artifact). Spec Kitty: `kitty-specs/`, `.kittify/`. GRACE: `.grace/` and code markup. Telos foundation docs: `docs/foundation/`, `docs/decisions/`, `docs/research/`.
 3. Telos packages never import either tool, and the Telos model does not adopt their vocabularies. A Spec Kitty mission corresponds loosely to an Evolution; GRACE modules are not Loci.
 4. Handover happens per responsibility, with the external tool kept as fallback until the Telos mechanism has been used on real changes.

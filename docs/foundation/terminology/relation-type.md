@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: A named meaning of a relation, defined by a semantic extension, such as "CLI command maps to capability".
 related:
   [relation, semantic-extension, grant, P15-no-arbitrary-agent-privileges]
@@ -26,7 +26,7 @@ A named meaning of a [relation](relation.md), defined by a [semantic extension](
 
 ## In the model
 
-Relation types are declared in an extension definition in `packages/kernel/src/extension.ts`. A relation type can mark that it grants invocation; only such a type can produce a [grant](grant.md).
+Relation types are declared in an extension definition in `packages/kernel/src/extension.ts`. A relation type can mark that it grants invocation; only such a type can produce a [grant](grant.md) through a relation.
 
 ## Related
 

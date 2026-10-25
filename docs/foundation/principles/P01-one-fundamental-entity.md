@@ -32,7 +32,7 @@ Systems are described in many vocabularies at once: components, services, module
 
 - `Locus.make` in `packages/kernel/src/locus.ts` is the only constructor for the semantic entity; it requires an identity and nothing else.
 - `buildModel` in `packages/kernel/src/model.ts` collects every Locus reachable from a root and produces the [semantic model](../terminology/semantic-model.md).
-- Containment is a single structural field on the Locus, checked by the kernel (`packages/kernel/src/containment.ts`), not a relation type.
+- Containment is a single structural field on the Locus, checked by the kernel (`packages/kernel/src/model.ts`), not a relation type.
 
 ## Limits
 

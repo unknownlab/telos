@@ -5,7 +5,7 @@ kind: decision
 status: proposed
 maturity: implemented
 date: 2026-10-21
-summary: A Locus identity is a declared namespace-qualified name, not derived from where its definition is stored or which Locus owns it, and source location is excluded from Revision digests.
+summary: A Locus identity is a declared namespace-qualified name, not derived from where its definition is stored or which Locus owns it, and source location is excluded from digests.
 related:
   [
     identity,
@@ -27,7 +27,7 @@ Most tools identify units by path: module specifiers, package names, file names.
 1. A Locus [Identity](../foundation/terminology/identity.md) is declared explicitly as `<namespace>:<name>`. Each part starts with a lowercase letter and continues with lowercase letters, digits and single hyphens, with no trailing hyphen. The whole identity is at most 128 characters.
 2. It is not derived from the file, directory or package containing the definition.
 3. It is not derived from the owner. Nesting is expressed by the `owner` property ([ADR-0007](ADR-0007-ownership-is-structural.md)); re-parenting does not rename.
-4. A definition may carry its source location as metadata. Metadata is excluded from validation of identity and from the Revision digest ([INV-003](../foundation/conceptual-model/README.md#5-invariants)).
+4. A definition may carry its source location as metadata. Metadata is excluded from validation of identity and from the digest ([INV-003](../foundation/conceptual-model/README.md#5-invariants)).
 
 ## Alternatives
 
@@ -37,6 +37,6 @@ Most tools identify units by path: module specifiers, package names, file names.
 
 ## Consequences
 
-- Authors must choose names. Names can collide; uniqueness is checked per Fabric (INV-002).
+- Authors must choose names. Names can collide; uniqueness is checked per semantic model (INV-002).
 - Tools that map files to Loci need explicit metadata or markup.
-- The same definition stored in two places has the same identity and the same Revision id, which the Stage 0 specifications check.
+- The same definition stored in two places has the same identity and the same digest, which the Stage 0 specifications checked.

@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: An ordinary TypeScript package that distributes semantic extensions, Archetypes and adapters.
 related:
   [

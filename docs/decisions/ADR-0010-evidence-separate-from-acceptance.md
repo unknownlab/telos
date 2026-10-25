@@ -2,7 +2,7 @@
 id: ADR-0010
 title: Evidence is separate from acceptance
 kind: decision
-status: proposed
+status: superseded
 maturity: proposed
 date: 2026-10-21
 summary: A result of running a check (Witness) is a different record from the decision to accept a change (Verdict); in Stage 0 every displayed result carries its provenance and no result is written by hand.
@@ -11,6 +11,8 @@ related:
 ---
 
 # ADR-0010 — Evidence is separate from acceptance
+
+> Superseded by [ADR-0023](ADR-0023-archetypes-and-knowledge-status.md).
 
 ## Context
 

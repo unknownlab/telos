@@ -19,7 +19,7 @@ Telos is a framework, not a business product. It is early, and most of its desig
 
 1. Telos is built MVP-style: the smallest slice that works end to end, then the next one. A slice may change the design that came before it.
 2. **Fixed:** TypeScript (strict) and Effect are the authoring model ([ADR-0004](ADR-0004-typescript-and-effect.md)).
-3. **First target:** Bun is the first runtime and toolchain. Other runtimes and targets are open. The Stage 0 packages already use only web-standard APIs, so they run in browsers too.
+3. **First target:** Bun is the first runtime and toolchain. Other runtimes and targets are open. The packages already use only web-standard APIs, so they run in browsers too.
 4. **Provisional:** every other decision, including every record that is still `proposed`, can be changed or replaced when the MVP shows a better design. A decision is replaced by a new record that supersedes it (see [Statuses](README.md#statuses)), not by editing history.
 5. A `proposed` record is not a commitment. It becomes `accepted` only when the owner decides it.
 
@@ -31,5 +31,5 @@ Telos is a framework, not a business product. It is early, and most of its desig
 ## Consequences
 
 - Contributors and agents build for what the current slice needs, not for imagined future needs.
-- Stage 0 APIs, formats, packages and documents may change. Documents state their maturity honestly, so a reader can tell what exists and what is only an idea.
-- "Bun is the first target" does not decide deployment, hosting or publishing. Nothing is deployed or published in Stage 0.
+- Early APIs, formats, packages and documents may change. Documents state their maturity honestly, so a reader can tell what exists and what is only an idea.
+- "Bun is the first target" does not decide deployment, hosting or publishing. Nothing is deployed or published yet.

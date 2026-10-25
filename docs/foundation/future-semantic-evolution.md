@@ -5,7 +5,7 @@ kind: direction
 status: provisional
 maturity: vision
 summary: The concepts that Telos may add later for governed change, namely Mandate, Variant, Witness, Verdict, Evolution and Revision, what each would mean as an extension of the current model and why none is built now.
-related: [foundation, knowledge-status, archetype]
+related: [foundation, knowledge-status, archetype, ADR-0018]
 ---
 
 # Future semantic evolution

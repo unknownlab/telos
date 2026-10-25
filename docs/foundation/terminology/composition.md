@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The combination of semantic extensions into a Locus kind, where incompatible definitions are reported and never silently overwritten.
 related: [semantic-extension, locus-kind, diagnostic, P02-composable-extensions]
 ---
@@ -25,7 +25,7 @@ Combining [semantic extensions](semantic-extension.md) into a [Locus kind](locus
 
 ## In the model
 
-The composition function is in `packages/kernel/src/composition.ts`. A conflict is returned as a [diagnostic](diagnostic.md) with a stable code, and no Locus kind is produced for it.
+The composition function is in `packages/kernel/src/locus.ts`. A conflict is returned as a [diagnostic](diagnostic.md) with a stable code, and no Locus kind is produced for it.
 
 ## Related
 

@@ -1,3 +1,15 @@
 <GraceVerificationDocument graceVersion="4.0">
-  <VD-KERNEL-CLOSURE />
+  <VD-KERNEL-CLOSURE>
+    <V-M-KERNEL-CLOSURE>
+      <TestFiles>
+        <File>packages/kernel/test/closure.test.ts</File>
+        <File>packages/kernel/test/closure-unparsable.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/closure.test.ts packages/kernel/test/closure-unparsable.test.ts</Command>
+      <Scenario>Each closure code is reported exactly when its rule fails, with the exact finding fields and message, and not reported when the rule holds. Scope, claims, owners, relative, alias, workspace and asset resolution, externals, dynamic imports, limits, the report shape, determinism and hasClosureErrors are checked over temporary fixture repositories.</Scenario>
+      <Scenario>A file that cannot be read or does not parse gives one closure.unparsable error finding, and the check continues with the next file instead of failing.</Scenario>
+      <Scenario>A relative or alias import whose last segment has a non-code extension is an asset when that exact file exists; otherwise it resolves to the .ts, .tsx or index file of that name (./routeTree.gen to routeTree.gen.ts), which then follows the owner and dependency rules, and it is unresolved when neither exists.</Scenario>
+      <TraceAssertion>closure.test.ts names one reported and one not-reported test per closure code (closure.unowned, closure.ambiguous, closure.empty-claim, closure.undeclared-dependency, closure.unknown-external, closure.unresolved-import, closure.dynamic-import), the dotted-module-name tests (resolved to a .ts, .tsx or index file, unresolved when nothing exists, an existing asset wins, the dependency rule through a dotted name, and the alias form), and the report, determinism and hasClosureErrors tests. closure-unparsable.test.ts names the reported and not-reported closure.unparsable tests.</TraceAssertion>
+    </V-M-KERNEL-CLOSURE>
+  </VD-KERNEL-CLOSURE>
 </GraceVerificationDocument>

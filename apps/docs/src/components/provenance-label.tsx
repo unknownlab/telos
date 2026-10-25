@@ -2,7 +2,7 @@
 //   PURPOSE: Show where and when a result was produced, as one visible line with an icon for its origin (FR-021, INV-013).
 //   SCOPE: ProvenanceLabel, a presentational component. Its text comes only from provenanceText; it never formats a time itself.
 //   DEPENDS: M-DOCS-SITE
-//   LINKS: M-DOCS-SITE
+//   LINKS: M-DOCS-SEMANTIC-REPORT
 //   ROLE: RUNTIME
 //   MAP_MODE: EXPORTS
 // END_MODULE_CONTRACT
@@ -11,22 +11,13 @@
 //   ProvenanceLabel - the provenance text of a result, with an origin icon
 // END_MODULE_MAP
 
-import {
-  CircleSlash,
-  Globe,
-  Hammer,
-  History,
-  type LucideIcon,
-} from "lucide-react";
+import { CircleSlash, Hammer, type LucideIcon } from "lucide-react";
 import type { Provenance, ProvenanceOrigin } from "@/lib/provenance";
 import { provenanceText } from "@/lib/provenance";
 
 const ICONS: Readonly<Record<ProvenanceOrigin, LucideIcon>> = {
-  browser: Globe,
   "bun-build": Hammer,
-  ci: CircleSlash,
   none: CircleSlash,
-  historical: History,
 };
 
 // START_CONTRACT: ProvenanceLabel
@@ -34,7 +25,7 @@ const ICONS: Readonly<Record<ProvenanceOrigin, LucideIcon>> = {
 //   INPUTS: { provenance: Provenance | null - the provenance of the result, null when nothing ran }
 //   OUTPUTS: { JSX.Element - a p with data-slot="provenance-label" and data-origin, holding an aria-hidden icon and provenanceText(provenance) }
 //   SIDE_EFFECTS: none
-//   LINKS: M-DOCS-SITE
+//   LINKS: M-DOCS-SEMANTIC-REPORT
 // END_CONTRACT: ProvenanceLabel
 export function ProvenanceLabel({
   provenance,

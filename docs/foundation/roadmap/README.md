@@ -26,7 +26,9 @@ The semantic foundation rebuild replaces the earlier Stage 0 model with one fund
 
 - Loci, identity and containment, relations and relation types, capabilities and contracts.
 - Semantic extensions, composition and Locus kinds, with conflicts reported as diagnostics.
-- The semantic model, Archetype rules, findings with knowledge statuses, and Semantic Closure.
+- The semantic model, Archetype rules, findings with knowledge statuses, and Semantic Closure, which checks file ownership and file-level imports.
+- The repository model in `telos.ts`, which describes every workspace package as Loci, and the `bun run telos` commands that check it.
+- The Packs: the CLI Pack (`@telos/cli`), the Agent Pack (`@telos/agent`, with its MCP server and client) and the Web Pack (`@telos/web`).
 - Introspection through `bun run telos inspect` and agent tools, and invocation that needs a grant.
 - The calculator as the proof application, and a documentation site and playground that run the real kernel.
 
@@ -36,7 +38,7 @@ Exit criterion for this step: a new contributor or agent can read the model, dec
 
 These are the next steps the model points to. None is committed.
 
-1. **Telos describes itself.** Describe Telos's own packages as Loci in the repository ([P16](../principles/P16-no-speculative-implementation.md) applies: start with the packages that exist). Add a first drift check between declared relations and package imports ([OQ-012](../open-questions.md#oq-012)).
+1. **Detect drift below the file level.** Semantic Closure checks file ownership and file-level imports, but it does not detect a Locus whose declared capabilities no longer match the code behind them, and it does not attribute code inside one file ([OQ-012](../open-questions.md#oq-012), [ADR-0026](../../decisions/ADR-0026-semantic-closure-at-file-granularity.md)).
 2. **Reconcile with GRACE.** Decide how the `.grace/` architecture description relates to the semantic model ([OQ-021](../open-questions.md#oq-021)).
 3. **Persist the model.** A file-based store so that a model survives between runs. Revisions and history are designed first, in [future semantic evolution](../future-semantic-evolution.md).
 4. **Requirements extension.** Design it against one real case before adding it ([OQ-008](../open-questions.md#oq-008)).

@@ -19,8 +19,8 @@ The Stage 0 directive called the work "the UnknownLab framework". The repository
 
 - The framework is **Telos**. In prose: "Telos", or "Telos by UnknownLab" where the maker matters (site header, about text).
 - **UnknownLab** is the lab, not part of the product name.
-- Workspace packages use the `@telos/` scope (`@telos/locus`, `@telos/docs`). The root package stays `telos`.
-- "Telos" is Greek for purpose or end, matching the role of the Charter. This is a note, not a constraint.
+- Workspace packages use the `@telos/` scope (for example `@telos/kernel`, `@telos/docs`). The root package stays `telos`.
+- "Telos" is Greek for purpose or end, matching the `telos.purpose` extension. This is a note, not a constraint.
 
 ## Alternatives
 

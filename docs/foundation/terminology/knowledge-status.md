@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: "The state of a fact in the model, from declared and derived facts to execution results, not run, observed, invalidated and unknown."
 related: [finding, rule, P13-no-unverified-guarantees]
 ---
@@ -25,7 +25,7 @@ The state of a fact in the model. There are eight statuses: **declared** (writte
 
 ## In the model
 
-The statuses are defined in `packages/kernel/src/status.ts`. Every [finding](finding.md) carries one. `observed` and `invalidated` are defined but nothing in this mission produces them.
+The statuses are the values of the type `Knowledge` in `packages/kernel/src/describe.ts`. Every [finding](finding.md) carries one. `observed` and `invalidated` are defined but nothing in this mission produces them.
 
 ## Related
 

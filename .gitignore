@@ -43,6 +43,7 @@ apps/docs/dist/
 apps/docs/src/generated/
 apps/docs/public/llms.txt
 apps/docs/public/index.json
+apps/docs/public/semantic-report.json
 apps/docs/test-results/
 apps/docs/playwright-report/
 apps/docs/.tanstack/

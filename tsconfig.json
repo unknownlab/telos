@@ -3,12 +3,6 @@
   "include": ["scripts", "telos.ts"],
   "references": [
     {
-      "path": "packages/locus"
-    },
-    {
-      "path": "packages/locus/test"
-    },
-    {
       "path": "packages/kernel"
     },
     {

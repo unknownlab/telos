@@ -112,12 +112,12 @@ test.describe("search", () => {
     page,
   }) => {
     const check = trackPageErrors(page);
-    await page.goto("/playground/a");
+    await page.goto("/playground");
     await expect(page.locator('[data-slot="playground"]')).toHaveAttribute(
       "data-ready",
       "true",
     );
-    const input = page.getByLabel("Fabric JSON");
+    const input = page.getByLabel("Locus JSON");
     await caretToEnd(input);
     await page.keyboard.press("/");
     await expect(input).toHaveValue(/\}\/$/);

@@ -1,3 +1,17 @@
 <GraceVerificationDocument graceVersion="4.0">
-  <VD-KERNEL-DECODE />
+  <VD-KERNEL-DECODE>
+    <V-M-KERNEL-DECODE>
+      <TestFiles>
+        <File>packages/kernel/test/decode.test.ts</File>
+      </TestFiles>
+      <Command>bun test packages/kernel/test/decode.test.ts</Command>
+      <Scenario>A JSON definition with only an id decodes to a Locus with no extensions and no description, and builds with no diagnostics.</Scenario>
+      <Scenario>Extensions are composed in listed order, contained Loci and relations decode to their RelationType and target, and capabilities are declared without a handler with their field types mapped.</Scenario>
+      <Scenario>An unknown extension id or relation type is reported at its path, and a relation type the Locus does not declare reports relation.type-unavailable through buildModel.</Scenario>
+      <Scenario>Structural errors, nested issue paths, and sorted issues are reported with their exact paths.</Scenario>
+      <Scenario>A JSON syntax error gives one issue at the empty path, and JSON text is never evaluated.</Scenario>
+      <Scenario>A code-built model and its JSON form give the same diagnostics in the same order.</Scenario>
+      <TraceAssertion>decode.test.ts: decodeLocus basics, decodeLocus issues, decodeLocusText, LocusJsonSchema and code and JSON parity describe blocks.</TraceAssertion>
+    </V-M-KERNEL-DECODE>
+  </VD-KERNEL-DECODE>
 </GraceVerificationDocument>

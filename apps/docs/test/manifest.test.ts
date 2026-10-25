@@ -7,7 +7,6 @@ const approvedDependencies = {
   "@tanstack/react-start": "1.169.2",
   "@telos/calculator": "workspace:*",
   "@telos/kernel": "workspace:*",
-  "@telos/locus": "workspace:*",
   "@telos/web": "workspace:*",
   "class-variance-authority": "0.7.1",
   clsx: "2.1.1",

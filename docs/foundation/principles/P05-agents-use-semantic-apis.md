@@ -31,7 +31,7 @@ Agents work faster and make fewer errors when the answer has a known structure. 
 
 - The introspection tools in `packages/agent/src/tools.ts` expose the model's queries as typed tools with input and output contracts.
 - `bun run telos inspect` gives the same answers to a person in the terminal.
-- The introspection API in `packages/kernel/src/introspect.ts` is the one source for both, so the agent and the person see the same model.
+- The introspection API in `packages/kernel/src/introspection.ts` is the one source for both, so the agent and the person see the same model.
 
 ## Limits
 

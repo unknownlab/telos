@@ -2,7 +2,7 @@
 id: ADR-0008
 title: Relations are typed with a closed Stage 0 set of kinds
 kind: decision
-status: proposed
+status: superseded
 maturity: implemented
 date: 2026-10-21
 summary: Stage 0 Relations have one of four kinds (depends-on, refines, satisfies, verifies); targets must exist, self-relations and duplicates are rejected, and only refines must be acyclic.
@@ -10,6 +10,8 @@ related: [relation, P02-composable-extensions, open-questions]
 ---
 
 # ADR-0008 — Relations are typed with a closed Stage 0 set of kinds
+
+> Superseded by [ADR-0021](ADR-0021-relation-types-defined-by-extensions.md).
 
 ## Context
 

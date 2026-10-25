@@ -32,7 +32,7 @@ A single set of checks applied to every component is either too weak for the com
 
 - `Archetype.make` in `packages/kernel/src/archetype.ts` builds an Archetype from named rules and the extensions it applies to.
 - `verify` in `packages/kernel/src/verify.ts` runs the rules that apply to each Locus and records one finding per rule.
-- The calculator proof in `packages/calculator` declares its own Archetype for arithmetic Loci; the rules are listed in its verification file.
+- The calculator proof in `apps/calculator` declares its own Archetype for arithmetic Loci; the rules are listed in its verification file.
 
 ## Limits
 

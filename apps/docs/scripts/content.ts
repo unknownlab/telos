@@ -675,13 +675,25 @@ function llmsText(documents: ReadonlyArray<ContentDocument>): string {
   for (const section of NAV_SECTIONS) {
     if (section.id === "playground") {
       blocks.push(
-        `## ${section.title}\n\n- [${section.title}](${section.route}): Scenarios A to E run the real @telos/locus package in your browser.`,
+        `## ${section.title}\n\n- [${section.title}](${section.route}): Type a Locus definition as JSON; the real @telos/kernel decodes, builds and verifies it in your browser.`,
+      );
+      continue;
+    }
+    if (section.id === "calculator") {
+      blocks.push(
+        `## ${section.title}\n\n- [${section.title}](${section.route}): The calculator web interface: forms derived from the capability contracts of calculator:arithmetic.`,
+      );
+      continue;
+    }
+    if (section.id === "inspector") {
+      blocks.push(
+        `## ${section.title}\n\n- [${section.title}](${section.route}): The real repository model, built at site build time from telos.ts: Loci, extensions, relations, capability contracts and verification results. Machine-readable: /semantic-report.json.`,
       );
       continue;
     }
     if (section.id === "verification") {
       blocks.push(
-        `## ${section.title}\n\n- [${section.title}](${section.route}): The specification report from the build-time Bun run, with its provenance.`,
+        `## ${section.title}\n\n- [${section.title}](${section.route}): The Archetype verification and Semantic Closure report from the build-time run, with its provenance.`,
       );
       continue;
     }

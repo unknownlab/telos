@@ -58,12 +58,15 @@ Bun >=1.4.4-canary.1 required, found 1.4.3. Run: bun upgrade --canary
 ### Layout
 
 - `apps/`: applications, one directory per app.
-- `apps/docs`: the documentation site. It is built from `docs/`, and its content is never edited in the app.
+  - `apps/docs`: `@telos/docs`, the documentation site. It is built from `docs/`, and its content is never edited in the app.
+  - `apps/calculator`: `@telos/calculator`, the reference implementation.
 - `packages/`: library packages, one directory per package.
-- `packages/locus`: `@telos/locus`, the Stage 0 Locus model, validation, revisions, history and decoding. It depends only on `effect`.
-  - `packages/locus/src`: the core. It never imports the specifications, a runner, an adapter or a test runner (INV-014, checked by a test).
-  - `packages/locus/specs`: the sub-path `@telos/locus/specs`, the executable specifications LOC-001 to LOC-044 and their runner. Its tests are in `packages/locus/test/specs`.
-- `scripts/`: repository scripts (the version guard and the review gate runner).
+  - `packages/kernel`: `@telos/kernel`, the semantic kernel. It runs in Bun and the browser. The sub-path `@telos/kernel/closure` is Bun only.
+  - `packages/cli`: `@telos/cli`, the CLI Pack.
+  - `packages/agent`: `@telos/agent`, the Agent Pack (agent tools, the MCP server and client, the introspection tools).
+  - `packages/web`: `@telos/web`, the Web Pack (forms derived from capability contracts).
+- `telos.ts`: the repository's own Telos model.
+- `scripts/`: repository scripts: `check-bun-version.ts` (the version guard), `review-gate.ts` (the review gate runner) and `telos.ts` (the `bun run telos` command).
 - `tsconfig.base.json`: strict compiler options shared by every package. `tsconfig.json` at the root checks `scripts/` and lists packages under `references`.
 - `bunfig.toml`: linter, formatter and test-discovery settings. Spec Kitty, GRACE and generated files are excluded from the linter and formatter. `bun test` skips Spec Kitty's folders (`kitty-specs/`, `.kittify/`, `.spec-kitty/`), `.worktrees/` and `node_modules/`.
 
@@ -87,19 +90,30 @@ A new package gets its own `package.json`, a reference `{ "path": "<area>/<name>
 
 Run them from the repository root.
 
-| Command                                   | What it does                                                                                                                                         |
-| ----------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `bun install`                             | Installs dependencies. Run it once per clone and once in every Spec Kitty worktree.                                                                  |
-| `bun run verify`                          | The whole check suite, in order: version, format check, lint, typecheck, tests, docs build, browser tests, `grace lint`. Stops at the first failure. |
-| `bun run typecheck`                       | `bun check -b`: the root and every referenced package.                                                                                               |
-| `bun run lint` / `bun run lint:fix`       | Lint, or lint and apply safe fixes. Warnings do not fail.                                                                                            |
-| `bun run format` / `bun run format:check` | Format files, or only report unformatted files.                                                                                                      |
-| `bun run test`                            | `bun test`. Passes when no test files exist. Test discovery skips `kitty-specs/`, `.kittify/`, `.spec-kitty/`, `.worktrees/` and `node_modules/`.    |
-| `bun run grace:lint`                      | `grace lint --path . --assertions current`.                                                                                                          |
-| `bun run docs:build`                      | Builds the documentation site in `apps/docs` and prerenders every page, then checks the built Verification page.                                     |
-| `bun run docs:preview`                    | Serves the built site on the loopback address. Run `bun run docs:build` first.                                                                       |
-| `bun run test:e2e`                        | Playwright browser tests (Chromium) against the built site. Needs the one-time browser setup.                                                        |
-| `bun run check:bun`                       | The version guard alone.                                                                                                                             |
+| Command                                           | What it does                                                                                                                                                          |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bun install`                                     | Installs dependencies. Run it once per clone and once in every Spec Kitty worktree.                                                                                   |
+| `bun run verify`                                  | The whole check suite, in order: version, format check, lint, typecheck, tests, docs build, browser tests, `grace lint`, the Telos check. Stops at the first failure. |
+| `bun run typecheck`                               | `bun check -b`: the root and every referenced package.                                                                                                                |
+| `bun run lint` / `bun run lint:fix`               | Lint, or lint and apply safe fixes. Warnings do not fail.                                                                                                             |
+| `bun run format` / `bun run format:check`         | Format files, or only report unformatted files.                                                                                                                       |
+| `bun run test`                                    | `bun test`. Passes when no test files exist. Test discovery skips `kitty-specs/`, `.kittify/`, `.spec-kitty/`, `.worktrees/` and `node_modules/`.                     |
+| `bun run grace:lint`                              | `grace lint --path . --assertions current`.                                                                                                                           |
+| `bun run docs:build`                              | Builds the documentation site in `apps/docs` and prerenders every page, then checks the built Verification page.                                                      |
+| `bun run docs:preview`                            | Serves the built site on the loopback address. Run `bun run docs:build` first.                                                                                        |
+| `bun run test:e2e`                                | Playwright browser tests (Chromium) against the built site. Needs the one-time browser setup.                                                                         |
+| `bun run check:bun`                               | The version guard alone.                                                                                                                                              |
+| `bun run telos list`                              | Prints the id of every Locus in the repository model as JSON.                                                                                                         |
+| `bun run telos inspect <id>`                      | Prints the description of one Locus, by id, as JSON.                                                                                                                  |
+| `bun run telos verify [--static]`                 | Runs the verifications of every Locus and prints the report as JSON; `--static` runs only the static methods.                                                         |
+| `bun run telos closure`                           | Runs the Semantic Closure check over the source files and prints its findings as JSON.                                                                                |
+| `bun run telos impact <target>`                   | Prints the Loci and checks affected by a change to a Locus or to a capability written `<locus>#<capability>`, as JSON.                                                |
+| `bun run telos check`                             | Runs verification and Semantic Closure, prints a JSON summary and exits 1 when a check fails.                                                                         |
+| `bun run telos report --out <path>`               | Writes the semantic report that the documentation site reads to the given path.                                                                                       |
+| `bun run telos:check`                             | Runs `bun run telos check`, the last step of `bun run verify`.                                                                                                        |
+| `bun run calculator <capability> --a <n> --b <n>` | Runs one calculator capability (`add`, `subtract`, `multiply` or `divide`) and prints its result as JSON.                                                             |
+| `bun run calculator:mcp`                          | Serves the calculator's agent tools over MCP on stdio.                                                                                                                |
+| `bun run calculator:agent-demo`                   | Runs a fixed, offline agent that discovers and calls the calculator tools over MCP and prints each step as JSON.                                                      |
 
 ### Pre-commit hook
 
@@ -119,7 +133,7 @@ Formatting restages whole files. If you staged only part of a file, the hook blo
 
 ### Review gate
 
-Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review. It runs every check, writes one JUnit report with a test case per check (`verify.lint`, `verify.typecheck`, and so on) plus every `bun test` result, and Spec Kitty blocks the review on any failure that is not already failing on the base branch. The docs build and the browser tests appear as `verify.docs:build` and `verify.test:e2e`. A unit test compares the gate's step list with the root `verify` script, so the two cannot drift apart.
+Spec Kitty runs `bun scripts/review-gate.ts` when a work package goes to review. It runs every check, writes one JUnit report with a test case per check (`verify.lint`, `verify.typecheck`, and so on) plus every `bun test` result, and Spec Kitty blocks the review on any failure that is not already failing on the base branch. The docs build and the browser tests appear as `verify.docs:build` and `verify.test:e2e`, and the Telos check appears as `verify.telos:check`. A unit test compares the gate's step list with the root `verify` script, so the two cannot drift apart.
 
 If `node_modules/` is missing, as in the base-branch checkout that Spec Kitty uses to tell new failures from old ones, the gate first runs `bun install --frozen-lockfile` once. A failed install appears as a failing `verify.install` case, and the other checks still run. When dependencies are already installed, the gate adds no install case.
 

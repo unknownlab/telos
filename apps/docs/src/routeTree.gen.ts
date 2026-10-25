@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AgentReferenceRouteImport } from './routes/agent-reference'
+import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as ExamplesRouteImport } from './routes/examples'
 import { Route as FirstLocusRouteImport } from './routes/first-locus'
 import { Route as NotFoundRouteImport } from './routes/not-found'
@@ -21,8 +22,9 @@ import { Route as ArchitectureIndexRouteImport } from './routes/architecture/ind
 import { Route as ArchitectureIdRouteImport } from './routes/architecture/$id'
 import { Route as DecisionsIndexRouteImport } from './routes/decisions/index'
 import { Route as DecisionsIdRouteImport } from './routes/decisions/$id'
+import { Route as InspectorIndexRouteImport } from './routes/inspector/index'
+import { Route as InspectorSlugRouteImport } from './routes/inspector/$slug'
 import { Route as PlaygroundIndexRouteImport } from './routes/playground/index'
-import { Route as PlaygroundScenarioRouteImport } from './routes/playground/$scenario'
 import { Route as PrinciplesIndexRouteImport } from './routes/principles/index'
 import { Route as PrinciplesIdRouteImport } from './routes/principles/$id'
 import { Route as TerminologyIndexRouteImport } from './routes/terminology/index'
@@ -36,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
 const AgentReferenceRoute = AgentReferenceRouteImport.update({
   id: '/agent-reference',
   path: '/agent-reference',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExamplesRoute = ExamplesRouteImport.update({
@@ -88,14 +95,19 @@ const DecisionsIdRoute = DecisionsIdRouteImport.update({
   path: '/decisions/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InspectorIndexRoute = InspectorIndexRouteImport.update({
+  id: '/inspector/',
+  path: '/inspector/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InspectorSlugRoute = InspectorSlugRouteImport.update({
+  id: '/inspector/$slug',
+  path: '/inspector/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlaygroundIndexRoute = PlaygroundIndexRouteImport.update({
   id: '/playground/',
   path: '/playground/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PlaygroundScenarioRoute = PlaygroundScenarioRouteImport.update({
-  id: '/playground/$scenario',
-  path: '/playground/$scenario',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrinciplesIndexRoute = PrinciplesIndexRouteImport.update({
@@ -122,6 +134,7 @@ const TerminologyIdRoute = TerminologyIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agent-reference': typeof AgentReferenceRoute
+  '/calculator': typeof CalculatorRoute
   '/examples': typeof ExamplesRoute
   '/first-locus': typeof FirstLocusRoute
   '/not-found': typeof NotFoundRoute
@@ -130,11 +143,12 @@ export interface FileRoutesByFullPath {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
-  '/playground/$scenario': typeof PlaygroundScenarioRoute
+  '/inspector/$slug': typeof InspectorSlugRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture/': typeof ArchitectureIndexRoute
   '/decisions/': typeof DecisionsIndexRoute
+  '/inspector/': typeof InspectorIndexRoute
   '/playground/': typeof PlaygroundIndexRoute
   '/principles/': typeof PrinciplesIndexRoute
   '/terminology/': typeof TerminologyIndexRoute
@@ -142,6 +156,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agent-reference': typeof AgentReferenceRoute
+  '/calculator': typeof CalculatorRoute
   '/examples': typeof ExamplesRoute
   '/first-locus': typeof FirstLocusRoute
   '/not-found': typeof NotFoundRoute
@@ -150,11 +165,12 @@ export interface FileRoutesByTo {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
-  '/playground/$scenario': typeof PlaygroundScenarioRoute
+  '/inspector/$slug': typeof InspectorSlugRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture': typeof ArchitectureIndexRoute
   '/decisions': typeof DecisionsIndexRoute
+  '/inspector': typeof InspectorIndexRoute
   '/playground': typeof PlaygroundIndexRoute
   '/principles': typeof PrinciplesIndexRoute
   '/terminology': typeof TerminologyIndexRoute
@@ -163,6 +179,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/agent-reference': typeof AgentReferenceRoute
+  '/calculator': typeof CalculatorRoute
   '/examples': typeof ExamplesRoute
   '/first-locus': typeof FirstLocusRoute
   '/not-found': typeof NotFoundRoute
@@ -171,11 +188,12 @@ export interface FileRoutesById {
   '/verification': typeof VerificationRoute
   '/architecture/$id': typeof ArchitectureIdRoute
   '/decisions/$id': typeof DecisionsIdRoute
-  '/playground/$scenario': typeof PlaygroundScenarioRoute
+  '/inspector/$slug': typeof InspectorSlugRoute
   '/principles/$id': typeof PrinciplesIdRoute
   '/terminology/$id': typeof TerminologyIdRoute
   '/architecture/': typeof ArchitectureIndexRoute
   '/decisions/': typeof DecisionsIndexRoute
+  '/inspector/': typeof InspectorIndexRoute
   '/playground/': typeof PlaygroundIndexRoute
   '/principles/': typeof PrinciplesIndexRoute
   '/terminology/': typeof TerminologyIndexRoute
@@ -185,6 +203,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/agent-reference'
+    | '/calculator'
     | '/examples'
     | '/first-locus'
     | '/not-found'
@@ -193,11 +212,12 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
-    | '/playground/$scenario'
+    | '/inspector/$slug'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture/'
     | '/decisions/'
+    | '/inspector/'
     | '/playground/'
     | '/principles/'
     | '/terminology/'
@@ -205,6 +225,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/agent-reference'
+    | '/calculator'
     | '/examples'
     | '/first-locus'
     | '/not-found'
@@ -213,11 +234,12 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
-    | '/playground/$scenario'
+    | '/inspector/$slug'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture'
     | '/decisions'
+    | '/inspector'
     | '/playground'
     | '/principles'
     | '/terminology'
@@ -225,6 +247,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/agent-reference'
+    | '/calculator'
     | '/examples'
     | '/first-locus'
     | '/not-found'
@@ -233,11 +256,12 @@ export interface FileRouteTypes {
     | '/verification'
     | '/architecture/$id'
     | '/decisions/$id'
-    | '/playground/$scenario'
+    | '/inspector/$slug'
     | '/principles/$id'
     | '/terminology/$id'
     | '/architecture/'
     | '/decisions/'
+    | '/inspector/'
     | '/playground/'
     | '/principles/'
     | '/terminology/'
@@ -246,6 +270,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AgentReferenceRoute: typeof AgentReferenceRoute
+  CalculatorRoute: typeof CalculatorRoute
   ExamplesRoute: typeof ExamplesRoute
   FirstLocusRoute: typeof FirstLocusRoute
   NotFoundRoute: typeof NotFoundRoute
@@ -254,11 +279,12 @@ export interface RootRouteChildren {
   VerificationRoute: typeof VerificationRoute
   ArchitectureIdRoute: typeof ArchitectureIdRoute
   DecisionsIdRoute: typeof DecisionsIdRoute
-  PlaygroundScenarioRoute: typeof PlaygroundScenarioRoute
+  InspectorSlugRoute: typeof InspectorSlugRoute
   PrinciplesIdRoute: typeof PrinciplesIdRoute
   TerminologyIdRoute: typeof TerminologyIdRoute
   ArchitectureIndexRoute: typeof ArchitectureIndexRoute
   DecisionsIndexRoute: typeof DecisionsIndexRoute
+  InspectorIndexRoute: typeof InspectorIndexRoute
   PlaygroundIndexRoute: typeof PlaygroundIndexRoute
   PrinciplesIndexRoute: typeof PrinciplesIndexRoute
   TerminologyIndexRoute: typeof TerminologyIndexRoute
@@ -278,6 +304,13 @@ declare module '@tanstack/react-router' {
       path: '/agent-reference'
       fullPath: '/agent-reference'
       preLoaderRoute: typeof AgentReferenceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/examples': {
@@ -350,18 +383,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DecisionsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inspector/': {
+      id: '/inspector/'
+      path: '/inspector'
+      fullPath: '/inspector/'
+      preLoaderRoute: typeof InspectorIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inspector/$slug': {
+      id: '/inspector/$slug'
+      path: '/inspector/$slug'
+      fullPath: '/inspector/$slug'
+      preLoaderRoute: typeof InspectorSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/playground/': {
       id: '/playground/'
       path: '/playground'
       fullPath: '/playground/'
       preLoaderRoute: typeof PlaygroundIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/playground/$scenario': {
-      id: '/playground/$scenario'
-      path: '/playground/$scenario'
-      fullPath: '/playground/$scenario'
-      preLoaderRoute: typeof PlaygroundScenarioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/principles/': {
@@ -398,6 +438,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AgentReferenceRoute: AgentReferenceRoute,
+  CalculatorRoute: CalculatorRoute,
   ExamplesRoute: ExamplesRoute,
   FirstLocusRoute: FirstLocusRoute,
   NotFoundRoute: NotFoundRoute,
@@ -406,11 +447,12 @@ const rootRouteChildren: RootRouteChildren = {
   VerificationRoute: VerificationRoute,
   ArchitectureIdRoute: ArchitectureIdRoute,
   DecisionsIdRoute: DecisionsIdRoute,
-  PlaygroundScenarioRoute: PlaygroundScenarioRoute,
+  InspectorSlugRoute: InspectorSlugRoute,
   PrinciplesIdRoute: PrinciplesIdRoute,
   TerminologyIdRoute: TerminologyIdRoute,
   ArchitectureIndexRoute: ArchitectureIndexRoute,
   DecisionsIndexRoute: DecisionsIndexRoute,
+  InspectorIndexRoute: InspectorIndexRoute,
   PlaygroundIndexRoute: PlaygroundIndexRoute,
   PrinciplesIndexRoute: PrinciplesIndexRoute,
   TerminologyIndexRoute: TerminologyIndexRoute,

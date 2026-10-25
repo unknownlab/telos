@@ -8,7 +8,7 @@ fundamental: false
 engine: false
 stage0: in-scope
 status: provisional
-maturity: proposed
+maturity: implemented
 summary: The outcome of one rule on one Locus, recorded as passed, failed or error.
 related: [rule, diagnostic, knowledge-status, archetype]
 ---

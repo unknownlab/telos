@@ -44,7 +44,7 @@ export type CheckStep = {
 // START_CONTRACT: CHECK_STEPS
 //   PURPOSE: Name every check step the review gate runs, in the order of the root verify script, so the gate and verify cannot drift apart.
 //   INPUTS: {}
-//   OUTPUTS: { ReadonlyArray<CheckStep> - check:bun, format:check, lint, typecheck, test, docs:build, test:e2e, grace:lint; the test step runs bun test without reporter flags, which the gate adds at run time }
+//   OUTPUTS: { ReadonlyArray<CheckStep> - check:bun, format:check, lint, typecheck, test, docs:build, test:e2e, grace:lint, telos:check; the test step runs bun test without reporter flags, which the gate adds at run time }
 //   SIDE_EFFECTS: none
 //   LINKS: M-REVIEW-GATE
 // END_CONTRACT: CHECK_STEPS
@@ -57,6 +57,7 @@ export const CHECK_STEPS: ReadonlyArray<CheckStep> = [
   { name: "docs:build", command: ["bun", "run", "docs:build"] },
   { name: "test:e2e", command: ["bun", "run", "test:e2e"] },
   { name: "grace:lint", command: ["bun", "run", "grace:lint"] },
+  { name: "telos:check", command: ["bun", "run", "telos:check"] },
 ];
 
 // START_CONTRACT: verifyStepNames

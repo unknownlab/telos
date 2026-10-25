@@ -2,7 +2,7 @@
 id: ADR-0005
 title: Revisions are immutable and content-addressed; baselines advance by compare-and-set
 kind: decision
-status: proposed
+status: superseded
 maturity: implemented
 date: 2026-10-21
 summary: A Revision id is the SHA-256 of a canonical JSON form of the semantic definition; histories are append-only and a new head is accepted only against the expected current head.
@@ -16,6 +16,8 @@ related:
 ---
 
 # ADR-0005 — Revisions are immutable and content-addressed; baselines advance by compare-and-set
+
+> Superseded by [ADR-0024](ADR-0024-digests-and-model-comparison.md).
 
 ## Context
 

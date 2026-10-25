@@ -60,7 +60,7 @@ Packs are ordinary TypeScript packages that depend on the kernel's public API. T
 
 External engines connect through interfaces that the semantic model defines ([P14](../principles/P14-no-ai-in-the-kernel.md), [P09](../principles/P09-no-duplicated-frameworks.md)). In code, an engine interface is an Effect service; an engine is a layer that implements it. The kernel never imports an engine directly. Engines Telos expects to connect to, and does not intend to replace: test runners, model checkers, AI model providers, infrastructure-as-code engines, durable workflow engines, databases and telemetry backends.
 
-Temporary development engines follow the same rule. Stage 0 specification checks are data run by a small runner, with `bun test` and the browser as two adapters ([ADR-0013](../../decisions/ADR-0013-temporary-executable-specifications.md)).
+Temporary development engines follow the same rule. Stage 0 specification checks were data run by a small runner, with `bun test` and the browser as two adapters ([ADR-0013](../../decisions/ADR-0013-temporary-executable-specifications.md)). They have been removed.
 
 ## Semantic intermediate representation
 

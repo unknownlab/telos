@@ -2,7 +2,7 @@
 id: ADR-0002
 title: Locus is the primary semantic unit
 kind: decision
-status: proposed
+status: superseded
 maturity: proposed
 date: 2026-10-21
 summary: The Locus, a bounded semantic unit with identity, Charter, single owner and typed Relations, is the unit every other Telos concept attaches to.
@@ -17,6 +17,8 @@ related:
 ---
 
 # ADR-0002 — Locus is the primary semantic unit
+
+> Superseded by [ADR-0019](ADR-0019-locus-with-composable-extensions.md).
 
 ## Context
 

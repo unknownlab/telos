@@ -2,7 +2,7 @@
 id: ADR-0009
 title: AI tools are modelled as bounded capabilities
 kind: decision
-status: proposed
+status: superseded
 maturity: vision
 date: 2026-10-21
 summary: Agents act only through declared Acts with typed contracts under explicit Mandates, never through general-purpose tools such as unrestricted shells; nothing of this is built in Stage 0.
@@ -17,6 +17,8 @@ related:
 ---
 
 # ADR-0009 — AI tools are modelled as bounded capabilities
+
+> Superseded by [ADR-0022](ADR-0022-capabilities-and-governed-invocation.md).
 
 ## Context
 

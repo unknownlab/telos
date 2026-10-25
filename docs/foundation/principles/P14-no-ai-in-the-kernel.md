@@ -29,9 +29,10 @@ A kernel that calls a model cannot be trusted to give the same answer twice, can
 ## In practice
 
 - The `package.json` of `packages/kernel` lists `effect` as its only runtime dependency.
-- No file in `packages/kernel/src` imports a model provider SDK. A check in the repository gate rejects such an import.
+- No file in `packages/kernel/src` imports a model provider SDK. The Semantic Closure check of `bun run telos check` (the last step of `bun run verify`) rejects an import of a package that `telos:kernel` does not declare in `telos.ts` (`closure.unknown-external`), and `telos:kernel` declares only `effect`.
 - The agent package `packages/agent` is the only place where model calls may appear, and it calls the kernel through its public API.
 
 ## Limits
 
+- The import check sees static imports and literal `import("...")` calls. A computed `import(name)` is only a warning (`closure.dynamic-import`), and type-only imports are not seen, so an import of a model provider written in either form is not rejected by the check. See [Semantic Closure](../terminology/semantic-closure.md).
 - Some useful checks, such as judging the quality of a description, need judgement that a deterministic rule does not give. Those checks belong in an agent or a person, outside the kernel, and their results are recorded with a lower status.
