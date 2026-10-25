@@ -1,0 +1,16 @@
+{
+  "coordination_branch": "kitty/mission-m0-cleanup-01M5SPZC",
+  "created_at": "2026-10-25T14:21:02.466931+00:00",
+  "flattened": false,
+  "friendly_name": "M0 Cleanup",
+  "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
+  "mission_number": null,
+  "mission_slug": "m0-cleanup-01M5SPZC",
+  "mission_type": "software-dev",
+  "pr_bound": true,
+  "purpose_context": "The owner is rewriting the Telos framework. Documentation, architecture records, the GRACE knowledge layer and the contract comments cost a lot to keep in sync at this stage and will be rebuilt once Telos is written by Telos. M0 removes them and the checks that exist only for them, keeps the owner's inline review notes for the next mission (M1) to act on, and leaves every remaining check green so the rewrite starts from a small, honest codebase.",
+  "purpose_tldr": "Strip the repository down to working code: drop the documentation site, the docs folder, GRACE artifacts and every code comment except the owner's review notes, without changing kernel, pack or calculator behavior.",
+  "slug": "m0-cleanup-01M5SPZC",
+  "target_branch": "feat/m0-cleanup",
+  "topology": "coord"
+}
