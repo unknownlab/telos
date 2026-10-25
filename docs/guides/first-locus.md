@@ -7,7 +7,15 @@ section: first-locus
 status: provisional
 maturity: implemented
 summary: A five-step tutorial in which you define, validate, break, relate and revise a Locus with the Telos package.
-related: [locus, charter, fabric, relation, revision, examples]
+related:
+  [
+    locus,
+    purpose,
+    semantic-model,
+    relation,
+    future-semantic-evolution,
+    examples,
+  ]
 ---
 
 # Your first Locus
@@ -19,11 +27,11 @@ This tutorial takes about fifteen minutes. You do not need to read the source co
 A [Locus](../foundation/terminology/locus.md) is an identifiable unit with one purpose. Four parts describe it:
 
 - Its [Identity](../foundation/terminology/identity.md) is a name of the form `namespace:name`, such as `shop:checkout`. Each part starts with a letter and holds lowercase letters, digits and single hyphens.
-- Its [Charter](../foundation/terminology/charter.md) states the purpose and lists at least one responsibility.
+- Its [Charter](../foundation/terminology/purpose.md) states the purpose and lists at least one responsibility.
 - An optional `owner` names the Locus that contains it.
 - Optional [Relations](../foundation/terminology/relation.md) link it to other Loci.
 
-A [Fabric](../foundation/terminology/fabric.md) is a named set of Loci. The package checks a Fabric as a whole. The Fabric has an identity of the same form.
+A [Fabric](../foundation/terminology/semantic-model.md) is a named set of Loci. The package checks a Fabric as a whole. The Fabric has an identity of the same form.
 
 The JSON below is a Fabric named `shop:system` with three Loci. The Locus `shop:checkout` is owned by `shop:storefront`, and it depends on `shop:payment`.
 
@@ -224,7 +232,7 @@ Try it: [Scenario C in the playground](/playground/c).
 
 ## 4. Revise a Locus
 
-A [Revision](../foundation/terminology/revision.md) is a frozen snapshot of one Locus definition. Its id is `sha256:` followed by the SHA-256 digest of the canonical form of the definition. The canonical form is JSON with a fixed key order, sorted sets and no metadata. Two definitions with the same meaning therefore have the same id.
+A [Revision](../foundation/future-semantic-evolution.md) is a frozen snapshot of one Locus definition. Its id is `sha256:` followed by the SHA-256 digest of the canonical form of the definition. The canonical form is JSON with a fixed key order, sorted sets and no metadata. Two definitions with the same meaning therefore have the same id.
 
 The two Locus definitions below are two versions of `shop:checkout`. Version B changes one responsibility.
 
@@ -278,7 +286,7 @@ The change set from A to B lists each changed part. A part that loses an entry g
 ]
 ```
 
-A [history](../foundation/terminology/revision.md) is an ordered list of Revision ids for one Locus. The last id is the head, which is the current baseline. An append names the head that its author expects. If that is not the current head, the package refuses the append with `StaleBaselineError`, and the history does not change. This is compare-and-set. It stops one change from silently overwriting another, which is the rule of [P08](../foundation/principles/P08-preserve-the-baseline.md).
+A [history](../foundation/future-semantic-evolution.md) is an ordered list of Revision ids for one Locus. The last id is the head, which is the current baseline. An append names the head that its author expects. If that is not the current head, the package refuses the append with `StaleBaselineError`, and the history does not change. This is compare-and-set. It stops one change from silently overwriting another, which is the rule of [P08](../foundation/principles/P13-no-unverified-guarantees.md).
 
 The history below runs four steps, one after another. Each step names the Revision to append (`a` or `b`), the head it expects (`null` for an empty history), and the outcome the package gives:
 

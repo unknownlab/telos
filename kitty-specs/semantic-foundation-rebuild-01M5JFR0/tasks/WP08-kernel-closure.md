@@ -9,6 +9,9 @@ requirement_refs:
 planning_base_branch: feat/semantic-foundation-rebuild
 merge_target_branch: feat/semantic-foundation-rebuild
 branch_strategy: Planning artifacts for this mission were generated on feat/semantic-foundation-rebuild. During /spec-kitty.implement this WP may branch from a dependency-specific base, but completed changes must merge back into feat/semantic-foundation-rebuild unless the human explicitly redirects the landing branch.
+base_branch: kitty/mission-semantic-foundation-rebuild-01M5JFR0
+base_commit: e68f46190cd73edd5d9e03b44a867b8f57e589db
+created_at: '2026-10-24T09:23:20.926564+00:00'
 subtasks:
 - T042
 - T043
@@ -114,7 +117,7 @@ Algorithm:
    - `node:*`, `bun`, `bun:*` → platform, always allowed.
    - A specifier starting with an alias `prefix` → replace the prefix with the alias `dir` and resolve it like a relative path from the repository root. Aliases apply only to files under the alias `dir`'s app (the first path segment pair, e.g. `apps/docs/`).
    - A name in `options.packages` (exact, or `name/<sub>`) → read `<root>/<dir>/package.json` and take `exports["."]` (bare name) or `exports["./<sub>"]`. Only string values are used. Resolve it to a repository-relative file. B = the owner of that file. A missing export or file → `closure.unresolved-import`. Then the dependency rule.
-   - Before resolving, remove a query suffix (`?url`, `?raw`). A relative or alias path that then ends with an extension other than `.ts`, `.tsx` or `.js` (for example `.css`, `.json`) is an **asset**: it is allowed when the file exists, and `closure.unresolved-import` otherwise. A workspace subpath that ends with `/package.json` is also an asset and is allowed.
+   - Before resolving, remove a query suffix (`?url`, `?raw`). A relative or alias path whose last segment then has an extension other than `.ts`, `.tsx` or `.js` (for example `.css`, `.json`, `.svg`, and also dotted module names such as `routeTree.gen` or `app.config`) is resolved in this order: (1) the file `<path>` exists → an **asset**, allowed; (2) otherwise the first existing file of `<path>.ts`, `<path>.tsx`, `<path>/index.ts`, `<path>/index.tsx` is a code target that follows the unowned-target and dependency rules; (3) neither → `closure.unresolved-import` (`"<specifier> does not resolve to a file."`). A workspace subpath that ends with `/package.json` is also an asset and is allowed. *(Amended 2026-10-24 after WP08 was approved: WP15 applies this change to `closure.ts` as a sanctioned edit. See contracts/kernel.md and the tasks.md deviation "Dotted module names in the closure resolver".)*
    - A resolved target file that has no owner (outside the scope or unowned) → `closure.unresolved-import` with the message `"<specifier> resolves to <file>, which no Locus owns."`.
    - Another bare specifier → package name = `@scope/name` or the first segment. Allowed if it is listed in `properties.packages` of an `telos.external` Locus that is the owner or an ancestor of the owner. Otherwise → `closure.unknown-external`.
    - Dependency rule: allowed when B === A, B is an ancestor or descendant of A, or a valid relation (any type) exists from A or any ancestor of A to B or to a capability of B. Otherwise → `closure.undeclared-dependency` (loci = [A, B]).
@@ -131,7 +134,7 @@ Algorithm:
 | `closure.empty-claim` | warning | a `Source` glob matches no file in scope |
 | `closure.undeclared-dependency` | error | a file of Locus A imports a file owned by Locus B, where B is not A, an ancestor or descendant of A, or a target of a relation from A or its ancestors |
 | `closure.unknown-external` | error | a bare package import that no `External` declaration on the owner or its ancestors lists |
-| `closure.unresolved-import` | error | a relative import whose target file does not exist |
+| `closure.unresolved-import` | error | a relative, alias or workspace import that resolves to no file (an existing asset, or a dotted module name such as `./routeTree.gen` that resolves to `routeTree.gen.ts`, is not unresolved), or to a file no Locus owns |
 | `closure.dynamic-import` | warning | a computed `import(...)` (a non-literal argument, or a template literal with `${...}`), so the dependency is unknown; the finding has `knowledge: "unknown"` |
 
 Modules you use: `SemanticModel`, `ancestors`, `outgoing` (`./model`); `deepFreeze` (`./freeze`). Read `properties.sources` of Loci whose kind has the extension id `telos.source`, and `properties.packages` of Loci whose kind has `telos.external` (`definition.kind.extensions.some((e) => e.id === "telos.source")`).
@@ -253,7 +256,7 @@ Each exported function, constant or class has a contract block right above it:
 // END_CONTRACT: <exportName>
 ```
 
-Exported types and interfaces need only the MODULE_MAP line. Test files use `ROLE: TEST` and `MAP_MODE: LOCALS`, and list their local helpers (or "none") in the map. Optional named regions use `// START_BLOCK_<NAME>` / `// END_BLOCK_<NAME>`. The guides quote these regions (contracts/docs.md).
+Exported types and interfaces need only the MODULE_MAP line. Test files use `ROLE: TEST` and `MAP_MODE: LOCALS`, and list their local helpers in the map. A test file with no local helpers has exactly one map line `(none) - no local helpers`, with the parentheses. Never write `none - no local helpers`: `grace lint` reads the leading identifier of each map line as a symbol name, so a bare `none` counts as a helper that does not exist and fails with `markup.module-map-mismatch`. `(none)` does not start with an identifier, so it keeps the map non-empty (no `markup.module-map-missing`) without naming a symbol. Optional named regions use `// START_BLOCK_<NAME>` / `// END_BLOCK_<NAME>`. The guides quote these regions (contracts/docs.md).
 
 ## GRACE graph and verification layout (created by WP01)
 
@@ -361,7 +364,7 @@ and in `.grace/verification/index.xml` the same with `<VD-…>` and `<V-M-… />
 Lint rules that were confirmed while planning (they fail the gate when ignored):
 
 - `START_MODULE_MAP` lists **every** export of the file, one line each (types and interfaces too), in file order.
-- Test files use `ROLE: TEST`, `MAP_MODE: LOCALS`, and a **non-empty** map: list the local helpers, or one line `none - no local helpers`.
+- Test files use `ROLE: TEST`, `MAP_MODE: LOCALS`, and a **non-empty** map: list the local helpers, or exactly one line `(none) - no local helpers` (with the parentheses; a bare `none` fails `grace lint` with `markup.module-map-mismatch`).
 - Every `<File>` in a verification entry must exist. Register a module only together with its verification entry, after the test files exist.
 - A module's dependency modules are empty child elements (`<M-KERNEL-DIAGNOSTIC />`) and must be registered ids.
 
@@ -407,7 +410,7 @@ Algorithm steps 1–3. Use `new Bun.Glob(g).scanSync({ cwd: root, onlyFiles: tru
 
 ### T044 – Import scanning and resolution
 
-Use `new Bun.Transpiler({ loader: file.endsWith(".tsx") ? "tsx" : "ts" }).scanImports(text)`; each entry's `path` is the specifier. Strip a `?query` suffix first. Resolve with the rules of the contract, in this order: platform; workspace package (exact name or `name/<sub>`); alias prefix (only for files whose path starts with the alias app directory, i.e. the first two segments of `dir`, for example `apps/docs/`); relative (`./`, `../`); otherwise a bare package. Relative and alias paths are joined with `path.posix` from the importing file's directory (relative) or the repository root (alias); a result that starts with `../` is unresolved. Candidates for a code path: `p`, `p.ts`, `p.tsx`, `p/index.ts`, `p/index.tsx`, and `p` with a final `.js` replaced by `.ts`. A path whose extension is not `.ts`, `.tsx` or `.js` is an asset: allowed when the file exists.
+Use `new Bun.Transpiler({ loader: file.endsWith(".tsx") ? "tsx" : "ts" }).scanImports(text)`; each entry's `path` is the specifier. Strip a `?query` suffix first. Resolve with the rules of the contract, in this order: platform; workspace package (exact name or `name/<sub>`); alias prefix (only for files whose path starts with the alias app directory, i.e. the first two segments of `dir`, for example `apps/docs/`); relative (`./`, `../`); otherwise a bare package. Relative and alias paths are joined with `path.posix` from the importing file's directory (relative) or the repository root (alias); a result that starts with `../` is unresolved. Candidates for a code path: `p`, `p.ts`, `p.tsx`, `p/index.ts`, `p/index.tsx`, and `p` with a final `.js` replaced by `.ts`. A path whose extension is not `.ts`, `.tsx` or `.js` is an asset when that exact file exists; otherwise `p.ts`, `p.tsx`, `p/index.ts` and `p/index.tsx` are tried as code paths before the import is unresolved (amended 2026-10-24, applied by WP15).
 
 ### T045 – Externals, the dependency rule, dynamic imports
 

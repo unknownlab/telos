@@ -7,7 +7,7 @@ section: examples
 status: provisional
 maturity: implemented
 summary: Worked examples of valid and invalid Fabrics, malformed input, and two Loci with the same meaning, with what the package reports for each.
-related: [first-locus, locus, relation, revision]
+related: [first-locus, locus, relation, future-semantic-evolution]
 ---
 
 # Examples
