@@ -12,5 +12,7 @@
   "purpose_tldr": "Strip the repository down to working code: drop the documentation site, the docs folder, GRACE artifacts and every code comment except the owner's review notes, without changing kernel, pack or calculator behavior.",
   "slug": "m0-cleanup-01M5SPZC",
   "target_branch": "feat/m0-cleanup",
-  "topology": "coord"
+  "topology": "coord",
+  "vcs": "git",
+  "vcs_locked_at": "2026-10-25T17:43:19.043537+00:00"
 }
