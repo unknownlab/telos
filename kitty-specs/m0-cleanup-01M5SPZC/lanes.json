@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "mission_slug": "m0-cleanup-01M5SPZC",
+  "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
+  "mission_branch": "kitty/mission-m0-cleanup-01M5SPZC",
+  "target_branch": "feat/m0-cleanup",
+  "lanes": [
+    {
+      "lane_id": "lane-a",
+      "wp_ids": [
+        "WP01",
+        "WP02",
+        "WP03"
+      ],
+      "write_scope": [
+        ".githooks/pre-commit",
+        ".gitignore",
+        ".grace/**",
+        ".kittify/glossaries/team_domain.yaml",
+        "README.md",
+        "apps/calculator/**",
+        "apps/docs/**",
+        "bun.lock",
+        "bunfig.toml",
+        "docs/**",
+        "package.json",
+        "packages/**",
+        "scripts/**",
+        "scripts/review-gate.test.ts",
+        "scripts/review-gate.ts",
+        "scripts/telos.test.ts",
+        "scripts/telos.ts",
+        "telos.ts",
+        "tools/README.md",
+        "tools/agents/settings/README.md",
+        "tsconfig.json"
+      ],
+      "predicted_surfaces": [
+        "api",
+        "app-shell",
+        "artifact-rendering",
+        "legacy-cleanup",
+        "tracker-integration",
+        "workspace"
+      ],
+      "depends_on_lanes": [],
+      "parallel_group": 0
+    },
+    {
+      "lane_id": "lane-b",
+      "wp_ids": [
+        "WP04"
+      ],
+      "write_scope": [
+        "AGENTS.md"
+      ],
+      "predicted_surfaces": [
+        "api",
+        "legacy-cleanup"
+      ],
+      "depends_on_lanes": [
+        "lane-a"
+      ],
+      "parallel_group": 1
+    }
+  ],
+  "computed_at": "2026-10-25T17:38:36.294068+00:00",
+  "computed_from": "dependency_graph+ownership",
+  "planning_artifact_wps": [],
+  "planning_commit_sha": "becac6b0720efe9564e1d41bfca8ba4ad923d1fe",
+  "collapse_report": {
+    "events": [
+      {
+        "wp_a": "WP01",
+        "wp_b": "WP02",
+        "rule": "write_scope_overlap",
+        "evidence": "overlapping globs: 'package.json' vs 'package.json', '.githooks/pre-commit' vs '.githooks/pre-commit'; WP02 depends on WP01"
+      },
+      {
+        "wp_a": "WP01",
+        "wp_b": "WP03",
+        "rule": "write_scope_overlap",
+        "evidence": "overlapping globs: 'scripts/review-gate.ts' vs 'scripts/**', 'scripts/review-gate.test.ts' vs 'scripts/**'"
+      }
+    ],
+    "total_merges": 2,
+    "independent_wps_collapsed": 0,
+    "by_rule": {
+      "write_scope_overlap": 2
+    }
+  }
+}
