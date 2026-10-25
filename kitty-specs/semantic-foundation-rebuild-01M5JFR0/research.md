@@ -45,6 +45,7 @@ The prototypes below ran on 2026-10-22 against the installed effect 4.0.4 and Bu
   - Passing `McpSchema.TextContent` instances inside the result failed schema validation, which produced an MCP InternalError. Plain objects are required.
   - The higher-level `McpServer.toolkit(Toolkit)` validates parameters itself and answers JSON-RPC `-32602`, which bypasses kernel `InvalidInput`. That is why it is rejected: errors would differ from the CLI and the Web interface (NFR-004).
   - `annotations` values on the `Tool` constructor were replaced by defaults when a `ToolAnnotations` class instance was passed. WP11 must pass a plain object and assert the listed annotations in its test. If the plain object is also ignored, the test documents the observed defaults, and the read-only status is carried in `_meta["telos/effect"]` instead.
+  - Follow-up (2026-10-24, WP14): the prototype's layer order lets `layerStdio` read stdin before the tools are registered. When requests are already waiting on stdin, a fresh calculator server listed no tool in 17 of 20 starts. contracts/packs.md ("Startup order") now gates stdin until registration has finished. With the gate, 30 of 30 starts listed every tool.
 - **Alternatives**: a hand-written JSON-RPC server, rejected because it rebuilds what Effect provides (directive §8). An in-process `Toolkit` only, rejected because no out-of-process agent could use it.
 
 ## R7 Command line
@@ -89,6 +90,7 @@ The prototypes below ran on 2026-10-22 against the installed effect 4.0.4 and Bu
   - Type-only dependencies are not seen.
   - Computed `import(...)` is found by a separate text scan, `/\bimport\s*\(\s*(?!["'`])/` or a template literal with an interpolation (`/\bimport\s*\(\s*`[^`]*\$\{/`), and reported as `closure.dynamic-import` (warning, `knowledge: "unknown"`). A template literal without `${` is returned by `scanImports` and resolved like a string literal.
   - Generated files and `node_modules` are excluded by the scope globs.
+- Follow-up (2026-10-24, WP15): the first resolver treated any non-code extension as an asset, so the dotted module name `./routeTree.gen` (and `@/routeTree.gen`) was reported as unresolved although `routeTree.gen.ts` exists. Bun and Vite try the exact file first and then the code suffixes. contracts/kernel.md now does the same: an existing file with a non-code extension is an asset, otherwise `<path>.ts`, `<path>.tsx` and the index files are tried. A read-only run of the corrected resolver over the repository left no closure error except the docs externals that WP15 declares, and also none over the WP18 lane.
 
 ## R12 Supply chain
 
