@@ -30,6 +30,10 @@ Enforced by the tools:
 - Spec Kitty's review gate runs the whole check suite through `scripts/review-gate.ts` and blocks a review on any new failure (`review:` in `.kittify/config.yaml`).
 - Spec Kitty checks review artifacts at merge; bypassing that needs a recorded note.
 - Claude Code hooks (`.claude/settings.json`). `spec-kitty session-start` injects orientation and open Ops. `spec-kitty session-stop` reminds about open Ops.
+- Claude Code project settings (`.claude/settings.json`, installed from the tracked copy in `tools/agents/settings/`). They apply to sessions started in the main checkout and to their subagents, including subagents working in worktrees. A session started inside a worktree does not read them. The coordinator checks them at the start of every session, installs them in a worktree when needed and tells you when a restart is needed. [`agents/settings/README.md`](agents/settings/README.md) has the details and the rollback.
+  - Sonnet is the default model, with medium effort for Sonnet and high for Opus. xhigh is never a default.
+  - Spec Kitty's `.claude/CLAUDE.md` and the `CLAUDE.md` at each worktree root are not loaded, because they repeat what `AGENTS.md` already provides.
+  - Claude Code adds no attribution to commits and PRs.
 
 Advisory: the instructions in `AGENTS.md`. Agents normally follow them, but nothing guarantees it. They cover:
 
@@ -66,7 +70,7 @@ Bun >=1.4.4-canary.1 required, found 1.4.3. Run: bun upgrade --canary
   - `packages/web`: `@telos/web`, the Web Pack (forms derived from capability contracts).
 - `telos.ts`: the repository's own Telos model.
 - `scripts/`: repository scripts: `check-bun-version.ts` (the version guard), `review-gate.ts` (the review gate runner) and `telos.ts` (the `bun run telos` command).
-- `tools/`: this overview and the agent process material outside the product. `tools/agents/` holds the coordinator's brief templates (`delegation.md`).
+- `tools/`: this overview and the agent process material outside the product. `tools/agents/` holds the coordinator's brief templates (`delegation.md`), the tracked Claude Code routing settings (`settings/`), the usage ledger (`usage/`) and agent experiments (`experiments/`).
 - `tsconfig.base.json`: strict compiler options shared by every package. `tsconfig.json` at the root checks `scripts/` and lists packages under `references`.
 - `bunfig.toml`: linter, formatter and test-discovery settings. Spec Kitty's folders are excluded from the linter and formatter; the formatter also skips `bun.lock`, `AGENTS.md`, `CLAUDE.md` and the agent usage records. `bun test` skips Spec Kitty's folders (`kitty-specs/`, `.kittify/`, `.spec-kitty/`), `.worktrees/` and `node_modules/`.
 
@@ -148,6 +152,15 @@ bun install    # project dependencies; repeat in every Spec Kitty worktree
 ```
 
 Codex may ask once to trust the project directory.
+
+Then add the routing settings next to the hooks Spec Kitty wrote, and check them:
+
+```sh
+python3 tools/agents/settings/routing.py apply
+python3 tools/agents/settings/routing.py check
+```
+
+`routing.py remove` takes them out again. [`agents/settings/README.md`](agents/settings/README.md) explains each key, where the settings apply and how to roll back.
 
 ## After a mission merge
 

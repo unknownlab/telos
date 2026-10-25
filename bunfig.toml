@@ -17,6 +17,9 @@ ignorePatterns = [
   "bun.lock",
   "AGENTS.md",
   "CLAUDE.md",
+  "tools/agents/usage/ledgers/**",
+  "tools/agents/experiments/*/outputs/**",
+  "tools/agents/experiments/*/briefs/**",
 ]
 
 [test]
