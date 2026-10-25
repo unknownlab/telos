@@ -156,8 +156,8 @@ catalog:
     local_path: _LIBRARY/directive-directive-036.md
   - id: DIRECTIVE:DIRECTIVE_037
     kind: directive
-    title: Living Documentation Sync
-    summary: "Behavior-describing artifacts must evolve together. When observable behavior changes, the canonical examples, acceptance checks, narrative specifications, user documentation, glossary terms, code-level documentation, and architecture records must be updated in the same change so no reader is left with a stale picture of the system.\n"
+    title: DIRECTIVE_037
+    summary: Definition unavailable in bundled doctrine.
     source_path: ''
     local_path: _LIBRARY/directive-directive-037.md
   - id: DIRECTIVE:DIRECTIVE_040
@@ -738,7 +738,7 @@ catalog:
     local_path: _LIBRARY/template-set-software-dev-default.md
 overrides: {}
 metadata:
-  generated_at: '2026-10-22T09:40:22Z'
+  generated_at: '2026-10-25T17:11:51Z'
   bundle_schema_version: 2
 mission_type_activations:
 - software-dev
@@ -757,7 +757,6 @@ activated_directives:
 - 034-test-first-development
 - 035-bulk-edit-occurrence-classification
 - 036-black-box-integration-testing
-- 037-living-documentation-sync
 - 041-tests-as-scaffold-not-friction
 - 043-close-defect-class-by-construction
 - 045-prs-only-and-read-intent
