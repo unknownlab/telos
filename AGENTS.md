@@ -18,15 +18,13 @@ Two usage patterns:
 
 # Agent rules
 
-These rules apply to every coding agent in this repo. Codex reads this file, and Claude Code imports it through `CLAUDE.md`. Keep agent rules here only. The owner-facing overview is `docs/tooling.md`.
+These rules apply to every coding agent in this repo. Codex reads this file, and Claude Code imports it through `CLAUDE.md`. Keep agent rules here only. The owner-facing overview is `tools/README.md`.
 
 Spec Kitty generates the block above and prints the same text from its SessionStart hook. Where it disagrees with these rules, these rules win: answer questions directly and make small operations (state reads, recovery, mechanical fixes, git) directly. Run `spec-kitty dispatch` only when the owner asks for a tracked Op.
 
 The owner directs the work in plain language and makes the decisions. You choose and run the tools, skills, and commands yourself. Never ask the owner to run a command or to name a tool, skill, or workflow phase.
 
-## Telos foundation
-
-Telos by UnknownLab is defined in `docs/foundation/README.md` (doctrine, principles, terminology, conceptual model), `docs/decisions/` (architecture decision records) and `docs/research/`. Read the foundation README before product work. Product terms are defined in `docs/foundation/terminology/`; use them as defined there. The documentation site in `apps/docs` is generated from these files; never edit content in the app.
+There is no product documentation until Telos is written by Telos. Product terms are used as they appear in the code.
 
 ## Read state before working
 
@@ -34,19 +32,16 @@ The coordinator (the root session) queries the native state before starting or r
 - `git status` and `git worktree list`
 - for each mission in `kitty-specs/`: `spec-kitty agent tasks status --mission <slug> --json` and `spec-kitty next --mission <slug> --json` (query mode does not advance)
 - open Spec Kitty Ops: `spec-kitty invocations list`
-- if `.grace/` exists: `grace status --path . --json`
 
 Resume only the work that matches the owner's current request. Report any other unfinished or abandoned work, and ask before resuming, closing, or discarding it.
 
 ## Routing: one authority per concern
 
 - **Product changes** (features, behavior, interfaces, data, dependencies, architecture) go through a Spec Kitty mission (`spk-start-here`). The phases are specify → plan → tasks → implement/review → accept → merge, advanced with `spec-kitty next` (`spk-run-next`).
-- **Questions, investigation, explanation**: answer directly. When `.grace/` exists, use `grace-ask` and `grace-cli`.
+- **Questions, investigation, explanation**: answer directly.
 - **Edits that change no behavior** (typos, comments, formatting): make them directly, then run the checks.
 - **Stuck workflow**: use `spk-run-blocked-recovery`. **Broken tooling**: use `spk-admin-setup-doctor`. The coordinator handles both itself.
-- **GRACE** owns architecture knowledge and its validation: contracts, the module graph, verification, and semantic markup. The skills are `grace-status`, `grace-ask`, `grace-cli`, `grace-reviewer`, `grace-verification`, `grace-refresh`, `grace-fix`, `grace-refactor`, and `grace-explainer`. When `.grace/` exists, every mission keeps `.grace/` and the code markup in sync inside its own work packages. The mission must also pass `grace lint --path . --assertions current`.
-- **Spec Kitty** owns the change lifecycle. Do not use `grace-spec`, `grace-plan`, `grace-execute`, `grace-setup-subagents`, or `.grace/changes/`. The mission is the change record.
-- If `.grace/` is absent, do not create it yourself. Offer `grace-init` when a mission first defines architecture. If GRACE proposes rules that conflict with this file, this file wins. Tell the owner about the conflict.
+- **Spec Kitty** owns the change lifecycle. The mission is the change record.
 
 ## Model routing (owner rule)
 
@@ -84,7 +79,7 @@ Every Agent call sets `model` and `effort`. Without them a subagent gets the coo
 Ask the owner about the following. Ask one short question with your recommended option, and batch questions together.
 - Product: scope, requirements, behavior, UX, acceptance criteria. Never fill these gaps with assumptions.
 - Approval of each mission's spec and plan before implementation starts.
-- Architecture: new modules or boundaries, public contracts, the data model, adding or upgrading dependencies, `grace-init`.
+- Architecture: new modules or boundaries, public contracts, the data model, adding or upgrading dependencies.
 - Releasing and deploying.
 - Destructive actions outside git: discarding uncommitted work you did not create, closing or abandoning missions.
 - Gate bypasses: `--force`, `--skip-*`, `*_DISABLE` environment variables.
@@ -99,9 +94,10 @@ Everything else proceeds without asking: inspecting, running checks, implementin
 
 - Never add fake tests, placeholder scripts, or checks that verify nothing.
 - Before implementing, read the work package's acceptance criteria. Run the existing checks to get a baseline.
-- Run every check the repo declares (typecheck, lint, format, tests) before review, and again before accept or merge. Add `grace lint` when `.grace/` exists. Report the results exactly. If a check does not exist, say so; never claim it passed.
+- Run every check the repo declares (typecheck, lint, format, tests) before review, and again before accept or merge. Report the results exactly. If a check does not exist, say so; never claim it passed.
 - The mission that introduces a toolchain also wires its checks into CI and into Spec Kitty's review gate (`review.test_command`). That wiring is part of the plan the owner approves.
 - Spec Kitty blocks mission merges until reviews and dependencies are complete (`policy.merge_gates.mode: block`). Never bypass a gate on your own.
+- Write no code comments. The only exceptions are owner review notes (`//@unknownhero`) and directives the toolchain reads, such as `@ts-expect-error`.
 
 ## Git and setup
 
@@ -109,4 +105,4 @@ Everything else proceeds without asking: inspecting, running checks, implementin
 - Every commit message follows Conventional Commits 1.0.0 (https://www.conventionalcommits.org/en/v1.0.0/): `<type>[optional scope][!]: <description>`, then an optional body and optional footers, each after one blank line. Add a scope (a noun for the affected area, e.g. `chore(git):`) whenever one fits. Use `feat` for features and `fix` for bug fixes; other types such as `docs`, `chore`, `refactor`, `test`, `ci` and `build` are allowed. Mark breaking changes with `!` or a `BREAKING CHANGE:` footer.
 - Commits and PRs carry no AI author or co-author lines, and no AI names in the message.
 - The `.githooks/commit-msg` hook enforces both rules. Never bypass it with `--no-verify`.
-- If `spec-kitty`, `grace`, or the project skills are missing on a machine, point the owner to the one-time setup in `docs/tooling.md` instead of installing anything globally.
+- If `spec-kitty` or the project skills are missing on a machine, point the owner to the one-time setup in `tools/README.md` instead of installing anything globally.
