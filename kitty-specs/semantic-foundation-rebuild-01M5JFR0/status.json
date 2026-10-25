@@ -1,16 +1,16 @@
 {
-  "event_count": 143,
-  "last_event_id": "01M5RZD5QDXJQG08QRQ40ADS8F",
-  "materialized_at": "2026-10-25T07:29:08.333479+00:00",
+  "event_count": 144,
+  "last_event_id": "01M5RZD809TA23NNT0HB1C80VS",
+  "materialized_at": "2026-10-25T07:29:10.666058+00:00",
   "mission_number": "4",
   "mission_slug": "semantic-foundation-rebuild-01M5JFR0",
   "mission_type": "software-dev",
   "summary": {
-    "approved": 21,
+    "approved": 20,
     "blocked": 0,
     "canceled": 0,
     "claimed": 0,
-    "done": 1,
+    "done": 2,
     "for_review": 0,
     "in_progress": 0,
     "in_review": 0,
@@ -514,14 +514,14 @@
       }
     },
     "WP16": {
-      "actor": "user",
+      "actor": "merge",
       "agent": "claude",
       "agent_profile": "__resolved_profile_absent__",
       "agent_profile_version": "__resolved_profile_version_absent__",
       "force_count": 0,
-      "lane": "approved",
-      "last_event_id": "01M5PHW3G06BMC6RAEYQA4ZAPJ",
-      "last_transition_at": "2026-10-24T08:54:08.640421+00:00",
+      "lane": "done",
+      "last_event_id": "01M5RZD809TA23NNT0HB1C80VS",
+      "last_transition_at": "2026-10-25T07:29:10.666058+00:00",
       "model": "__resolved_model_absent__",
       "notes": [
         "Review passed: bun run verify green (875 tests, 110 e2e, grace lint 0 issues); 16 principles, 25 terms, future-semantic-evolution present. Non-blocking: P14 claims a repo-gate import check that is not planned."
