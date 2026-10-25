@@ -67,11 +67,11 @@
     {
       "criterion_id": "FR-007",
       "description": "Verify FR-007 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "parity.ts scan --expect-clean",
+      "evidence": "lane-b tip c3095bb: scan prints {ownerNotes:34,directives:7,other:0}, scan passed; no START_/END_ markup (NFR-005 search empty)",
+      "pass_fail": "pass",
+      "verified_by": "reviewer-renata",
+      "verified_at": "2026-10-25T18:03:40.848063+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
