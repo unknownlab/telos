@@ -57,6 +57,9 @@
       "last_event_id": "01M5T33XVA3CBJKY1RFR2C4JMT",
       "last_transition_at": "2026-10-25T17:53:14.090805+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Review passed: diff equals reference patch, verify green (526 pass), parity ok"
+      ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/m0-cleanup-01M5SPZC/tasks/WP02-remove-docs-and-grace/review-cycle-1.md",
