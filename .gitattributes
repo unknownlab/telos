@@ -1,3 +1,4 @@
+kitty-specs/** merge=telos-keep-current
 kitty-specs/**/status.events.jsonl merge=spec-kitty-event-log
 kitty-specs/**/decisions.events.jsonl merge=spec-kitty-event-log
 kitty-specs/**/meta.json merge=spec-kitty-meta
