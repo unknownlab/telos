@@ -1,0 +1,126 @@
+{
+  "entries": [
+    {
+      "created_at": "2026-10-25T14:21:14.350944Z",
+      "decision_id": "01M5SPZR7EDPG88GN26BZND70E",
+      "final_answer": "All docs: apps/docs, the docs/ folder (foundation, decisions, research, guides), .grace/ and grace:lint, docs:build and test:e2e in verify and the review gate, and tests that exist only to check docs or markup. Owner, relayed by the coordinator: 'we can drop everything about docs; when Telos is written by Telos we will build new docs'.",
+      "input_key": "docs_removal_scope",
+      "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
+      "mission_slug": "m0-cleanup-01M5SPZC",
+      "opened_by": "cli",
+      "options": [
+        "All docs: apps/docs, docs/, .grace/, docs:build, test:e2e, grace:lint, doc-only tests",
+        "Only apps/docs",
+        "Other"
+      ],
+      "origin_flow": "specify",
+      "other_answer": false,
+      "question": "What documentation and documentation-only checks does M0 remove?",
+      "rationale": null,
+      "resolved_at": "2026-10-25T14:21:26.050910Z",
+      "resolved_by": null,
+      "slot_key": "specify.scope.docs-removal",
+      "status": "resolved",
+      "step_id": null,
+      "summary_json": null
+    },
+    {
+      "created_at": "2026-10-25T14:21:15.996671Z",
+      "decision_id": "01M5SPZSTWB18VBTM1SQ9AS1VY",
+      "final_answer": "Remove all in-code comments and GRACE markup (START_/END_ blocks, contract and module-map comments). Keep every //@unknownhero review note intact until M1 consumes it. Owner note in apps/calculator/src/app.ts:1: 'just remove comments everywhere'.",
+      "input_key": "code_comment_policy",
+      "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
+      "mission_slug": "m0-cleanup-01M5SPZC",
+      "opened_by": "cli",
+      "options": [
+        "All comments and GRACE markup except //@unknownhero review notes and functional directives",
+        "Only GRACE markup",
+        "Other"
+      ],
+      "origin_flow": "specify",
+      "other_answer": false,
+      "question": "Which in-code comments does M0 remove?",
+      "rationale": null,
+      "resolved_at": "2026-10-25T14:21:27.726312Z",
+      "resolved_by": null,
+      "slot_key": "specify.scope.code-comments",
+      "status": "resolved",
+      "step_id": null,
+      "summary_json": null
+    },
+    {
+      "created_at": "2026-10-25T14:21:29.483517Z",
+      "decision_id": "01M5SQ070BR65M0VX1JHQXG5XT",
+      "final_answer": null,
+      "input_key": "tooling_doc_fate",
+      "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
+      "mission_slug": "m0-cleanup-01M5SPZC",
+      "opened_by": "cli",
+      "options": [
+        "Move a trimmed copy to tools/README.md (recommended)",
+        "Drop it; setup knowledge lives only in AGENTS.md",
+        "Other"
+      ],
+      "origin_flow": "specify",
+      "other_answer": false,
+      "question": "docs/tooling.md is the one-time setup and tooling guide that AGENTS.md, the pre-commit hook messages and tools/agents/settings/README.md point to. Drop it with the rest of docs/, or move a trimmed copy (no docs or GRACE content) out of docs/?",
+      "rationale": "Specify runs as a subagent without direct owner contact; the coordinator relays this question to the owner before plan.",
+      "resolved_at": "2026-10-25T14:21:38.427032Z",
+      "resolved_by": null,
+      "slot_key": "specify.scope.tooling-doc",
+      "status": "deferred",
+      "step_id": null,
+      "summary_json": null
+    },
+    {
+      "created_at": "2026-10-25T14:21:31.292873Z",
+      "decision_id": "01M5SQ08RWEEYCR1W3EB2FKF6J",
+      "final_answer": null,
+      "input_key": "ergonomics_test_fate",
+      "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
+      "mission_slug": "m0-cleanup-01M5SPZC",
+      "opened_by": "cli",
+      "options": [
+        "Drop the test and the markers (recommended)",
+        "Keep the two markers and the test",
+        "Other"
+      ],
+      "origin_flow": "specify",
+      "other_answer": false,
+      "question": "apps/calculator/test/ergonomics.test.ts enforces the old NFR-008 size and style limit on the arithmetic definition and finds it through the START_BLOCK_ARITHMETIC_LOCUS markers. Drop the test with the markers, or keep the two markers as the only exception?",
+      "rationale": "Specify runs as a subagent without direct owner contact; the coordinator relays this question to the owner before plan.",
+      "resolved_at": "2026-10-25T14:21:39.989456Z",
+      "resolved_by": null,
+      "slot_key": "specify.scope.ergonomics-test",
+      "status": "deferred",
+      "step_id": null,
+      "summary_json": null
+    },
+    {
+      "created_at": "2026-10-25T14:21:33.022310Z",
+      "decision_id": "01M5SQ0AEYG7J8VNE7GP1XM4PH",
+      "final_answer": null,
+      "input_key": "telos_report_fate",
+      "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
+      "mission_slug": "m0-cleanup-01M5SPZC",
+      "opened_by": "cli",
+      "options": [
+        "Keep it unchanged (recommended)",
+        "Remove it and its tests",
+        "Other"
+      ],
+      "origin_flow": "specify",
+      "other_answer": false,
+      "question": "bun run telos report --out writes the semantic report the docs site consumed. With the site gone it has no consumer. Keep the command unchanged, or remove it?",
+      "rationale": "Specify runs as a subagent without direct owner contact; the coordinator relays this question to the owner before plan.",
+      "resolved_at": "2026-10-25T14:21:41.603345Z",
+      "resolved_by": null,
+      "slot_key": "specify.scope.telos-report",
+      "status": "deferred",
+      "step_id": null,
+      "summary_json": null
+    }
+  ],
+  "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
+  "version": 1
+}
