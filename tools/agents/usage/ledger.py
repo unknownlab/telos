@@ -21,11 +21,16 @@ RATES = {"claude-opus-5-5": (4.0, 20.0, 0.20, 5.0, 8.0),
          "haiku<=100K": (0.10, 0.50, 0.01, 0.125, 0.20),
          "haiku>100K": (0.50, 2.50, 0.05, 0.625, 1.00)}
 # Role inference from the agent's profile and description, first match wins.
+# Descriptions follow tools/agents/delegation.md ("WP prompts ...", "clarify WP03", "rework WP05").
 ROLE_RULES = [("mission review", None, r"mission review"),
               ("review", r"^reviewer-", None),
+              ("clarification", None, r"\bclarif"),
+              ("prompt writing", None, r"\bwp prompts?\b"),
               ("preparation", r"^(planner|architect|analyst)-", r"\b(specify|plan|tasks|outline|analysis|replan)\b"),
+              ("rework", None, r"\brework\b"),
               ("implementation", r"^(implementer|frontend|node|python|java|generic)-", None),
               ("recovery", None, r"\b(conflict|lane|status|merge|gate|hook|tooling|recover)")]
+WP_COLUMNS = ["preparation", "prompt writing", "clarification", "implementation", "rework", "review", "escalation"]
 
 
 def load(path, since="", until="9999"):
@@ -149,7 +154,7 @@ def main():
             wp = single_wp(meta.get("description"))
             by_role[role].append(data)
             if wp:
-                is_escalation = role == "implementation" and any(r["model"].startswith("claude-opus") for r in data[0])
+                is_escalation = role in ("implementation", "rework") and any(r["model"].startswith("claude-opus") for r in data[0])
                 by_wp[wp]["escalation" if is_escalation else role].append(data)
             agents.append((meta, role, wp, totals([data])))
 
@@ -176,11 +181,12 @@ def main():
         L.append(f"| {role} | {len(by_role[role])} | {int(s['requests'])} | {s['models']} | {s['efforts']} | {mtok(s['out'])} | {mtok(s['read'])} | {mtok(s['write'])} | {int(s['compactions'])} |")
     L += ["", "### Per work package", "",
           "Agents are attributed to a WP only when their description names exactly one WP.", "",
-          "| WP | Preparation agents | Implementation agents | Review agents | Escalations (Opus) | Rejections |",
-          "| --- | --: | --: | --: | --: | --: |"]
+          "Cells count agents. Escalation means an implementation or rework agent that ran on Opus.", "",
+          "| WP | " + " | ".join(c.capitalize() for c in WP_COLUMNS) + " | Rejections |",
+          "| --- |" + " --: |" * (len(WP_COLUMNS) + 1)]
     for wp in sorted(set(by_wp) | set(rej)):
         d = by_wp[wp]
-        L.append(f"| {wp} | {len(d['preparation'])} | {len(d['implementation'])} | {len(d['review'])} | {len(d['escalation'])} | {rej.get(wp, 0)} |")
+        L.append(f"| {wp} | " + " | ".join(str(len(d[c])) for c in WP_COLUMNS) + f" | {rej.get(wp, 0)} |")
 
     L += ["", "## Estimated", "",
           "API-equivalent dollars at list prices (rates in `ledger.py`). This is not subscription usage and not a bill.", "",

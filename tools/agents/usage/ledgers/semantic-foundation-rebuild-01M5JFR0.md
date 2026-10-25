@@ -1,6 +1,6 @@
 # Usage ledger: semantic-foundation-rebuild-01M5JFR0
 
-Generated 2026-10-25 12:36 UTC by `tools/agents/usage/ledger.py` from 2 root session(s): `48f2abba`, `f2b2b2c3`, requests from the start until 2026-10-25T08:00.
+Generated 2026-10-25 13:04 UTC by `tools/agents/usage/ledger.py` from 2 root session(s): `48f2abba`, `f2b2b2c3`, requests from the start until 2026-10-25T08:00.
 
 ## Measured
 
@@ -20,7 +20,8 @@ Read from Claude Code transcripts (model, effort, tokens, compaction markers) an
 | implementation | 26 | 1429 | haiku-5-5 1429 | medium 1429 | 1.48M | 192.73M | 5.04M | 0 |
 | mission review | 1 | 107 | opus-5-5 107 | high 107 | 0.06M | 12.95M | 0.50M | 1 |
 | other | 1 | 15 | haiku-5-5 15 | medium 15 | 0.02M | 0.98M | 0.09M | 0 |
-| preparation | 8 | 1468 | opus-5-5 1468 | high 1468 | 1.42M | 202.48M | 6.93M | 27 |
+| preparation | 7 | 1425 | opus-5-5 1425 | high 1425 | 1.40M | 199.53M | 6.83M | 27 |
+| prompt writing | 1 | 43 | opus-5-5 43 | high 43 | 0.02M | 2.95M | 0.10M | 0 |
 | recovery | 6 | 193 | opus-5-5 148, sonnet-5-5 45 | high 148, medium 45 | 0.12M | 15.34M | 0.57M | 0 |
 | review | 24 | 360 | sonnet-5-5 360 | medium 360 | 0.17M | 26.22M | 2.18M | 0 |
 
@@ -28,30 +29,32 @@ Read from Claude Code transcripts (model, effort, tokens, compaction markers) an
 
 Agents are attributed to a WP only when their description names exactly one WP.
 
-| WP | Preparation agents | Implementation agents | Review agents | Escalations (Opus) | Rejections |
-| --- | --: | --: | --: | --: | --: |
-| WP01 | 0 | 3 | 1 | 0 | 0 |
-| WP02 | 0 | 2 | 1 | 0 | 0 |
-| WP03 | 0 | 1 | 1 | 0 | 0 |
-| WP04 | 0 | 1 | 1 | 0 | 0 |
-| WP05 | 0 | 1 | 1 | 0 | 0 |
-| WP06 | 0 | 1 | 1 | 0 | 0 |
-| WP07 | 0 | 1 | 1 | 0 | 0 |
-| WP08 | 0 | 1 | 1 | 0 | 0 |
-| WP09 | 0 | 1 | 1 | 0 | 0 |
-| WP10 | 0 | 1 | 2 | 0 | 1 |
-| WP11 | 0 | 1 | 1 | 0 | 0 |
-| WP12 | 0 | 1 | 1 | 0 | 0 |
-| WP13 | 0 | 1 | 1 | 0 | 0 |
-| WP14 | 0 | 1 | 1 | 0 | 0 |
-| WP15 | 1 | 1 | 1 | 0 | 0 |
-| WP16 | 0 | 2 | 1 | 0 | 0 |
-| WP17 | 0 | 1 | 1 | 0 | 0 |
-| WP18 | 0 | 1 | 1 | 0 | 0 |
-| WP19 | 0 | 1 | 1 | 0 | 0 |
-| WP20 | 1 | 1 | 1 | 0 | 0 |
-| WP21 | 0 | 1 | 2 | 0 | 1 |
-| WP22 | 1 | 1 | 1 | 0 | 0 |
+Cells count agents. Escalation means an implementation or rework agent that ran on Opus.
+
+| WP | Preparation | Prompt writing | Clarification | Implementation | Rework | Review | Escalation | Rejections |
+| --- | --: | --: | --: | --: | --: | --: | --: | --: |
+| WP01 | 0 | 0 | 0 | 3 | 0 | 1 | 0 | 0 |
+| WP02 | 0 | 0 | 0 | 2 | 0 | 1 | 0 | 0 |
+| WP03 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP04 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP05 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP06 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP07 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP08 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP09 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP10 | 0 | 0 | 0 | 1 | 0 | 2 | 0 | 1 |
+| WP11 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP12 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP13 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP14 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP15 | 1 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP16 | 0 | 0 | 0 | 2 | 0 | 1 | 0 | 0 |
+| WP17 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP18 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP19 | 0 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP20 | 1 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
+| WP21 | 0 | 0 | 0 | 1 | 0 | 2 | 0 | 1 |
+| WP22 | 1 | 0 | 0 | 1 | 0 | 1 | 0 | 0 |
 
 ## Estimated
 
@@ -64,7 +67,8 @@ API-equivalent dollars at list prices (rates in `ledger.py`). This is not subscr
 | subagents: implementation | 13.73 |
 | subagents: mission review | 6.34 |
 | subagents: other | 0.03 |
-| subagents: preparation | 103.61 |
+| subagents: preparation | 102.14 |
+| subagents: prompt writing | 1.47 |
 | subagents: recovery | 7.76 |
 | subagents: review | 12.41 |
 | WP01 (attributed agents) | 0.44 |
@@ -115,7 +119,7 @@ API-equivalent dollars at list prices (rates in `ledger.py`). This is not subscr
 | recovery |  | general-purpose | 34 | opus-5-5 34 | high 34 | 0 | 1.72 | Fix lane-g/lane-i merge conflict |
 | recovery | WP14 | general-purpose | 34 | opus-5-5 34 | high 34 | 0 | 1.72 | Fix WP14 lane-n allocation failure |
 | implementation | WP20 | frontend-freddy | 114 | haiku-5-5 114 | medium 114 | 0 | 1.59 | Implement WP20 calculator page and guides |
-| preparation |  | planner-priti | 43 | opus-5-5 43 | high 43 | 0 | 1.47 | Fix map-line wording in WP prompts |
+| prompt writing |  | planner-priti | 43 | opus-5-5 43 | high 43 | 0 | 1.47 | Fix map-line wording in WP prompts |
 | implementation | WP14 | implementer-ivan | 111 | haiku-5-5 111 | medium 111 | 0 | 1.46 | Implement WP14 calculator interfaces |
 | implementation | WP19 | frontend-freddy | 103 | haiku-5-5 103 | medium 103 | 0 | 1.33 | Implement WP19 report and inspector |
 | recovery |  | general-purpose | 30 | opus-5-5 30 | high 30 | 0 | 1.12 | Recover lane-a state conflict |

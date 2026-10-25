@@ -15,6 +15,8 @@ Each brief states:
 
 Leave out session directives and scratchpad files, the whole spec or plan when the WP quotes what it needs, other WPs, and earlier chat. Set `model` and `effort` on every Agent call.
 
+Start each Agent `description` with the role, then the one WP it works on, if any: `specify`, `plan`, `tasks outline`, `WP prompts WP01–WP04`, `clarify WP03`, `implement WP05`, `rework WP05`, `review WP05`, `mission review`, `recovery <what>`. `tools/agents/usage/ledger.py` attributes cost by these words, and to a WP only when exactly one WP id appears.
+
 ## Opus planner: specify, plan, tasks outline, design questions
 
 `model: opus`, `effort: high`, profile `planner-priti` or `architect-alphonso`.
@@ -32,7 +34,7 @@ Leave out session directives and scratchpad files, the whole spec or plan when t
 - The writer works in the mission's checkout with dependencies installed. It may run throwaway prototypes in its scratchpad to confirm how an API or check behaves, and writes only the WP files.
 - The writer does not change WP boundaries or interfaces. It returns each open question as one focused question with a recommended default. A convention that another WP relies on (a marker line, a mapping, a table column) counts as an interface: if the outline or contracts do not fix it, it is an open question. A claim about what a check accepts or rejects needs a contract quote or a prototype result.
 - Before `/spec-kitty.tasks-finalize`, the coordinator sends all writers' questions in one batch to an Opus planner. The answers go into the WP files and contracts.
-- Evidence and limits: `tools/agents/experiments/2026-10-e2-sonnet-wp-prompts/README.md`.
+- This routing is experimental. E2 measured only the prompts' own cost, not a saving (`tools/agents/experiments/2026-10-e2-sonnet-wp-prompts/README.md`). It stays experimental until a whole-workflow ledger, with the clarification pass, implementation, review and rework, shows a saving at equal quality.
 
 ## Haiku implementer
 
