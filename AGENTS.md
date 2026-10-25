@@ -52,12 +52,14 @@ Resume only the work that matches the owner's current request. Report any other 
 
 The root session is the coordinator. It runs on Sonnet at medium effort, which is the project default in `.claude/settings.json`. It reads state, delegates, and relays results. It also does tooling recovery, Spec Kitty state repair and mechanical fixes itself: formatting, a lint fix, a status repair, anything that needs no design decision. It writes no specs, plans, WP prompts, product code or reviews.
 
+The coordinator checks the routing itself at the start of every session: `python3 tools/agents/settings/routing.py check`, run where the session started. If a key differs, for example in a worktree, which has no `.claude/` of its own, it runs `routing.py apply` there, which keeps the other settings, and checks again. Settings load only when a session starts. So after an `apply`, or when the session is not on Sonnet and the owner did not choose its model, the coordinator tells the owner in one line that a restart is needed before it starts the work. It never carries on silently on another model, such as the user default Opus at xhigh.
+
 Every Agent call sets `model` and `effort`. Without them a subagent gets the coordinator's model and a default effort, and Spec Kitty regenerates the agent definitions without model fields.
 
 | Work | Model, effort |
 | --- | --- |
-| Specify and plan; open design questions; WP boundaries and cross-WP interfaces in the tasks outline | Opus, high |
-| WP prompt files from the settled outline (trial) | Sonnet, high |
+| Specify and plan; open design questions; the tasks outline with WP boundaries and cross-WP interfaces; WP prompt files | Opus, high |
+| WP prompt files from a settled outline, as an optional trial (`tools/agents/delegation.md`) | Sonnet, high |
 | WP implementation, with the WP's `agent_profile` | Haiku, medium |
 | WP review (`reviewer-renata`) | Sonnet, medium |
 | Hard cross-WP problems: an interface conflict, a defect that spans WPs, a design question a writer or reviewer escalates | Opus, high |

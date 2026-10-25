@@ -1,6 +1,6 @@
 # Delegation guide
 
-The coordinator reads this before delegating. The rules themselves live in `AGENTS.md` (model routing, planning and context); this file holds the brief templates and the phase-boundary routine. Subagents do not need it.
+The coordinator reads this before delegating. The rules themselves live in `AGENTS.md` (model routing, planning and context); this file holds the brief templates, what to do at phase boundaries and how to measure usage on demand. Subagents do not need it.
 
 ## Every brief
 
@@ -17,24 +17,25 @@ Leave out session directives and scratchpad files, the whole spec or plan when t
 
 Start each Agent `description` with the role, then the one WP it works on, if any: `specify`, `plan`, `tasks outline`, `WP prompts WP01–WP04`, `clarify WP03`, `implement WP05`, `rework WP05`, `review WP05`, `mission review`, `recovery <what>`. `tools/agents/usage/ledger.py` attributes cost by these words, and to a WP only when exactly one WP id appears.
 
-## Opus planner: specify, plan, tasks outline, design questions
+## Opus planner: specify, plan, tasks, design questions
 
 `model: opus`, `effort: high`, profile `planner-priti` or `architect-alphonso`.
 
 - Specify or plan: give the owner's request word for word (or the approved spec), the mission slug, and the phase command (`/spec-kitty.specify`, `/spec-kitty.plan`).
 - Tasks outline: ask for WP boundaries, dependencies, owned files, requirement refs and every cross-WP interface. Interfaces go in `contracts/`, decisions and open questions in `plan.md`. Owner questions come back batched, each with a recommendation.
+- WP prompt files: by default the same planner writes them in the tasks phase, for a Haiku implementer: exact files, APIs and acceptance tests.
 - Design question from a writer, reviewer or implementer: give the question, the artifacts it touches and the options already seen. The answer is recorded in the mission artifacts, not only in the report.
 
-## Sonnet WP prompt writer (trial)
+## Sonnet WP prompt writer (optional trial)
 
-`model: sonnet`, `effort: high`, profile `planner-priti`. Use one writer per group of WPs that share contracts, and run the groups in parallel.
+`model: sonnet`, `effort: high`, profile `planner-priti`. Optional: the coordinator may use it once the outline is settled, instead of the Opus planner writing the WP files. Nothing changes when it is not used. Use one writer per group of WPs that share contracts, and run the groups in parallel.
 
 - Inputs: the WP ids, `tasks.md` (the outline; each WP's section is binding), `spec.md`, `plan.md`, `data-model.md`, `contracts/`, and the per-WP structure from `/spec-kitty.tasks-packages`.
 - The audience is a Haiku implementer. Give exact files, APIs and acceptance tests. Quote only the contract text the WP needs and reference the rest by file and section.
 - The writer works in the mission's checkout with dependencies installed. It may run throwaway prototypes in its scratchpad to confirm how an API or check behaves, and writes only the WP files.
 - The writer does not change WP boundaries or interfaces. It returns each open question as one focused question with a recommended default. A convention that another WP relies on (a marker line, a mapping, a table column) counts as an interface: if the outline or contracts do not fix it, it is an open question. A claim about what a check accepts or rejects needs a contract quote or a prototype result.
 - Before `/spec-kitty.tasks-finalize`, the coordinator sends all writers' questions in one batch to an Opus planner. The answers go into the WP files and contracts.
-- This routing is experimental. E2 measured only the prompts' own cost, not a saving (`tools/agents/experiments/2026-10-e2-sonnet-wp-prompts/README.md`). It stays experimental until a whole-workflow ledger, with the clarification pass, implementation, review and rework, shows a saving at equal quality.
+- No saving is shown. E2 measured only the prompts' own cost, not the clarification pass, implementation, review and rework that follow (`tools/agents/experiments/2026-10-e2-sonnet-wp-prompts/README.md`).
 
 ## Haiku implementer
 
@@ -58,8 +59,8 @@ Start each Agent `description` with the role, then the one WP it works on, if an
 
 ## Phase boundaries
 
-The boundaries are: plan approved, tasks finalized, implementation and review done, mission merged. At each one:
+The boundaries are: plan approved, tasks finalized, implementation and review done, mission merged. At each one, start the next phase with fresh agents and pass state through the mission artifacts. Keep an agent only when its context still helps, for example an implementer fixing its own rejected WP.
 
-1. Run `python3 tools/agents/usage/ledger.py --mission <slug>`. It rewrites `tools/agents/usage/ledgers/<slug>.md`.
-2. In the phase report, ask the owner for the weekly usage % shown in Claude's usage settings, in one line. Add it to `tools/agents/usage/weekly.md` only when the owner gives it.
-3. Start the next phase with fresh agents and pass state through the mission artifacts. Keep an agent only when its context still helps, for example an implementer fixing its own rejected WP.
+## Measuring usage on demand
+
+`python3 tools/agents/usage/ledger.py --mission <slug>` writes `tools/agents/usage/ledgers/<slug>.md` (see `tools/agents/usage/README.md`). Run it when the owner asks, or when an observed problem needs numbers, such as repeated rejections, many compactions or a session on the wrong model. It is not a routine step, and the coordinator does not ask the owner for usage figures.

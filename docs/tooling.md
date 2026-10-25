@@ -31,7 +31,7 @@ Enforced by the tools:
 - Spec Kitty's review gate runs the whole check suite through `scripts/review-gate.ts` and blocks a review on any new failure (`review:` in `.kittify/config.yaml`).
 - Spec Kitty checks review artifacts at merge; bypassing that needs a recorded note.
 - Claude Code hooks (`.claude/settings.json`). `spec-kitty session-start` injects orientation and open Ops. `spec-kitty session-stop` reminds about open Ops.
-- Claude Code project settings (`.claude/settings.json`, installed from the tracked copy in `tools/agents/settings/`). They apply to sessions started in the main checkout and to their subagents, including subagents working in worktrees. A session started inside a worktree does not read them. [`tools/agents/settings/README.md`](../tools/agents/settings/README.md) has the details and the rollback.
+- Claude Code project settings (`.claude/settings.json`, installed from the tracked copy in `tools/agents/settings/`). They apply to sessions started in the main checkout and to their subagents, including subagents working in worktrees. A session started inside a worktree does not read them. The coordinator checks them at the start of every session, installs them in a worktree when needed and tells you when a restart is needed. [`tools/agents/settings/README.md`](../tools/agents/settings/README.md) has the details and the rollback.
   - Sonnet is the default model, with medium effort for Sonnet and high for Opus. xhigh is never a default.
   - Spec Kitty's `.claude/CLAUDE.md` and the `CLAUDE.md` at each worktree root are not loaded, because they repeat what `AGENTS.md` already provides.
   - Claude Code adds no attribution to commits and PRs.

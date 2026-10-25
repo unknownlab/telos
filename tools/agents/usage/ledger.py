@@ -199,7 +199,7 @@ def main():
         L.append(f"| {wp} (attributed agents) | {totals([x for v in by_wp[wp].values() for x in v])['usd']:.2f} |")
     unpriced = sum(totals([d])["unpriced"] for _, d in roots) + sum(totals(v)["unpriced"] for v in by_role.values())
     L += ["", "## Unknown", "",
-          "- Subscription usage. Record the weekly % the owner reports in `tools/agents/usage/weekly.md`.",
+          "- Subscription usage. Only the owner can see it.",
           "- Effort on requests the transcript does not record (counted as `not recorded` above).",
           "- Preparation cost per WP when one planner wrote several WPs in a single context.",
           "- Agents whose description names no single WP (see Subagents by role).",

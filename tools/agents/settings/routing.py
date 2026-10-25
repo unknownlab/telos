@@ -5,7 +5,8 @@ Usage: python3 tools/agents/settings/routing.py apply|check|remove [--target DIR
 
 The keys come from claude-settings.json next to this script, with ${REPO} replaced
 by the main checkout's absolute path. They go into DIR/.claude/settings.json
-(default DIR: the main checkout). Every other key, such as Spec Kitty's hooks, is kept.
+(default DIR: the checkout or worktree the command runs in). Every other key, such as
+Spec Kitty's hooks, is kept.
 """
 import argparse, json, os, shutil, subprocess, sys
 
@@ -19,14 +20,19 @@ def main_checkout():
     return os.path.dirname(common)
 
 
+def current_checkout():
+    """The checkout or worktree the command runs in, where a session started here reads its settings."""
+    return subprocess.check_output(["git", "rev-parse", "--show-toplevel"], text=True).strip()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("action", choices=["apply", "check", "remove"])
-    ap.add_argument("--target", help="directory whose .claude/settings.json to use; default: the main checkout")
+    ap.add_argument("--target", help="directory whose .claude/settings.json to use; default: the current checkout")
     a = ap.parse_args()
     repo = main_checkout()
     keys = json.loads(open(os.path.join(HERE, "claude-settings.json")).read().replace("${REPO}", repo))
-    path = os.path.join(os.path.abspath(a.target or repo), ".claude", "settings.json")
+    path = os.path.join(os.path.abspath(a.target or current_checkout()), ".claude", "settings.json")
     current = json.load(open(path)) if os.path.exists(path) else {}
 
     if a.action == "check":

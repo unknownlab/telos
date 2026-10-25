@@ -4,7 +4,7 @@ Date: 2026-10-25. Mission: `semantic-foundation-rebuild-01M5JFR0`. Status: done,
 
 ## Question
 
-Can Sonnet (high effort) write work package prompts of the same quality as the Opus prompts the mission used, once Opus has settled the outline, the contracts and the WP boundaries? The answer decides the "(trial)" row in `AGENTS.md` "Model routing".
+Can Sonnet (high effort) write work package prompts of the same quality as the Opus prompts the mission used, once Opus has settled the outline, the contracts and the WP boundaries? The answer decides the Sonnet WP prompt row in `AGENTS.md` "Model routing".
 
 ## Method
 
@@ -90,8 +90,8 @@ Rejection check: the reviewer rejected WP21 because three passages still called 
 
 - **Cost.** Measured: $5.21 API-equivalent for four Sonnet prompts, $0.7–1.9 per WP. Not established: any saving. The run did not measure the Opus pass that answers Sonnet's 17 questions, or the implementation, review and rework that follow from each prompt. Those can cost more than the prompt itself.
 - **Quality (judged).** The Sonnet prompts are complete and more prescriptive, and on WP21 they follow the outline more closely than Opus. They leave 17 open questions where Opus left none. They twice claim that no real model can fail a rule (WP10, WP12), where Opus had a prototype showing one. And they invent cross-WP conventions between WP16 and WP21 that the outline did not settle. Neither model's prompts would have prevented the two real rejections.
-- **Decision.** Sonnet WP writing stays experimental: keep the "(trial)" row in `AGENTS.md`. `tools/agents/delegation.md` now adds the conditions this run points to: the writer works in a real checkout and may run throwaway prototypes; a convention another WP relies on is an open question; a claim about what a check can catch needs a contract quote or a prototype; all questions go to one Opus pass before tasks are finalized.
-- **Next measurement.** The next mission uses this routing and the ledger measures the whole workflow: Opus outline, Sonnet prompts, the Opus clarification pass, Haiku implementation, Sonnet review, rework and escalations, with rejections per WP. The comparison point is this mission's ledger (`tools/agents/usage/ledgers/semantic-foundation-rebuild-01M5JFR0.md`). Two missions differ in scope, so even that comparison is a signal, not proof.
+- **Decision.** Sonnet WP writing is an optional trial. Opus stays the default WP prompt writer in `AGENTS.md`. `tools/agents/delegation.md` adds the conditions this run points to: the writer works in a real checkout and may run throwaway prototypes; a convention another WP relies on is an open question; a claim about what a check can catch needs a contract quote or a prototype; all questions go to one Opus pass before tasks are finalized.
+- **No follow-up planned.** Measure again only if an observed problem calls for it. Any comparison then covers the whole workflow, from the Opus clarification pass to implementation, review and rework, not only the prompts. This mission's ledger (`tools/agents/usage/ledgers/semantic-foundation-rebuild-01M5JFR0.md`) is the reference.
 
 ## Limitations
 

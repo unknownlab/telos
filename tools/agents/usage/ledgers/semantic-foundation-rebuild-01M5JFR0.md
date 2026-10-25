@@ -1,6 +1,6 @@
 # Usage ledger: semantic-foundation-rebuild-01M5JFR0
 
-Generated 2026-10-25 13:04 UTC by `tools/agents/usage/ledger.py` from 2 root session(s): `48f2abba`, `f2b2b2c3`, requests from the start until 2026-10-25T08:00.
+Generated 2026-10-25 13:20 UTC by `tools/agents/usage/ledger.py` from 2 root session(s): `48f2abba`, `f2b2b2c3`, requests from the start until 2026-10-25T08:00.
 
 ## Measured
 
@@ -96,7 +96,7 @@ API-equivalent dollars at list prices (rates in `ledger.py`). This is not subscr
 
 ## Unknown
 
-- Subscription usage. Record the weekly % the owner reports in `tools/agents/usage/weekly.md`.
+- Subscription usage. Only the owner can see it.
 - Effort on requests the transcript does not record (counted as `not recorded` above).
 - Preparation cost per WP when one planner wrote several WPs in a single context.
 - Agents whose description names no single WP (see Subagents by role).

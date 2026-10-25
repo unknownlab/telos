@@ -2,10 +2,10 @@
 
 Spec Kitty keeps `.claude/` out of git, so the routing settings live only in each machine's `.claude/settings.json`. This folder is their tracked copy and the way to install, check and remove them.
 
-| File                   | Purpose                                                                                                                         |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `claude-settings.json` | The routing keys, without Spec Kitty's hooks and without machine paths. `${REPO}` stands for the main checkout's absolute path. |
-| `routing.py`           | `apply`, `check` and `remove` the keys in a `.claude/settings.json`. Needs only `python3` and `git`.                            |
+| File                   | Purpose                                                                                                                                                         |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `claude-settings.json` | The routing keys, without Spec Kitty's hooks and without machine paths. `${REPO}` stands for the main checkout's absolute path.                                 |
+| `routing.py`           | `apply`, `check` and `remove` the keys in the `.claude/settings.json` of the checkout or worktree it runs in, or of `--target`. Needs only `python3` and `git`. |
 
 ## What the keys do
 
@@ -43,7 +43,7 @@ Claude Code reads project settings from the directory where a session starts. Me
 
 - **Main checkout.** A session started there uses them. The coordinator ran on Sonnet at medium effort.
 - **Existing and future worktrees under `.worktrees/`, used by subagents.** Subagents of a session started in the main checkout keep that session's settings while they work in a worktree. In a probe started in the main checkout, a subagent reading files in a directory under `.worktrees/` loaded only the `CLAUDE.md` files the excludes allow; Haiku subagents ran at medium and Opus subagents at high. Each Agent call also sets `model` and `effort` itself (`AGENTS.md`), because Spec Kitty regenerates its agent definitions without a model.
-- **A session started inside a worktree.** It does not read the main checkout's settings, and worktrees have no `.claude/` of their own because it is ignored. It falls back to the user settings: a probe started in a fresh worktree ran on Opus at xhigh, this machine's user default. Start sessions in the main checkout. If one must start in a worktree, run `python3 tools/agents/settings/routing.py apply --target <worktree path>` first. Only that worktree gets the keys, and removing the worktree removes them.
+- **A session started inside a worktree.** It does not read the main checkout's settings, and worktrees have no `.claude/` of their own because it is ignored. It falls back to the user settings: a probe started in a fresh worktree ran on Opus at xhigh, this machine's user default. The coordinator handles this at the start of every session (`AGENTS.md`, "Model routing"): `routing.py check` where the session started, `apply` and `check` again if a key differs, then one line to the owner that a restart is needed. Only that worktree gets the keys, and removing the worktree removes them.
 - **Another machine or a fresh clone.** Nothing applies until `apply` runs there.
 
 The `--model` flag, `/model` inside a session and the `ANTHROPIC_MODEL` environment variable take precedence over `model`. Claude Code ignores `claudeMdExcludes` from project settings in sessions started with `--cloud`, `--remote` or `--attach-serve`. When Spec Kitty registers its hooks again, it keeps the other keys.
