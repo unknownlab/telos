@@ -1,0 +1,16 @@
+{
+  "coordination_branch": "kitty/mission-m1-framework-rewrite-01M5T5BT",
+  "created_at": "2026-10-25T18:32:30.154027+00:00",
+  "flattened": false,
+  "friendly_name": "M1 Framework Rewrite",
+  "mission_id": "01M5T5BTJH5G7NJSDWRWAP5SNJ",
+  "mission_number": null,
+  "mission_slug": "m1-framework-rewrite-01M5T5BT",
+  "mission_type": "software-dev",
+  "pr_bound": true,
+  "purpose_context": "The owner reviewed the kernel, the command-line, web and agent packs and the calculator app and left inline notes plus global notes asking for a functional, domain-driven design: one root Locus that creates every nested Locus, composition instead of extensions and archetypes, typed and branded identities, nested rules that are the app's tests, Effect schemas, pattern matching and state machines, and no comments or global data. M1 rewrites the framework and the calculator to that design while the calculator keeps serving one arithmetic implementation through a command line, a web form model and agent tools.",
+  "purpose_tldr": "Rewrite the Locus framework and the calculator proof as a functional, single-root system that satisfies every owner review note left in the code.",
+  "slug": "m1-framework-rewrite-01M5T5BT",
+  "target_branch": "feat/m1-framework-rewrite",
+  "topology": "coord"
+}
