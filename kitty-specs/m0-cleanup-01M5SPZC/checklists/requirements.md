@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Requirement types are separated (Functional / Non-Functional / Constraints)
 - [x] IDs are unique across FR-###, NFR-###, and C-### entries
@@ -35,6 +35,6 @@
 
 ## Notes
 
-- Three markers remain on purpose: Q1 (`docs/tooling.md`), Q2 (calculator ergonomics test) and Q3 (`telos report`). Each is a deferred Decision Moment for the owner, relayed by the coordinator. Resolve all three and replace the markers before `/spec-kitty.plan`.
+- The three deferred questions Q1 (`docs/tooling.md`), Q2 (calculator ergonomics test) and Q3 (`telos report`) were answered by the owner on 2026-10-25 and are recorded as resolved Decision Moments; their markers are replaced by "Resolved Questions" in the spec.
 - Implementation details: this is a repository cleanup, so the spec names the folders, scripts, check steps and markers that are removed. That is the scope itself, not a design choice. The spec does not prescribe how comments are stripped or how work is split.
-- `FR-014` and the `docs/tooling.md` part of `FR-002` and `FR-013` are written to hold for either answer to Q1 and Q3.
+- The owner also approved the spec and authorized the mission to apply the listed `AGENTS.md` and charter edits (FR-015, C-004).

@@ -4,9 +4,10 @@
 - **Origin flow:** `specify`
 - **Slot key:** `specify.scope.telos-report`
 - **Input key:** `telos_report_fate`
-- **Status:** `deferred`
+- **Status:** `resolved`
 - **Created:** `2026-10-25T14:21:33.022310+00:00`
-- **Resolved:** `2026-10-25T14:21:41.603345+00:00`
+- **Resolved:** `2026-10-25T14:34:11.273951+00:00`
+- **Resolved by:** `unknownhero`
 - **Opened by:** `cli`
 - **Other answer:** `false`
 
@@ -22,13 +23,13 @@ bun run telos report --out writes the semantic report the docs site consumed. Wi
 
 ## Final answer
 
-_(none)_
+Keep it unchanged: bun run telos report and its tests stay; only wording that names the docs site goes.
 
 ## Rationale
 
-Specify runs as a subagent without direct owner contact; the coordinator relays this question to the owner before plan.
+Owner, relayed by the coordinator: keep unless removal is needed; the spec shows it is not needed.
 
 ## Change log
 
 - `2026-10-25T14:21:33.022310+00:00` — opened
-- `2026-10-25T14:21:41.603345+00:00` — deferred
+- `2026-10-25T14:34:11.273951+00:00` — resolved (final_answer="Keep it unchanged: bun run telos report and its tests stay; only wording that names the docs site goes.")

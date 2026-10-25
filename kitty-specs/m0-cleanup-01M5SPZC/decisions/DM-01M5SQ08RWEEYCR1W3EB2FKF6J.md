@@ -4,9 +4,10 @@
 - **Origin flow:** `specify`
 - **Slot key:** `specify.scope.ergonomics-test`
 - **Input key:** `ergonomics_test_fate`
-- **Status:** `deferred`
+- **Status:** `resolved`
 - **Created:** `2026-10-25T14:21:31.292873+00:00`
-- **Resolved:** `2026-10-25T14:21:39.989456+00:00`
+- **Resolved:** `2026-10-25T14:34:10.004066+00:00`
+- **Resolved by:** `unknownhero`
 - **Opened by:** `cli`
 - **Other answer:** `false`
 
@@ -22,13 +23,13 @@ apps/calculator/test/ergonomics.test.ts enforces the old NFR-008 size and style 
 
 ## Final answer
 
-_(none)_
+Drop the test and the markers: delete apps/calculator/test/ergonomics.test.ts together with the START_BLOCK_ARITHMETIC_LOCUS / END_BLOCK_ARITHMETIC_LOCUS markers; no replacement test.
 
 ## Rationale
 
-Specify runs as a subagent without direct owner contact; the coordinator relays this question to the owner before plan.
+Owner, relayed by the coordinator: all tests must be part of the App, not outside. From M1 tests become rules inside the app, so M0 adds no replacement.
 
 ## Change log
 
 - `2026-10-25T14:21:31.292873+00:00` — opened
-- `2026-10-25T14:21:39.989456+00:00` — deferred
+- `2026-10-25T14:34:10.004066+00:00` — resolved (final_answer="Drop the test and the markers: delete apps/calculator/test/ergonomics.test.ts together with the START_BLOCK_ARITHMETIC_LOCUS / END_BLOCK_ARITHMETIC_LOCUS markers; no replacement test.")
