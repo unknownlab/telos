@@ -88,6 +88,9 @@
       "last_event_id": "01M5T3D1B5X5YV2J4SZDWNHKTY",
       "last_transition_at": "2026-10-25T17:58:12.581457+00:00",
       "model": "__resolved_model_absent__",
+      "notes": [
+        "Review passed: scan clean (34 notes, 7 directives), same-code ok, verify 522 pass"
+      ],
       "provider": "__resolved_provider_absent__",
       "review_result": {
         "feedback_path": "/Users/unknownhero/projects/unknownlab/telos/kitty-specs/m0-cleanup-01M5SPZC/tasks/WP03-strip-comments/review-cycle-1.md",
