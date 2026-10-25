@@ -49,3 +49,7 @@ Model and effort for mission review in `AGENTS.md`. Give the mission slug, the m
 ## Phase boundaries
 
 The boundaries are: plan approved, tasks finalized, implementation and review done, mission merged. At each one, start the next phase with fresh agents and pass state through the mission artifacts. Keep an agent only when its context still helps, for example an implementer fixing its own rejected WP.
+
+## Measuring usage on demand
+
+`tools/agents/usage/ledger.py` reads Claude Code transcripts only, so it does not cover Codex runs. Until it is adapted, the owner reads usage from the OpenAI side. Do not ask the owner for figures.
