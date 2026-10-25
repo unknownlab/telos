@@ -4,7 +4,7 @@
   "flattened": false,
   "friendly_name": "M0 Cleanup",
   "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
-  "mission_number": null,
+  "mission_number": 5,
   "mission_slug": "m0-cleanup-01M5SPZC",
   "mission_type": "software-dev",
   "pr_bound": true,
