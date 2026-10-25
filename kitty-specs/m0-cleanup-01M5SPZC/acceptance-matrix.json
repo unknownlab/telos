@@ -137,11 +137,11 @@
     {
       "criterion_id": "FR-014",
       "description": "Verify FR-014 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "run command",
+      "evidence": "lane-b tip c3095bb: bun scripts/telos.ts report --out file exit 0, valid report JSON; report tests pass in 522-test suite; parity covers 14 commands",
+      "pass_fail": "pass",
+      "verified_by": "reviewer-renata",
+      "verified_at": "2026-10-25T18:03:56.568100+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
