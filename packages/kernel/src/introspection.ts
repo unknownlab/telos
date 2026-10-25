@@ -1,20 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Give agents and tools one Effect service that resolves Loci, describes, verifies, impacts and invokes through the kernel with typed failures for unknown ids and capabilities.
-//   SCOPE: LocusNotFound, CapabilityNotFound, LocusView, TelosApi and the Telos service with its make and layer. Out: the model rules, the verification rules and the invocation checks, which their own modules own.
-//   DEPENDS: M-KERNEL-MODEL, M-KERNEL-DESCRIBE, M-KERNEL-VERIFY, M-KERNEL-INVOKE, M-KERNEL-IMPACT, M-KERNEL-DEFINITIONS, M-KERNEL-IDENTITY
-//   LINKS: M-KERNEL-INTROSPECTION, V-M-KERNEL-INTROSPECTION
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   LocusNotFound - typed failure for a Locus id that is not in the model
-//   CapabilityNotFound - typed failure for a capability that the named Locus does not have
-//   LocusView - one Locus of the model with its description, verifications and the latest report state
-//   TelosApi - the service surface of the kernel for agents and tools
-//   Telos - the Effect service that builds the model of a root Locus and serves TelosApi
-// END_MODULE_MAP
-
 import { Context, Effect, Layer, Ref, Schema } from "effect";
 import {
   describeLocus,
@@ -53,7 +36,7 @@ export interface LocusView {
   >;
   readonly verifications: () => Effect.Effect<
     ReadonlyArray<VerificationDescription>
-  >; // uses the latest report of this service, else not-run
+  >;
 }
 
 export interface TelosApi {
@@ -64,7 +47,7 @@ export interface TelosApi {
   readonly diagnostics: () => Effect.Effect<ReadonlyArray<Diagnostic>>;
   readonly verify: (
     options: VerifyOptions,
-  ) => Effect.Effect<VerificationReport>; // also stores it as the latest report
+  ) => Effect.Effect<VerificationReport>;
   readonly impact: (
     target: string,
   ) => Effect.Effect<ImpactReport, LocusNotFound | CapabilityNotFound>;
@@ -79,13 +62,6 @@ function locusNotFound(id: string): LocusNotFound {
   return new LocusNotFound({ id, message: `No Locus ${id} in the model.` });
 }
 
-// START_CONTRACT: Telos
-//   PURPOSE: The single Effect service through which agents and tools use a Locus tree.
-//   INPUTS: { root: LocusDefinition - the root Locus of the tree, given to make or layer }
-//   OUTPUTS: { Telos service with make: Effect of TelosApi and layer: Layer providing Telos }
-//   SIDE_EFFECTS: none; the latest verification report lives in a Ref of the built service
-//   LINKS: M-KERNEL-INTROSPECTION
-// END_CONTRACT: Telos
 export class Telos extends Context.Service<Telos, TelosApi>()(
   "@telos/kernel/Telos",
 ) {

@@ -1,17 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that buildModel registers the Locus tree with its identities and ownership, runs the per-Locus checks and returns a frozen, sorted model with one test per diagnostic code.
-//   SCOPE: Tests of model.ts structure, identity, ownership, composition and property checks. Out: relation checks and cycles (model-relations.test.ts) and determinism (model-determinism.test.ts).
-//   DEPENDS: M-KERNEL-MODEL, M-KERNEL-DEFINITIONS, M-KERNEL-DIAGNOSTIC
-//   LINKS: M-KERNEL-MODEL, V-M-KERNEL-MODEL
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   codesOf - the diagnostic codes of a model, in model order
-//   withCode - the diagnostics of a model that carry one code
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Schema } from "effect";
 import { Archetype } from "../src/archetype";

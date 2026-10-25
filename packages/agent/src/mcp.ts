@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Serve the derived agent tools and the introspection tools of one agent Locus as an MCP stdio server on Bun.
-//   SCOPE: BunStdio, registerTools, serveMcp and the module-local stdin gate that holds back every request until all tools are registered. Out: the derivation rules (tools.ts), the introspection behaviour (introspection-tools.ts) and the client (client.ts).
-//   DEPENDS: M-PACK-AGENT, M-KERNEL-API
-//   LINKS: M-PACK-AGENT-MCP, V-M-PACK-AGENT-MCP
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   BunStdio - the Stdio layer over the Bun process streams
-//   registerTools - registers every tool of the agent and the introspection tools on the MCP server
-//   serveMcp - builds the Telos service of a root Locus and serves its agent over stdio until the stream ends
-// END_MODULE_MAP
-
 import {
   Cause,
   Context,
@@ -35,13 +20,6 @@ import {
 } from "./tools";
 import { introspectionTools } from "./introspection-tools";
 
-// START_CONTRACT: BunStdio
-//   PURPOSE: Provide the Stdio service over process.argv, process.stdout, process.stderr and Bun.stdin.
-//   INPUTS: {}
-//   OUTPUTS: { Layer.Layer<Stdio.Stdio> }
-//   SIDE_EFFECTS: writes to process.stdout and process.stderr when the server sends or logs
-//   LINKS: M-PACK-AGENT-MCP
-// END_CONTRACT: BunStdio
 export const BunStdio: Layer.Layer<Stdio.Stdio> = Layer.succeed(
   Stdio.Stdio,
   Stdio.make({
@@ -65,7 +43,6 @@ export const BunStdio: Layer.Layer<Stdio.Stdio> = Layer.succeed(
   }),
 );
 
-// Holds back every stdin byte until `ready` is done, so the server reads no request before all tools are registered.
 const gateStdin = (
   ready: Deferred.Deferred<void>,
 ): Layer.Layer<Stdio.Stdio, never, Stdio.Stdio> =>
@@ -87,13 +64,6 @@ interface Served {
   readonly call: (args: unknown) => Effect.Effect<ToolResult>;
 }
 
-// START_CONTRACT: registerTools
-//   PURPOSE: Add every object-input derived tool and every introspection tool to the MCP server, with plain annotations and plain content.
-//   INPUTS: { telos: TelosApi - the service; agentLocusId: string - the agent Locus whose tools are served }
-//   OUTPUTS: { Layer.Layer<never, never, McpServer> - a layer that only registers tools }
-//   SIDE_EFFECTS: registers tools on the McpServer service
-//   LINKS: M-PACK-AGENT-MCP
-// END_CONTRACT: registerTools
 export const registerTools = (
   telos: TelosApi,
   agentLocusId: string,
@@ -138,13 +108,6 @@ export const registerTools = (
     }),
   );
 
-// START_CONTRACT: serveMcp
-//   PURPOSE: Serve the agent Locus of a root Locus over MCP stdio, naming the server after its server property. All tools are registered before the server reads its first request, so tools/list is complete and every tool is callable from the first request on.
-//   INPUTS: { root: LocusDefinition - the root of the model; agentLocusId: string - the agent Locus; options: { version: string } }
-//   OUTPUTS: { Promise<void> - resolves when the stream ends; rejects with "No agent Locus <id> in the model." for an id that is not an agent }
-//   SIDE_EFFECTS: reads stdin (only after registerTools has finished) and writes the protocol to stdout; sets process.exitCode 1 on a failure that is not an interrupt
-//   LINKS: M-PACK-AGENT-MCP
-// END_CONTRACT: serveMcp
 export const serveMcp = async (
   root: LocusDefinition,
   agentLocusId: string,

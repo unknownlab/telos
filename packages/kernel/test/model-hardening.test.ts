@@ -1,17 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that buildModel reports an Archetype with an empty appliesTo list and that the maps of the semantic model are read-only at runtime.
-//   SCOPE: Tests of the archetype.applies-to-empty check and of the read-only loci, extensions and archetypes maps of model.ts. Out: the other diagnostics (model.test.ts, model-relations.test.ts) and readonlyMap itself (readonly-map.test.ts).
-//   DEPENDS: M-KERNEL-MODEL, M-KERNEL-DEFINITIONS, M-KERNEL-DIAGNOSTIC
-//   LINKS: M-KERNEL-MODEL, V-M-KERNEL-MODEL
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   withCode - the diagnostics of a model that carry one code
-//   READ_ONLY - the TypeError that a read-only model map throws
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Archetype } from "../src/archetype";
 import type { Diagnostic, DiagnosticCode } from "../src/diagnostic";

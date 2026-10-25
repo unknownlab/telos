@@ -1,30 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the Telos service resolves Loci, verifies, describes, impacts and invokes through the kernel, with typed failures for unknown ids and capabilities.
-//   SCOPE: Tests of Telos.make, Telos.layer, LocusView, LocusNotFound and CapabilityNotFound. Out: impact traversal and diffModels (impact.test.ts) and the public export list (api.test.ts).
-//   DEPENDS: M-KERNEL-INTROSPECTION, M-KERNEL-DESCRIBE, M-KERNEL-VERIFY, M-KERNEL-MODEL, M-KERNEL-INVOKE, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-INTROSPECTION, V-M-KERNEL-INTROSPECTION
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Num - the input schema of the fixture capability double
-//   Val - the output schema of the fixture capability double
-//   Negative - the declared error of double
-//   calls - the test.calls relation type that grants invocation to a capability
-//   uses - the test.uses relation type that points at a Locus
-//   Ui - the test.ui extension carrying calls and uses
-//   ruleA - the static rule r.a that passes
-//   ruleB - the static rule r.b that fails
-//   MathRules - the test.math extension carrying the test.math-rules archetype
-//   double - the capability that doubles n and fails with Negative when n is negative
-//   math - the app:math Locus of kind Purpose
-//   ui - the app:ui Locus of kind Ui with calls and uses relations
-//   root - the root Locus containing app:math and app:ui and carrying MathRules
-//   model - the built model of the fixture tree
-//   failureOf - returns the typed failure of an Exit and fails the test when there is none
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Cause, Effect, Exit, Layer, Option, Schema } from "effect";
 import { Archetype, type Rule, violation } from "../src/archetype";

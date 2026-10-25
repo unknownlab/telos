@@ -1,21 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the telos developer command answers each of its commands with the documented JSON, exit code and error tag.
-//   SCOPE: Tests of runTelos for list, inspect, verify, closure, impact, check and report, the usage errors, and the NFR-003 timing limits on the real repository. Out: the kernel rules (kernel tests) and the repository model content (checked by telos:check).
-//   DEPENDS: M-TELOS-COMMAND, M-REPOSITORY-MODEL
-//   LINKS: M-TELOS-COMMAND, V-M-TELOS-COMMAND
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   createdDirs - the temporary directories to remove after each test
-//   makeDir - creates a temporary directory and records it for removal
-//   writeFile - writes a file below a directory, creating its parents
-//   fixtureRoot - a root Locus with a source Locus that has a relation to a missing Locus
-//   claimedRoot - a root Locus whose source Locus claims only the scripts/a files
-//   parseJson - parses the stdout of a command as JSON
-// END_MODULE_MAP
-
 import { afterEach, describe, expect, test } from "bun:test";
 import {
   mkdirSync,
@@ -173,12 +155,10 @@ describe("telos usage", () => {
     expect(parseJson(result.stderr).tag).toBe("UsageError");
   });
 
-  test("the closure scope names the repository source globs and the docs alias", () => {
+  test("the closure scope names the repository source globs and no path alias", () => {
     expect(CLOSURE_SCOPE.include).toContain("telos.ts");
     expect(CLOSURE_SCOPE.include).toContain("scripts/**/*.ts");
-    expect(CLOSURE_SCOPE.aliases).toEqual([
-      { prefix: "@/", dir: "apps/docs/src/" },
-    ]);
+    expect(CLOSURE_SCOPE.aliases).toEqual([]);
   });
 });
 

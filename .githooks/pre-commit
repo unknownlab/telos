@@ -17,7 +17,7 @@ if [ -n "$staged" ] && ! printf '%s\n' "$staged" | grep -q -v -E '^(kitty-specs|
   exit 0
 fi
 
-command -v bun >/dev/null 2>&1 || fail "bun not found. See docs/tooling.md"
+command -v bun >/dev/null 2>&1 || fail "bun not found. See tools/README.md"
 bun scripts/check-bun-version.ts || exit 1
 [ -d node_modules ] || fail "dependencies not installed. Run: bun install"
 
@@ -25,6 +25,3 @@ bun fmt --no-script --staged || fail "format failed"
 bun lint --no-script --staged || fail "lint failed"
 bun check -b || fail "typecheck failed"
 bun test --pass-with-no-tests || fail "tests failed"
-
-command -v grace >/dev/null 2>&1 || fail "grace not found. See docs/tooling.md"
-grace lint --path . --assertions current || fail "grace lint failed"

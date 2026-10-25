@@ -1,26 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that impact derives the affected Loci, their shortest relation paths and the applicable checks from the model, and that diffModels reports contract, capability and Locus changes between two models.
-//   SCOPE: Tests of impact and diffModels. Out: the Telos service (introspection.test.ts) and the public export list (api.test.ts).
-//   DEPENDS: M-KERNEL-IMPACT, M-KERNEL-MODEL, M-KERNEL-DESCRIBE, M-KERNEL-VERIFY, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-IMPACT, V-M-KERNEL-IMPACT
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Num - the input schema of the fixture capabilities
-//   Sum - the output schema of the fixture capabilities
-//   passRule - the static rule r.pass that always passes
-//   calls - the test.calls relation type that grants invocation to a capability
-//   uses - the test.uses relation type that points at a Locus
-//   Ui - the test.ui extension with calls, uses and the test.ui-rules archetype
-//   Core - the test.core extension with the test.core-rules archetype
-//   RootRules - the test.root extension with the test.root-rules archetype
-//   buildTree - builds the fixture root with optional changes to the core contract, the core subset, app:other and app:late
-//   model - the fixture model with every Locus
-//   checkOf - maps a check to a comparable record for the expected list
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import { Archetype, type Rule } from "../src/archetype";

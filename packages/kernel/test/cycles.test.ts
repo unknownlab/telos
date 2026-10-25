@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that elementaryCycles reports every elementary cycle once, rotated to its smallest member, in a fixed order, and stops at MAX_CYCLES.
-//   SCOPE: Tests of cycles.ts only. Out: the diagnostics built from cycles (diagnostic.ts) and graph checks of a model.
-//   DEPENDS: M-KERNEL-DIAGNOSTIC
-//   LINKS: M-KERNEL-DIAGNOSTIC, V-M-KERNEL-DIAGNOSTIC
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   completeDigraph - edges of the complete directed graph on the given nodes, without self-edges
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { MAX_CYCLES, elementaryCycles } from "../src/cycles";
 

@@ -1,17 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the calculator command-line binary answers every shared case with the expected exit code and streams, and that --help exits 0.
-//   SCOPE: Subprocess runs of bin/cli.ts with the shared case table. Out: the in-memory runCli path (interfaces.test.ts).
-//   DEPENDS: M-CALC-INTERFACES, M-PACK-CLI
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   BIN - the absolute path of bin/cli.ts
-//   runBinary - runs bin/cli.ts with the given arguments and collects its streams and exit code
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { CASES, argvOf, matchesExpected, normalizeCli } from "./cases";

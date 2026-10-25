@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that fields.ts derives input fields from a capability description and coerces text into input values the same way for every interface.
-//   SCOPE: Tests of inputFields and coerceInput, including $ref resolution, unsupported types and coercion edge cases. Out: describing capabilities (describe.test.ts) and invocation (invoke.test.ts).
-//   DEPENDS: M-KERNEL-DESCRIBE, M-KERNEL-MODEL, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-DESCRIBE, V-M-KERNEL-DESCRIBE
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   withInput - builds a capability description carrying only the given input document
-//   Num - the input schema of the fixture capability
-//   model - the built model holding the fixture capability app:math#double
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import { Capability } from "../src/capability";

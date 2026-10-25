@@ -1,34 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that verify runs the Archetype rules of every selected Locus, reports passed, failed and error findings with provenance, and never lets one rule stop another.
-//   SCOPE: Tests of verify.ts applicability, outcomes, filters, sorting, summary, provenance and freezing. Out: the model structure tests (model.test.ts) and archetype value tests (archetype.test.ts).
-//   DEPENDS: M-KERNEL-VERIFY, M-KERNEL-MODEL, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-VERIFY, V-M-KERNEL-VERIFY
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   runWith - runs verify on a model with the fixed clock and the given options
-//   findingKeys - the [locus, archetype, rule] triples of a report, in report order
-//   findOne - the single finding of a report for one locus and rule
-//   FIXED_TIME - the fixed ISO timestamp used by the fixed clock
-//   fixedNow - the fixed clock passed to verify
-//   rulePass - a static rule that always passes
-//   ruleFail - a static rule that always fails with "bad thing."
-//   ruleDie - an execution rule that dies with "boom"
-//   ruleThrow - an execution rule that throws before returning an Effect
-//   ruleBoth - a static rule that passes for test.a and test.b
-//   archetypeA - the archetype applying to test.a with four rules
-//   archetypeAB - the archetype applying to test.a and test.b with one rule
-//   extA - the test.a extension carrying both archetypes
-//   extB - the test.b extension with no archetypes
-//   locusA - a Locus of kind test.a
-//   locusAB - a Locus of kind test.a and test.b
-//   locusNone - a plain Locus with no extensions
-//   root - the root Locus containing the three fixture Loci
-//   model - the built model of the fixture tree
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import { Archetype, violation, type Rule } from "../src/archetype";

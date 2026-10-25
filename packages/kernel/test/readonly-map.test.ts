@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that readonlyMap reads like a Map in insertion order, copies its entries, is frozen and rejects every mutation.
-//   SCOPE: Tests of readonly-map.ts only. Out: the semantic model that uses it (model-hardening.test.ts).
-//   DEPENDS: M-KERNEL-MODEL
-//   LINKS: M-KERNEL-MODEL, V-M-KERNEL-MODEL
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { readonlyMap } from "../src/readonly-map";
 

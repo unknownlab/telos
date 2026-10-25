@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that discovery never grants invocation: an introspection tool can describe a hidden capability, but the kernel refuses to invoke it and no tool or MCP call reaches it.
-//   SCOPE: The three assertions of the discovery rule, through telos_capabilities, invoke, deriveTools and the MCP client. Out: the other tool behaviour, covered by the sibling test files.
-//   DEPENDS: M-PACK-AGENT, M-PACK-AGENT-MCP
-//   LINKS: V-M-PACK-AGENT, V-M-PACK-AGENT-MCP
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { Effect } from "effect";

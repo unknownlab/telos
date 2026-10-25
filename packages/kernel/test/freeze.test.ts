@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that deepFreeze freezes plain object and array graphs and leaves Effect Schemas and functions unfrozen.
-//   SCOPE: Tests of freeze.ts only. Out: copying, canonical JSON and digests.
-//   DEPENDS: M-KERNEL-IDENTITY
-//   LINKS: M-KERNEL-IDENTITY, V-M-KERNEL-IDENTITY
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Schema } from "effect";
 import { deepFreeze } from "../src/freeze";

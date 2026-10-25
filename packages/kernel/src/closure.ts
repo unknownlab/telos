@@ -1,22 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Check the Semantic Closure of a repository: every managed file has exactly one owning Locus, every cross-Locus import follows a declared relation, and every third-party import is declared by an External Locus.
-//   SCOPE: checkClosure, hasClosureErrors, CLOSURE_LIMITS and the closure report shapes. Out: archetype rules, model building and running the check from the command line.
-//   DEPENDS: M-KERNEL-MODEL, M-KERNEL-IDENTITY
-//   LINKS: M-KERNEL-CLOSURE, V-M-KERNEL-CLOSURE
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ClosureCode - the eight closure finding codes
-//   ClosureFinding - one closure finding with its file, Loci, detail, message and knowledge
-//   ClosureOptions - the repository root, managed globs, exclusions, workspace packages and path aliases
-//   ClosureReport - the scope, file owners, sorted findings, limits and knowledge of one check
-//   CLOSURE_LIMITS - the four limits of the closure check, as sentences
-//   checkClosure - checks the closure of a model against a repository and returns the frozen report
-//   hasClosureErrors - true when the report has at least one error finding
-// END_MODULE_MAP
-
 import { readFileSync, statSync } from "node:fs";
 import { posix } from "node:path";
 import { Effect } from "effect";
@@ -71,13 +52,6 @@ export interface ClosureReport {
   readonly knowledge: "derived";
 }
 
-// START_CONTRACT: CLOSURE_LIMITS
-//   PURPOSE: State the four limits of the closure check so every report carries them.
-//   INPUTS: none
-//   OUTPUTS: { ReadonlyArray<string> - the four limit sentences in order, frozen }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-CLOSURE
-// END_CONTRACT: CLOSURE_LIMITS
 export const CLOSURE_LIMITS: ReadonlyArray<string> = Object.freeze([
   "Ownership is checked per file; code inside a file is not attributed to a narrower Locus.",
   "Type-only imports are not seen, so type-only dependencies are not checked.",
@@ -87,7 +61,6 @@ export const CLOSURE_LIMITS: ReadonlyArray<string> = Object.freeze([
 
 const CODE_EXTENSIONS = [".ts", ".tsx", ".js"];
 
-// Orders strings by UTF-16 code unit, never by locale.
 function byCodeUnit(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
@@ -117,7 +90,6 @@ function readManifestExports(
   }
 }
 
-// Returns the first existing code file for a repository-relative path, or null.
 function resolveCodePath(root: string, path: string): string | null {
   const candidates = [
     path,
@@ -135,9 +107,6 @@ function resolveCodePath(root: string, path: string): string | null {
   return null;
 }
 
-// Returns the first existing code file named by a repository-relative path plus a
-// code suffix, or null. Used when the last segment of the path has a non-code
-// extension but no such file exists, such as "./routeTree.gen" for routeTree.gen.ts.
 function resolveSuffixedCodePath(root: string, path: string): string | null {
   const candidates = [
     `${path}.ts`,
@@ -180,8 +149,6 @@ function stringArrayProperty(
   return Array.isArray(value) ? (value as string[]) : [];
 }
 
-// The dependency rule: same Locus, an ancestor or a descendant, or a valid relation
-// (any type) from the importer or one of its ancestors to the target Locus.
 function allowedDependency(
   model: SemanticModel,
   from: string,
@@ -225,8 +192,6 @@ function unresolved(ctx: FileContext, raw: string, message: string): void {
   });
 }
 
-// Checks one owned target file: an owned file follows the dependency rule, an unowned
-// file is unresolved, and an ambiguous file is already reported as closure.ambiguous.
 function checkTarget(ctx: FileContext, raw: string, target: string): void {
   const targetOwner = ctx.owners.get(target);
   if (targetOwner === undefined) {
@@ -252,16 +217,12 @@ function checkTarget(ctx: FileContext, raw: string, target: string): void {
   }
 }
 
-// Resolves a repository-relative path that came from a relative or alias specifier.
 function checkLocalPath(ctx: FileContext, raw: string, path: string): void {
   if (path.startsWith("../") || path === "..") {
     unresolved(ctx, raw, `${raw} does not resolve to a file.`);
     return;
   }
   if (isAssetPath(path)) {
-    // An existing file with a non-code extension is an asset. Otherwise the last
-    // segment is a dotted module name, such as "./routeTree.gen", and the code
-    // suffixes are tried before the import is reported as unresolved.
     if (isFile(posix.join(ctx.root, path))) return;
     const target = resolveSuffixedCodePath(ctx.root, path);
     if (target === null) {
@@ -283,7 +244,6 @@ function checkImport(ctx: FileContext, raw: string): void {
   const queryAt = raw.indexOf("?");
   const specifier = queryAt >= 0 ? raw.slice(0, queryAt) : raw;
 
-  // Platform imports are always allowed.
   if (
     specifier.startsWith("node:") ||
     specifier === "bun" ||
@@ -292,7 +252,6 @@ function checkImport(ctx: FileContext, raw: string): void {
     return;
   }
 
-  // Workspace packages, by exact name or name/<subpath>.
   const pkg = ctx.packages.find(
     (p) => specifier === p.name || specifier.startsWith(`${p.name}/`),
   );
@@ -325,7 +284,6 @@ function checkImport(ctx: FileContext, raw: string): void {
     return;
   }
 
-  // Path aliases, only for files under the alias app directory (its first two segments).
   const alias = ctx.aliases.find(
     (a) =>
       specifier.startsWith(a.prefix) &&
@@ -342,7 +300,6 @@ function checkImport(ctx: FileContext, raw: string): void {
     return;
   }
 
-  // Relative imports, resolved from the importing file's directory.
   if (specifier.startsWith("./") || specifier.startsWith("../")) {
     checkLocalPath(
       ctx,
@@ -352,7 +309,6 @@ function checkImport(ctx: FileContext, raw: string): void {
     return;
   }
 
-  // Bare packages must be listed by an External of the owner or its containers.
   const name = packageNameOf(specifier);
   const declared = [ctx.owner, ...ancestors(ctx.model, ctx.owner)].some(
     (id) => {
@@ -376,7 +332,6 @@ function checkImport(ctx: FileContext, raw: string): void {
   }
 }
 
-// Reads a file as UTF-8, or returns null when it cannot be read.
 function readText(absolute: string): string | null {
   try {
     return readFileSync(absolute, "utf8");
@@ -385,7 +340,6 @@ function readText(absolute: string): string | null {
   }
 }
 
-// Lists the import specifiers of a file, or returns null when the file does not parse.
 function scanSpecifiers(
   file: string,
   text: string,
@@ -412,14 +366,6 @@ function unparsable(file: string, owner: string): ClosureFinding {
   };
 }
 
-// START_CONTRACT: checkClosure
-//   PURPOSE: Check the closure of a semantic model against a repository and return a frozen report with every closure finding sorted and de-duplicated.
-//   INPUTS: { model: SemanticModel - a built model; options: ClosureOptions - the root, include and exclude globs, workspace packages and aliases }
-//   OUTPUTS: { Effect<ClosureReport> - the frozen report with scope, files, findings, limits and knowledge; a file that cannot be read or parsed becomes a closure.unparsable finding, never a failure }
-//   SIDE_EFFECTS: Reads the files of the repository under the root; writes nothing
-//   LINKS: M-KERNEL-CLOSURE
-// END_CONTRACT: checkClosure
-/** Checks the Semantic Closure of a model against the files of a repository. */
 export const checkClosure = (
   model: SemanticModel,
   options: ClosureOptions,
@@ -436,7 +382,6 @@ function computeClosure(
   const aliases = options.aliases ?? [];
   const findings: ClosureFinding[] = [];
 
-  // Step 1: scope, the union of the include globs minus the exclude globs.
   const scanned = new Set<string>();
   for (const glob of options.include) {
     for (const file of new Bun.Glob(glob).scanSync({
@@ -451,7 +396,6 @@ function computeClosure(
     .filter((file) => !excludeGlobs.some((glob) => glob.match(file)))
     .sort(byCodeUnit);
 
-  // Step 2: claims, each Source glob of each Locus claims the in-scope files it matches.
   const claimants = new Map<string, string[]>();
   const locusIds = [...model.loci.keys()].sort(byCodeUnit);
   for (const id of locusIds) {
@@ -479,7 +423,6 @@ function computeClosure(
     }
   }
 
-  // Step 3: owners, the claimants minus those that contain another claimant.
   const owners = new Map<string, string>();
   const ambiguous = new Set<string>();
   const files: Array<{ file: string; owner: string | null }> = [];
@@ -521,7 +464,6 @@ function computeClosure(
     }
   }
 
-  // Step 4 and 5: imports and dynamic imports of owned files.
   for (const [file, owner] of [...owners].sort(([a], [b]) =>
     byCodeUnit(a, b),
   )) {
@@ -600,14 +542,6 @@ function dedupeAndSort(
   );
 }
 
-// START_CONTRACT: hasClosureErrors
-//   PURPOSE: Tell whether a closure report has at least one error finding.
-//   INPUTS: { report: ClosureReport - a closure report }
-//   OUTPUTS: { boolean - true when some finding has severity error }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-CLOSURE
-// END_CONTRACT: hasClosureErrors
-/** True when any finding of the report has severity "error". Warnings do not count. */
 export function hasClosureErrors(report: ClosureReport): boolean {
   return report.findings.some((f) => f.severity === "error");
 }

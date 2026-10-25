@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove the identifier grammar of the kernel: Locus ids, extension ids, capability names and capability keys.
-//   SCOPE: Tests of identity.ts only. Out: freeze, canonical JSON, digests and diagnostics.
-//   DEPENDS: M-KERNEL-IDENTITY
-//   LINKS: M-KERNEL-IDENTITY, V-M-KERNEL-IDENTITY
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import {
   capabilityKey,

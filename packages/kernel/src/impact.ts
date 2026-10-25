@@ -1,21 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Derive the change impact of a Locus or capability from the model, and compare two models into the changes a reviewer must read.
-//   SCOPE: The AffectedLocus and ImpactReport shapes, impact, the ModelChange shapes and diffModels. Out: verification (verify.ts), the Telos service that checks ids before calling impact (introspection.ts) and any rule evaluation.
-//   DEPENDS: M-KERNEL-MODEL, M-KERNEL-DESCRIBE, M-KERNEL-VERIFY
-//   LINKS: M-KERNEL-IMPACT, V-M-KERNEL-IMPACT
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   AffectedLocus - one Locus affected by a target with its shortest relation path and distance
-//   ImpactReport - the derived impact of a target with affected Loci, applicable checks and the knowledge status
-//   impact - the Loci affected by a target and the checks that apply to them
-//   ModelChangeKind - the kinds of change diffModels reports
-//   ModelChange - one change between two models with its JSON patch
-//   diffModels - compares two models by Locus id and reports the changes sorted by locus, capability and kind
-// END_MODULE_MAP
-
 import { Effect, JsonPatch, Schema } from "effect";
 import type { RuleMethod } from "./archetype";
 import {
@@ -82,7 +64,6 @@ interface Node {
   readonly path: ReadonlyArray<Step>;
 }
 
-// Orders strings by UTF-16 code unit, never by locale.
 function byCodeUnit(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
@@ -95,14 +76,6 @@ function stepOf(relation: ModelRelation): Step {
   };
 }
 
-// START_CONTRACT: impact
-//   PURPOSE: Find every Locus that reaches a target through valid relations, with the shortest path, and every check that applies to the affected Loci.
-//   INPUTS: { model: SemanticModel - a built model; target: string - a Locus id or "<locus>#<capability>", validated by the caller }
-//   OUTPUTS: { ImpactReport - affected Loci sorted by distance then locus, checks sorted by locus, archetype and rule, knowledge derived; frozen }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-IMPACT
-// END_CONTRACT: impact
-/** Breadth-first over the valid incoming relations of the target and of every affected Locus. */
 export function impact(model: SemanticModel, target: string): ImpactReport {
   const parsed = parseCapabilityKey(target);
   const targetLocus = parsed?.locus ?? target;
@@ -111,7 +84,6 @@ export function impact(model: SemanticModel, target: string): ImpactReport {
   const known = new Set<string>([targetLocus]);
   const affected: Array<AffectedLocus> = [];
 
-  // Level 0: relations that point at the target itself. A capability target only matches its own capability.
   let level: Array<Node> = [];
   for (const relation of incoming(model, targetLocus)) {
     if (
@@ -152,7 +124,6 @@ export function impact(model: SemanticModel, target: string): ImpactReport {
     (a, b) => a.distance - b.distance || byCodeUnit(a.locus, b.locus),
   );
 
-  // Checks: the target, every affected Locus, and every container of those, each Locus once.
   const scope = new Set<string>([targetLocus, ...affected.map((a) => a.locus)]);
   for (const id of [...scope]) {
     for (const container of ancestors(model, id)) scope.add(container);
@@ -205,14 +176,6 @@ function patchOf(
   return [...JsonPatch.get(before as Schema.Json, after as Schema.Json)];
 }
 
-// START_CONTRACT: diffModels
-//   PURPOSE: Report the changes between two models by comparing their descriptions per Locus id and per capability name.
-//   INPUTS: { before: SemanticModel - the earlier model; after: SemanticModel - the later model }
-//   OUTPUTS: { Effect of ReadonlyArray<ModelChange> - changes sorted by locus, capability ("" for none) and kind; frozen }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-IMPACT
-// END_CONTRACT: diffModels
-/** Compares describeModel of both models. Contract digests decide contract changes; the rest of a shared Locus is one locus-changed. */
 export const diffModels = (
   before: SemanticModel,
   after: SemanticModel,

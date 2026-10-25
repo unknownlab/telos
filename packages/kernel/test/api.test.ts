@@ -1,22 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the public entry of the kernel exports exactly the contract value names, names every contract type, and that the main entry with everything it imports stays free of platform and Pack modules.
-//   SCOPE: Tests of the value export list of src/index.ts, the type export surface and the import graph of the main entry. Out: behaviour of the exported functions, which their own test files cover.
-//   DEPENDS: M-KERNEL-API, M-KERNEL-INTROSPECTION, M-KERNEL-IMPACT
-//   LINKS: M-KERNEL-API, V-M-KERNEL-API
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   expectedValues - the value exports of the main entry named by the contract
-//   forbiddenPackages - package specifiers the main entry must never import
-//   forbiddenPrefixes - package specifier prefixes the main entry must never import
-//   resolveRelative - resolves a relative import to its TypeScript file or index file
-//   importsOf - lists the import specifiers of a TypeScript file
-//   reachableFrom - walks the relative import graph from a file and returns every visited file and package specifier
-//   ContractTypeNames - compile-time list of every type export the contract names
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
@@ -73,7 +54,6 @@ import type {
   VerifyOptions,
 } from "../src/index";
 
-// The value exports the contract names. Compared after sorting.
 const expectedValues = [
   "Archetype",
   "CAPABILITY_NAME_PATTERN",
@@ -128,7 +108,6 @@ const expectedValues = [
   "violation",
 ];
 
-// Every type name the contract lists, kept referenced so a missing type export fails typecheck.
 export type ContractTypeNames = [
   AffectedLocus,
   CapabilityDescription,

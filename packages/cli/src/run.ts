@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Run one command line of a CLI Locus through kernel invoke and report its stdout, stderr and exit code without a real process.
-//   SCOPE: CliResult, EXIT_CODE and runCli, which build the effect/cli program from the derived commands and capture its output. Out: the process entry (bun.ts), derivation (derive.ts) and the Archetype (archetype.ts).
-//   DEPENDS: M-PACK-CLI
-//   LINKS: M-PACK-CLI, V-M-PACK-CLI
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   CliResult - the outcome of one command line: exit code, stdout and stderr
-//   EXIT_CODE - the exit code of a kernel invocation error
-//   runCli - runs one command line of a CLI Locus and returns its result
-// END_MODULE_MAP
-
 import { Effect, Exit, Option } from "effect";
 import { Command, Flag } from "effect/cli";
 import {
@@ -26,26 +11,12 @@ import { memoryEnvironment, type Captured } from "./environment";
 
 const DEFAULT_VERSION = "0.0.0";
 
-// START_CONTRACT: CliResult
-//   PURPOSE: Carry the outcome of one command line.
-//   INPUTS: { exitCode: 0 | 1 | 2 - the exit code; stdout: string - the captured stdout; stderr: string - the captured stderr }
-//   OUTPUTS: { CliResult - the outcome record }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-CLI
-// END_CONTRACT: CliResult
 export interface CliResult {
   readonly exitCode: 0 | 1 | 2;
   readonly stdout: string;
   readonly stderr: string;
 }
 
-// START_CONTRACT: EXIT_CODE
-//   PURPOSE: Map a kernel invocation error to the exit code of the command line.
-//   INPUTS: { error: InvocationError - the error of a failed invocation }
-//   OUTPUTS: { 1 | 2 - 2 for usage and input problems, 1 for declared errors, defects and invalid output }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-CLI
-// END_CONTRACT: EXIT_CODE
 export const EXIT_CODE = (error: InvocationError): 1 | 2 => {
   switch (error.tag) {
     case "InvalidInput":
@@ -60,13 +31,6 @@ export const EXIT_CODE = (error: InvocationError): 1 | 2 => {
   }
 };
 
-// START_CONTRACT: runCli
-//   PURPOSE: Run one command line of a CLI Locus in memory: derive the commands, invoke the chosen capability through the CLI Locus and write one JSON line.
-//   INPUTS: { model: SemanticModel - the model; cliLocusId: string - the CLI Locus; argv: ReadonlyArray<string> - the arguments; options: { version?: string - the program version, default "0.0.0" } }
-//   OUTPUTS: { Effect<CliResult> - the captured stdout, stderr and exit code; never fails }
-//   SIDE_EFFECTS: none; output is captured in memory, never written to a real stream
-//   LINKS: M-PACK-CLI
-// END_CONTRACT: runCli
 export const runCli = (
   model: SemanticModel,
   cliLocusId: string,

@@ -1,31 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that describe.ts describes capabilities, Loci and the model as JSON with knowledge statuses and digests that match their documented objects.
-//   SCOPE: Tests of describeCapability, describeLocus, describeModel and describeVerifications. Out: invocation (invoke.test.ts) and input fields (fields.test.ts).
-//   DEPENDS: M-KERNEL-DESCRIBE, M-KERNEL-MODEL, M-KERNEL-VERIFY, M-KERNEL-CANONICAL, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-DESCRIBE, V-M-KERNEL-DESCRIBE
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Num - the input schema of the fixture capabilities
-//   Val - the output schema of the fixture capabilities
-//   Negative - the declared error of double
-//   calls - the test.calls relation type that grants invocation to a capability
-//   uses - the test.uses relation type that points at a Locus
-//   Ui - the test.ui extension carrying calls and uses
-//   ruleA - the static rule r.a that passes
-//   ruleB - the static rule r.b that fails
-//   MathRules - the test.math extension carrying the test.math-rules archetype
-//   double - the capability that doubles n and fails with Negative when n is negative
-//   half - the capability that halves n
-//   math - the app:math Locus of kind Purpose
-//   ui - the app:ui Locus of kind Ui with calls and uses relations
-//   root - the root Locus containing app:math and app:ui and carrying MathRules
-//   model - the built model of the fixture tree
-//   declaredModel - builds a model with one declared capability of the given output schema
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Exit, Schema } from "effect";
 import { Archetype, violation, type Rule } from "../src/archetype";

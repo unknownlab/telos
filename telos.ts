@@ -1,24 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Describe the Telos repository as a semantic model: its Loci, their source claims, external packages and dependency relations.
-//   SCOPE: The Locus definitions and the repository model only. It imports only the kernel and the calculator, and never runs a check.
-//   DEPENDS: M-KERNEL-API, M-CALC-INTERFACES
-//   LINKS: M-REPOSITORY-MODEL, V-M-REPOSITORY-MODEL
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   kernel - the telos:kernel Locus over the kernel package
-//   cliPack - the telos:cli-pack Locus over the command line pack
-//   agentPack - the telos:agent-pack Locus over the agent pack
-//   webPack - the telos:web-pack Locus over the web pack
-//   calculator - the telos:calculator Locus that contains the calculator application
-//   tooling - the telos:tooling Locus over the repository scripts
-//   docsSite - the telos:docs-site Locus over the documentation site
-//   repository - the telos:repository Locus that contains every other Locus
-//   repositoryModel - the built semantic model of repository
-// END_MODULE_MAP
-
 import {
   External,
   Locus,
@@ -31,13 +10,6 @@ import { app as calculatorApp } from "@telos/calculator";
 
 const Module = Locus.extend(Purpose, Source, External);
 
-// START_CONTRACT: kernel
-//   PURPOSE: Declare the telos:kernel Locus that owns the kernel package sources.
-//   INPUTS: none
-//   OUTPUTS: { LocusDefinition - telos:kernel with its sources and externals }
-//   SIDE_EFFECTS: none
-//   LINKS: M-REPOSITORY-MODEL
-// END_CONTRACT: kernel
 export const kernel = Module.make({
   id: "telos:kernel",
   description:
@@ -123,68 +95,16 @@ export const tooling = Module.make({
   relations: [SourceDependsOn.to(kernel)],
 });
 
-export const docsSite = Module.make({
-  id: "telos:docs-site",
-  description:
-    "A TanStack Start site that renders the foundation documents, the playground on the real kernel and the semantic report.",
-  properties: {
-    purpose:
-      "Builds the documentation site from the foundation documents and the semantic report.",
-    sources: [
-      "apps/docs/*.ts",
-      "apps/docs/src/**/*.ts",
-      "apps/docs/src/**/*.tsx",
-      "apps/docs/scripts/**/*.ts",
-      "apps/docs/test/**/*.ts",
-      "apps/docs/test/**/*.tsx",
-      "apps/docs/e2e/**/*.ts",
-    ],
-    packages: [
-      "@axe-core/playwright",
-      "@playwright/test",
-      "@tailwindcss/vite",
-      "@tanstack/react-router",
-      "@tanstack/react-start",
-      "@vitejs/plugin-react",
-      "class-variance-authority",
-      "clsx",
-      "effect",
-      "lucide-react",
-      "mermaid",
-      "minisearch",
-      "radix-ui",
-      "react",
-      "react-dom",
-      "tailwind-merge",
-      "vite",
-    ],
-  },
-  relations: [
-    SourceDependsOn.to(kernel),
-    SourceDependsOn.to(webPack),
-    SourceDependsOn.to(calculator),
-  ],
-});
-
 export const repository = Module.make({
   id: "telos:repository",
   description:
-    "The Telos repository holds the framework, its packs, the calculator proof and the documentation site as one model.",
+    "The Telos repository holds the framework, its packs and the calculator proof as one model.",
   properties: {
-    purpose:
-      "Holds the Telos framework, its packs, the calculator proof and the documentation site.",
+    purpose: "Holds the Telos framework, its packs and the calculator proof.",
     sources: ["telos.ts"],
     packages: [],
   },
-  contains: [
-    kernel,
-    cliPack,
-    agentPack,
-    webPack,
-    calculator,
-    tooling,
-    docsSite,
-  ],
+  contains: [kernel, cliPack, agentPack, webPack, calculator, tooling],
 });
 
 export const repositoryModel = buildModel(repository);

@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Talk to an MCP stdio server from a deterministic agent client that uses no model, no network and no credentials.
-//   SCOPE: McpStdioClient with spawn, initialize, listTools, callTool and close over newline-delimited JSON-RPC. Out: the server side (mcp.ts) and any LLM use.
-//   DEPENDS: none
-//   LINKS: M-PACK-AGENT-MCP, V-M-PACK-AGENT-MCP
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ListedTool - one tool as the server lists it
-//   CallResult - the result of a tools/call request
-//   McpStdioClient - a client that spawns an MCP stdio server and makes requests to it
-// END_MODULE_MAP
-
 export interface ListedTool {
   readonly name: string;
   readonly description: string;
@@ -34,13 +19,6 @@ interface PendingRequest {
 
 const PROTOCOL_VERSION = "2025-06-18";
 
-// START_CONTRACT: McpStdioClient
-//   PURPOSE: A deterministic MCP client over a child process stdin and stdout, with one timer per request.
-//   INPUTS: { spawn: command, cwd and timeoutMs of the child process }
-//   OUTPUTS: { McpStdioClient - initialized client whose server field holds the initialize result }
-//   SIDE_EFFECTS: starts a child process and reads its stdout until it closes
-//   LINKS: M-PACK-AGENT-MCP
-// END_CONTRACT: McpStdioClient
 export class McpStdioClient {
   private readonly proc: Bun.Subprocess<"pipe", "pipe", "pipe">;
   private readonly timeoutMs: number;
@@ -62,13 +40,6 @@ export class McpStdioClient {
     void this.readLoop();
   }
 
-  // START_CONTRACT: spawn
-  //   PURPOSE: Start the server command and perform the initialize handshake.
-  //   INPUTS: { command: ReadonlyArray<string> - the program and arguments; options: { cwd, timeoutMs default 10000 } }
-  //   OUTPUTS: { Promise<McpStdioClient> - the initialized client, or a rejection of the failed request }
-  //   SIDE_EFFECTS: starts a child process; kills it when initialize fails
-  //   LINKS: M-PACK-AGENT-MCP
-  // END_CONTRACT: spawn
   static async spawn(
     command: ReadonlyArray<string>,
     options: { readonly cwd?: string; readonly timeoutMs?: number } = {},
@@ -89,7 +60,6 @@ export class McpStdioClient {
     return client;
   }
 
-  /** The serverName and protocolVersion of the initialize that spawn performed. */
   get server(): {
     readonly serverName: string;
     readonly protocolVersion: string;

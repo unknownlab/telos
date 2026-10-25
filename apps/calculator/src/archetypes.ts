@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Define the ArithmeticBehavior archetype that checks an arithmetic Locus offers exactly the four pure operations with the documented results and errors.
-//   SCOPE: The five ArithmeticBehavior rules and their checks. It never defines capabilities and never imports ./arithmetic, which would be a cycle.
-//   DEPENDS: M-KERNEL-API
-//   LINKS: M-CALC-ARITHMETIC, V-M-CALC-ARITHMETIC
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ArithmeticBehavior - the archetype applied to calculator.arithmetic Loci with its five rules
-// END_MODULE_MAP
-
 import { Effect } from "effect";
 import {
   Archetype,
@@ -42,13 +29,6 @@ const EXAMPLES: ReadonlyArray<
   ["divide", { a: 7, b: 2 }, { result: 3.5 }],
 ];
 
-// START_CONTRACT: ArithmeticBehavior
-//   PURPOSE: Check that an arithmetic Locus offers add, divide, multiply and subtract, that they are pure, that the documented examples hold, and that errors are reported with their tags and messages.
-//   INPUTS: none
-//   OUTPUTS: { Archetype - calculator.arithmetic-behavior with five rules applied to calculator.arithmetic }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-ARITHMETIC
-// END_CONTRACT: ArithmeticBehavior
 export const ArithmeticBehavior = Archetype.make({
   id: "calculator.arithmetic-behavior",
   description:

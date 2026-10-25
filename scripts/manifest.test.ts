@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that every workspace package manifest pins its dependencies exactly, trusts no install script and exposes only its declared entry points (charter 051).
-//   SCOPE: Reads the package.json of each workspace package and of the repository root. Out: the packages' code, which their own tests cover.
-//   DEPENDS: none
-//   LINKS: none
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ROOT - the repository root directory
-//   PACKAGES - the expected name, directory, exports and dependencies of each new workspace package
-//   readManifest - reads one package.json as JSON
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 
@@ -75,13 +60,6 @@ const PACKAGES: ReadonlyArray<{
   },
 ];
 
-// START_CONTRACT: readManifest
-//   PURPOSE: Read one package.json of the repository as JSON.
-//   INPUTS: { path: string - the path relative to the repository root }
-//   OUTPUTS: { Promise<Record<string, unknown>> - the parsed manifest }
-//   SIDE_EFFECTS: reads one file
-//   LINKS: none
-// END_CONTRACT: readManifest
 async function readManifest(path: string): Promise<Record<string, unknown>> {
   return (await Bun.file(join(ROOT, path)).json()) as Record<string, unknown>;
 }

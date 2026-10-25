@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that formModel derives one form per exposed capability and that submit goes through kernel invoke with the web Locus as the invoker.
-//   SCOPE: Tests of formModel, WebField mapping, submit coercion, LocusNotFound and form ordering. Out: the archetype rules (archetype.test.ts).
-//   DEPENDS: M-PACK-WEB, M-KERNEL-API
-//   LINKS: M-PACK-WEB, V-M-PACK-WEB
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   run - runs an Effect and returns its exit
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Cause, Effect, Exit, Schema } from "effect";
 import { Capability, Locus, buildModel } from "@telos/kernel";

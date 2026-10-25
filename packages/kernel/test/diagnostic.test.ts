@@ -1,17 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove the diagnostic severity table, the frozen constructor, the code-unit ordering and the duplicate dropping of diagnostics.
-//   SCOPE: Tests of diagnostic.ts only. Out: the checks that produce diagnostics (later work packages).
-//   DEPENDS: M-KERNEL-DIAGNOSTIC
-//   LINKS: M-KERNEL-DIAGNOSTIC, V-M-KERNEL-DIAGNOSTIC
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ALL_CODES - every DiagnosticCode, written out once so the severity table is checked for completeness
-//   diag - builds a diagnostic with a fixed message and the given subject, code, path and members
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import {
   SEVERITY,

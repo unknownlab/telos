@@ -1,21 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that every rule of the AgentInterface archetype has one passing and one failing model.
-//   SCOPE: The four AgentInterface rules, each checked through the kernel verify with the rule id and the contract message. Out: the derivation and invocation behaviour, which tools.test.ts covers.
-//   DEPENDS: M-PACK-AGENT
-//   LINKS: V-M-PACK-AGENT
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   FakeTool - a relation type with the agent.tool id that does not grant invocation
-//   FakeAgent - an extension with the telos.agent id that uses AgentInterface
-//   fake - an agent Locus that exposes double through FakeTool
-//   other - a second Locus that also has a double capability
-//   scalar - a Locus whose capability takes a number instead of an object
-//   findingOf - returns the finding of one rule for the agent Locus
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import {
