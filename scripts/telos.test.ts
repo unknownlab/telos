@@ -173,12 +173,10 @@ describe("telos usage", () => {
     expect(parseJson(result.stderr).tag).toBe("UsageError");
   });
 
-  test("the closure scope names the repository source globs and the docs alias", () => {
+  test("the closure scope names the repository source globs and no path alias", () => {
     expect(CLOSURE_SCOPE.include).toContain("telos.ts");
     expect(CLOSURE_SCOPE.include).toContain("scripts/**/*.ts");
-    expect(CLOSURE_SCOPE.aliases).toEqual([
-      { prefix: "@/", dir: "apps/docs/src/" },
-    ]);
+    expect(CLOSURE_SCOPE.aliases).toEqual([]);
   });
 });
 

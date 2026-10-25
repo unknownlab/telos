@@ -85,21 +85,9 @@ export const CLOSURE_SCOPE = {
     "apps/calculator/src/**/*.ts",
     "apps/calculator/bin/**/*.ts",
     "apps/calculator/test/**/*.ts",
-    "apps/docs/*.ts",
-    "apps/docs/src/**/*.ts",
-    "apps/docs/src/**/*.tsx",
-    "apps/docs/scripts/**/*.ts",
-    "apps/docs/test/**/*.ts",
-    "apps/docs/test/**/*.tsx",
-    "apps/docs/e2e/**/*.ts",
   ],
-  exclude: [
-    "**/node_modules/**",
-    "**/*.d.ts",
-    "apps/docs/src/generated/**",
-    "apps/docs/test/fixtures/**",
-  ],
-  aliases: [{ prefix: "@/", dir: "apps/docs/src/" }],
+  exclude: ["**/node_modules/**", "**/*.d.ts"],
+  aliases: [],
 } as const;
 
 const REPO_ROOT = resolve(import.meta.dir, "..");

@@ -123,68 +123,16 @@ export const tooling = Module.make({
   relations: [SourceDependsOn.to(kernel)],
 });
 
-export const docsSite = Module.make({
-  id: "telos:docs-site",
-  description:
-    "A TanStack Start site that renders the foundation documents, the playground on the real kernel and the semantic report.",
-  properties: {
-    purpose:
-      "Builds the documentation site from the foundation documents and the semantic report.",
-    sources: [
-      "apps/docs/*.ts",
-      "apps/docs/src/**/*.ts",
-      "apps/docs/src/**/*.tsx",
-      "apps/docs/scripts/**/*.ts",
-      "apps/docs/test/**/*.ts",
-      "apps/docs/test/**/*.tsx",
-      "apps/docs/e2e/**/*.ts",
-    ],
-    packages: [
-      "@axe-core/playwright",
-      "@playwright/test",
-      "@tailwindcss/vite",
-      "@tanstack/react-router",
-      "@tanstack/react-start",
-      "@vitejs/plugin-react",
-      "class-variance-authority",
-      "clsx",
-      "effect",
-      "lucide-react",
-      "mermaid",
-      "minisearch",
-      "radix-ui",
-      "react",
-      "react-dom",
-      "tailwind-merge",
-      "vite",
-    ],
-  },
-  relations: [
-    SourceDependsOn.to(kernel),
-    SourceDependsOn.to(webPack),
-    SourceDependsOn.to(calculator),
-  ],
-});
-
 export const repository = Module.make({
   id: "telos:repository",
   description:
-    "The Telos repository holds the framework, its packs, the calculator proof and the documentation site as one model.",
+    "The Telos repository holds the framework, its packs and the calculator proof as one model.",
   properties: {
-    purpose:
-      "Holds the Telos framework, its packs, the calculator proof and the documentation site.",
+    purpose: "Holds the Telos framework, its packs and the calculator proof.",
     sources: ["telos.ts"],
     packages: [],
   },
-  contains: [
-    kernel,
-    cliPack,
-    agentPack,
-    webPack,
-    calculator,
-    tooling,
-    docsSite,
-  ],
+  contains: [kernel, cliPack, agentPack, webPack, calculator, tooling],
 });
 
 export const repositoryModel = buildModel(repository);

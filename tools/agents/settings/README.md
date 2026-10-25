@@ -18,7 +18,7 @@ Spec Kitty keeps `.claude/` out of git, so the routing settings live only in eac
 
 ## Setup
 
-On a new machine or a fresh clone, after the one-time setup in [`docs/tooling.md`](../../../docs/tooling.md) (which registers Spec Kitty's hooks), run from the main checkout:
+On a new machine or a fresh clone, after the one-time setup in [`tools/README.md`](../../README.md) (which registers Spec Kitty's hooks), run from the main checkout:
 
 ```sh
 python3 tools/agents/settings/routing.py apply

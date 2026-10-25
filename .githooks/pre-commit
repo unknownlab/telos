@@ -17,7 +17,7 @@ if [ -n "$staged" ] && ! printf '%s\n' "$staged" | grep -q -v -E '^(kitty-specs|
   exit 0
 fi
 
-command -v bun >/dev/null 2>&1 || fail "bun not found. See docs/tooling.md"
+command -v bun >/dev/null 2>&1 || fail "bun not found. See tools/README.md"
 bun scripts/check-bun-version.ts || exit 1
 [ -d node_modules ] || fail "dependencies not installed. Run: bun install"
 

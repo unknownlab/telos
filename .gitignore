@@ -38,15 +38,5 @@ node_modules/
 .worktrees/
 kitty-ops/ops-index.jsonl
 
-# docs app build output (locus-foundation)
-apps/docs/dist/
-apps/docs/src/generated/
-apps/docs/public/llms.txt
-apps/docs/public/index.json
-apps/docs/public/semantic-report.json
-apps/docs/test-results/
-apps/docs/playwright-report/
-apps/docs/.tanstack/
-
 # Python caches of the agent usage tools
 tools/agents/**/__pycache__/
