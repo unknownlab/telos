@@ -87,11 +87,11 @@
     {
       "criterion_id": "FR-009",
       "description": "Verify FR-009 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "git diff --name-status; bun test",
+      "evidence": "lane-b tip c3095bb: deleted tests are apps/docs/test/* and apps/calculator/test/ergonomics.test.ts only; no skipped/emptied tests; 522 pass 0 fail",
+      "pass_fail": "pass",
+      "verified_by": "reviewer-renata",
+      "verified_at": "2026-10-25T18:03:45.366118+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
