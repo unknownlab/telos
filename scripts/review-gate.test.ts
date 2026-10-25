@@ -133,7 +133,7 @@ describe("failureMessage", () => {
   test("falls back to the last real line when no line looks like an error", () => {
     expect(
       failureMessage(
-        'docs/tooling.md\n1 file needs formatting.\nerror: script "format:check" exited with code 1\n',
+        'tools/README.md\n1 file needs formatting.\nerror: script "format:check" exited with code 1\n',
         1,
       ),
     ).toBe("1 file needs formatting.");
@@ -228,32 +228,35 @@ describe("CHECK_STEPS and the root verify script", () => {
     }
   });
 
-  test("docs:build runs after test, test:e2e runs after docs:build, grace:lint runs after test:e2e, and telos:check runs last", () => {
-    const names = CHECK_STEPS.map((step) => step.name);
-    const at = (name: string) => names.indexOf(name);
-    expect(at("docs:build")).toBeGreaterThan(at("test"));
-    expect(at("test:e2e")).toBeGreaterThan(at("docs:build"));
-    expect(at("grace:lint")).toBeGreaterThan(at("test:e2e"));
-    expect(at("telos:check")).toBeGreaterThan(at("grace:lint"));
-    expect(names.at(-1)).toBe("telos:check");
+  test("the gate runs exactly check:bun, format:check, lint, typecheck, test and telos:check, in that order", () => {
+    expect(CHECK_STEPS.map((step) => step.name)).toEqual([
+      "check:bun",
+      "format:check",
+      "lint",
+      "typecheck",
+      "test",
+      "telos:check",
+    ]);
   });
 
-  test("a failing docs:build is a failing verify.docs:build case, and a passing test:e2e stays passing", () => {
+  test("a failing telos:check is a failing verify.telos:check case, and a passing typecheck stays passing", () => {
     const report = buildReport(
       [
         {
-          name: "docs:build",
+          name: "telos:check",
           ok: false,
-          message: "verification/index.html is missing",
+          message: "closure has 1 error",
         },
-        { name: "test:e2e", ok: true, message: "" },
+        { name: "typecheck", ok: true, message: "" },
       ],
       null,
     );
     expect(report).toContain(
-      '<testcase classname="verify" name="docs:build">\n      <failure message="verification/index.html is missing" />\n    </testcase>',
+      '<testcase classname="verify" name="telos:check">\n      <failure message="closure has 1 error" />\n    </testcase>',
     );
-    expect(report).toContain('<testcase classname="verify" name="test:e2e" />');
+    expect(report).toContain(
+      '<testcase classname="verify" name="typecheck" />',
+    );
     expect(report).toContain('tests="2" failures="1"');
   });
 });
