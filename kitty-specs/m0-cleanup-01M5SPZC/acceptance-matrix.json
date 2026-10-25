@@ -47,11 +47,11 @@
     {
       "criterion_id": "FR-005",
       "description": "Verify FR-005 is satisfied",
-      "proof_type": "automated_test",
-      "evidence": null,
-      "pass_fail": "pending",
-      "verified_by": null,
-      "verified_at": null,
+      "proof_type": "grep",
+      "evidence": "lane-b tip c3095bb: grep -c grace .githooks/pre-commit = 0; grep -ri grace .githooks empty",
+      "pass_fail": "pass",
+      "verified_by": "reviewer-renata",
+      "verified_at": "2026-10-25T18:03:36.197314+00:00",
       "notes": "TODO: replace with a real acceptance criterion"
     },
     {
