@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the Bun entry runMain writes the result of a command to the process streams and sets the process exit code.
-//   SCOPE: One successful and one failing run of runMain with the stream writers replaced by recorders. Out: the in-memory run itself (run.test.ts).
-//   DEPENDS: M-PACK-CLI
-//   LINKS: M-PACK-CLI, V-M-PACK-CLI
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   captureStreams - replaces process.stdout.write and process.stderr.write and returns the recorded text
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { runMain } from "../src/bun";
 import { model } from "./fixture";

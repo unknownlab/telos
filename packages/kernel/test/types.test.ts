@@ -1,17 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that composed Locus kinds type their properties, capability names and handler errors at compile time.
-//   SCOPE: Each @ts-expect-error line is checked by bun run typecheck; each call also runs and its run-time result is asserted.
-//   DEPENDS: M-KERNEL-DEFINITIONS
-//   LINKS: V-M-KERNEL-DEFINITIONS
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   E1 - a tagged error that the test capabilities may or may not declare
-//   operands - the input schema shared by the test capabilities
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import { Capability } from "../src/capability";

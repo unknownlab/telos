@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the deterministic agent demo runs its seven steps against the calculator MCP server and exits 0 with the success line.
-//   SCOPE: One subprocess run of bin/agent-demo.ts and the shape of its output lines. Out: the individual MCP responses (mcp.test.ts).
-//   DEPENDS: M-CALC-INTERFACES, M-PACK-AGENT-MCP
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   DEMO - the absolute path of bin/agent-demo.ts
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 

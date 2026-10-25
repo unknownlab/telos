@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove the review gate report marks every failing step as a JUnit failure and keeps bun test's suites.
-//   SCOPE: Unit tests of sanitizeText, escapeXml, buildReport, failureMessage, needsInstall, cleanEnv, CHECK_STEPS and verifyStepNames, including the escape-code cases, the no-mutation case for cleanEnv, and the no-drift test that compares CHECK_STEPS with the root verify script.
-//   DEPENDS: M-REVIEW-GATE
-//   LINKS: V-M-REVIEW-GATE
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   BUN_JUNIT - a minimal bun test JUnit document
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";

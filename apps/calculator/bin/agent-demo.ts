@@ -1,30 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Run a deterministic agent that discovers and calls the calculator tools over MCP and prints one JSON line per step.
-//   SCOPE: Spawns bin/mcp.ts with McpStdioClient, runs seven fixed steps and prints their results. It needs no LLM, no network and no credentials, and never changes the calculator.
-//   DEPENDS: M-CALC-INTERFACES, M-PACK-AGENT-MCP, M-PACK-AGENT, M-KERNEL-API
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: SCRIPT
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   MCP - the absolute path of bin/mcp.ts
-//   ARITHMETIC_ID - the id of the arithmetic Locus
-//   OPERATION_NAMES - the names of the four calculator tools
-//   EXPECTED_AFFECTED - the interface Loci the impact step expects
-//   FIXED_VALUES - the fixed operand values of the call-add step
-//   CallResponse - the part of a tools/call result the steps read
-//   outputOf - the output of a successful tool result
-//   errorTagOf - the error tag of a failed tool result
-//   CapabilityEntry - one capability of the telos_capabilities output
-//   addEntryOf - the add capability of a telos_capabilities response
-//   requiredOf - the required field names of an input schema
-//   failed - the names of the steps whose expectation did not hold
-//   printStep - prints one step line to stdout
-//   runStep - runs one step, records whether it held and prints it
-//   client - the deterministic MCP client of the run
-// END_MODULE_MAP
-
 import { join } from "node:path";
 import { INTROSPECTION_TOOL_NAMES, toolInputSchema } from "@telos/agent";
 import { McpStdioClient } from "@telos/agent/client";
@@ -60,14 +33,12 @@ interface CapabilityEntry {
   readonly input: JsonSchemaDocument;
 }
 
-// The add capability description of telos_capabilities, or undefined.
 const addEntryOf = (response: CallResponse): CapabilityEntry | undefined =>
   (
     outputOf(response) as
       { readonly capabilities?: ReadonlyArray<CapabilityEntry> } | undefined
   )?.capabilities?.find((capability) => capability.name === "add");
 
-// The required field names of an input schema, in document order.
 const requiredOf = (
   input: JsonSchemaDocument | undefined,
 ): ReadonlyArray<string> => {

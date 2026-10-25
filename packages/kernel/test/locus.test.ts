@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that Locus kinds compose extensions, report composition conflicts and build frozen Locus definitions that never throw.
-//   SCOPE: Tests of locus.ts only. Out: compile-time checks (types.test.ts) and built-in extension contents.
-//   DEPENDS: M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-DEFINITIONS, V-M-KERNEL-DEFINITIONS
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import { Archetype } from "../src/archetype";

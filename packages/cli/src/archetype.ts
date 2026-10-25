@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Define the CliInterface Archetype whose four rules check that a command-line interface Locus exposes derivable, unique commands that reject invalid input.
-//   SCOPE: The CliInterface value and its four rules with their exact violation messages. Out: the relation type and Extension values (semantics.ts), derivation (derive.ts) and running commands (run.ts).
-//   DEPENDS: M-PACK-CLI
-//   LINKS: M-PACK-CLI, V-M-PACK-CLI
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   CliInterface - the archetype of command-line interface Loci with its four rules
-// END_MODULE_MAP
-
 import { Effect } from "effect";
 import {
   Archetype,
@@ -23,13 +10,6 @@ import {
 import { CLI_COMMAND_TYPE, CLI_EXTENSION_ID, deriveCommands } from "./derive";
 import { runCli } from "./run";
 
-// START_CONTRACT: CliInterface
-//   PURPOSE: Check the commands of a command-line interface Locus: at least one, unique names, derivable flags, and exit 2 with InvalidInput for missing required input.
-//   INPUTS: none
-//   OUTPUTS: { Archetype - id "telos.cli.interface" applying to telos.cli with four rules }
-//   SIDE_EFFECTS: none; the execution rule runs the CLI in memory
-//   LINKS: M-PACK-CLI
-// END_CONTRACT: CliInterface
 export const CliInterface = Archetype.make({
   id: "telos.cli.interface",
   description:
@@ -137,7 +117,6 @@ export const CliInterface = Archetype.make({
   ],
 });
 
-// True when a schema is an object schema with no properties, so a command with no flags is still derivable.
 function isEmptyObjectSchema(schema: unknown): boolean {
   if (typeof schema !== "object" || schema === null) return false;
   const record = schema as Record<string, unknown>;
@@ -151,7 +130,6 @@ function isEmptyObjectSchema(schema: unknown): boolean {
   );
 }
 
-// True when the run exited 2 and its stderr is one JSON line whose tag is InvalidInput.
 function rejectsMissingInput(exitCode: number, stderr: string): boolean {
   if (exitCode !== 2) return false;
   try {

@@ -1,21 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that each CalculatorInterfaces rule passes on the real app and fails with its exact message on a broken app variant.
-//   SCOPE: The three CalculatorInterfaces rules verified on calculator:app and on makeApp variants. Out: the shared case table (interfaces.test.ts) and the other Archetypes (verification.test.ts).
-//   DEPENDS: M-CALC-INTERFACES, M-CALC-ARITHMETIC, M-PACK-CLI, M-PACK-WEB, M-PACK-AGENT, M-KERNEL-API
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ARCHETYPE - the id of the CalculatorInterfaces archetype
-//   APP - the id of the app Locus
-//   findingOf - the verify finding of one CalculatorInterfaces rule on the app
-//   fakeDivide - a divide capability whose zero case fails with a different message
-//   fake - a plain Locus that disagrees with the arithmetic Locus on divide
-//   webDeclaringAdd - a web Locus that declares its own capability
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import {

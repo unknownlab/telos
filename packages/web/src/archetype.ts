@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Define the WebInterface archetype that checks a web interface Locus exposes uniquely named forms with derivable fields that reject invalid input.
-//   SCOPE: The WebInterface archetype and its four rules. Out: the Extension and RelationType values (semantics.ts) and form derivation (form.ts).
-//   DEPENDS: M-PACK-WEB, M-KERNEL-API
-//   LINKS: M-PACK-WEB, V-M-PACK-WEB
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   WebInterface - the archetype of web interface Loci with its four rules
-// END_MODULE_MAP
-
 import { Effect } from "effect";
 import {
   Archetype,
@@ -26,13 +13,6 @@ import {
   formModel,
 } from "./form";
 
-// START_CONTRACT: WebInterface
-//   PURPOSE: Check the forms of a telos.web Locus: at least one form, unique names, derivable fields and InvalidInput for missing required input.
-//   INPUTS: none
-//   OUTPUTS: { Archetype - the telos.web.interface archetype applying to telos.web }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-WEB
-// END_CONTRACT: WebInterface
 export const WebInterface: Archetype = Archetype.make({
   id: "telos.web.interface",
   description:

@@ -1,19 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Give developers and agents one command, bun run telos, that reads the repository model, runs its checks and writes the semantic report.
-//   SCOPE: Parses the command line, computes the model, verification and closure, and prints one JSON document per command. It never edits repository sources, only writes the report file that report asks for.
-//   DEPENDS: M-REPOSITORY-MODEL, M-KERNEL-API, M-KERNEL-CLOSURE
-//   LINKS: M-TELOS-COMMAND, V-M-TELOS-COMMAND
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   TelosRunResult - the exit code and the stdout and stderr text of one command
-//   CLOSURE_SCOPE - the globs, exclusions and aliases the closure check reads
-//   SemanticReport - the JSON document that report writes for the docs site
-//   runTelos - runs one telos command and returns its result
-// END_MODULE_MAP
-
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { Effect } from "effect";
@@ -68,13 +52,6 @@ export interface SemanticReport {
   readonly ok: boolean;
 }
 
-// START_CONTRACT: CLOSURE_SCOPE
-//   PURPOSE: Name the repository files the closure check covers, the files it never covers and the docs path alias.
-//   INPUTS: {}
-//   OUTPUTS: { { include, exclude, aliases } - the closure scope of the repository }
-//   SIDE_EFFECTS: none
-//   LINKS: M-TELOS-COMMAND
-// END_CONTRACT: CLOSURE_SCOPE
 export const CLOSURE_SCOPE = {
   include: [
     "telos.ts",
@@ -185,13 +162,6 @@ const readCommit = (cwd: string): string | null => {
   }
 };
 
-// START_CONTRACT: runTelos
-//   PURPOSE: Run one telos command over a model and return its exit code and output text, never printing or exiting.
-//   INPUTS: { argv: ReadonlyArray<string> - the command and its arguments, options: { root: LocusDefinition - the root Locus, default the repository Locus; cwd: string - the repository root, default the directory above scripts } }
-//   OUTPUTS: { Promise<TelosRunResult> - exit code 0, 1 or 2 with the JSON stdout or the JSON stderr of the command }
-//   SIDE_EFFECTS: report writes the semantic report file given by --out; no other command writes anything
-//   LINKS: M-TELOS-COMMAND
-// END_CONTRACT: runTelos
 export async function runTelos(
   argv: ReadonlyArray<string>,
   options: { readonly root?: LocusDefinition; readonly cwd?: string } = {},

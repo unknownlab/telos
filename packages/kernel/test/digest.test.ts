@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that digestOf gives the SHA-256 digest of canonical JSON, independent of key order.
-//   SCOPE: Tests of digest.ts only. Out: canonical JSON rules (canonical.test.ts).
-//   DEPENDS: M-KERNEL-CANONICAL
-//   LINKS: M-KERNEL-CANONICAL, V-M-KERNEL-CANONICAL
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import { digestOf } from "../src/digest";

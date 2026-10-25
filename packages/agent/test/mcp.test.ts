@@ -1,20 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the MCP stdio server serves the derived and introspection tools with the same contract, and that the deterministic client talks to it over a subprocess.
-//   SCOPE: The fixture server spawned through McpStdioClient, tools/list, tools/call round trips, the close code and the request timeout. Out: the kernel behaviour, which the other test files cover.
-//   DEPENDS: M-PACK-AGENT-MCP, M-PACK-AGENT
-//   LINKS: V-M-PACK-AGENT-MCP
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   fixtureServer - the absolute path of the fixture MCP server
-//   TIMEOUT - the test timeout of every subprocess test in milliseconds
-//   spawnFixture - starts the fixture server through the deterministic client
-//   STARTUP_RUNS - how many fresh fixture servers the startup-order test starts
-//   STARTUP_REQUESTS - initialize, notifications/initialized and tools/list as one newline-delimited stdin payload
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { Effect } from "effect";

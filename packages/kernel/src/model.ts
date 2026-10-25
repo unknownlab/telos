@@ -1,23 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Build a checked, frozen semantic model from a root Locus and report every structural diagnostic of the data model without throwing.
-//   SCOPE: The ModelLocus, ModelRelation and SemanticModel shapes, buildModel, incoming, outgoing, ancestors and hasErrors. Out: archetype rule checks and closure (later work packages).
-//   DEPENDS: M-KERNEL-DEFINITIONS, M-KERNEL-IDENTITY, M-KERNEL-DIAGNOSTIC
-//   LINKS: M-KERNEL-MODEL, V-M-KERNEL-MODEL
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ModelLocus - one Locus of the model with its container, depth and sorted children
-//   ModelRelation - one relation of a Locus with its source, type, target, index and validity
-//   SemanticModel - the frozen result of buildModel with ids, Loci, relations, extensions, archetypes and diagnostics
-//   buildModel - checks a root Locus tree and returns its frozen semantic model
-//   incoming - the valid relations whose target is the given Locus or capability owner
-//   outgoing - all relations whose source is the given Locus
-//   ancestors - the containers of a Locus, nearest first
-//   hasErrors - true when the model has at least one error diagnostic
-// END_MODULE_MAP
-
 import type { Archetype } from "./archetype";
 import type { CompositionConflict, LocusDefinition } from "./locus";
 import { elementaryCycles, MAX_CYCLES } from "./cycles";
@@ -67,7 +47,6 @@ interface Pending {
   readonly depth: number;
 }
 
-// Orders strings by UTF-16 code unit, never by locale.
 function byCodeUnit(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
@@ -95,14 +74,6 @@ const CONFLICT_TEXT: Record<
     `Extensions ${first} and ${second} both define archetype ${subject}.`,
 };
 
-// START_CONTRACT: buildModel
-//   PURPOSE: Check a root Locus tree and return its frozen semantic model with every structural diagnostic.
-//   INPUTS: { root: LocusDefinition - the root Locus of the tree }
-//   OUTPUTS: { SemanticModel - frozen model with read-only maps; diagnostics sorted by sortDiagnostics; never throws for definitions made by a LocusKind's make }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-MODEL
-// END_CONTRACT: buildModel
-/** Builds the semantic model of a Locus tree. Every problem is reported as a diagnostic; nothing throws. */
 export function buildModel(root: LocusDefinition): SemanticModel {
   const diagnostics: Diagnostic[] = [];
   const registered = new Map<string, Registered>();
@@ -110,7 +81,6 @@ export function buildModel(root: LocusDefinition): SemanticModel {
   const firstContainer = new Map<LocusDefinition, string | null>();
   const stack: Pending[] = [{ def: root, container: null, depth: 0 }];
 
-  // Step 1: pre-order traversal in array order, with the first registration of an id winning.
   while (stack.length > 0) {
     const { def, container, depth } = stack.pop()!;
     if (visited.has(def)) {
@@ -156,7 +126,6 @@ export function buildModel(root: LocusDefinition): SemanticModel {
 
   const ids = [...registered.keys()].sort(byCodeUnit);
 
-  // Step 2: per-Locus checks in id order.
   for (const id of ids) {
     const { def } = registered.get(id)!;
     if (!isLocusId(id)) {
@@ -226,7 +195,6 @@ export function buildModel(root: LocusDefinition): SemanticModel {
     }
   }
 
-  // Step 3: relation checks, per Locus in id order and relation index.
   const relations: ModelRelation[] = [];
   for (const id of ids) {
     const { def } = registered.get(id)!;
@@ -293,7 +261,6 @@ export function buildModel(root: LocusDefinition): SemanticModel {
     });
   }
 
-  // Step 4: cycles of acyclic relation types, over valid Locus targets.
   const acyclicEdges = new Map<string, Array<readonly [string, string]>>();
   for (const relation of relations) {
     if (!relation.valid || !relation.type.acyclic) continue;
@@ -333,7 +300,6 @@ export function buildModel(root: LocusDefinition): SemanticModel {
     }
   }
 
-  // Step 5: first extension and archetype object per id, over all kinds in id order.
   const extensions = new Map<string, Extension>();
   const archetypes = new Map<string, Archetype>();
   for (const id of ids) {
@@ -353,7 +319,6 @@ export function buildModel(root: LocusDefinition): SemanticModel {
     [...archetypes].sort(([a], [b]) => byCodeUnit(a, b)),
   );
 
-  // Step 6: freeze and assemble the model.
   const loci = new Map<string, ModelLocus>();
   for (const id of ids) {
     const entry = registered.get(id)!;
@@ -384,14 +349,6 @@ export function buildModel(root: LocusDefinition): SemanticModel {
   });
 }
 
-// START_CONTRACT: incoming
-//   PURPOSE: List the valid relations that point at a Locus or at one of its capabilities.
-//   INPUTS: { model: SemanticModel - a built model; target: string - a Locus id }
-//   OUTPUTS: { ReadonlyArray<ModelRelation> - valid relations with target.locus equal to target, in model order }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-MODEL
-// END_CONTRACT: incoming
-/** The valid relations whose target Locus is `target`, in the order of model.relations. */
 export function incoming(
   model: SemanticModel,
   target: string,
@@ -401,14 +358,6 @@ export function incoming(
   );
 }
 
-// START_CONTRACT: outgoing
-//   PURPOSE: List every relation that starts at a Locus, valid or not.
-//   INPUTS: { model: SemanticModel - a built model; from: string - a Locus id }
-//   OUTPUTS: { ReadonlyArray<ModelRelation> - all relations with from equal to the id, in model order }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-MODEL
-// END_CONTRACT: outgoing
-/** All relations of the Locus `from`, in the order of model.relations. */
 export function outgoing(
   model: SemanticModel,
   from: string,
@@ -416,14 +365,6 @@ export function outgoing(
   return Object.freeze(model.relations.filter((r) => r.from === from));
 }
 
-// START_CONTRACT: ancestors
-//   PURPOSE: List the containers of a Locus from its parent up to the root.
-//   INPUTS: { model: SemanticModel - a built model; id: string - a Locus id }
-//   OUTPUTS: { ReadonlyArray<string> - container ids, nearest first; empty for the root or an unknown id }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-MODEL
-// END_CONTRACT: ancestors
-/** The containers of `id`, nearest first. */
 export function ancestors(
   model: SemanticModel,
   id: string,
@@ -437,14 +378,6 @@ export function ancestors(
   return Object.freeze(result);
 }
 
-// START_CONTRACT: hasErrors
-//   PURPOSE: Tell whether a model has at least one error diagnostic.
-//   INPUTS: { model: SemanticModel - a built model }
-//   OUTPUTS: { boolean - true when some diagnostic has severity error }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-MODEL
-// END_CONTRACT: hasErrors
-/** True when any diagnostic of the model has severity "error". Warnings do not count. */
 export function hasErrors(model: SemanticModel): boolean {
   return model.diagnostics.some((d) => d.severity === "error");
 }

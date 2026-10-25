@@ -1,21 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Define Locus kinds that compose extensions with conflict reporting, and build frozen Locus definitions that never throw.
-//   SCOPE: The Locus kind and definition types, the composition rules, the type helpers that merge extension properties, and the universal Locus kind. Out: relation target validation and model building.
-//   DEPENDS: M-KERNEL-IDENTITY
-//   LINKS: M-KERNEL-DEFINITIONS, V-M-KERNEL-DEFINITIONS
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   MergedFields - the merged property fields of a list of extensions
-//   PropertiesOf - the decoded property type of a list of extensions
-//   CompositionConflict - one conflict found while composing extensions
-//   LocusDefinition - a frozen Locus with its kind, parts, decoded properties and capability references
-//   LocusKind - a composed set of extensions that makes Locus definitions
-//   Locus - the universal Locus kind with no extensions
-// END_MODULE_MAP
-
 import { Cause, Exit, Option, Schema, SchemaIssue } from "effect";
 import type { Archetype } from "./archetype";
 import type { Capability } from "./capability";
@@ -230,13 +212,6 @@ function makeLocus(
   });
 }
 
-// START_CONTRACT: Locus
-//   PURPOSE: The universal Locus kind with no extensions; Locus.make({ id }) is a complete Locus.
-//   INPUTS: none
-//   OUTPUTS: { LocusKind<readonly []> - the kind with no extensions, extend and make }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DEFINITIONS
-// END_CONTRACT: Locus
 export const Locus: LocusKind<readonly []> = compose(
   [],
 ) as unknown as LocusKind<readonly []>;

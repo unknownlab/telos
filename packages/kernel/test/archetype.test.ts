@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that rules and archetypes are frozen values and that violation fails with a RuleViolation.
-//   SCOPE: Tests of archetype.ts only. Out: applying archetypes to a model.
-//   DEPENDS: M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-DEFINITIONS, V-M-KERNEL-DEFINITIONS
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Cause, Effect, Exit, Option } from "effect";
 import { Archetype, Rule, RuleViolation, violation } from "../src/archetype";

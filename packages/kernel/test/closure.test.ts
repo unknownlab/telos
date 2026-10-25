@@ -1,21 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that checkClosure reports each closure code exactly when its rule fails, with the exact finding fields, messages and sort order, over temporary fixture repositories.
-//   SCOPE: Tests of closure.ts scope, claims, owners, import resolution, externals, dynamic imports, limits and the report shape. Out: the model rules (model tests) and the repository's own closure (checked by telos:check).
-//   DEPENDS: M-KERNEL-CLOSURE, M-KERNEL-MODEL, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-CLOSURE, V-M-KERNEL-CLOSURE
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Owned - the test kind with the source extension
-//   OwnedExt - the test kind with the source and external extensions
-//   created - the fixture directories to remove after each test
-//   fixture - writes the files of a fixture repository into a new temporary directory
-//   check - runs checkClosure over a built model of the fixture repository
-//   withCode - the findings of a report that carry one closure code
-// END_MODULE_MAP
-
 import { afterEach, describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";

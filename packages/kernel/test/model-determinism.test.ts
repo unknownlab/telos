@@ -1,21 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that buildModel gives the same ids, relations and diagnostics for the same Loci whatever order their contains lists have, and the same output on every call.
-//   SCOPE: Tests of the determinism of model.ts. Out: the content of each check (model.test.ts and model-relations.test.ts).
-//   DEPENDS: M-KERNEL-MODEL, M-KERNEL-DEFINITIONS, M-KERNEL-DIAGNOSTIC
-//   LINKS: M-KERNEL-MODEL, V-M-KERNEL-MODEL
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   uses - relation type between Loci, not acyclic
-//   flows - acyclic relation type between Loci
-//   links - extension that declares the relation types uses and flows
-//   Links - Locus kind composed of the links extension
-//   makeLoci - the Loci of the fixture, a fresh set on every call
-//   projection - the JSON form of the ids, relations and diagnostics of a model
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Extension } from "../src/extension";
 import { Locus, type LocusDefinition } from "../src/locus";

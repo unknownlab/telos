@@ -1,16 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that relation types build frozen relations whose targets resolve locus and capability references.
-//   SCOPE: Tests of relation.ts only. Out: graph validation of relation targets.
-//   DEPENDS: M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-DEFINITIONS, V-M-KERNEL-DEFINITIONS
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   (none) - no local helpers
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import {
   CapabilityRef,

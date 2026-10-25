@@ -1,17 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that every WebInterface rule passes for a correct web Locus and fails with its exact message for a broken one.
-//   SCOPE: Tests of the four WebInterface rules through verify. Out: form derivation and submit (form.test.ts).
-//   DEPENDS: M-PACK-WEB, M-KERNEL-API
-//   LINKS: M-PACK-WEB, V-M-PACK-WEB
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   findingOf - returns the finding of one rule of the web Locus in a verification report
-//   check - verifies the web Locus of a model with the test runner
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import {
   Capability,

@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that each arithmetic capability returns the documented results and errors through invoke, and that the arithmetic Locus builds without diagnostics or composition conflicts.
-//   SCOPE: Tests of the four capabilities, both declared errors, input rejection and the Locus properties. Out: the archetype rules (archetypes.test.ts) and the NFR-008 size check (ergonomics.test.ts).
-//   DEPENDS: M-CALC-ARITHMETIC, M-KERNEL-API
-//   LINKS: M-CALC-ARITHMETIC, V-M-CALC-ARITHMETIC
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Operation - the names of the four arithmetic capabilities
-//   model - the built model of the arithmetic Locus
-//   run - invokes one arithmetic capability through the calculator:arithmetic Locus
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import { buildModel, invoke, type InvocationOutcome } from "@telos/kernel";

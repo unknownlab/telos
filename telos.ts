@@ -1,24 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Describe the Telos repository as a semantic model: its Loci, their source claims, external packages and dependency relations.
-//   SCOPE: The Locus definitions and the repository model only. It imports only the kernel and the calculator, and never runs a check.
-//   DEPENDS: M-KERNEL-API, M-CALC-INTERFACES
-//   LINKS: M-REPOSITORY-MODEL, V-M-REPOSITORY-MODEL
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   kernel - the telos:kernel Locus over the kernel package
-//   cliPack - the telos:cli-pack Locus over the command line pack
-//   agentPack - the telos:agent-pack Locus over the agent pack
-//   webPack - the telos:web-pack Locus over the web pack
-//   calculator - the telos:calculator Locus that contains the calculator application
-//   tooling - the telos:tooling Locus over the repository scripts
-//   docsSite - the telos:docs-site Locus over the documentation site
-//   repository - the telos:repository Locus that contains every other Locus
-//   repositoryModel - the built semantic model of repository
-// END_MODULE_MAP
-
 import {
   External,
   Locus,
@@ -31,13 +10,6 @@ import { app as calculatorApp } from "@telos/calculator";
 
 const Module = Locus.extend(Purpose, Source, External);
 
-// START_CONTRACT: kernel
-//   PURPOSE: Declare the telos:kernel Locus that owns the kernel package sources.
-//   INPUTS: none
-//   OUTPUTS: { LocusDefinition - telos:kernel with its sources and externals }
-//   SIDE_EFFECTS: none
-//   LINKS: M-REPOSITORY-MODEL
-// END_CONTRACT: kernel
 export const kernel = Module.make({
   id: "telos:kernel",
   description:

@@ -1,17 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Provide the in-memory Effect environment that effect/cli runs in, so a command line runs without a real process.
-//   SCOPE: The Captured record and memoryEnvironment. Out: running the program (run.ts) and any real process, file or terminal access.
-//   DEPENDS: M-PACK-CLI
-//   LINKS: M-PACK-CLI, V-M-PACK-CLI
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Captured - the stdout and stderr chunks written during one run
-//   memoryEnvironment - the layer that gives effect/cli the argv and captures its output in memory
-// END_MODULE_MAP
-
 import {
   Effect,
   FileSystem,
@@ -24,25 +10,11 @@ import {
 } from "effect";
 import { ChildProcessSpawner } from "effect/process";
 
-// START_CONTRACT: Captured
-//   PURPOSE: Hold the text written to stdout and stderr during one run.
-//   INPUTS: { stdout: Array<string> - the stdout chunks; stderr: Array<string> - the stderr chunks }
-//   OUTPUTS: { Captured - the record whose arrays grow as output is written }
-//   SIDE_EFFECTS: none
-//   LINKS: M-PACK-CLI
-// END_CONTRACT: Captured
 export interface Captured {
   readonly stdout: Array<string>;
   readonly stderr: Array<string>;
 }
 
-// START_CONTRACT: memoryEnvironment
-//   PURPOSE: Build the Effect layer that supplies argv and captures every write of one run.
-//   INPUTS: { argv: ReadonlyArray<string> - the arguments; captured: Captured - the arrays that receive the output }
-//   OUTPUTS: { Layer - the file system, path, stdio, terminal and child process spawner layers }
-//   SIDE_EFFECTS: none; the output is pushed into captured only when the program writes
-//   LINKS: M-PACK-CLI
-// END_CONTRACT: memoryEnvironment
 export function memoryEnvironment(
   argv: ReadonlyArray<string>,
   captured: Captured,

@@ -1,18 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that each ArithmeticBehavior rule passes on the real arithmetic Locus and fails with its exact message on a broken variant.
-//   SCOPE: Tests of the five ArithmeticBehavior rules through verify. Out: the capability results themselves (arithmetic.test.ts).
-//   DEPENDS: M-CALC-ARITHMETIC, M-KERNEL-API
-//   LINKS: M-CALC-ARITHMETIC, V-M-CALC-ARITHMETIC
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   ARCHETYPE - the id of the ArithmeticBehavior archetype
-//   findingOf - the verify finding of one rule of the calculator:arithmetic Locus
-//   variant - builds an arithmetic Locus that offers the given capabilities
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import {

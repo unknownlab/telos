@@ -1,37 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that invoke.ts runs a capability only through a grant, decodes input and encodes output against its contract, and reports every outcome as a value with the contract tag and message.
-//   SCOPE: Tests of isGranted and invoke, one test per invocation error tag and the success paths. Out: describing capabilities (describe.test.ts) and input fields (fields.test.ts).
-//   DEPENDS: M-KERNEL-INVOKE, M-KERNEL-MODEL, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-INVOKE, V-M-KERNEL-INVOKE
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Num - the input schema of the fixture capabilities
-//   Val - the output schema of the fixture capabilities
-//   Negative - the declared error of double
-//   Undeclared - an error class that no capability declares
-//   calls - the test.calls relation type that grants invocation to a capability
-//   refers - the test.refers relation type to a capability that does not grant invocation
-//   Ui - the test.ui extension carrying calls
-//   Other - the test.other extension carrying refers
-//   calledCount - the number of times the counted handler ran
-//   double - the capability that doubles n and fails with Negative when n is negative
-//   boom - the capability whose handler throws
-//   undeclared - the capability whose handler fails with an undeclared error
-//   liar - the capability whose handler returns output that does not match its contract
-//   declared - a declared capability without handler
-//   counted - the capability whose handler counts its calls
-//   math - the app:math Locus holding the capabilities
-//   ui - the app:ui Locus with a granting relation to double
-//   other - the app:other Locus with a non-granting relation to double
-//   bad - the app:bad Locus with a relation whose type its kind does not declare
-//   root - the root Locus containing the fixture Loci
-//   model - the built model of the fixture tree
-//   run - invokes a capability of the fixture model through the given via Locus
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect, Schema } from "effect";
 import { Capability } from "../src/capability";
@@ -96,7 +62,6 @@ const undeclared = Capability.make({
   input: Num,
   output: Val,
   effect: "pure",
-  // The cast hides the undeclared error from the type, as a JavaScript handler would.
   handler: () =>
     Effect.fail(
       new Undeclared({ message: "not declared." }),

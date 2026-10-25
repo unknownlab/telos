@@ -1,27 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Describe capabilities, Loci, the model and verification state as JSON with a knowledge status and a digest on each described object.
-//   SCOPE: The description types, toJsonSchema, describeCapability, describeLocus, describeModel and describeVerifications. Out: invoking capabilities (invoke.ts), input fields (fields.ts) and running rules (verify.ts).
-//   DEPENDS: M-KERNEL-MODEL, M-KERNEL-VERIFY, M-KERNEL-CANONICAL, M-KERNEL-DEFINITIONS
-//   LINKS: M-KERNEL-DESCRIBE, V-M-KERNEL-DESCRIBE
-//   ROLE: RUNTIME
-//   MAP_MODE: EXPORTS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Knowledge - the knowledge status a description can carry
-//   JsonSchemaDocument - a JSON Schema document with its dialect and definitions
-//   RelationDescription - one relation of a Locus with its type description and knowledge
-//   CapabilityDescription - one capability with its contract, exposure and digest
-//   VerificationDescription - one Archetype rule of a Locus with its verification outcome
-//   LocusDescription - one Locus with its kind, relations, capabilities, archetypes, diagnostics and digest
-//   ModelDescription - the whole model with its Loci, diagnostics and digest
-//   toJsonSchema - converts an Effect schema to a JSON Schema document
-//   describeCapability - describes one capability of one Locus
-//   describeLocus - describes one Locus of the model
-//   describeModel - describes every Locus of the model in model order
-//   describeVerifications - lists the rules of a Locus with the outcome of a verification report
-// END_MODULE_MAP
-
 import { Effect, Schema as S } from "effect";
 import type { RuleMethod } from "./archetype";
 import { errorTag, type EffectClass } from "./capability";
@@ -43,7 +19,6 @@ import {
   type VerificationReport,
 } from "./verify";
 
-/** Where a described fact comes from. Only declared, derived, verified, failed and not-run are produced here. */
 export type Knowledge =
   | "declared"
   | "derived"
@@ -137,7 +112,6 @@ export interface ModelDescription {
   readonly digest: Digest;
 }
 
-// Orders strings by UTF-16 code unit, never by locale.
 function byCodeUnit(a: string, b: string): number {
   return a < b ? -1 : a > b ? 1 : 0;
 }
@@ -146,13 +120,6 @@ function hasOwn(record: object, key: string): boolean {
   return Object.prototype.hasOwnProperty.call(record, key);
 }
 
-// START_CONTRACT: toJsonSchema
-//   PURPOSE: Convert an Effect schema to a JSON Schema document with its dialect and definitions.
-//   INPUTS: { schema: S.Top - any Effect schema }
-//   OUTPUTS: { JsonSchemaDocument - dialect, schema and definitions of Schema.toJsonSchemaDocument }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DESCRIBE
-// END_CONTRACT: toJsonSchema
 export const toJsonSchema = (schema: S.Top): JsonSchemaDocument => {
   const document = S.toJsonSchemaDocument(schema);
   return {
@@ -162,14 +129,6 @@ export const toJsonSchema = (schema: S.Top): JsonSchemaDocument => {
   };
 };
 
-// START_CONTRACT: describeCapability
-//   PURPOSE: Describe one capability of one Locus with its contract, implementation state, exposure and contract digest.
-//   INPUTS: { model: SemanticModel - a built model; locus: string - a Locus id; name: string - a capability name }
-//   OUTPUTS: { Effect<CapabilityDescription> - frozen description; dies for an unknown Locus or capability }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DESCRIBE
-// END_CONTRACT: describeCapability
-/** Describes one capability. Dies when the Locus or the capability does not exist. */
 export const describeCapability = (
   model: SemanticModel,
   locus: string,
@@ -236,14 +195,6 @@ function describeRelation(
   };
 }
 
-// START_CONTRACT: describeLocus
-//   PURPOSE: Describe one Locus with its extensions, decoded properties, relations, capabilities, archetypes, diagnostics and digest.
-//   INPUTS: { model: SemanticModel - a built model; id: string - a Locus id }
-//   OUTPUTS: { Effect<LocusDescription> - frozen description; dies for an unknown id }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DESCRIBE
-// END_CONTRACT: describeLocus
-/** Describes one Locus. Dies when the id is not in the model. */
 export const describeLocus = (
   model: SemanticModel,
   id: string,
@@ -304,14 +255,6 @@ export const describeLocus = (
     return deepFreeze({ ...base, digest, knowledge: "declared" as const });
   });
 
-// START_CONTRACT: describeModel
-//   PURPOSE: Describe every Locus of a model in model order, with the model diagnostics and a digest over the Locus digests.
-//   INPUTS: { model: SemanticModel - a built model }
-//   OUTPUTS: { Effect<ModelDescription> - frozen description with loci in model.ids order }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DESCRIBE
-// END_CONTRACT: describeModel
-/** Describes the whole model. */
 export const describeModel = (
   model: SemanticModel,
 ): Effect.Effect<ModelDescription> =>
@@ -327,14 +270,6 @@ export const describeModel = (
     });
   });
 
-// START_CONTRACT: describeVerifications
-//   PURPOSE: List every rule of a Locus with the outcome of a verification report, never claiming verified without a passed finding.
-//   INPUTS: { model: SemanticModel - a built model; id: string - a Locus id; report: VerificationReport | null - a verification report or none }
-//   OUTPUTS: { ReadonlyArray<VerificationDescription> - one entry per applicable rule sorted by archetype and rule, frozen }
-//   SIDE_EFFECTS: none
-//   LINKS: M-KERNEL-DESCRIBE
-// END_CONTRACT: describeVerifications
-/** One entry per rule of the applicable archetypes of `id`, with the outcome from `report` when a finding matches. */
 export function describeVerifications(
   model: SemanticModel,
   id: string,

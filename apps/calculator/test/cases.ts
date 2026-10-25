@@ -1,25 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Hold the shared case table of the calculator interfaces and the helpers that normalize each interface's outcome into one comparable shape.
-//   SCOPE: The Case table, argvOf, and the normalizers for kernel outcomes, CLI results and tool results. Out: the assertions themselves, which live in the interface test files.
-//   DEPENDS: M-CALC-INTERFACES, M-KERNEL-API, M-PACK-CLI, M-PACK-AGENT
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   Case - one row of the shared case table
-//   Normalized - the comparable outcome of one interface
-//   byCodeUnit - plain code-unit comparison of two strings
-//   pathsOf - the sorted issue paths of an invocation error
-//   CASES - the fourteen shared cases in table order
-//   argvOf - the CLI argv of a case
-//   normalizeOutcome - normalizes a kernel invocation outcome
-//   normalizeCli - normalizes a CLI result
-//   normalizeTool - normalizes a tool result
-//   matchesExpected - whether a normalized outcome matches a case's expectation
-// END_MODULE_MAP
-
 import type { CliResult } from "@telos/cli";
 import {
   jsonEqual,
@@ -57,13 +35,6 @@ const byCodeUnit = (a: string, b: string): number =>
 const pathsOf = (error: InvocationError): ReadonlyArray<string> =>
   error.issues.map((issue) => issue.path.join(".")).sort(byCodeUnit);
 
-// START_CONTRACT: CASES
-//   PURPOSE: The fourteen shared cases that every calculator interface must answer alike.
-//   INPUTS: none
-//   OUTPUTS: { ReadonlyArray<Case> - the cases in table order }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: CASES
 export const CASES: ReadonlyArray<Case> = [
   {
     name: "add integers",
@@ -179,13 +150,6 @@ export const CASES: ReadonlyArray<Case> = [
   },
 ];
 
-// START_CONTRACT: argvOf
-//   PURPOSE: Build the command-line arguments of one case: the capability name, then one --flag value pair per text entry.
-//   INPUTS: { c: Case - the case }
-//   OUTPUTS: { ReadonlyArray<string> - the argv of the case }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: argvOf
 export function argvOf(c: Case): ReadonlyArray<string> {
   return [
     c.capability,
@@ -193,13 +157,6 @@ export function argvOf(c: Case): ReadonlyArray<string> {
   ];
 }
 
-// START_CONTRACT: normalizeOutcome
-//   PURPOSE: Reduce a kernel invocation outcome to the normalized shape shared by every interface.
-//   INPUTS: { outcome: InvocationOutcome - the kernel outcome }
-//   OUTPUTS: { Normalized - the output, or the tag, message and sorted issue paths }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: normalizeOutcome
 export function normalizeOutcome(outcome: InvocationOutcome): Normalized {
   if (outcome.ok) return { ok: true, output: outcome.output };
   return {
@@ -210,13 +167,6 @@ export function normalizeOutcome(outcome: InvocationOutcome): Normalized {
   };
 }
 
-// START_CONTRACT: normalizeCli
-//   PURPOSE: Reduce a command-line result to the normalized shape, parsing its JSON stdout or stderr line.
-//   INPUTS: { result: CliResult - the captured exit code and streams }
-//   OUTPUTS: { Normalized - the parsed output on exit 0, otherwise the parsed error }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: normalizeCli
 export function normalizeCli(result: CliResult): Normalized {
   if (result.exitCode === 0) {
     return { ok: true, output: JSON.parse(result.stdout) as unknown };
@@ -225,13 +175,6 @@ export function normalizeCli(result: CliResult): Normalized {
   return normalizeOutcome({ ok: false, error });
 }
 
-// START_CONTRACT: normalizeTool
-//   PURPOSE: Reduce an agent tool result, or an MCP call result, to the normalized shape from its structured payload.
-//   INPUTS: { result: { structured: unknown } | { structuredContent: unknown } - the tool result }
-//   OUTPUTS: { Normalized - the normalized structured outcome }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: normalizeTool
 export function normalizeTool(
   result:
     { readonly structured: unknown } | { readonly structuredContent: unknown },
@@ -241,13 +184,6 @@ export function normalizeTool(
   return normalizeOutcome(structured as InvocationOutcome);
 }
 
-// START_CONTRACT: matchesExpected
-//   PURPOSE: Check that a normalized outcome equals the expected outcome of a case.
-//   INPUTS: { n: Normalized - the outcome; c: Case - the case with its expected value }
-//   OUTPUTS: { boolean - true when the output deep-equals the expected output, or the tag and paths equal the expected ones }
-//   SIDE_EFFECTS: none
-//   LINKS: M-CALC-INTERFACES
-// END_CONTRACT: matchesExpected
 export function matchesExpected(n: Normalized, c: Case): boolean {
   if (c.expected.ok) {
     return n.ok && jsonEqual(n.output, c.expected.output);

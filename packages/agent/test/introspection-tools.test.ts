@@ -1,19 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the six telos_* introspection tools describe the model read-only, decode their input and report typed failures as tool results.
-//   SCOPE: INTROSPECTION_TOOL_NAMES, introspectionTools and the annotations, input, output and failure behaviour of each tool. Out: the agent tools and the MCP transport.
-//   DEPENDS: M-PACK-AGENT, M-KERNEL-API
-//   LINKS: V-M-PACK-AGENT
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   run - runs an Effect to its value in a test
-//   telos - the Telos service built from the fixture root
-//   tools - the introspection tools of the telos service
-//   toolNamed - finds one introspection tool by name
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { Effect } from "effect";
 import { Telos, describeLocus } from "@telos/kernel";

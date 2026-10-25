@@ -1,19 +1,3 @@
-// START_MODULE_CONTRACT
-//   PURPOSE: Prove that the calculator MCP server lists its tools with the capability schemas, answers every shared case through tools/call, exposes the introspection tool with the real description, and rejects an unknown tool.
-//   SCOPE: McpStdioClient runs against bin/mcp.ts. Out: the agent demo (agent-demo.test.ts) and the in-memory callTool path (interfaces.test.ts).
-//   DEPENDS: M-CALC-INTERFACES, M-PACK-AGENT, M-PACK-AGENT-MCP, M-KERNEL-API
-//   LINKS: M-CALC-INTERFACES, V-M-CALC-INTERFACES
-//   ROLE: TEST
-//   MAP_MODE: LOCALS
-// END_MODULE_CONTRACT
-//
-// START_MODULE_MAP
-//   MCP - the absolute path of bin/mcp.ts
-//   ARITHMETIC_ID - the id of the arithmetic Locus
-//   CALCULATOR_TOOLS - the names of the four arithmetic tools
-//   withClient - runs a test body with a spawned client and closes the client afterwards
-// END_MODULE_MAP
-
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
 import { Effect } from "effect";
