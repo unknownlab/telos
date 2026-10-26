@@ -40,6 +40,7 @@
 
 ## Notes
 
-- Not ready for `/spec-kitty.plan` yet: 14 open framework-design questions (Q1-Q14) need the owner's answers, and 16 requirement rows (13 FR, 3 NFR) carry the status "Pending Qn". The spec keeps them as a batched "Open Questions" section with a recommendation each instead of `[NEEDS CLARIFICATION]` markers, because there are more than three and none was deferred by the owner.
-- Implementation details: the spec names Effect schemas, Effect's pattern matching, Effect's CLI framework and `effect-machine` because the owner named them as design constraints (C-010). The NFR source scans name file scopes and identifier patterns, because the owner's notes are about the code itself.
-- No Decision Moments were opened in this pass; the coordinator relays the questions to the owner, and the answers are recorded as resolved decisions in the next specify pass.
+- Second specify pass (2026-10-26): the owner answered Q1-Q14 and gave the Locus creation design (D15: `Locus.root(...)` plus `makeChild()`, no extensions, archetypes, `appliesTo` or package-provided compositions, `@telos/kernel` as the only package). All 15 answers are recorded as resolved Decision Moments in `decisions/`, listed in the spec's "Decisions" section. No requirement row is pending.
+- Not ready for `/spec-kitty.plan` until the owner answers Q15 (how the calculator root relates to the repository root). It follows from D15 and touches only FR-049, FR-050 and US6/US8 scenarios that reference it; the spec gives a recommendation.
+- Implementation details: the spec names Effect schemas, Effect's pattern matching, Effect's CLI framework, `effect-machine`, `Locus.root(...)` and `makeChild()` because the owner named them as design constraints (C-010). The NFR source scans name file scopes and identifier patterns, because the owner's notes are about the code itself.
+- The charter edit (FR-051) is a requirement for implementation; the specify pass does not edit the charter.
