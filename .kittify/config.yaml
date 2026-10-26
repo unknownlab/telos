@@ -15,6 +15,7 @@ vcs:
   type: git
 agents:
   available:
+  - claude
   - codex
   auto_commit: true
   lint_on_edit: false

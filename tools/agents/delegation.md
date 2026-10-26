@@ -13,38 +13,49 @@ Each brief states:
 - what is out of scope;
 - the report: result, changed files, checks run and their outcomes, unresolved issues, links to commits or files.
 
-Leave out session directives and scratchpad files, the whole spec or plan when the WP quotes what it needs, other WPs, and earlier chat. Run every delegation as `codex exec -m <model> -c model_reasoning_effort=<effort> -C <path> "<brief>"`, with the model and effort from the table in `AGENTS.md`.
+Leave out session directives and scratchpad files, the whole spec or plan when the WP quotes what it needs, other WPs, and earlier chat. Set `model` and `effort` on every Agent call.
 
-Start the first line of each brief with the role, then the one WP it works on, if any: `specify`, `plan`, `tasks outline`, `WP prompts WP01–WP04`, `clarify WP03`, `implement WP05`, `rework WP05`, `review WP05`, `mission review`, `recovery <what>`. Name only one WP id per brief, so usage can be attributed to it.
+Start each Agent `description` with the role, then the one WP it works on, if any: `specify`, `plan`, `tasks outline`, `WP prompts WP01–WP04`, `clarify WP03`, `implement WP05`, `rework WP05`, `review WP05`, `mission review`, `recovery <what>`. `tools/agents/usage/ledger.py` attributes cost by these words, and to a WP only when exactly one WP id appears.
 
-## Planner: specify, plan, tasks, design questions
+## Opus planner: specify, plan, tasks, design questions
 
-Model and effort for planning in `AGENTS.md`; profile `planner-priti` or `architect-alphonso`.
+`model: opus`, `effort: high`, profile `planner-priti` or `architect-alphonso`.
 
 - Specify or plan: give the owner's request word for word (or the approved spec), the mission slug, and the phase command (`/spec-kitty.specify`, `/spec-kitty.plan`).
 - Tasks outline: ask for WP boundaries, dependencies, owned files, requirement refs and every cross-WP interface. Interfaces go in `contracts/`, decisions and open questions in `plan.md`. Owner questions come back batched, each with a recommendation.
-- WP prompt files: by default the same planner writes them in the tasks phase, for the implementation model: exact files, APIs and acceptance tests.
+- WP prompt files: by default the same planner writes them in the tasks phase, for a Haiku implementer: exact files, APIs and acceptance tests.
 - Design question from a writer, reviewer or implementer: give the question, the artifacts it touches and the options already seen. The answer is recorded in the mission artifacts, not only in the report.
 
-## Implementer
+## Sonnet WP prompt writer (optional trial)
 
-Model and effort for implementation in `AGENTS.md`; profile = the WP's `agent_profile`.
+`model: sonnet`, `effort: high`, profile `planner-priti`. Optional: the coordinator may use it once the outline is settled, instead of the Opus planner writing the WP files. Nothing changes when it is not used. Use one writer per group of WPs that share contracts, and run the groups in parallel.
 
-- Inputs: the WP file (the prompt), the worktree path, `spec-kitty agent action implement <WP> --agent codex`, and `bun run verify` (or the subset the WP names).
+- Inputs: the WP ids, `tasks.md` (the outline; each WP's section is binding), `spec.md`, `plan.md`, `data-model.md`, `contracts/`, and the per-WP structure from `/spec-kitty.tasks-packages`.
+- The audience is a Haiku implementer. Give exact files, APIs and acceptance tests. Quote only the contract text the WP needs and reference the rest by file and section.
+- The writer works in the mission's checkout with dependencies installed. It may run throwaway prototypes in its scratchpad to confirm how an API or check behaves, and writes only the WP files.
+- The writer does not change WP boundaries or interfaces. It returns each open question as one focused question with a recommended default. A convention that another WP relies on (a marker line, a mapping, a table column) counts as an interface: if the outline or contracts do not fix it, it is an open question. A claim about what a check accepts or rejects needs a contract quote or a prototype result.
+- Before `/spec-kitty.tasks-finalize`, the coordinator sends all writers' questions in one batch to an Opus planner. The answers go into the WP files and contracts.
+- No saving is shown. E2 measured only the prompts' own cost, not the clarification pass, implementation, review and rework that follow (`tools/agents/experiments/2026-10-e2-sonnet-wp-prompts/README.md`).
+
+## Haiku implementer
+
+`model: haiku`, `effort: medium`, profile = the WP's `agent_profile`.
+
+- Inputs: the WP file (the prompt), the worktree path, `spec-kitty agent action implement <WP> --agent claude`, and `bun run verify` (or the subset the WP names).
 - Lane chores the implementer cannot do (planning-artifact clean-up, dependency merges) stay with the coordinator.
 - The report includes the check output. The coordinator passes it to the reviewer as evidence to verify, because implementers cannot write the Activity Log.
 
-## WP reviewer
+## Sonnet WP reviewer
 
-Model and effort for review in `AGENTS.md`; profile `reviewer-renata`. Never the agent that implemented the WP.
+`model: sonnet`, `effort: medium`, profile `reviewer-renata`. Never the agent that implemented the WP.
 
 - Inputs: the WP file, the lane branch and its diff base, the requirement IDs and acceptance criteria, the interfaces touched, and the implementer's check results as claims to verify.
 - The reviewer runs the checks itself. It records the verdict through Spec Kitty (`spk-run-review-wp`, `spk-run-verdict-capture`), with findings that point to a file and line.
-- A design problem goes back as an escalation for the planner model, not as an implementation fix.
+- A design problem goes back as an escalation for Opus, not as an implementation fix.
 
-## Mission reviewer
+## Opus mission reviewer
 
-Model and effort for mission review in `AGENTS.md`. Give the mission slug, the merge commit and `spk-gate-mission-review`. The reviewer reads the artifacts and the merged code itself.
+`model: opus`, `effort: high`. Give the mission slug, the merge commit and `spk-gate-mission-review`. The reviewer reads the artifacts and the merged code itself.
 
 ## Phase boundaries
 
@@ -52,4 +63,4 @@ The boundaries are: plan approved, tasks finalized, implementation and review do
 
 ## Measuring usage on demand
 
-`tools/agents/usage/ledger.py` reads Claude Code transcripts only, so it does not cover Codex runs. Until it is adapted, the owner reads usage from the OpenAI side. Do not ask the owner for figures.
+`python3 tools/agents/usage/ledger.py --mission <slug>` writes `tools/agents/usage/ledgers/<slug>.md` (see `tools/agents/usage/README.md`). Run it when the owner asks, or when an observed problem needs numbers, such as repeated rejections, many compactions or a session on the wrong model. It is not a routine step, and the coordinator does not ask the owner for usage figures.

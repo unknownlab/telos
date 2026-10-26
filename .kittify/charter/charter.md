@@ -29,12 +29,12 @@ Wrong behavior: silent logic bugs and drift between the spec and the code. Most 
 
 Strict. Roles are never swapped; only the owner may change them.
 
-- **Root session:** OpenAI gpt-6-luna at medium effort through Codex. It reads state, delegates, relays results, and does tooling recovery and mechanical fixes itself.
-- **Mission creation, specify, plan, tasks:** gpt-6.1-sol, high effort.
-- **Tasks:** written by the planner model for the implementation model. Work packages are sized and written so that one implementation-model agent can finish each one from its prompt alone.
-- **Implementation:** gpt-6-luna, medium effort.
-- **Work package review:** gpt-6-sol, medium effort.
-- **Mission review after merge:** gpt-6.1-sol, high effort.
+- **Root session:** Claude Sonnet. Only calls subagents and relays their result.
+- **Mission creation, specify, plan, tasks:** Claude Opus, high effort.
+- **Tasks:** written by Opus for Haiku only. Work packages are sized and written so that one Haiku model can finish each one from its prompt alone.
+- **Implementation:** Claude Haiku class, mid to max effort.
+- **Work package review:** Claude Sonnet.
+- **Mission review after merge:** Claude Opus, high effort.
 
 No built-in doctrine covers model routing. This is a doctrine gap, recorded here as project policy.
 
