@@ -14,9 +14,8 @@
   "accepted_by": "unknownhero",
   "accepted_from_commit": "0f940d4aa062a29c906e5706e5bdbcf3ec05ced3",
   "baseline_merge_commit": "d9e16baa1c6dbc42d5b92e54159abcfe5987e2eb",
-  "coordination_branch": "kitty/mission-m0-cleanup-01M5SPZC",
   "created_at": "2026-10-25T14:21:02.466931+00:00",
-  "flattened": false,
+  "flattened": true,
   "friendly_name": "M0 Cleanup",
   "mission_id": "01M5SPZCH029ZWAHMSDW3BQANB",
   "mission_number": 5,
@@ -28,7 +27,7 @@
   "slug": "m0-cleanup-01M5SPZC",
   "status_phase": "1",
   "target_branch": "feat/m0-cleanup",
-  "topology": "coord",
+  "topology": "lanes",
   "vcs": "git",
   "vcs_locked_at": "2026-10-25T17:43:19.043537+00:00"
 }

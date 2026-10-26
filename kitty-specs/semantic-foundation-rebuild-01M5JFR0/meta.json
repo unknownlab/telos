@@ -14,9 +14,8 @@
   "accepted_by": "unknownhero",
   "accepted_from_commit": "a5e07b3e6a8cab85442bd47cebac1ac3afee1145",
   "baseline_merge_commit": "e77404dfca3299666a23a88b0da4c5e43b0d6560",
-  "coordination_branch": "kitty/mission-semantic-foundation-rebuild-01M5JFR0",
   "created_at": "2026-10-22T18:59:59.729556+00:00",
-  "flattened": false,
+  "flattened": true,
   "friendly_name": "Semantic Foundation Rebuild",
   "mission_id": "01M5JFR0GHYQFRQCZSGQ29Y2VX",
   "mission_number": 4,
@@ -28,7 +27,7 @@
   "slug": "semantic-foundation-rebuild-01M5JFR0",
   "status_phase": "1",
   "target_branch": "feat/semantic-foundation-rebuild",
-  "topology": "coord",
+  "topology": "lanes",
   "vcs": "git",
   "vcs_locked_at": "2026-10-24T08:32:58.923897+00:00"
 }

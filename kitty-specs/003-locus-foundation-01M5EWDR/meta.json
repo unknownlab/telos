@@ -21,9 +21,8 @@
   "accepted_by": "claude",
   "accepted_from_commit": "0454ad115155cb356d7be87eedb5a9b3dcedf1b6",
   "baseline_merge_commit": "c074b1ac85da0fe2e8a47d9966be1c6f73478a89",
-  "coordination_branch": "kitty/mission-locus-foundation-01M5EWDR",
   "created_at": "2026-10-21T09:24:37.707719+00:00",
-  "flattened": false,
+  "flattened": true,
   "friendly_name": "Locus Foundation — Semantic Identity and Ownership",
   "mission_id": "01M5EWDRJV1S7AK53778A6M46R",
   "mission_number": 3,
@@ -35,7 +34,7 @@
   "slug": "locus-foundation-01M5EWDR",
   "status_phase": "1",
   "target_branch": "feat/locus-foundation",
-  "topology": "coord",
+  "topology": "lanes",
   "vcs": "git",
   "vcs_locked_at": "2026-10-21T12:31:11.776713+00:00"
 }

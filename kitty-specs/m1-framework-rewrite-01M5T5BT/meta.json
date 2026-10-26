@@ -1,7 +1,6 @@
 {
-  "coordination_branch": "kitty/mission-m1-framework-rewrite-01M5T5BT",
   "created_at": "2026-10-25T18:32:30.154027+00:00",
-  "flattened": false,
+  "flattened": true,
   "friendly_name": "M1 Framework Rewrite",
   "mission_id": "01M5T5BTJH5G7NJSDWRWAP5SNJ",
   "mission_number": null,
@@ -12,5 +11,5 @@
   "purpose_tldr": "Rewrite the Locus framework and the calculator proof as a functional, single-root system that satisfies every owner review note left in the code.",
   "slug": "m1-framework-rewrite-01M5T5BT",
   "target_branch": "feat/m1-framework-rewrite",
-  "topology": "coord"
+  "topology": "single_branch"
 }

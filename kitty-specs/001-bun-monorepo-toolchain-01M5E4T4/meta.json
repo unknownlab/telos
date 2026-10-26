@@ -1,7 +1,6 @@
 {
-  "coordination_branch": "kitty/mission-bun-monorepo-toolchain-01M5E4T4",
   "created_at": "2026-10-21T02:31:57.689772+00:00",
-  "flattened": false,
+  "flattened": true,
   "friendly_name": "Bun Monorepo Toolchain",
   "mission_id": "01M5E4T4WERCN71DVFXECG7GPC",
   "mission_number": 1,
@@ -12,5 +11,5 @@
   "purpose_tldr": "Give the repository a working Bun-based monorepo foundation with local quality checks.",
   "slug": "bun-monorepo-toolchain-01M5E4T4",
   "target_branch": "feat/bun-monorepo-toolchain",
-  "topology": "coord"
+  "topology": "lanes"
 }
