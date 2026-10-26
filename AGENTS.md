@@ -95,7 +95,7 @@ Everything else proceeds without asking: inspecting, running checks, implementin
 - Never add fake tests, placeholder scripts, or checks that verify nothing.
 - Before implementing, read the work package's acceptance criteria. Run the existing checks to get a baseline.
 - Run every check the repo declares (typecheck, lint, format, tests) before review, and again before accept or merge. Report the results exactly. If a check does not exist, say so; never claim it passed.
-- The mission that introduces a toolchain also wires its checks into CI and into Spec Kitty's review gate (`review.test_command`). That wiring is part of the plan the owner approves.
+- The mission that introduces a toolchain also wires its checks into Spec Kitty's review gate (`review.test_command`). There is no CI. That wiring is part of the plan the owner approves.
 - Spec Kitty blocks mission merges until reviews and dependencies are complete (`policy.merge_gates.mode: block`). Never bypass a gate on your own.
 - Write no code comments. The only exceptions are owner review notes (`//@unknownhero`) and directives the toolchain reads, such as `@ts-expect-error`.
 
